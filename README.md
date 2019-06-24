@@ -45,7 +45,7 @@ views:
 ```
 
 ## Installation
-1. Download [*xiaomi-vacuum-map-card.js*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/xiaomi-vacuum-map-card.js), [*texts.js*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/texts.js) and [style.js](Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/style.js) to `/www/custom_lovelace/xiaomi_vacuum_map_card` folder:
+1. Download [*xiaomi-vacuum-map-card.js*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/xiaomi-vacuum-map-card.js), [*texts.js*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/texts.js) and [style.js](Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/style.js) to `/www/custom_lovelace/xiaomi_vacuum_map_card` directory:
     ```bash
     mkdir -p www/custom_lovelace/xiaomi_vacuum_map_card
     cd www/custom_lovelace/xiaomi_vacuum_map_card/
