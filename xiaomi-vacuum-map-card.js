@@ -28,8 +28,6 @@ class XiaomiVacuumMapCard extends LitElement {
         this.vacuumZonedCleanupRepeats = 1;
         this.currPoint = {x: null, y: null};
         this.unit = {x: null, y: null};
-        this.canvasWidth = 0;
-        this.canvasHeight = 0;
         this.shouldSwapAxis = false;
     }
 
@@ -46,8 +44,6 @@ class XiaomiVacuumMapCard extends LitElement {
             vacuumZonedCleanupRepeats: {},
             currPoint: {},
             mapDrawing: {},
-            canvasWidth: {},
-            canvasHeight: {}
         };
     }
 
@@ -122,7 +118,7 @@ class XiaomiVacuumMapCard extends LitElement {
             </div>
             <div class="dropdownWrapper">
                 <paper-dropdown-menu label="${textMode}" @value-changed="${e => this.modeSelected(e)}" class="vacuumDropdown">
-                    <paper-listbox slot="dropdown-content" class="dropdown-content" width="${this.canvasWidth}" height="${this.canvasHeight}">
+                    <paper-listbox slot="dropdown-content" class="dropdown-content">
                         <paper-item>${textGoToTarget}</paper-item>
                         <paper-item>${textZonedCleanup}</paper-item>
                         ${preselected}
@@ -139,6 +135,9 @@ class XiaomiVacuumMapCard extends LitElement {
             </p>
         </ha-card>
         `;
+        if (this.getMapImage()) {
+            this.mapOnLoad();
+        }
         return rendered;
     }
 
@@ -155,11 +154,11 @@ class XiaomiVacuumMapCard extends LitElement {
 
     onMouseDown(e) {
         const pos = this.getMousePos(e);
+        this.isMouseDown = true;
         if (this.mode === 1) {
             this.currPoint.x = pos.x;
             this.currPoint.y = pos.y;
         } else if (this.mode === 2) {
-            this.isMouseDown = true;
             this.selectedRectangle = this.getSelectedRectangle(pos.x, pos.y);
             this.currRectangle.x = pos.x;
             this.currRectangle.y = pos.y;
@@ -176,7 +175,9 @@ class XiaomiVacuumMapCard extends LitElement {
                 if (this.selectedZones.includes(selectedZone)) {
                     this.selectedZones.splice(this.selectedZones.indexOf(selectedZone), 1);
                 } else {
-                    this.selectedZones.push(selectedZone);
+                    if (this.selectedZones.length < 5) {
+                        this.selectedZones.push(selectedZone);
+                    }
                 }
             }
         }
@@ -185,7 +186,7 @@ class XiaomiVacuumMapCard extends LitElement {
 
     onMouseUp(e) {
         this.isMouseDown = false;
-        if (this.selectedRectangle >= 0 || this.mode !== 2) {
+        if (this.selectedRectangle >= 0 || this.mode !== 2 || this.mode === 2 && this.rectangles.length >= 5) {
             this.selectedRectangle = -1;
             this.drawCanvas();
             return;
@@ -386,12 +387,11 @@ class XiaomiVacuumMapCard extends LitElement {
 
     vacuumStartPreselectedZonesCleanup() {
         const zone = [];
-        for (let i = 0; i < this.config.zones.length; i++) {
-            const preselectedZone = this.config.zones[i];
-            if (this.selectedZones.includes(i)) {
-                for (const rect of preselectedZone) {
-                    zone.push(rect);
-                }
+        for (let i = 0; i < this.selectedZones.length; i++) {
+            const selectedZone = this.selectedZones[i];
+            const preselectedZone = this.config.zones[selectedZone];
+            for (const rect of preselectedZone) {
+                zone.push(rect)
             }
         }
         this._hass.callService("vacuum", "xiaomi_clean_zone", {
