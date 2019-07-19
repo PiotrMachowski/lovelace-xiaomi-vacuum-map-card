@@ -96,4 +96,6 @@ views:
 * **Does this card require rooted device?**
 
   No, as it only utilises features already existing in Home Assistant integration
-  
+ 
+## Community
+Thread on [community.home-assistant.io](https://community.home-assistant.io/): [Xiaomi Vacuum Interactive Map Card](https://community.home-assistant.io/t/xiaomi-vacuum-interactive-map-card/)
