@@ -38,23 +38,7 @@ views:
         - [[28972, 26715, 31072, 27915], [29457, 27903, 31107, 29203], [30198, 29215, 31498, 31215], [29461, 31228, 31511, 32478]]
 ```
 
-## Installation
-1. Download [*xiaomi-vacuum-map-card.js*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/dist/xiaomi-vacuum-map-card.js), [*texts.js*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/dist/texts.js) and [style.js](Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/dist/style.js) to `/www/custom_lovelace/xiaomi_vacuum_map_card` directory:
-    ```bash
-    mkdir -p www/custom_lovelace/xiaomi_vacuum_map_card
-    cd www/custom_lovelace/xiaomi_vacuum_map_card/
-    wget https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/dist/xiaomi-vacuum-map-card.js
-    wget https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/dist/texts.js
-    wget https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/dist/style.js
-    ```
-2. Add card to resources in `ui-lovelace.yaml` or in raw editor if you are using frontend UI editor:
-    ```yaml
-    resources:
-      - url: /local/custom_lovelace/xiaomi_vacuum_map_card/xiaomi-vacuum-map-card.js
-        type: module
-    ```
-
-### Hints
+## Hints
 * To find out values for `base_position` and `reference_point` use service `vacuum.send_command` with data:
   * `base_postion`:
     ```json
