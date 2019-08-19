@@ -77,5 +77,9 @@ views:
 
   No, as it only utilises features already existing in Home Assistant integration
   
+* **How to create map?**
+
+  You can use any image you want, the easisest way is to use screenshot from Mi Home/FloleVac.
+  
 ## Community
 Thread on [community.home-assistant.io](https://community.home-assistant.io/): [Xiaomi Vacuum Interactive Map Card](https://community.home-assistant.io/t/xiaomi-vacuum-interactive-map-card/)
