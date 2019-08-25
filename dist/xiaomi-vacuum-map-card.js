@@ -378,6 +378,9 @@ class XiaomiVacuumMapCard extends LitElement {
             const xy2 = this.convertCanvasToRealCoordinates(rect.x + rect.w, rect.y + rect.h);
             zone.push([xy1.x, xy2.y, xy2.x, xy1.y])
         }
+        if (this.config.debug) {
+            alert(zone);
+        }
         this._hass.callService("vacuum", "xiaomi_clean_zone", {
             entity_id: this.config.entity,
             repeats: this.vacuumZonedCleanupRepeats,
