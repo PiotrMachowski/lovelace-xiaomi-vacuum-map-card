@@ -474,7 +474,7 @@ class XiaomiVacuumMapCard extends LitElement {
             longPressSelector.bind(this.shadowRoot.querySelector("paper-button"));
         }
     }
-}``
+}
 
 function convertTouchToMouse(evt) {
     if (evt.cancelable) {
