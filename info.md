@@ -16,6 +16,7 @@
 | `base_position` | `string` | `True` | - | Coordinates of pixel corresponding to base position (25500, 25500) on map image |
 | `reference_point` | `string` | `True` | - | Coordinates of pixel corresponding to reference point (26500, 26500) on map image |
 | `zones` | `List` | `False` | Empty | List of predefined zones |
+| `debug` | `boolean` | `False` | `false` | Enables alerts with coordinates after holding `Start` button. Possible values: `true`, `false` |
 
 ## Example usage:
 ```yaml
@@ -64,8 +65,10 @@ views:
       "repeats": 1
     }
     ```
-* You can find out coordinates for zones using app [*FloleVac*](https://play.google.com/store/apps/details?id=de.flole.xiaomi)
-
+* You can find out coordinates for zones using two methods:
+  * Enabling `debug` in settings, drawing zone in `Zoned cleanup` mode and holding `Start` button. Note: this method also works for other modes.
+  * Android App [*FloleVac*](https://play.google.com/store/apps/details?id=de.flole.xiaomi)
+  
 * For Polish version download [*textsPL.js*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/dist/textsPL.js) and change filename to `texts.js`
 
 ## FAQ

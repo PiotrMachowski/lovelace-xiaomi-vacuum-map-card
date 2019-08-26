@@ -131,7 +131,7 @@ class XiaomiVacuumMapCard extends LitElement {
                 <mwc-button class="vacuumButton" @click="${() => this.vacuumZonedClearButton()}">${textRemoveAllZones}</mwc-button>
             </p>
             <p class="buttonsWrapper">
-                <mwc-button class="vacuumRunButton" @click="${() => this.vacuumStartButton()}">${textRun}</mwc-button>
+                <paper-button @ha-click="${() => this.vacuumStartButton(false)}" @ha-hold="${() => this.vacuumStartButton(true)}"><mwc-button>${textRun}</mwc-button></paper-button>
             </p>
         </ha-card>
         `;
@@ -265,13 +265,13 @@ class XiaomiVacuumMapCard extends LitElement {
         this.drawCanvas();
     }
 
-    vacuumStartButton() {
+    vacuumStartButton(debug) {
         if (this.mode === 1 && this.currPoint.x != null) {
-            this.vacuumGoToPoint();
+            this.vacuumGoToPoint(debug);
         } else if (this.mode === 2 && !this.rectangles.empty) {
-            this.vacuumStartZonedCleanup();
+            this.vacuumStartZonedCleanup(debug);
         } else if (this.mode === 3 && !this.selectedZones.empty) {
-            this.vacuumStartPreselectedZonesCleanup();
+            this.vacuumStartPreselectedZonesCleanup(debug);
         }
     }
 
@@ -362,30 +362,38 @@ class XiaomiVacuumMapCard extends LitElement {
         return selected;
     }
 
-    vacuumGoToPoint() {
+    vacuumGoToPoint(debug) {
         const mapPos = this.convertCanvasToRealCoordinates(this.currPoint.x, this.currPoint.y);
-        this._hass.callService("vacuum", "send_command", {
-            entity_id: this.config.entity,
-            command: "app_goto_target",
-            params: [mapPos.x, mapPos.y]
-        });
+        if (debug && this.config.debug) {
+            alert(JSON.stringify([mapPos.x, mapPos.y]));
+        } else {
+            this._hass.callService("vacuum", "send_command", {
+                entity_id: this.config.entity,
+                command: "app_goto_target",
+                params: [mapPos.x, mapPos.y]
+            });
+        }
     }
 
-    vacuumStartZonedCleanup() {
+    vacuumStartZonedCleanup(debug) {
         const zone = [];
         for (const rect of this.rectangles) {
             const xy1 = this.convertCanvasToRealCoordinates(rect.x, rect.y);
             const xy2 = this.convertCanvasToRealCoordinates(rect.x + rect.w, rect.y + rect.h);
             zone.push([xy1.x, xy2.y, xy2.x, xy1.y])
         }
-        this._hass.callService("vacuum", "xiaomi_clean_zone", {
-            entity_id: this.config.entity,
-            repeats: this.vacuumZonedCleanupRepeats,
-            zone: zone
-        });
+        if (debug && this.config.debug) {
+            alert(JSON.stringify(zone));
+        } else {
+            this._hass.callService("vacuum", "xiaomi_clean_zone", {
+                entity_id: this.config.entity,
+                repeats: this.vacuumZonedCleanupRepeats,
+                zone: zone
+            });
+        }
     }
 
-    vacuumStartPreselectedZonesCleanup() {
+    vacuumStartPreselectedZonesCleanup(debug) {
         const zone = [];
         for (let i = 0; i < this.selectedZones.length; i++) {
             const selectedZone = this.selectedZones[i];
@@ -394,11 +402,15 @@ class XiaomiVacuumMapCard extends LitElement {
                 zone.push(rect)
             }
         }
-        this._hass.callService("vacuum", "xiaomi_clean_zone", {
-            entity_id: this.config.entity,
-            repeats: this.vacuumZonedCleanupRepeats,
-            zone: zone
-        });
+        if (debug && this.config.debug) {
+            alert(JSON.stringify(zone));
+        } else {
+            this._hass.callService("vacuum", "xiaomi_clean_zone", {
+                entity_id: this.config.entity,
+                repeats: this.vacuumZonedCleanupRepeats,
+                zone: zone
+            });
+        }
     }
 
     getCardSize() {
@@ -454,6 +466,10 @@ class XiaomiVacuumMapCard extends LitElement {
             x: Math.round(evt.clientX - rect.left),
             y: Math.round(evt.clientY - rect.top)
         };
+    }
+
+    firstUpdated(changedProperties) {
+        document.body.querySelector("long-press").bind(this.shadowRoot.querySelector("paper-button"));
     }
 }
 
