@@ -131,7 +131,7 @@ class XiaomiVacuumMapCard extends LitElement {
                 <mwc-button class="vacuumButton" @click="${() => this.vacuumZonedClearButton()}">${textRemoveAllZones}</mwc-button>
             </p>
             <p class="buttonsWrapper">
-                <paper-button @ha-click="${() => this.vacuumStartButton(false)}" @ha-hold="${() => this.vacuumStartButton(true)}"><mwc-button>${textRun}</mwc-button></paper-button>
+                <mwc-button class="vacuumRunButton" @click="${() => this.vacuumStartButton(true)}">${textRun}</mwc-button>
             </p>
         </ha-card>
         `;
@@ -466,13 +466,6 @@ class XiaomiVacuumMapCard extends LitElement {
             x: Math.round(evt.clientX - rect.left),
             y: Math.round(evt.clientY - rect.top)
         };
-    }
-
-    firstUpdated(changedProperties) {
-        customElements.whenDefined("long-press").then(() => {
-            const longPressSelector = document.body.querySelector("long-press");
-            longPressSelector.bind(element);
-        });
     }
 }
 
