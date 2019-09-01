@@ -32,7 +32,6 @@ const style = html`
       z-index: 2;
       left: 0;
       top: 0;
-      touch-action: none;
   }
   .dropdownWrapper {
       margin-left: 10px;

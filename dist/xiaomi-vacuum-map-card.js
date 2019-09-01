@@ -52,6 +52,11 @@ class XiaomiVacuumMapCard extends LitElement {
     }
 
     setConfig(config) {
+        const availableModes = new Map();
+        availableModes.set("go_to_target", textGoToTarget);
+        availableModes.set("zoned_cleanup", textZonedCleanup);
+        availableModes.set("predefined_zones", textZones);
+
         if (!config.entity) {
             throw new Error("Missing configuration: entity");
         }
@@ -76,6 +81,31 @@ class XiaomiVacuumMapCard extends LitElement {
         if (!config.reference_point.y) {
             throw new Error("Missing configuration: reference_point.y");
         }
+        if (config.modes) {
+            if (!Array.isArray(config.modes) || config.modes.length < 1 || config.modes.length > 3) {
+                throw new Error("Invalid configuration: modes");
+            }
+            this.modes = [];
+            for (const mode of config.modes) {
+                if (!availableModes.has(mode)) {
+                    throw new Error("Invalid mode: " + mode);
+                }
+                this.modes.push(availableModes.get(mode));
+            }
+        } else {
+            this.modes = [textGoToTarget, textZonedCleanup, textZones];
+        }
+        if (!config.zones || !Array.isArray(config.zones) || config.zones.length === 0 && this.modes.includes(textZones)) {
+            this.modes.splice(this.modes.indexOf(textZones), 1);
+        }
+        if (config.default_mode) {
+            if (!availableModes.has(config.default_mode) || !this.modes.includes(availableModes.get(config.default_mode))) {
+                throw new Error("Invalid default mode: " + config.default_mode);
+            }
+            this.defaultMode = this.modes.indexOf(availableModes.get(config.default_mode));
+        } else {
+            this.defaultMode = -1;
+        }
         this.config = config;
         const diffX = config.reference_point.x - config.base_position.x;
         const diffY = config.reference_point.y - config.base_position.y;
@@ -97,31 +127,26 @@ class XiaomiVacuumMapCard extends LitElement {
     }
 
     render() {
-        let preselected = html`<paper-item>${textZones}</paper-item`;
-        if (!this.config.zones || this.config.zones.length === 0) {
-            preselected = "";
-        }
+        const modesDropdown = this.modes.map(m => html`<paper-item>${m}</paper-item>`);
         const rendered = html`
         ${style}
         <ha-card id="xiaomiCard">
             <div id="mapWrapper">
                 <div id="map">
                     <img id="mapBackground" @load="${() => this.mapOnLoad()}" src="${this.config.map_image}">
-                    <canvas id="mapDrawing" 
-                        @mousemove="${e => this.onMouseMove(e)}" 
-                        @mousedown="${e => this.onMouseDown(e)}" 
+                    <canvas id="mapDrawing" style="${this.getCanvasStyle()}"
+                        @mousemove="${e => this.onMouseMove(e)}"
+                        @mousedown="${e => this.onMouseDown(e)}"
                         @mouseup="${e => this.onMouseUp(e)}"
-                        @touchstart="${e => this.onTouchStart(e)}" 
-                        @touchend="${e => this.onTouchEnd(e)}" 
+                        @touchstart="${e => this.onTouchStart(e)}"
+                        @touchend="${e => this.onTouchEnd(e)}"
                         @touchmove="${e => this.onTouchMove(e)}" />
                 </div>
             </div>
             <div class="dropdownWrapper">
-                <paper-dropdown-menu label="${textMode}" @value-changed="${e => this.modeSelected(e)}" class="vacuumDropdown">
-                    <paper-listbox slot="dropdown-content" class="dropdown-content">
-                        <paper-item>${textGoToTarget}</paper-item>
-                        <paper-item>${textZonedCleanup}</paper-item>
-                        ${preselected}
+                <paper-dropdown-menu label="${textMode}" @value-changed="${e => this.modeSelected(e)}" class="vacuumDropdown" selected="${this.defaultMode}">
+                    <paper-listbox slot="dropdown-content" class="dropdown-content" selected="${this.defaultMode}">
+                        ${modesDropdown}
                     </paper-listbox>
                 </paper-dropdown-menu>
             </div>
@@ -222,15 +247,18 @@ class XiaomiVacuumMapCard extends LitElement {
     }
 
     onTouchStart(e) {
-        this.onMouseDown(convertTouchToMouse(e));
+        if (this.mode === 2)
+            this.onMouseDown(this.convertTouchToMouse(e));
     }
 
     onTouchEnd(e) {
-        this.onMouseUp(convertTouchToMouse(e));
+        if (this.mode === 2)
+            this.onMouseUp(this.convertTouchToMouse(e));
     }
 
     onTouchMove(e) {
-        this.onMouseMove(convertTouchToMouse(e));
+        if (this.mode === 2)
+            this.onMouseMove(this.convertTouchToMouse(e));
     }
 
     modeSelected(e) {
@@ -362,6 +390,11 @@ class XiaomiVacuumMapCard extends LitElement {
         return selected;
     }
 
+    getCanvasStyle() {
+        if (this.mode === 2) return html`touch-action: none;`;
+        else return html``;
+    }
+
     vacuumGoToPoint(debug) {
         const mapPos = this.convertCanvasToRealCoordinates(this.currPoint.x, this.currPoint.y);
         if (debug && this.config.debug) {
@@ -467,17 +500,18 @@ class XiaomiVacuumMapCard extends LitElement {
             y: Math.round(evt.clientY - rect.top)
         };
     }
-}
 
-function convertTouchToMouse(evt) {
-    if (evt.cancelable) {
-        evt.preventDefault();
+    convertTouchToMouse(evt) {
+        if (evt.cancelable && this.mode === 2) {
+            evt.preventDefault();
+        }
+        return {
+            clientX: evt.changedTouches[0].clientX,
+            clientY: evt.changedTouches[0].clientY,
+            currentTarget: evt.currentTarget
+        };
     }
-    return {
-        clientX: evt.changedTouches[0].clientX,
-        clientY: evt.changedTouches[0].clientY,
-        currentTarget: evt.currentTarget
-    };
+
 }
 
 customElements.define('xiaomi-vacuum-map-card', XiaomiVacuumMapCard);

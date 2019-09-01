@@ -20,6 +20,8 @@ This card enables you to specify target or start zoned cleanup using map, just l
 | `base_position` | `string` | `True` | - | Coordinates of pixel corresponding to base position (25500, 25500) on map image |
 | `reference_point` | `string` | `True` | - | Coordinates of pixel corresponding to reference point (26500, 26500) on map image |
 | `zones` | `List` | `False` | Empty | List of predefined zones |
+| `modes` | `List` | `False` | `[go_to_target, zoned_cleanup, predefined_zones]` | List of displayed modes. Possible values: `go_to_target`, `zoned_cleanup`, `predefined_zones` |
+| `default_mode` | `string` | `False` | - | Default selected mode. Possible values: `go_to_target`, `zoned_cleanup`, `predefined_zones` |
 | `debug` | `boolean` | `False` | `false` | Enables alerts with coordinates after holding `Start` button. Possible values: `true`, `false` |
 
 ## Example usage:
