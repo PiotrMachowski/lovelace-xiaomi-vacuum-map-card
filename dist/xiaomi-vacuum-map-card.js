@@ -156,6 +156,7 @@ class XiaomiVacuumMapCard extends LitElement {
                 <mwc-button class="vacuumButton" @click="${() => this.vacuumZonedClearButton()}">${textRemoveAllZones}</mwc-button>
             </p>
             <p class="buttonsWrapper">
+                <span id="increaseButton" hidden><mwc-button @click="${() => this.vacuumZonedIncreaseButton()}">${textRepeats} ${this.vacuumZonedCleanupRepeats}</mwc-button></span>
                 <mwc-button class="vacuumRunButton" @click="${() => this.vacuumStartButton(true)}">${textRun}</mwc-button>
             </p>
         </ha-card>
@@ -266,14 +267,13 @@ class XiaomiVacuumMapCard extends LitElement {
         this.mode = 0;
         if (selected === textGoToTarget) {
             this.mode = 1;
-            this.getZoneControlButtonsWrapper().hidden = true;
         } else if (selected === textZonedCleanup) {
             this.mode = 2;
-            this.getZoneControlButtonsWrapper().hidden = false;
         } else if (selected === textZones) {
             this.mode = 3;
-            this.getZoneControlButtonsWrapper().hidden = true;
         }
+        this.getZoneControlButtonsWrapper().hidden = this.mode !== 2;
+        this.getPredefinedZonesIncreaseButton().hidden = this.mode !== 3;
         this.drawCanvas();
     }
 
@@ -490,6 +490,10 @@ class XiaomiVacuumMapCard extends LitElement {
 
     getZoneControlButtonsWrapper() {
         return this.shadowRoot.getElementById("zonedButtonsWrapper");
+    }
+
+    getPredefinedZonesIncreaseButton() {
+        return this.shadowRoot.getElementById("increaseButton");
     }
 
     getMousePos(evt) {

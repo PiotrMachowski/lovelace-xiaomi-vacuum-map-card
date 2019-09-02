@@ -56,6 +56,10 @@ const style = html`
   .vacuumRunButton {
       margin: 5px;
       float: right;
+  }  
+  #increaseButton {
+      margin: 5px;
+      float: left;
   }
 </style>`;
 
