@@ -415,15 +415,15 @@ class XiaomiVacuumMapCard extends LitElement {
         for (const rect of this.rectangles) {
             const xy1 = this.convertCanvasToRealCoordinates(rect.x, rect.y);
             const xy2 = this.convertCanvasToRealCoordinates(rect.x + rect.w, rect.y + rect.h);
-            zone.push([xy1.x, xy2.y, xy2.x, xy1.y])
+            zone.push([xy1.x, xy2.y, xy2.x, xy1.y, this.vacuumZonedCleanupRepeats])
         }
         if (debug && this.config.debug) {
             alert(JSON.stringify(zone));
         } else {
-            this._hass.callService("vacuum", "xiaomi_clean_zone", {
+            this._hass.callService("vacuum", "send_command", {
                 entity_id: this.config.entity,
-                repeats: this.vacuumZonedCleanupRepeats,
-                zone: zone
+                command: "app_zoned_clean",
+                params: zone
             }).then(() => this.launch_toast());
         }
     }
@@ -434,16 +434,16 @@ class XiaomiVacuumMapCard extends LitElement {
             const selectedZone = this.selectedZones[i];
             const preselectedZone = this.config.zones[selectedZone];
             for (const rect of preselectedZone) {
-                zone.push(rect)
+                zone.push([rect[0], rect[1], rect[2], rect[3], this.vacuumZonedCleanupRepeats])
             }
         }
         if (debug && this.config.debug) {
             alert(JSON.stringify(zone));
         } else {
-            this._hass.callService("vacuum", "xiaomi_clean_zone", {
+            this._hass.callService("vacuum", "send_command", {
                 entity_id: this.config.entity,
-                repeats: this.vacuumZonedCleanupRepeats,
-                zone: zone
+                command: "app_zoned_clean",
+                params: zone
             }).then(() => this.launch_toast());
         }
     }
