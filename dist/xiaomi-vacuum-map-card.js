@@ -6,8 +6,6 @@ import {
     textZones,
     textRun,
     textRepeats,
-    textRemoveLastZone,
-    textRemoveAllZones,
     textConfirmation
 } from './texts.js'
 
@@ -151,11 +149,6 @@ class XiaomiVacuumMapCard extends LitElement {
                     </paper-listbox>
                 </paper-dropdown-menu>
             </div>
-            <p id="zonedButtonsWrapper" hidden>
-                <mwc-button class="vacuumButton" @click="${() => this.vacuumZonedIncreaseButton()}">${textRepeats} ${this.vacuumZonedCleanupRepeats}</mwc-button>
-                <mwc-button class="vacuumButton" @click="${() => this.vacuumZonedRemoveLastButton()}">${textRemoveLastZone}</mwc-button>
-                <mwc-button class="vacuumButton" @click="${() => this.vacuumZonedClearButton()}">${textRemoveAllZones}</mwc-button>
-            </p>
             <p class="buttonsWrapper">
                 <span id="increaseButton" hidden><mwc-button @click="${() => this.vacuumZonedIncreaseButton()}">${textRepeats} ${this.vacuumZonedCleanupRepeats}</mwc-button></span>
                 <mwc-button class="vacuumRunButton" @click="${() => this.vacuumStartButton(true)}">${textRun}</mwc-button>
@@ -187,9 +180,22 @@ class XiaomiVacuumMapCard extends LitElement {
             this.currPoint.x = pos.x;
             this.currPoint.y = pos.y;
         } else if (this.mode === 2) {
-            this.selectedRectangle = this.getSelectedRectangle(pos.x, pos.y);
+            const {selected, shouldDelete, shouldResize} = this.getSelectedRectangle(pos.x, pos.y);
             this.currRectangle.x = pos.x;
             this.currRectangle.y = pos.y;
+            if (shouldDelete) {
+                this.rectangles.splice(selected, 1);
+                this.drawCanvas();
+                return;
+            }
+            if (shouldResize) {
+                this.currRectangle.x = this.rectangles[selected].x;
+                this.currRectangle.y = this.rectangles[selected].y;
+                this.rectangles.splice(selected, 1);
+                this.drawCanvas();
+                return;
+            }
+            this.selectedRectangle = selected;
             if (this.selectedRectangle >= 0) {
                 this.currRectangle.w = this.rectangles[this.selectedRectangle].x;
                 this.currRectangle.h = this.rectangles[this.selectedRectangle].y;
@@ -220,18 +226,17 @@ class XiaomiVacuumMapCard extends LitElement {
             return;
         }
         const {x, y} = this.getMousePos(e);
-        this.currRectangle.w = x - this.currRectangle.x;
-        this.currRectangle.h = y - this.currRectangle.y;
-        if (this.currRectangle.w < 0) {
-            this.currRectangle.w = -this.currRectangle.w;
-            this.currRectangle.x = this.currRectangle.x - this.currRectangle.w;
+        const rx = Math.min(x, this.currRectangle.x);
+        const ry = Math.min(y, this.currRectangle.y);
+        const rw = Math.max(x, this.currRectangle.x) - rx;
+        const rh = Math.max(y, this.currRectangle.y) - ry;
+        this.currRectangle.x = rx;
+        this.currRectangle.y = ry;
+        this.currRectangle.w = rw;
+        this.currRectangle.h = rh;
+        if (rw > 0 && rh > 0) {
+            this.rectangles.push({x: rx, y: ry, w: rw, h: rh});
         }
-        if (this.currRectangle.h < 0) {
-            this.currRectangle.h = -this.currRectangle.h;
-            this.currRectangle.y = this.currRectangle.y - this.currRectangle.h;
-        }
-        const {x: rx, y: ry, w: rw, h: rh} = this.currRectangle;
-        this.rectangles.push({x: rx, y: ry, w: rw, h: rh});
         this.drawCanvas();
     }
 
@@ -274,8 +279,7 @@ class XiaomiVacuumMapCard extends LitElement {
         } else if (selected === textZones) {
             this.mode = 3;
         }
-        this.getZoneControlButtonsWrapper().hidden = this.mode !== 2;
-        this.getPredefinedZonesIncreaseButton().hidden = this.mode !== 3;
+        this.getPredefinedZonesIncreaseButton().hidden = this.mode !== 3 && this.mode !== 2;
         this.drawCanvas();
     }
 
@@ -283,16 +287,6 @@ class XiaomiVacuumMapCard extends LitElement {
         this.vacuumZonedCleanupRepeats++;
         if (this.vacuumZonedCleanupRepeats > 3)
             this.vacuumZonedCleanupRepeats = 1;
-    }
-
-    vacuumZonedRemoveLastButton() {
-        this.rectangles.pop();
-        this.drawCanvas();
-    }
-
-    vacuumZonedClearButton() {
-        this.rectangles = [];
-        this.drawCanvas();
     }
 
     vacuumStartButton(debug) {
@@ -311,11 +305,7 @@ class XiaomiVacuumMapCard extends LitElement {
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.translate(0.5, 0.5);
         if (this.mode === 1 && this.currPoint.x != null) {
-            context.beginPath();
-            context.arc(this.currPoint.x, this.currPoint.y, 4, 0, Math.PI * 2);
-            context.strokeStyle = 'yellow';
-            context.lineWidth = 1;
-            context.stroke();
+            this.drawCircle(context, this.currPoint.x, this.currPoint.y, 4, 'yellow', 1);
         } else if (this.mode === 2) {
             for (let i = 0; i < this.rectangles.length; i++) {
                 const rect = this.rectangles[i];
@@ -332,6 +322,8 @@ class XiaomiVacuumMapCard extends LitElement {
                 context.rect(rect.x, rect.y, rect.w, rect.h);
                 context.lineWidth = 1;
                 context.stroke();
+                this.drawDelete(context, rect.x + rect.w, rect.y);
+                this.drawResize(context, rect.x + rect.w, rect.y + rect.h);
             }
             if (this.isMouseDown && this.selectedRectangle < 0) {
                 context.beginPath();
@@ -365,16 +357,63 @@ class XiaomiVacuumMapCard extends LitElement {
         context.translate(-0.5, -0.5);
     }
 
+    drawCircle(context, x, y, r, style, lineWidth) {
+        context.beginPath();
+        context.arc(x, y, r, 0, Math.PI * 2);
+        context.strokeStyle = style;
+        context.lineWidth = lineWidth;
+        context.stroke();
+    }
+
+    drawDelete(context, x, y) {
+        context.setLineDash([]);
+        this.drawCircle(context, x, y, 8, 'black', 1.2);
+        const diff = 4;
+        context.moveTo(x - diff, y - diff);
+        context.lineTo(x + diff, y + diff);
+        context.moveTo(x - diff, y + diff);
+        context.lineTo(x + diff, y - diff);
+        context.stroke();
+    }
+
+    drawResize(context, x, y) {
+        context.setLineDash([]);
+        this.drawCircle(context, x, y, 8, 'black', 1.2);
+        const diff = 4;
+        context.moveTo(x - diff, y - diff);
+        context.lineTo(x + diff, y + diff);
+        context.lineTo(x + diff, y + diff - 4);
+        context.lineTo(x + diff - 4, y + diff);
+        context.lineTo(x + diff, y + diff);
+        context.moveTo(x - diff, y - diff);
+        context.lineTo(x - diff, y - diff + 4);
+        context.lineTo(x - diff + 4, y - diff);
+        context.lineTo(x - diff, y - diff);
+        context.stroke();
+    }
+
     getSelectedRectangle(x, y) {
         let selected = -1;
+        let shouldDelete = false;
+        let shouldResize = false;
         for (let i = this.rectangles.length - 1; i >= 0; i--) {
             const rect = this.rectangles[i];
+            if (Math.pow(x - rect.x - rect.w, 2) + Math.pow(y - rect.y, 2) <= 64) {
+                selected = i;
+                shouldDelete = true;
+                break;
+            }
+            if (Math.pow(x - rect.x - rect.w, 2) + Math.pow(y - rect.y - rect.h, 2) <= 64) {
+                selected = i;
+                shouldResize = true;
+                break;
+            }
             if (x >= rect.x && y >= rect.y && x <= rect.x + rect.w && y <= rect.y + rect.h) {
                 selected = i;
                 break;
             }
         }
-        return selected;
+        return {selected, shouldDelete, shouldResize};
     }
 
     getSelectedZone(mx, my) {
@@ -488,10 +527,6 @@ class XiaomiVacuumMapCard extends LitElement {
 
     getCanvas() {
         return this.shadowRoot.getElementById("mapDrawing");
-    }
-
-    getZoneControlButtonsWrapper() {
-        return this.shadowRoot.getElementById("zonedButtonsWrapper");
     }
 
     getPredefinedZonesIncreaseButton() {

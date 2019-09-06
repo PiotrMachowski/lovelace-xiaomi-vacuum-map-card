@@ -4,8 +4,6 @@ const textZonedCleanup = "Zoned cleanup";
 const textZones = "Zones";
 const textRun = "Start";
 const textRepeats = "Times:";
-const textRemoveLastZone = "Remove last zone";
-const textRemoveAllZones = "Remove all zones";
 const textConfirmation = "Command sent!";
 
 export {
@@ -15,7 +13,5 @@ export {
     textZones,
     textRun,
     textRepeats,
-    textRemoveLastZone,
-    textRemoveAllZones,
     textConfirmation
 };

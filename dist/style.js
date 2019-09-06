@@ -43,16 +43,6 @@ const style = html`
         .buttonsWrapper {
             margin: 5px;
         }
-        #zonedButtonsWrapper {
-            margin: 5px;
-        }
-        .vacuumButton {
-            margin: 5px;
-        }
-        .vacuumButton.checked {
-            background-color: var(--disabled-text-color);
-            border-radius: var(--lumo-border-radius);
-        }
         .vacuumRunButton {
             margin: 5px;
             float: right;
