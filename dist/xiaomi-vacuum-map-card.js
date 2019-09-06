@@ -234,7 +234,7 @@ class XiaomiVacuumMapCard extends LitElement {
         this.currRectangle.y = ry;
         this.currRectangle.w = rw;
         this.currRectangle.h = rh;
-        if (rw > 0 && rh > 0) {
+        if (rw > 5 && rh > 5) {
             this.rectangles.push({x: rx, y: ry, w: rw, h: rh});
         }
         this.drawCanvas();
