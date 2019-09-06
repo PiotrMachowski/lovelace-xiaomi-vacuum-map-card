@@ -7,7 +7,8 @@ import {
     textRun,
     textRepeats,
     textRemoveLastZone,
-    textRemoveAllZones
+    textRemoveAllZones,
+    textConfirmation
 } from './texts.js'
 
 const LitElement = Object.getPrototypeOf(
@@ -159,6 +160,7 @@ class XiaomiVacuumMapCard extends LitElement {
                 <span id="increaseButton" hidden><mwc-button @click="${() => this.vacuumZonedIncreaseButton()}">${textRepeats} ${this.vacuumZonedCleanupRepeats}</mwc-button></span>
                 <mwc-button class="vacuumRunButton" @click="${() => this.vacuumStartButton(true)}">${textRun}</mwc-button>
             </p>
+            <div id="toast"><div id="img"><ha-icon icon="mdi:check" style="vertical-align: center"></ha-icon></div><div id="desc">${textConfirmation}</div></div>
         </ha-card>
         `;
         if (this.getMapImage()) {
@@ -404,7 +406,7 @@ class XiaomiVacuumMapCard extends LitElement {
                 entity_id: this.config.entity,
                 command: "app_goto_target",
                 params: [mapPos.x, mapPos.y]
-            });
+            }).then(() => this.launch_toast());
         }
     }
 
@@ -422,7 +424,7 @@ class XiaomiVacuumMapCard extends LitElement {
                 entity_id: this.config.entity,
                 repeats: this.vacuumZonedCleanupRepeats,
                 zone: zone
-            });
+            }).then(() => this.launch_toast());
         }
     }
 
@@ -442,7 +444,7 @@ class XiaomiVacuumMapCard extends LitElement {
                 entity_id: this.config.entity,
                 repeats: this.vacuumZonedCleanupRepeats,
                 zone: zone
-            });
+            }).then(() => this.launch_toast());
         }
     }
 
@@ -514,6 +516,14 @@ class XiaomiVacuumMapCard extends LitElement {
             clientY: evt.changedTouches[0].clientY,
             currentTarget: evt.currentTarget
         };
+    }
+
+    launch_toast() {
+        const x = this.shadowRoot.getElementById("toast");
+        x.className = "show";
+        setTimeout(function () {
+            x.className = x.className.replace("show", "");
+        }, 2000);
     }
 
 }

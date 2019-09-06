@@ -6,6 +6,7 @@ const textRun = "Start";
 const textRepeats = "Times:";
 const textRemoveLastZone = "Remove last zone";
 const textRemoveAllZones = "Remove all zones";
+const textConfirmation = "Command sent!";
 
 export {
     textMode,
@@ -15,5 +16,6 @@ export {
     textRun,
     textRepeats,
     textRemoveLastZone,
-    textRemoveAllZones
+    textRemoveAllZones,
+    textConfirmation
 };

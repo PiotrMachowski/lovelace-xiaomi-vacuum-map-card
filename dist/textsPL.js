@@ -6,6 +6,7 @@ const textRun = "Uruchom";
 const textRepeats = "Razy:";
 const textRemoveLastZone = "Usuń ostatnią strefę";
 const textRemoveAllZones = "Wyczyść";
+const textConfirmation = "Komenda wysłana!";
 
 export {
     textMode,
@@ -15,5 +16,6 @@ export {
     textRun,
     textRepeats,
     textRemoveLastZone,
-    textRemoveAllZones
+    textRemoveAllZones,
+    textConfirmation
 };
