@@ -304,6 +304,12 @@ class XiaomiVacuumMapCard extends LitElement {
         const context = canvas.getContext("2d");
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.translate(0.5, 0.5);
+        if (this.config.debug) {
+            const p1 = this.convertRealToCanvasCoordinates(25500, 25500);
+            this.drawCircle(context, p1.x, p1.y, 4, 'red', 1);
+            const p2 = this.convertRealToCanvasCoordinates(26500, 26500);
+            this.drawCircle(context, p2.x, p2.y, 4, 'red', 1);
+        }
         if (this.mode === 1 && this.currPoint.x != null) {
             this.drawCircle(context, this.currPoint.x, this.currPoint.y, 4, 'yellow', 1);
         } else if (this.mode === 2) {
@@ -452,9 +458,7 @@ class XiaomiVacuumMapCard extends LitElement {
     vacuumStartZonedCleanup(debug) {
         const zone = [];
         for (const rect of this.rectangles) {
-            const xy1 = this.convertCanvasToRealCoordinates(rect.x, rect.y);
-            const xy2 = this.convertCanvasToRealCoordinates(rect.x + rect.w, rect.y + rect.h);
-            zone.push([xy1.x, xy2.y, xy2.x, xy1.y, this.vacuumZonedCleanupRepeats])
+            zone.push(this.convertCanvasToRealRect(rect, this.vacuumZonedCleanupRepeats));
         }
         if (debug && this.config.debug) {
             alert(JSON.stringify(zone));
@@ -489,6 +493,16 @@ class XiaomiVacuumMapCard extends LitElement {
 
     getCardSize() {
         return 3;
+    }
+
+    convertCanvasToRealRect(rect, repeats) {
+        const xy1 = this.convertCanvasToRealCoordinates(rect.x, rect.y);
+        const xy2 = this.convertCanvasToRealCoordinates(rect.x + rect.w, rect.y + rect.h);
+        const x1 = Math.min(xy1.x, xy2.x);
+        const y1 = Math.min(xy1.y, xy2.y);
+        const x2 = Math.max(xy1.x, xy2.x);
+        const y2 = Math.max(xy1.y, xy2.y);
+        return [x1, y1, x2, y2, repeats];
     }
 
     convertCanvasToRealCoordinates(canvasX, canvasY) {
