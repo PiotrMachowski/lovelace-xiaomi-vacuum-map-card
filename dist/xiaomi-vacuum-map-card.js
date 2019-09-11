@@ -105,6 +105,13 @@ class XiaomiVacuumMapCard extends LitElement {
         } else {
             this.defaultMode = -1;
         }
+        if (config.service && config.service.split(".").length === 2) {
+            this.service_domain = config.service.split(".")[0];
+            this.service_method = config.service.split(".")[1];
+        } else {
+            this.service_domain = "vacuum";
+            this.service_method = "send_command";
+        }
         this.config = config;
         const diffX = config.reference_point.x - config.base_position.x;
         const diffY = config.reference_point.y - config.base_position.y;
@@ -447,7 +454,7 @@ class XiaomiVacuumMapCard extends LitElement {
         if (debug && this.config.debug) {
             alert(JSON.stringify([mapPos.x, mapPos.y]));
         } else {
-            this._hass.callService("vacuum", "send_command", {
+            this._hass.callService(this.service_domain, this.service_method, {
                 entity_id: this.config.entity,
                 command: "app_goto_target",
                 params: [mapPos.x, mapPos.y]
@@ -463,7 +470,7 @@ class XiaomiVacuumMapCard extends LitElement {
         if (debug && this.config.debug) {
             alert(JSON.stringify(zone));
         } else {
-            this._hass.callService("vacuum", "send_command", {
+            this._hass.callService(this.service_domain, this.service_method, {
                 entity_id: this.config.entity,
                 command: "app_zoned_clean",
                 params: zone
@@ -483,7 +490,7 @@ class XiaomiVacuumMapCard extends LitElement {
         if (debug && this.config.debug) {
             alert(JSON.stringify(zone));
         } else {
-            this._hass.callService("vacuum", "send_command", {
+            this._hass.callService(this.service_domain, this.service_method, {
                 entity_id: this.config.entity,
                 command: "app_zoned_clean",
                 params: zone

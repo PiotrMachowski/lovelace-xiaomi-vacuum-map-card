@@ -1,0 +1,7 @@
+vacuum_send_command:
+  sequence:
+    - service: python_script.vacuum_send_command
+      data_template:
+        entity_id: "{{entity_id}}"
+        command: "{{command}}"
+        params: "{{params}}"
