@@ -76,8 +76,7 @@ You can use `service` parameter for example to run a script instead of starting 
 
 | WARNING: in current version of Home Assistant service `vacuum.send_command` does not support templates! |
 | --- |
-
-To overcome this issue you can use a [*python script*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/examples/vacuum_send_command.py).
+| To overcome this issue you can use a [*python script*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/examples/vacuum_send_command.py). |
 
 Example HA script that can be used with this card is available [*here*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/examples/vacuum_send_command.yaml).
 
