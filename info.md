@@ -13,8 +13,7 @@
 | --- | --- | --- | --- | --- |
 | `entity` | `string` | `True` | - | ID of Xiaomi vacuum entity |
 | `map_image` | `string` | `True` | - | Path to image of map |
-| `base_position` | `string` | `True` | - | Coordinates of pixel corresponding to base position (25500, 25500) on map image |
-| `reference_point` | `string` | `True` | - | Coordinates of pixel corresponding to reference point (26500, 26500) on map image |
+| `calibration_points` | `List` | `True` | - | Pairs of coordinates: in vacuum system and on map image. See: [Calibration](#calibration)  |
 | `zones` | `List` | `False` | Empty | List of predefined zones |
 | `modes` | `List` | `False` | `[go_to_target, zoned_cleanup, predefined_zones]` | List of displayed modes. Possible values: `go_to_target`, `zoned_cleanup`, `predefined_zones` |
 | `default_mode` | `string` | `False` | - | Default selected mode. Possible values: `go_to_target`, `zoned_cleanup`, `predefined_zones` |
@@ -29,20 +28,44 @@ views:
     - type: custom:xiaomi-vacuum-map-card
       entity: vacuum.xiaomi_vacuum
       map_image: '/local/custom_lovelace/xiaomi_vacuum_map_card/map.png'
-      base_position:
-        x: 1889
-        y: 1600
-      reference_point:
-        x: 1625
-        y: 1336
+      calibration_points:
+        - vacuum:
+            x: 25500
+            y: 25500
+          map:
+            x: 466
+            y: 1889
+        - vacuum:
+            x: 26500
+            y: 26500
+          map:
+            x: 730
+            y: 1625
+        - vacuum:
+            x: 25500
+            y: 26500
+          map:
+            x: 466
+            y: 1625
       zones:
         - [[25500, 25500, 26500, 26500]]
         - [[24215, 28125, 29465, 32175]]
         - [[24245, 25190, 27495, 27940], [27492, 26789, 28942, 27889]]
         - [[28972, 26715, 31072, 27915], [29457, 27903, 31107, 29203], [30198, 29215, 31498, 31215], [29461, 31228, 31511, 32478]]
 ```
+   
+## Calibration
 
-### Defining service
+To calibrate this card you have to provide exactly 3 pairs of coordinates.
+
+Each pair must consist of:
+* coordinates of point in vacuum system (extracted by FloleVac or just by sending vacuum to a desired point)
+* coordinates of matching point on a map image
+
+For the best outcome calibration points should form a right triangle.
+
+If you have used this card before a migration guide will appear instead of actual card.
+## Defining service
 
 You can use `service` parameter for example to run a script instead of starting a vacuum directly. Provided service will be run with following parameters:
 * `entity_id` - id of a vacuum
@@ -59,23 +82,14 @@ To overcome this issue you can use a [*python script*](https://github.com/PiotrM
 Example HA script that can be used with this card is available [*here*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/examples/vacuum_send_command.yaml).
 
 ## Hints
-* To find out values for `base_position` and `reference_point` use service `vacuum.send_command` with data:
-  * `base_postion`:
-    ```json
-    {
-      "entity_id": "vacuum.xiaomi_vacuum",
-      "command": "app_goto_target",
-      "params": [25500, 25500]
-    }
-    ```
-  * `reference_point`:
-    ```json
-    {
-      "entity_id": "vacuum.xiaomi_vacuum",
-      "command": "app_goto_target",
-      "params": [26500, 26500]
-    }
-    ```
+* To find out values for `calibration_points` you can use service `vacuum.send_command` with data:
+  ```json
+  {
+    "entity_id": "vacuum.xiaomi_vacuum",
+    "command": "app_goto_target",
+    "params": [25500, 25500]
+  }
+  ```
   Alternatively you can use `vacuum.xiaomi_clean_zone`:
     ```json
     {
@@ -87,7 +101,7 @@ Example HA script that can be used with this card is available [*here*](https://
 * You can find out coordinates for zones using two methods:
   * Enabling `debug` in settings, drawing zone in `Zoned cleanup` mode and holding `Start` button. Note: this method also works for other modes.
   * Android App [*FloleVac*](https://play.google.com/store/apps/details?id=de.flole.xiaomi)
-  
+
 * For Polish version download [*textsPL.js*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/dist/textsPL.js) and change filename to `texts.js`
 
 ## FAQ

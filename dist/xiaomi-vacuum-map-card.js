@@ -1,3 +1,4 @@
+import CoordinatesConverter from './coordinates-converter.js';
 import style from './style.js';
 import {
     textMode,
@@ -26,8 +27,7 @@ class XiaomiVacuumMapCard extends LitElement {
         this.mode = 0;
         this.vacuumZonedCleanupRepeats = 1;
         this.currPoint = {x: null, y: null};
-        this.unit = {x: null, y: null};
-        this.shouldSwapAxis = false;
+        this.outdatedConfig = false;
     }
 
     static get properties() {
@@ -62,24 +62,42 @@ class XiaomiVacuumMapCard extends LitElement {
         if (!config.map_image) {
             throw new Error("Missing configuration: map_image");
         }
-        if (!config.base_position) {
-            throw new Error("Missing configuration: base_position");
+        if (config.base_position || config.reference_point) {
+            this.outdatedConfig = true;
+            this.config = config;
+            return;
         }
-        if (!config.base_position.x) {
-            throw new Error("Missing configuration: base_position.x");
+        if (!config.calibration_points || !Array.isArray(config.calibration_points)) {
+            throw new Error("Missing configuration: calibration_points");
         }
-        if (!config.base_position.y) {
-            throw new Error("Missing configuration: base_position.y");
+        if (config.calibration_points.length !== 3) {
+            throw new Error("Exactly 3 calibration_points required");
         }
-        if (!config.reference_point) {
-            throw new Error("Missing configuration: reference_point");
+        for (const calibration_point of config.calibration_points) {
+            if (calibration_point.map === null) {
+                throw new Error("Missing configuration: calibration_points.map");
+            }
+            if (calibration_point.map.x === null) {
+                throw new Error("Missing configuration: calibration_points.map.x");
+            }
+            if (calibration_point.map.y === null) {
+                throw new Error("Missing configuration: calibration_points.map.y");
+            }
+            if (calibration_point.vacuum === null) {
+                throw new Error("Missing configuration: calibration_points.vacuum");
+            }
+            if (calibration_point.vacuum.x === null) {
+                throw new Error("Missing configuration: calibration_points.vacuum.x");
+            }
+            if (calibration_point.vacuum.y === null) {
+                throw new Error("Missing configuration: calibration_points.vacuum.y");
+            }
         }
-        if (!config.reference_point.x) {
-            throw new Error("Missing configuration: reference_point.x");
-        }
-        if (!config.reference_point.y) {
-            throw new Error("Missing configuration: reference_point.y");
-        }
+        const p1 = this.getCalibrationPoint(config, 0);
+        const p2 = this.getCalibrationPoint(config, 1);
+        const p3 = this.getCalibrationPoint(config, 2);
+        this.coordinatesConverter = new CoordinatesConverter(p1, p2, p3);
+
         if (config.modes) {
             if (!Array.isArray(config.modes) || config.modes.length < 1 || config.modes.length > 3) {
                 throw new Error("Invalid configuration: modes");
@@ -113,33 +131,77 @@ class XiaomiVacuumMapCard extends LitElement {
             this.service_method = "send_command";
         }
         this.config = config;
+    }
+
+    getConfigurationMigration(config) {
         const diffX = config.reference_point.x - config.base_position.x;
         const diffY = config.reference_point.y - config.base_position.y;
-        this.shouldSwapAxis = diffX * diffY > 0;
-        if (this.shouldSwapAxis) {
-            this.unit = {
-                x: diffY,
-                y: diffX
-            };
+        const shouldSwapAxis = diffX * diffY > 0;
+        let unit = shouldSwapAxis ? diffX : diffY;
+        if (shouldSwapAxis) {
             const temp = config.base_position.x;
             config.base_position.x = config.base_position.y;
             config.base_position.y = temp;
-        } else {
-            this.unit = {
-                x: diffX,
-                y: diffY
-            };
         }
+        const canvasX = config.base_position.x;
+        const canvasY = unit + config.base_position.y;
+        let x = Math.round(canvasX);
+        let y = Math.round(canvasY);
+        if (shouldSwapAxis) {
+            x = Math.round(canvasY);
+            y = Math.round(canvasX);
+        }
+        return html`
+<ha-card id="xiaomiCard" style="padding: 16px">
+<div class="card-header" style="padding: 8px 0 16px 0;"><div class="name">Xiaomi Vacuum Map card</div></div>
+<h3>Your configuration is outdated</h3>
+<p>Migrate it using following calibration settings:</p>
+<pre><textarea style="width: 100%; height: 22em">calibration_points:
+  - vacuum:
+      x: 25500
+      y: 25500
+    map:
+      x: ${config.base_position.x}
+      y: ${config.base_position.y}
+  - vacuum:
+      x: 26500
+      y: 26500
+    map:
+      x: ${config.reference_point.x}
+      y: ${config.reference_point.y}
+  - vacuum:
+      x: 25500
+      y: 26500
+    map:
+      x: ${x}
+      y: ${y}</textarea></pre>
+</ha-card>`
+    }
+
+    getCalibrationPoint(config, index) {
+        return {
+            a: {
+                x: config.calibration_points[index].map.x,
+                y: config.calibration_points[index].map.y
+            },
+            b: {
+                x: config.calibration_points[index].vacuum.x,
+                y: config.calibration_points[index].vacuum.y
+            }
+        };
     }
 
     render() {
+        if (this.outdatedConfig) {
+            return this.getConfigurationMigration(this.config);
+        }
         const modesDropdown = this.modes.map(m => html`<paper-item>${m}</paper-item>`);
         const rendered = html`
         ${style}
         <ha-card id="xiaomiCard">
             <div id="mapWrapper">
                 <div id="map">
-                    <img id="mapBackground" @load="${() => this.mapOnLoad()}" src="${this.config.map_image}">
+                    <img id="mapBackground" @load="${() => this.calculateScale()}" src="${this.config.map_image}">
                     <canvas id="mapDrawing" style="${this.getCanvasStyle()}"
                         @mousemove="${e => this.onMouseMove(e)}"
                         @mousedown="${e => this.onMouseDown(e)}"
@@ -164,12 +226,12 @@ class XiaomiVacuumMapCard extends LitElement {
         </ha-card>
         `;
         if (this.getMapImage()) {
-            this.mapOnLoad();
+            this.calculateScale();
         }
         return rendered;
     }
 
-    mapOnLoad() {
+    calculateScale() {
         const img = this.getMapImage();
         const canvas = this.getCanvas();
         this.imageScale = img.width / img.naturalWidth;
@@ -312,10 +374,10 @@ class XiaomiVacuumMapCard extends LitElement {
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.translate(0.5, 0.5);
         if (this.config.debug) {
-            const p1 = this.convertRealToCanvasCoordinates(25500, 25500);
-            this.drawCircle(context, p1.x, p1.y, 4, 'red', 1);
-            const p2 = this.convertRealToCanvasCoordinates(26500, 26500);
-            this.drawCircle(context, p2.x, p2.y, 4, 'red', 1);
+            for (const calibration_point of this.config.calibration_points) {
+                const {x, y} = this.convertVacuumToMapCoordinates(calibration_point.vacuum.x, calibration_point.vacuum.y);
+                this.drawCircle(context, x, y, 4, 'red', 1);
+            }
         }
         if (this.mode === 1 && this.currPoint.x != null) {
             this.drawCircle(context, this.currPoint.x, this.currPoint.y, 4, 'yellow', 1);
@@ -350,7 +412,7 @@ class XiaomiVacuumMapCard extends LitElement {
             for (let i = 0; i < this.config.zones.length; i++) {
                 const zone = this.config.zones[i];
                 for (const rect of zone) {
-                    const {x, y, w, h} = this.convertRealToCanvasZone(rect[0], rect[1], rect[2], rect[3]);
+                    const {x, y, w, h} = this.convertVacuumToMapZone(rect[0], rect[1], rect[2], rect[3]);
                     context.beginPath();
                     context.setLineDash([]);
                     if (!this.selectedZones.includes(i)) {
@@ -434,7 +496,7 @@ class XiaomiVacuumMapCard extends LitElement {
         for (let i = 0; i < this.config.zones.length && selected === -1; i++) {
             const zone = this.config.zones[i];
             for (const rect of zone) {
-                const {x, y, w, h} = this.convertRealToCanvasZone(rect[0], rect[1], rect[2], rect[3]);
+                const {x, y, w, h} = this.convertVacuumToMapZone(rect[0], rect[1], rect[2], rect[3]);
                 if (mx >= x && my >= y && mx <= x + w && my <= y + h) {
                     selected = i;
                     break;
@@ -450,7 +512,7 @@ class XiaomiVacuumMapCard extends LitElement {
     }
 
     vacuumGoToPoint(debug) {
-        const mapPos = this.convertCanvasToRealCoordinates(this.currPoint.x, this.currPoint.y);
+        const mapPos = this.convertMapToVacuumCoordinates(this.currPoint.x, this.currPoint.y);
         if (debug && this.config.debug) {
             alert(JSON.stringify([mapPos.x, mapPos.y]));
         } else {
@@ -458,14 +520,14 @@ class XiaomiVacuumMapCard extends LitElement {
                 entity_id: this.config.entity,
                 command: "app_goto_target",
                 params: [mapPos.x, mapPos.y]
-            }).then(() => this.launch_toast());
+            }).then(() => this.showToast());
         }
     }
 
     vacuumStartZonedCleanup(debug) {
         const zone = [];
         for (const rect of this.rectangles) {
-            zone.push(this.convertCanvasToRealRect(rect, this.vacuumZonedCleanupRepeats));
+            zone.push(this.convertMapToVacuumRect(rect, this.vacuumZonedCleanupRepeats));
         }
         if (debug && this.config.debug) {
             alert(JSON.stringify(zone));
@@ -474,7 +536,7 @@ class XiaomiVacuumMapCard extends LitElement {
                 entity_id: this.config.entity,
                 command: "app_zoned_clean",
                 params: zone
-            }).then(() => this.launch_toast());
+            }).then(() => this.showToast());
         }
     }
 
@@ -494,7 +556,7 @@ class XiaomiVacuumMapCard extends LitElement {
                 entity_id: this.config.entity,
                 command: "app_zoned_clean",
                 params: zone
-            }).then(() => this.launch_toast());
+            }).then(() => this.showToast());
         }
     }
 
@@ -502,9 +564,9 @@ class XiaomiVacuumMapCard extends LitElement {
         return 3;
     }
 
-    convertCanvasToRealRect(rect, repeats) {
-        const xy1 = this.convertCanvasToRealCoordinates(rect.x, rect.y);
-        const xy2 = this.convertCanvasToRealCoordinates(rect.x + rect.w, rect.y + rect.h);
+    convertMapToVacuumRect(rect, repeats) {
+        const xy1 = this.convertMapToVacuumCoordinates(rect.x, rect.y);
+        const xy2 = this.convertMapToVacuumCoordinates(rect.x + rect.w, rect.y + rect.h);
         const x1 = Math.min(xy1.x, xy2.x);
         const y1 = Math.min(xy1.y, xy2.y);
         const x2 = Math.max(xy1.x, xy2.x);
@@ -512,16 +574,14 @@ class XiaomiVacuumMapCard extends LitElement {
         return [x1, y1, x2, y2, repeats];
     }
 
-    convertCanvasToRealCoordinates(canvasX, canvasY) {
-        const {x, y} = this.swapAxisIfNeeded(canvasX, canvasY);
-        const mapX = 25500 + (x / this.imageScale - this.config.base_position.x) / this.unit.x * 1000;
-        const mapY = 25500 + (y / this.imageScale - this.config.base_position.y) / this.unit.y * 1000;
-        return {x: Math.round(mapX), y: Math.round(mapY)};
+    convertMapToVacuumCoordinates(mapX, mapY) {
+        const {x, y} = this.coordinatesConverter.convertAB(mapX / this.imageScale, mapY / this.imageScale);
+        return {x: Math.round(x), y: Math.round(y)};
     }
 
-    convertRealToCanvasZone(mapX1, mapY1, mapX2, mapY2) {
-        const {x: x1, y: y1} = this.convertRealToCanvasCoordinates(mapX1, mapY1);
-        const {x: x2, y: y2} = this.convertRealToCanvasCoordinates(mapX2, mapY2);
+    convertVacuumToMapZone(vacuumX1, vacuumY1, vacuumX2, vacuumY2) {
+        const {x: x1, y: y1} = this.convertVacuumToMapCoordinates(vacuumX1, vacuumY1);
+        const {x: x2, y: y2} = this.convertVacuumToMapCoordinates(vacuumX2, vacuumY2);
         let x = Math.min(x1, x2);
         let y = Math.min(y1, y2);
         let w = Math.abs(x2 - x1);
@@ -529,17 +589,11 @@ class XiaomiVacuumMapCard extends LitElement {
         return {x, y, w, h};
     }
 
-    convertRealToCanvasCoordinates(mapX, mapY) {
-        const canvasX = ((mapX - 25500) / 1000 * this.unit.x + this.config.base_position.x) * this.imageScale;
-        const canvasY = ((mapY - 25500) / 1000 * this.unit.y + this.config.base_position.y) * this.imageScale;
-        return this.swapAxisIfNeeded(Math.round(canvasX), Math.round(canvasY));
-    }
-
-    swapAxisIfNeeded(x, y) {
-        if (this.shouldSwapAxis) {
-            return {x: y, y: x};
-        }
-        return {x: x, y: y};
+    convertVacuumToMapCoordinates(vacuumX, vacuumY) {
+        const {x: vX, y: vY} = this.coordinatesConverter.convertBA(vacuumX, vacuumY);
+        const x = Math.round(vX * this.imageScale);
+        const y = Math.round(vY * this.imageScale);
+        return {x, y};
     }
 
     getMapImage() {
@@ -574,7 +628,7 @@ class XiaomiVacuumMapCard extends LitElement {
         };
     }
 
-    launch_toast() {
+    showToast() {
         const x = this.shadowRoot.getElementById("toast");
         x.className = "show";
         setTimeout(function () {
