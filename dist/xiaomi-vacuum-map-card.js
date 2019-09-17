@@ -278,7 +278,7 @@ class XiaomiVacuumMapCard extends LitElement {
                 if (this.selectedZones.includes(selectedZone)) {
                     this.selectedZones.splice(this.selectedZones.indexOf(selectedZone), 1);
                 } else {
-                    if (this.selectedZones.length < 5) {
+                    if (this.selectedZones.length < 5 && !this.config.ignore_zones_limit) {
                         this.selectedZones.push(selectedZone);
                     }
                 }
@@ -289,7 +289,7 @@ class XiaomiVacuumMapCard extends LitElement {
 
     onMouseUp(e) {
         this.isMouseDown = false;
-        if (this.selectedRectangle >= 0 || this.mode !== 2 || this.mode === 2 && this.rectangles.length >= 5) {
+        if (this.selectedRectangle >= 0 || this.mode !== 2 || this.mode === 2 && this.rectangles.length >= 5 && !this.config.ignore_zones_limit) {
             this.selectedRectangle = -1;
             this.drawCanvas();
             return;
