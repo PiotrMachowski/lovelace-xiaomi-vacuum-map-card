@@ -1,0 +1,49 @@
+vacuum_send_command_multiple_zones:
+  alias: vacuum_send_command_multiple_zones
+  sequence:
+    - delay:
+        milliseconds: 100
+    - service: python_script.vacuum_send_command
+      data_template:
+        entity_id: "{{ entity_id }}"
+        command: "{{ command }}"
+        params: >
+          {%- set cleaned =  params | string | replace(" ", "") -%}
+          {%- set parsed = cleaned.replace("[[", "[").replace("]]", "]").replace("],[", "]|[").split("|") | list -%}
+          {%- set firstBatch = parsed | batch(5) | list | first | join(",") -%}
+          {%- set rest = cleaned | replace(firstBatch, "") | replace("[,[", "[[") -%}
+          {{ "[" + firstBatch + "]" }}
+    - condition: template
+      value_template: "{{ command == 'app_zoned_clean' }}"
+    - condition: template
+      value_template: >
+        {%- set cleaned =  params | string | replace(" ", "") -%}
+        {%- set parsed = cleaned.replace("[[", "[").replace("]]", "]").replace("],[", "]|[").split("|") | list -%}
+        {%- set firstBatch = parsed | batch(5) | list | first | join(",") -%}
+        {%- set rest = cleaned | replace(firstBatch, "") | replace("[,[", "[[") -%}
+        {{ rest != "[]" }}
+    - wait_template: "{{ is_state(entity_id, 'cleaning') }}"
+    - wait_template: "{{ not is_state(entity_id, 'cleaning') }}"
+    - service: vacuum.pause
+      data_template:
+        entity_id: "{{ entity_id }}"
+    - service: script.vacuum_multiple_zones_launcher
+      data_template:
+        entity_id: "{{ entity_id }}"
+        command: "{{ command }}"
+        params: >
+          {%- set cleaned =  params | string | replace(" ", "") -%}
+          {%- set parsed = cleaned.replace("[[", "[").replace("]]", "]").replace("],[", "]|[").split("|") | list -%}
+          {%- set firstBatch = parsed | batch(5) | list | first | join(",") -%}
+          {%- set rest = cleaned | replace(firstBatch, "") | replace("[,[", "[[") -%}
+          {{ rest }}
+vacuum_multiple_zones_launcher:
+  alias: vacuum_multiple_zones_launcher
+  sequence:
+    - delay:
+        milliseconds: 100
+    - service: script.vacuum_send_command_multiple_zones
+      data_template:
+        entity_id: "{{ entity_id }}"
+        command: "{{ command }}"
+        params: "{{ params }}"
