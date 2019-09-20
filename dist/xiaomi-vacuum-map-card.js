@@ -278,7 +278,7 @@ class XiaomiVacuumMapCard extends LitElement {
                 if (this.selectedZones.includes(selectedZone)) {
                     this.selectedZones.splice(this.selectedZones.indexOf(selectedZone), 1);
                 } else {
-                    if (this.selectedZones.length < 5 && !this.config.ignore_zones_limit) {
+                    if (this.selectedZones.length < 5 || this.config.ignore_zones_limit) {
                         this.selectedZones.push(selectedZone);
                     }
                 }
