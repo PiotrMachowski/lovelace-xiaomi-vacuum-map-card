@@ -2,6 +2,8 @@
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/custom-components/hacs)
 [![Community Forum](https://img.shields.io/badge/community-forum-brightgreen.svg?style=popout)](https://community.home-assistant.io/t/xiaomi-vacuum-interactive-map-card/123901)
+[![buymeacoffee_badge](https://img.shields.io/badge/Donate-buymeacoffe-ff813f?style=flat)](https://www.buymeacoffee.com/PiotrMachowski)
+
 
 This card enables you to specify target or start zoned cleanup using map, just like in Mi Home app. Additionally you can define a list of zones and choose ones to be cleaned.
 
