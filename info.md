@@ -22,6 +22,7 @@
 | `debug` | `boolean` | `False` | `false` | Enables alerts with coordinates after holding `Start` button. Possible values: `true`, `false` |
 | `service` | `string` | `False` | `vacuum.send_command` | Allows to define service used after clicking `Start` button. See: [Defining service](#defining-service) |
 | `ignore_zones_limit` | `boolean` | `False` | `false` | Disables 5 zones limit. Possible values: `true`, `false`. See: [Defining service](#defining-service) |
+| `language` | `string` | `False` | `en` | Language used to display card. Possible values: `en`, `pl`, `es` |
 
 ## Example usage:
 ```yaml
@@ -104,7 +105,7 @@ Example HA script that can be used with this card is available [*here*](https://
   * Enabling `debug` in settings, drawing zone in `Zoned cleanup` mode and holding `Start` button. Note: this method also works for other modes.
   * Android App [*FloleVac*](https://play.google.com/store/apps/details?id=de.flole.xiaomi)
 
-* For Polish version download [*textsPL.js*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/dist/textsPL.js) and change filename to `texts.js`
+* To add another language modify file [*texts.js*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/dist/texts.js) and set `language` parameter in cards configuration.
 
 ## FAQ
 * **Does this card show live map?**

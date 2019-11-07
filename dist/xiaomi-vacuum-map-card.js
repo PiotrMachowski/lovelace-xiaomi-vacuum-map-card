@@ -1,13 +1,14 @@
 import CoordinatesConverter from './coordinates-converter.js';
 import style from './style.js';
 import {
-    textMode,
-    textGoToTarget,
-    textZonedCleanup,
-    textZones,
-    textRun,
-    textRepeats,
-    textConfirmation
+    mode,
+    goToTarget,
+    zonedCleanup,
+    zones,
+    run,
+    repeats,
+    confirmation,
+    texts
 } from './texts.js'
 
 const LitElement = Object.getPrototypeOf(
@@ -52,9 +53,10 @@ class XiaomiVacuumMapCard extends LitElement {
 
     setConfig(config) {
         const availableModes = new Map();
-        availableModes.set("go_to_target", textGoToTarget);
-        availableModes.set("zoned_cleanup", textZonedCleanup);
-        availableModes.set("predefined_zones", textZones);
+        this._language = config.language || "en";
+        availableModes.set("go_to_target", texts[this._language][goToTarget]);
+        availableModes.set("zoned_cleanup", texts[this._language][zonedCleanup]);
+        availableModes.set("predefined_zones", texts[this._language][zones]);
 
         if (!config.entity) {
             throw new Error("Missing configuration: entity");
@@ -113,10 +115,14 @@ class XiaomiVacuumMapCard extends LitElement {
                 this.modes.push(availableModes.get(mode));
             }
         } else {
-            this.modes = [textGoToTarget, textZonedCleanup, textZones];
+            this.modes = [
+                texts[this._language][goToTarget],
+                texts[this._language][zonedCleanup],
+                texts[this._language][zones]
+            ];
         }
-        if (!config.zones || !Array.isArray(config.zones) || config.zones.length === 0 && this.modes.includes(textZones)) {
-            this.modes.splice(this.modes.indexOf(textZones), 1);
+        if (!config.zones || !Array.isArray(config.zones) || config.zones.length === 0 && this.modes.includes(texts[this._language][zones])) {
+            this.modes.splice(this.modes.indexOf(texts[this._language][zones]), 1);
         }
         if (config.default_mode) {
             if (!availableModes.has(config.default_mode) || !this.modes.includes(availableModes.get(config.default_mode))) {
@@ -136,7 +142,7 @@ class XiaomiVacuumMapCard extends LitElement {
         if (config.map_image) {
             this.map_image = config.map_image;
         }
-        this.map_refresh_interval = (config.camera_refresh_interval || 5) * 1000;
+        this._map_refresh_interval = (config.camera_refresh_interval || 5) * 1000;
         this._config = config;
     }
 
@@ -222,17 +228,17 @@ class XiaomiVacuumMapCard extends LitElement {
                 </div>
             </div>
             <div class="dropdownWrapper">
-                <paper-dropdown-menu label="${textMode}" @value-changed="${e => this.modeSelected(e)}" class="vacuumDropdown" selected="${this.defaultMode}">
+                <paper-dropdown-menu label="${texts[this._language][mode]}" @value-changed="${e => this.modeSelected(e)}" class="vacuumDropdown" selected="${this.defaultMode}">
                     <paper-listbox slot="dropdown-content" class="dropdown-content" selected="${this.defaultMode}">
                         ${modesDropdown}
                     </paper-listbox>
                 </paper-dropdown-menu>
             </div>
             <p class="buttonsWrapper">
-                <span id="increaseButton" hidden><mwc-button @click="${() => this.vacuumZonedIncreaseButton()}">${textRepeats} ${this.vacuumZonedCleanupRepeats}</mwc-button></span>
-                <mwc-button class="vacuumRunButton" @click="${() => this.vacuumStartButton(true)}">${textRun}</mwc-button>
+                <span id="increaseButton" hidden><mwc-button @click="${() => this.vacuumZonedIncreaseButton()}">${texts[this._language][repeats]} ${this.vacuumZonedCleanupRepeats}</mwc-button></span>
+                <mwc-button class="vacuumRunButton" @click="${() => this.vacuumStartButton(true)}">${texts[this._language][run]}</mwc-button>
             </p>
-            <div id="toast"><div id="img"><ha-icon icon="mdi:check" style="vertical-align: center"></ha-icon></div><div id="desc">${textConfirmation}</div></div>
+            <div id="toast"><div id="img"><ha-icon icon="mdi:check" style="vertical-align: center"></ha-icon></div><div id="desc">${texts[this._language][confirmation]}</div></div>
         </ha-card>
         `;
         if (this.getMapImage()) {
@@ -353,11 +359,11 @@ class XiaomiVacuumMapCard extends LitElement {
     modeSelected(e) {
         const selected = e.detail.value;
         this.mode = 0;
-        if (selected === textGoToTarget) {
+        if (selected === texts[this._language][goToTarget]) {
             this.mode = 1;
-        } else if (selected === textZonedCleanup) {
+        } else if (selected === texts[this._language][zonedCleanup]) {
             this.mode = 2;
-        } else if (selected === textZones) {
+        } else if (selected === texts[this._language][zones]) {
             this.mode = 3;
         }
         this.getPredefinedZonesIncreaseButton().hidden = this.mode !== 3 && this.mode !== 2;
@@ -661,7 +667,7 @@ class XiaomiVacuumMapCard extends LitElement {
     connectedCallback() {
         super.connectedCallback();
         if (this._config.map_camera) {
-            this.thumbUpdater = setInterval(() => this.updateCameraImage(), this.map_refresh_interval);
+            this.thumbUpdater = setInterval(() => this.updateCameraImage(), this._map_refresh_interval);
         }
     }
 
