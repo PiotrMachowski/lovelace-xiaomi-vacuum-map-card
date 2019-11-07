@@ -12,10 +12,12 @@
 | Key | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
 | `entity` | `string` | `True` | - | ID of Xiaomi vacuum entity |
-| `map_image` | `string` | `True` | - | Path to image of map |
-| `calibration_points` | `List` | `True` | - | Pairs of coordinates: in vacuum system and on map image. See: [Calibration](#calibration)  |
-| `zones` | `List` | `False` | Empty | List of predefined zones |
-| `modes` | `List` | `False` | `[go_to_target, zoned_cleanup, predefined_zones]` | List of displayed modes. Possible values: `go_to_target`, `zoned_cleanup`, `predefined_zones` |
+| `map_image` | `string` | `False` | - | Path to image of map |
+| `map_camera` | `string` | `False` | - | Id of map camera enitity |
+| `camera_refresh_interval` | `integer` | `False` | 5 | Update interval for map camera in seconds |
+| `calibration_points` | `list` | `True` | - | Pairs of coordinates: in vacuum system and on map image. See: [Calibration](#calibration)  |
+| `zones` | `list` | `False` | Empty | List of predefined zones |
+| `modes` | `list` | `False` | `[go_to_target, zoned_cleanup, predefined_zones]` | List of displayed modes. Possible values: `go_to_target`, `zoned_cleanup`, `predefined_zones` |
 | `default_mode` | `string` | `False` | - | Default selected mode. Possible values: `go_to_target`, `zoned_cleanup`, `predefined_zones` |
 | `debug` | `boolean` | `False` | `false` | Enables alerts with coordinates after holding `Start` button. Possible values: `true`, `false` |
 | `service` | `string` | `False` | `vacuum.send_command` | Allows to define service used after clicking `Start` button. See: [Defining service](#defining-service) |
@@ -119,3 +121,6 @@ Example HA script that can be used with this card is available [*here*](https://
   
 ## Community
 Thread on [community.home-assistant.io](https://community.home-assistant.io/): [Xiaomi Vacuum Interactive Map Card](https://community.home-assistant.io/t/xiaomi-vacuum-interactive-map-card/)
+
+
+<a href="https://www.buymeacoffee.com/PiotrMachowski" target="_blank"><img src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
