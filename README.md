@@ -22,7 +22,7 @@ This card enables you to specify target or start zoned cleanup using map, just l
 | --- | --- | --- | --- | --- |
 | `entity` | `string` | `True` | - | ID of Xiaomi vacuum entity |
 | `map_image` | `string` | `False` | - | Path to image of map |
-| `map_camera` | `string` | `False` | - | Id of map camera enitity |
+| `map_camera` | `string` | `False` | - | Id of map camera entity |
 | `camera_refresh_interval` | `integer` | `False` | 5 | Update interval for map camera in seconds |
 | `calibration_points` | `list` | `True` | - | Pairs of coordinates: in vacuum system and on map image. See: [Calibration](#calibration)  |
 | `zones` | `list` | `False` | Empty | List of predefined zones |

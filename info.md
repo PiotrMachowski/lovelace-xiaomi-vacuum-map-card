@@ -13,7 +13,7 @@
 | --- | --- | --- | --- | --- |
 | `entity` | `string` | `True` | - | ID of Xiaomi vacuum entity |
 | `map_image` | `string` | `False` | - | Path to image of map |
-| `map_camera` | `string` | `False` | - | Id of map camera enitity |
+| `map_camera` | `string` | `False` | - | Id of map camera entity |
 | `camera_refresh_interval` | `integer` | `False` | 5 | Update interval for map camera in seconds |
 | `calibration_points` | `list` | `True` | - | Pairs of coordinates: in vacuum system and on map image. See: [Calibration](#calibration)  |
 | `zones` | `list` | `False` | Empty | List of predefined zones |
@@ -118,7 +118,7 @@ Example HA script that can be used with this card is available [*here*](https://
   
 * **How to create map?**
 
-  You can use any image you want, the easisest way is to use screenshot from Mi Home/FloleVac.
+  You can use any image you want, the easiest way is to use screenshot from Mi Home/FloleVac.
   
 ## Community
 Thread on [community.home-assistant.io](https://community.home-assistant.io/): [Xiaomi Vacuum Interactive Map Card](https://community.home-assistant.io/t/xiaomi-vacuum-interactive-map-card/)
