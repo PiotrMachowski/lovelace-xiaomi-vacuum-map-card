@@ -5,7 +5,7 @@
 [![buymeacoffee_badge](https://img.shields.io/badge/Donate-buymeacoffe-ff813f?style=flat)](https://www.buymeacoffee.com/PiotrMachowski)
 
 
-This card enables you to specify target or start zoned cleanup using map, just like in Mi Home app. Additionally you can define a list of zones and choose ones to be cleaned.
+This card enables you to specify target or start zoned cleanup using live or static map, just like in Mi Home app. Additionally you can define a list of zones and choose ones to be cleaned.
 
 ## Go to target
 ![Go to target](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/blob/master/s1.gif)
@@ -134,13 +134,13 @@ Example HA script that can be used with this card is available [*here*](https://
 * To add another language modify file [*texts.js*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/dist/texts.js) and set `language` parameter in cards configuration.
 
 ## FAQ
-* **Does this card show live map?**
+* **Does this card can show live map?**
   
-  No, you have to prepare your own map in an image
+  Yes, to show a camera feed as a background set property `map_camera` in configuration.
   
 * **Does this card require rooted device?**
 
-  No, as it only utilises features already existing in Home Assistant integration
+  No, in basic version it uses a static image as a map. Root is required to create camera that will show a live map.
   
 * **How to create map?**
 
