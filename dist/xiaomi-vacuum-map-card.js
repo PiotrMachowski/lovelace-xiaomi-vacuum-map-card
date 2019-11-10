@@ -49,6 +49,9 @@ class XiaomiVacuumMapCard extends LitElement {
 
     set hass(hass) {
         this._hass = hass;
+        if (this._config && !this.map_image) {
+            this.updateCameraImage();
+        }
     }
 
     setConfig(config) {
@@ -208,9 +211,6 @@ class XiaomiVacuumMapCard extends LitElement {
         if (this.outdatedConfig) {
             return this.getConfigurationMigration(this._config);
         }
-        if (!this.map_image) {
-            this.updateCameraImage();
-        }
         const modesDropdown = this.modes.map(m => html`<paper-item>${m}</paper-item>`);
         const rendered = html`
         ${style}
@@ -342,18 +342,21 @@ class XiaomiVacuumMapCard extends LitElement {
     }
 
     onTouchStart(e) {
-        if (this.mode === 2)
+        if (this.mode === 2) {
             this.onMouseDown(this.convertTouchToMouse(e));
+        }
     }
 
     onTouchEnd(e) {
-        if (this.mode === 2)
+        if (this.mode === 2) {
             this.onMouseUp(this.convertTouchToMouse(e));
+        }
     }
 
     onTouchMove(e) {
-        if (this.mode === 2)
+        if (this.mode === 2) {
             this.onMouseMove(this.convertTouchToMouse(e));
+        }
     }
 
     modeSelected(e) {
@@ -372,8 +375,9 @@ class XiaomiVacuumMapCard extends LitElement {
 
     vacuumZonedIncreaseButton() {
         this.vacuumZonedCleanupRepeats++;
-        if (this.vacuumZonedCleanupRepeats > 3)
+        if (this.vacuumZonedCleanupRepeats > 3) {
             this.vacuumZonedCleanupRepeats = 1;
+        }
     }
 
     vacuumStartButton(debug) {
@@ -661,6 +665,7 @@ class XiaomiVacuumMapCard extends LitElement {
         }).then(val => {
             const {content_type: contentType, content} = val;
             this.map_image = `data:${contentType};base64, ${content}`;
+            this.requestUpdate();
         })
     }
 
