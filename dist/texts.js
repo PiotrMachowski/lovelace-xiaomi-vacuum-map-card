@@ -33,6 +33,15 @@ const texts = {
         run: "Empezar",
         repeats: "Veces:",
         confirmation: "Comando enviado!"
+    },
+    "de": {
+        mode: "Modus",
+        goToTarget: "Gehe zum Zielpunkt",
+        zonedCleanup: "Zonenreinigung",
+        zones: "Zonen",
+        run: "Starten",
+        repeats: "Wiederholungen:",
+        confirmation: "Kommando gesendet!"
     }
 };
 
