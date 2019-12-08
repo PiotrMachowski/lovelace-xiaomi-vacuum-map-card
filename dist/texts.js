@@ -34,6 +34,15 @@ const texts = {
         repeats: "Wiederholungen:",
         confirmation: "Kommando gesendet!"
     },
+    "nl": {
+        mode: "Mode",
+        goToTarget: "Ga naar een punt",
+        zonedCleanup: "Zone reinigen",
+        zones: "Zones",
+        run: "Start",
+        repeats: "Herhalingen",
+        confirmation: "Commando gestuurd!"
+    },
     "pl": {
         mode: "Tryb",
         goToTarget: "Idź do punktu",
