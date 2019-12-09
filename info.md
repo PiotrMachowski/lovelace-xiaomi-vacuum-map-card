@@ -13,7 +13,7 @@
 | --- | --- | --- | --- | --- |
 | `entity` | `string` | `True` | - | ID of Xiaomi vacuum entity |
 | `map_image` | `string` | `False` | - | Path to image of map |
-| `map_camera` | `string` | `False` | - | Id of map camera entity |
+| `map_camera` | `string` | `False` | - | ID of map camera entity |
 | `camera_refresh_interval` | `integer` | `False` | 5 | Update interval for map camera in seconds |
 | `calibration_points` | `list` | `True` | - | Pairs of coordinates: in vacuum system and on map image. See: [Calibration](#calibration)  |
 | `zones` | `list` | `False` | Empty | List of predefined zones |
@@ -22,7 +22,7 @@
 | `debug` | `boolean` | `False` | `false` | Enables alerts with coordinates after holding `Start` button. Possible values: `true`, `false` |
 | `service` | `string` | `False` | `vacuum.send_command` | Allows to define service used after clicking `Start` button. See: [Defining service](#defining-service) |
 | `ignore_zones_limit` | `boolean` | `False` | `false` | Disables 5 zones limit. Possible values: `true`, `false`. See: [Defining service](#defining-service) |
-| `language` | `string` | `False` | `en` | Language used to display card. Possible values: `en`, `pl`, `es`, `de` |
+| `language` | `string` | `False` | `en` | Language used in the card. Possible values: `en`, `es`, `de`, `nl`, `pl` |
 
 ## Example usage:
 ```yaml
@@ -57,35 +57,35 @@ views:
         - [[24245, 25190, 27495, 27940], [27492, 26789, 28942, 27889]]
         - [[28972, 26715, 31072, 27915], [29457, 27903, 31107, 29203], [30198, 29215, 31498, 31215], [29461, 31228, 31511, 32478]]
 ```
-   
+
 ## Calibration
 
 To calibrate this card you have to provide exactly 3 pairs of coordinates.
 
 Each pair must consist of:
-* coordinates of point in vacuum system (extracted by FloleVac or just by sending vacuum to a desired point)
-* coordinates of matching point on a map image
+* coordinates of a point in vacuum system (extracted by FloleVac or just by sending the vacuum to a desired point)
+* coordinates of a matching point on a map image
 
 For the best outcome calibration points should form a right triangle.
 
-If you have used this card before a migration guide will appear instead of actual card.
+If you have used this card before a migration guide will appear instead of the actual card.
 ## Defining service
 
-You can use `service` parameter for example to run a script instead of starting a vacuum directly. Provided service will be run with following parameters:
+You can use a `service` parameter for example to run a script instead of starting a vacuum directly. Provided service will be run with following parameters:
 * `entity_id` - id of a vacuum
 * `command` - one of two:
   * `app_goto_target` - for _Go to target_ mode
   * `zoned_cleanup` - for _Zoned cleanup_ and _Predefined zones_ modes
 * `params` - point or a list of zones (the same value as displayed in `debug` mode)
 
-| WARNING: in current version of Home Assistant service `vacuum.send_command` does not support templates! |
+| WARNING: In the current version of Home Assistant the service `vacuum.send_command` does not support templates! |
 | --- |
 | To overcome this issue you can use a [*script*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/examples/vacuum_send_command_multiple_zones.yaml) and a [*python script*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/examples/vacuum_send_command.py). |
 
 Example HA script that can be used with this card is available [*here*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/examples/vacuum_send_command.yaml).
 
 ## Hints
-* To find out values for `calibration_points` you can use service `vacuum.send_command` with data:
+* To find out values for `calibration_points` you can use the service `vacuum.send_command` with data:
   ```json
   {
     "entity_id": "vacuum.xiaomi_vacuum",
@@ -105,20 +105,21 @@ Example HA script that can be used with this card is available [*here*](https://
   * Enabling `debug` in settings, drawing zone in `Zoned cleanup` mode and holding `Start` button. Note: this method also works for other modes.
   * Android App [*FloleVac*](https://play.google.com/store/apps/details?id=de.flole.xiaomi)
 
-* To add another language modify file [*texts.js*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/dist/texts.js) and set `language` parameter in cards configuration.
+* To add another language modify file [*texts.js*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/dist/texts.js) and set the `language` parameter in cards configuration.
 
 ## FAQ
-* **Does this card can show live map?**
-  
-  Yes, to show a camera feed as a background set property `map_camera` in configuration.
-  
+* **Can this card show a live map?**
+
+  Yes, to show a camera feed as a background set property `map_camera` in configuration. This only works if you have rooted your device.
+
 * **Does this card require rooted device?**
 
-  No, in basic version it uses a static image as a map. Root is required to create camera that will show a live map.
-  
-* **How to create map?**
+  No, in the basic version it uses a static image as a map. Root is required to create camera that will show a live map.
 
-  You can use any image you want, the easiest way is to use screenshot from Mi Home/FloleVac.
+* **How to create a map?**
+
+  You can use any image you want, the easiest way is to use a screenshot from Mi Home/FloleVac.
+
   
 ## Community
 Thread on [community.home-assistant.io](https://community.home-assistant.io/): [Xiaomi Vacuum Interactive Map Card](https://community.home-assistant.io/t/xiaomi-vacuum-interactive-map-card/)
