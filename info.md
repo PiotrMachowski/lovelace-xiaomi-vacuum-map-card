@@ -22,7 +22,7 @@
 | `debug` | `boolean` | `False` | `false` | Enables alerts with coordinates after holding `Start` button. Possible values: `true`, `false` |
 | `service` | `string` | `False` | `vacuum.send_command` | Allows to define service used after clicking `Start` button. See: [Defining service](#defining-service) |
 | `ignore_zones_limit` | `boolean` | `False` | `false` | Disables 5 zones limit. Possible values: `true`, `false`. See: [Defining service](#defining-service) |
-| `language` | `string` | `False` | `en` | Language used in the card. Possible values: `en`, `es`, `de`, `nl`, `pl` |
+| `language` | `string` | `False` | `en` | Language used in the card. Possible values: `en`, `es`, `de`, `dk`, `nl`, `pl` |
 
 ## Example usage:
 ```yaml
