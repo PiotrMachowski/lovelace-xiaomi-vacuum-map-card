@@ -51,6 +51,15 @@ const texts = {
         run: "Uruchom",
         repeats: "Razy:",
         confirmation: "Komenda wysłana!"
+    },
+    "dk": {
+        mode: "Mode",
+        goToTarget: "Gå til punkt",
+        zonedCleanup: "Zone rengøring",
+        zones: "Zoner",
+        run: "Start",
+        repeats: "Gentagelser:",
+        confirmation: "Kommando afsendt!"
     }
 };
 
