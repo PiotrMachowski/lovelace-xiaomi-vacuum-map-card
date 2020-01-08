@@ -9,7 +9,7 @@ for z in params.replace(' ', '').replace('],[', '|').replace('[', '').replace(']
         rect.append(int(c))
     parsedParams.append(rect)
 
-if command == "app_goto_target":
+if command in  ["app_goto_target", "app_segment_clean"]:
     parsedParams = parsedParams[0]
 
 hass.services.call('vacuum', 'send_command',
