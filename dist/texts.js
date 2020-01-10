@@ -79,6 +79,15 @@ const texts = {
         repeats: "Razy:",
         confirmation: "Komenda wysłana!"
     },
+    "ru": {
+        mode: "Режим",
+        goToTarget: "Движение к цели",
+        zonedCleanup: "Зональная уборка",
+        zones: "Зоны",
+        run: "Старт",
+        repeats: "Повторы:",
+        confirmation: "Команда отправлена"
+    },
     "se": {
         mode: "Läge",
         goToTarget: "Gå till vald destination",
