@@ -96,6 +96,15 @@ const texts = {
         run: "Start",
         repeats: "Repetitioner:",
         confirmation: "Kommando skickat!"
+    },
+    "fr": {
+        mode: "Mode",
+        goToTarget: "Aller sur la cible",
+        zonedCleanup: "Nettoyage de zone",
+        zones: "Zones",
+        run: "Démarrage",
+        repeats: "Répéter:",
+        confirmation: "Commande envoyée!"
     }
 };
 
