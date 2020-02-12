@@ -60,15 +60,8 @@ views:
 
 ## Calibration
 
-To calibrate this card you have to provide exactly 3 pairs of coordinates.
+To calibrate this card follow instructions from [this](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/wiki) guide.
 
-Each pair must consist of:
-* coordinates of a point in vacuum system (extracted by FloleVac or just by sending the vacuum to a desired point)
-* coordinates of a matching point on a map image
-
-For the best outcome calibration points should form a right triangle.
-
-If you have used this card before a migration guide will appear instead of the actual card.
 ## Defining service
 
 You can use a `service` parameter for example to run a script instead of starting a vacuum directly. Provided service will be run with following parameters:
