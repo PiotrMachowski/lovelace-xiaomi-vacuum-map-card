@@ -16,6 +16,10 @@ const LitElement = Object.getPrototypeOf(
 );
 const html = LitElement.prototype.html;
 
+const goToTargetConfigAlias = "go_to_target"; 
+const zonedCleanupConfigAlias = "zoned_cleanup"; 
+const zonesConfigAlias = "predefined_zones"; 
+
 class XiaomiVacuumMapCard extends LitElement {
     constructor() {
         super();
@@ -55,11 +59,11 @@ class XiaomiVacuumMapCard extends LitElement {
     }
 
     setConfig(config) {
-        const availableModes = new Map();
+        const allModesTexts = new Map();
         this._language = config.language || "en";
-        availableModes.set("go_to_target", texts[this._language][goToTarget]);
-        availableModes.set("zoned_cleanup", texts[this._language][zonedCleanup]);
-        availableModes.set("predefined_zones", texts[this._language][zones]);
+        allModesTexts.set(goToTargetConfigAlias, texts[this._language][goToTarget]);
+        allModesTexts.set(zonedCleanupConfigAlias, texts[this._language][zonedCleanup]);
+        allModesTexts.set(zonesConfigAlias, texts[this._language][zones]);
 
         if (!config.entity) {
             throw new Error("Missing configuration: entity");
@@ -112,26 +116,23 @@ class XiaomiVacuumMapCard extends LitElement {
             }
             this.modes = [];
             for (const mode of config.modes) {
-                if (!availableModes.has(mode)) {
+                if (!allModesTexts.has(mode)) {
                     throw new Error("Invalid mode: " + mode);
                 }
-                this.modes.push(availableModes.get(mode));
+                this.modes.push(mode);
             }
         } else {
-            this.modes = [
-                texts[this._language][goToTarget],
-                texts[this._language][zonedCleanup],
-                texts[this._language][zones]
-            ];
+            this.modes = Array.from(allModesTexts.keys());
         }
-        if (!config.zones || !Array.isArray(config.zones) || config.zones.length === 0 && this.modes.includes(texts[this._language][zones])) {
-            this.modes.splice(this.modes.indexOf(texts[this._language][zones]), 1);
+        if (!config.zones || !Array.isArray(config.zones) || config.zones.length === 0 && this.modes.indexOf(zonesConfigAlias) !== -1) {
+            this.modes.splice(this.modes.indexOf(zonesConfigAlias), 1);
         }
         if (config.default_mode) {
-            if (!availableModes.has(config.default_mode) || !this.modes.includes(availableModes.get(config.default_mode))) {
-                throw new Error("Invalid default mode: " + config.default_mode);
+            const defaultMode = config.default_mode;
+            if (!allModesTexts.has(defaultMode) || this.modes.indexOf(defaultMode) === -1) {
+                throw new Error("Invalid default mode: " + defaultMode);
             }
-            this.defaultMode = this.modes.indexOf(availableModes.get(config.default_mode));
+            this.defaultMode = this.modes.indexOf(defaultMode);
         } else {
             this.defaultMode = -1;
         }
@@ -147,6 +148,7 @@ class XiaomiVacuumMapCard extends LitElement {
         }
         this._map_refresh_interval = (config.camera_refresh_interval || 5) * 1000;
         this._config = config;
+        this.allModesTexts = allModesTexts;
     }
 
     getConfigurationMigration(config) {
@@ -211,7 +213,7 @@ class XiaomiVacuumMapCard extends LitElement {
         if (this.outdatedConfig) {
             return this.getConfigurationMigration(this._config);
         }
-        const modesDropdown = this.modes.map(m => html`<paper-item>${m}</paper-item>`);
+        const modesDropdown = this.modes.map(m => html`<paper-item>${this.allModesTexts.get(m)}</paper-item>`);
         const rendered = html`
         ${style}
         <ha-card id="xiaomiCard">
