@@ -35,6 +35,20 @@ class XiaomiVacuumMapCard extends LitElement {
         this.outdatedConfig = false;
     }
 
+    get allZones() {
+        let zones = [];
+        
+        if (this._config.zones !== undefined){
+            zones = zones.concat(this._config.zones);
+        }
+
+        if (this.zones !== undefined){
+            zones = zones.concat(this.zones);
+        }
+
+        return zones;
+    }
+
     static get properties() {
         return {
             _hass: {},
@@ -53,8 +67,14 @@ class XiaomiVacuumMapCard extends LitElement {
 
     set hass(hass) {
         this._hass = hass;
-        if (this._config && !this.map_image) {
-            this.updateCameraImage();
+        if (this._config) {
+            if (!this.map_image) {
+                this.updateCameraImage();
+            }
+
+            if (this._config.zones_sensor) {
+                this.updateZones();
+            }
         }
     }
 
@@ -84,6 +104,9 @@ class XiaomiVacuumMapCard extends LitElement {
         }
         if (config.calibration_points.length !== 3) {
             throw new Error("Exactly 3 calibration_points required");
+        }
+        if (config.zones_sensor && !config.zones_sensor.match(/^sensor\.\w+/)){
+            throw new Error("Invalid zone sensor provided: " + config.zones_sensor);
         }
         for (const calibration_point of config.calibration_points) {
             if (calibration_point.map === null) {
@@ -147,6 +170,7 @@ class XiaomiVacuumMapCard extends LitElement {
             this.map_image = config.map_image;
         }
         this._map_refresh_interval = (config.camera_refresh_interval || 5) * 1000;
+        this._zones_refresh_interval = (config.zones_refresh_interval || 5) * 1000;
         this._config = config;
         this.allModesTexts = allModesTexts;
     }
@@ -433,8 +457,8 @@ class XiaomiVacuumMapCard extends LitElement {
                 context.stroke();
             }
         } else if (this.mode === 3) {
-            for (let i = 0; i < this._config.zones.length; i++) {
-                const zone = this._config.zones[i];
+            for (let i = 0; i < this.allZones.length; i++) {
+                const zone = this.allZones[i];
                 for (const rect of zone) {
                     const {x, y, w, h} = this.convertVacuumToMapZone(rect[0], rect[1], rect[2], rect[3]);
                     context.beginPath();
@@ -517,8 +541,8 @@ class XiaomiVacuumMapCard extends LitElement {
 
     getSelectedZone(mx, my) {
         let selected = -1;
-        for (let i = 0; i < this._config.zones.length && selected === -1; i++) {
-            const zone = this._config.zones[i];
+        for (let i = 0; i < this.allZones.length && selected === -1; i++) {
+            const zone = this.allZones[i];
             for (const rect of zone) {
                 const {x, y, w, h} = this.convertVacuumToMapZone(rect[0], rect[1], rect[2], rect[3]);
                 if (mx >= x && my >= y && mx <= x + w && my <= y + h) {
@@ -533,6 +557,35 @@ class XiaomiVacuumMapCard extends LitElement {
     getCanvasStyle() {
         if (this.mode === 2) return html`touch-action: none;`;
         else return html``;
+    }
+
+    updateZones(){
+        if (this._config.zones_sensor !== undefined) {
+            const zoneEntity = this._hass.states[this._config.zones_sensor];
+
+            if (zoneEntity === undefined || zoneEntity.state === 'unavailable'){
+                return;
+            }
+            const zones = JSON.parse(zoneEntity.state);
+            
+            this.zones = zones
+            .filter(x => x.coordinates.length > 0)
+            .map(x => {
+                x.coordinates[0].pop();
+                return x.coordinates;
+            });
+        }
+
+        if (this.allZones.length === 0) {
+            if (this.modes.indexOf(zonesConfigAlias) !== -1) {
+                this.modes.splice(this.modes.indexOf(zonesConfigAlias), 1);
+            }
+        }
+        else {
+            if (this.modes.indexOf(zonesConfigAlias) === -1) {
+                this.modes.push(zonesConfigAlias);
+            }
+        }
     }
 
     vacuumGoToPoint(debug) {
@@ -568,7 +621,7 @@ class XiaomiVacuumMapCard extends LitElement {
         const zone = [];
         for (let i = 0; i < this.selectedZones.length; i++) {
             const selectedZone = this.selectedZones[i];
-            const preselectedZone = this._config.zones[selectedZone];
+            const preselectedZone = this.allZones[selectedZone];
             for (const rect of preselectedZone) {
                 zone.push([rect[0], rect[1], rect[2], rect[3], this.vacuumZonedCleanupRepeats])
             }
@@ -675,6 +728,10 @@ class XiaomiVacuumMapCard extends LitElement {
         super.connectedCallback();
         if (this._config.map_camera) {
             this.thumbUpdater = setInterval(() => this.updateCameraImage(), this._map_refresh_interval);
+        }
+
+        if (this._config.zones_sensor){
+            this.zonesUpdater = setInterval(() => this.updateZones(), this._zones_refresh_interval);
         }
     }
 
