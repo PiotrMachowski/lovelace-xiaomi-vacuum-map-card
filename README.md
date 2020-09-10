@@ -31,7 +31,7 @@ This card enables you to specify a target or start a zoned cleanup using live or
 | `debug` | `boolean` | `False` | `false` | Enables alerts with coordinates after holding `Start` button. Possible values: `true`, `false` |
 | `service` | `string` | `False` | `vacuum.send_command` | Allows to define service used after clicking `Start` button. See: [Defining service](#defining-service) |
 | `ignore_zones_limit` | `boolean` | `False` | `false` | Disables 5 zones limit. Possible values: `true`, `false`. See: [Defining service](#defining-service) |
-| `language` | `string` | `False` | `en` | Language used in the card. Possible values: `en`, `de`, `dk`, `es`, `fr`, `it`, `nl`, `no`, `pl`, `ru`, `se` |
+| `language` | `string` | `False` | `en` | Language used in the card. Possible values: `en`, `de`, `dk`, `es`, `fr`, `it`, `nl`, `no`, `pl`, `ru`, `se`, `uk` |
 
 ## Example usage:
 ```yaml
