@@ -434,7 +434,7 @@ class XiaomiVacuumMapCard extends LitElement {
             for (let i = 0; i < this._config.zones.length; i++) {
                 const zone = this._config.zones[i];
                 for (const rect of zone) {
-                    const {x, y, w, h} = this.convertVacuumToMapZone(rect[0], rect[1], rect[2], rect[3]);
+                    const {x, y, w, h} = this.calculateZone(rect, this._config.mapZonesMode);
                     context.beginPath();
                     context.setLineDash([]);
                     if (!this.selectedZones.includes(i)) {
@@ -518,7 +518,7 @@ class XiaomiVacuumMapCard extends LitElement {
         for (let i = 0; i < this._config.zones.length && selected === -1; i++) {
             const zone = this._config.zones[i];
             for (const rect of zone) {
-                const {x, y, w, h} = this.convertVacuumToMapZone(rect[0], rect[1], rect[2], rect[3]);
+                const {x, y, w, h} = this.calculateZone(rect, this._config.mapZonesMode);
                 if (mx >= x && my >= y && mx <= x + w && my <= y + h) {
                     selected = i;
                     break;
@@ -567,8 +567,13 @@ class XiaomiVacuumMapCard extends LitElement {
         for (let i = 0; i < this.selectedZones.length; i++) {
             const selectedZone = this.selectedZones[i];
             const preselectedZone = this._config.zones[selectedZone];
-            for (const rect of preselectedZone) {
-                zone.push([rect[0], rect[1], rect[2], rect[3], this.vacuumZonedCleanupRepeats])
+            for (const subZone of preselectedZone) {
+                if(this._config.mapZonesMode){
+                    const rect = this.convertMapToScaledMap(subZone);
+                    zone.push(this.convertMapToVacuumRect(rect, this.vacuumZonedCleanupRepeats))
+                } else {
+                    zone.push([subZone[0], subZone[1], subZone[2], subZone[3], this.vacuumZonedCleanupRepeats])
+                }
             }
         }
         if (debug && this._config.debug) {
@@ -584,6 +589,13 @@ class XiaomiVacuumMapCard extends LitElement {
 
     getCardSize() {
         return 5;
+    }
+
+    calculateZone(rect, isMapZonesMode) {
+        if(isMapZonesMode) {
+            return this.convertMapToScaledMap(rect);
+        }
+        return this.convertVacuumToMapZone(rect[0], rect[1], rect[2], rect[3]);
     }
 
     convertMapToVacuumRect(rect, repeats) {
@@ -616,6 +628,22 @@ class XiaomiVacuumMapCard extends LitElement {
         const x = Math.round(vX * this.imageScale);
         const y = Math.round(vY * this.imageScale);
         return {x, y};
+    }
+
+    convertMapToScaledMap(rect) {
+        const x = Math.round(rect[0] * this.imageScale);
+        const y = Math.round(rect[1] * this.imageScale);
+        const w = Math.round((rect[2] - rect[0]) * this.imageScale);
+        const h = Math.round((rect[3] - rect[1]) * this.imageScale);
+        return {x, y, w, h};
+    }
+
+    convertZoneToRectangle(rect) {
+        const x = rect[0];
+        const y = rect[1];
+        const w = rect[2] - rect[0];
+        const h = rect[3] - rect[1];
+        return {x, y, w, h};
     }
 
     getMapImage() {
