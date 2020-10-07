@@ -16,6 +16,9 @@ const LitElement = Object.getPrototypeOf(
 );
 const html = LitElement.prototype.html;
 
+const helpers = await loadCardHelpers();
+helpers.importMoreInfoControl("light");
+
 class XiaomiVacuumMapCard extends LitElement {
     constructor() {
         super();
