@@ -22,7 +22,7 @@ This card enables you to specify a target or start a zoned cleanup using live or
 | --- | --- | --- | --- | --- |
 | `entity` | `string` | `True` | - | ID of Xiaomi vacuum entity |
 | `map_image` | `string` | `False` | - | Path to image of map |
-| `map_camera` | `string` | `False` | - | ID of map camera entity |
+| `map_camera` | `string` | `False` | - | ID of map camera entity (for map without root on a vacuum use [this](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor) integration) |
 | `camera_refresh_interval` | `integer` | `False` | 5 | Update interval for map camera in seconds |
 | `calibration_points` | `list` | `True` | - | Pairs of coordinates: in vacuum system and on map image. See: [Calibration](#calibration)  |
 | `zones` | `list` | `False` | Empty | List of predefined zones |
@@ -129,15 +129,15 @@ Example HA script that can be used with this card is available [*here*](https://
 ## FAQ
 * **Can this card show a live map?**
 
-  Yes, to show a camera feed as a background set property `map_camera` in configuration. This only works if you have rooted your device.
+  Yes, to show a camera feed as a background set property `map_camera` in configuration. To get this feature without rooting your vacuum use [this](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor) integration.
 
 * **Does this card require rooted device?**
 
-  No, in the basic version it uses a static image as a map. Root is required to create camera that will show a live map.
+  No, it only utilizes features of Home Assistant and not communicates directly with a vacuum.
 
 * **How to create a map?**
 
-  You can use any image you want, the easiest way is to use a screenshot from Mi Home/FloleVac.
+  You can use any image you want, the easiest way is to use a screenshot from Mi Home/FloleVac or [this](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor) integration to provide live map without rooting.
 
 
 <a href="https://www.buymeacoffee.com/PiotrMachowski" target="_blank"><img src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
