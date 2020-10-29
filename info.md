@@ -26,36 +26,33 @@
 
 ## Example usage:
 ```yaml
-views:
-- name: Example
-  cards:
-    - type: custom:xiaomi-vacuum-map-card
-      entity: vacuum.xiaomi_vacuum
-      map_image: '/local/custom_lovelace/xiaomi_vacuum_map_card/map.png'
-      calibration_points:
-        - vacuum:
-            x: 25500
-            y: 25500
-          map:
-            x: 466
-            y: 1889
-        - vacuum:
-            x: 26500
-            y: 26500
-          map:
-            x: 730
-            y: 1625
-        - vacuum:
-            x: 25500
-            y: 26500
-          map:
-            x: 466
-            y: 1625
-      zones:
-        - [[25500, 25500, 26500, 26500]]
-        - [[24215, 28125, 29465, 32175]]
-        - [[24245, 25190, 27495, 27940], [27492, 26789, 28942, 27889]]
-        - [[28972, 26715, 31072, 27915], [29457, 27903, 31107, 29203], [30198, 29215, 31498, 31215], [29461, 31228, 31511, 32478]]
+type: custom:xiaomi-vacuum-map-card
+entity: vacuum.xiaomi_vacuum
+map_image: '/local/custom_lovelace/xiaomi_vacuum_map_card/map.png'
+calibration_points:
+  - vacuum:
+      x: 25500
+      y: 25500
+    map:
+      x: 466
+      y: 1889
+  - vacuum:
+      x: 26500
+      y: 26500
+    map:
+      x: 730
+      y: 1625
+  - vacuum:
+      x: 25500
+      y: 26500
+    map:
+      x: 466
+      y: 1625
+zones:
+  - [[25500, 25500, 26500, 26500]]
+  - [[24215, 28125, 29465, 32175]]
+  - [[24245, 25190, 27495, 27940], [27492, 26789, 28942, 27889]]
+  - [[28972, 26715, 31072, 27915], [29457, 27903, 31107, 29203], [30198, 29215, 31498, 31215], [29461, 31228, 31511, 32478]]
 ```
 
 ## Calibration
