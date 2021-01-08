@@ -5,6 +5,7 @@ const zones = "zones";
 const run = "run";
 const repeats = "repeats";
 const confirmation = "confirmation";
+const returnToBase = "returnToBase";
 
 const texts = {
     "cz": {
@@ -14,7 +15,8 @@ const texts = {
         zones: "Zóny",
         run: "Start",
         repeats: "Opakovat:",
-        confirmation: "Příkaz odeslán!"
+        confirmation: "Příkaz odeslán!",
+        returnToBase: "Vraťte se na základnu"
     },
     "en": {
         mode: "Mode",
@@ -23,7 +25,8 @@ const texts = {
         zones: "Zones",
         run: "Start",
         repeats: "Times:",
-        confirmation: "Command sent!"
+        confirmation: "Command sent!",
+        returnToBase: "Return to base"
     },
     "de": {
         mode: "Modus",
@@ -32,7 +35,8 @@ const texts = {
         zones: "Zonen",
         run: "Starten",
         repeats: "Wiederholungen:",
-        confirmation: "Kommando gesendet!"
+        confirmation: "Kommando gesendet!",
+        returnToBase: "Rückkehr zu Basis"
     },
     "dk": {
         mode: "Mode",
@@ -41,7 +45,8 @@ const texts = {
         zones: "Zoner",
         run: "Start",
         repeats: "Gentagelser:",
-        confirmation: "Kommando afsendt!"
+        confirmation: "Kommando afsendt!",
+        returnToBase: "Gå tilbage til basen"
     },
     "es": {
         mode: "Modos",
@@ -50,7 +55,8 @@ const texts = {
         zones: "Zonas",
         run: "Empezar",
         repeats: "Veces:",
-        confirmation: "Comando enviado!"
+        confirmation: "Comando enviado!",
+        returnToBase: "Volver a la base"
     },
     "fr": {
         mode: "Mode",
@@ -59,7 +65,8 @@ const texts = {
         zones: "Zones",
         run: "Démarrage",
         repeats: "Répéter:",
-        confirmation: "Commande envoyée!"
+        confirmation: "Commande envoyée!",
+        returnToBase: "Retourner à la base"
     },
     "it": {
         mode: "Modalità",
@@ -68,7 +75,8 @@ const texts = {
         zones: "Zone",
         run: "Avvia",
         repeats: "Volte:",
-        confirmation: "Comando inviato!"
+        confirmation: "Comando inviato!",
+        returnToBase: "Ritorno alla base"
     },
     "nl": {
         mode: "Modus",
@@ -77,7 +85,8 @@ const texts = {
         zones: "Zones",
         run: "Start",
         repeats: "Herhalingen",
-        confirmation: "Commando gestuurd!"
+        confirmation: "Commando gestuurd!",
+        returnToBase: "Keer terug naar de basis"
     },
     "no": {
         mode: "Modus",
@@ -86,7 +95,8 @@ const texts = {
         zones: "Soner",
         run: "Start",
         repeats: "Repetisjoner:",
-        confirmation: "Kommando sendt!"
+        confirmation: "Kommando sendt!",
+        returnToBase: "Gå tilbake til basen"
     },
     "pl": {
         mode: "Tryb",
@@ -95,7 +105,8 @@ const texts = {
         zones: "Strefy",
         run: "Uruchom",
         repeats: "Razy:",
-        confirmation: "Komenda wysłana!"
+        confirmation: "Komenda wysłana!",
+        returnToBase: "Powrót do bazy"
     },
     "pt": {
         mode: "Modo",
@@ -104,7 +115,8 @@ const texts = {
         zones: "Zonas",
         run: "Iniciar",
         repeats: "Repetições:",
-        confirmation: "Comando enviado!"
+        confirmation: "Comando enviado!",
+        returnToBase: "Retornar à base"
     },
     "ru": {
         mode: "Режим",
@@ -113,7 +125,8 @@ const texts = {
         zones: "Зоны",
         run: "Старт",
         repeats: "Повторы:",
-        confirmation: "Команда отправлена"
+        confirmation: "Команда отправлена",
+        returnToBase: "Вернуться на базу"
     },
     "se": {
         mode: "Läge",
@@ -122,7 +135,8 @@ const texts = {
         zones: "Zoner",
         run: "Start",
         repeats: "Repetitioner:",
-        confirmation: "Kommando skickat!"
+        confirmation: "Kommando skickat!",
+        returnToBase: "Återgå till basen"
     },
     "uk": {
         mode: "Режим",
@@ -131,7 +145,8 @@ const texts = {
         zones: "Зони",
         run: "Старт",
         repeats: "Разів:",
-        confirmation: "Команда надіслана"
+        confirmation: "Команда надіслана",
+        returnToBase: "Повернення на базу"
     },
 };
 
@@ -143,5 +158,6 @@ export {
     run,
     repeats,
     confirmation,
-    texts
+    texts,
+    returnToBase
 };

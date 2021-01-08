@@ -8,7 +8,8 @@ import {
     run,
     repeats,
     confirmation,
-    texts
+    texts,
+    returnToBase
 } from './texts.js'
 
 const LitElement = Object.getPrototypeOf(
@@ -69,6 +70,7 @@ class XiaomiVacuumMapCard extends LitElement {
         availableModes.set("go_to_target", texts[this._language][goToTarget]);
         availableModes.set("zoned_cleanup", texts[this._language][zonedCleanup]);
         availableModes.set("predefined_zones", texts[this._language][zones]);
+        availableModes.set("return_to_base", texts[this._language][returnToBase]);
 
         if (!config.entity) {
             throw new Error("Missing configuration: entity");
@@ -119,13 +121,13 @@ class XiaomiVacuumMapCard extends LitElement {
         }
 
         if (config.modes) {
-            if (!Array.isArray(config.modes) || config.modes.length < 1 || config.modes.length > 3) {
-                throw new Error("Invalid configuration: modes");
+            if (!Array.isArray(config.modes) || config.modes.length < 1 || config.modes.length > 4) {
+                throw new Error("Invalid configuration: " + config.modes.length + " modes configured; only 4 allowed");
             }
             this.modes = [];
             for (const mode of config.modes) {
                 if (!availableModes.has(mode)) {
-                    throw new Error("Invalid mode: " + mode);
+                    throw new Error("Invalid mode: " + mode + " is not a valid mode");
                 }
                 this.modes.push(availableModes.get(mode));
             }
@@ -133,7 +135,8 @@ class XiaomiVacuumMapCard extends LitElement {
             this.modes = [
                 texts[this._language][goToTarget],
                 texts[this._language][zonedCleanup],
-                texts[this._language][zones]
+                texts[this._language][zones],
+                texts[this._language][returnToBase]
             ];
         }
         if (!config.zones || !Array.isArray(config.zones) || config.zones.length === 0 && this.modes.includes(texts[this._language][zones])) {
@@ -391,6 +394,8 @@ class XiaomiVacuumMapCard extends LitElement {
             this.mode = 2;
         } else if (selected === texts[this._language][zones]) {
             this.mode = 3;
+        } else if (selected === texts[this._language][returnToBase]) {
+            this.mode = 4;
         }
         this.getPredefinedZonesIncreaseButton().hidden = this.mode !== 3 && this.mode !== 2;
         this.drawCanvas();
@@ -410,7 +415,13 @@ class XiaomiVacuumMapCard extends LitElement {
             this.vacuumStartZonedCleanup(debug);
         } else if (this.mode === 3 && !this.selectedZones.empty) {
             this.vacuumStartPreselectedZonesCleanup(debug);
+        } else if (this.mode === 4) {
+            this.vacuumReturnToBase(debug);
         }
+    }
+    
+    returnToBaseButton(debug) {
+        this.vacuumReturnToBase(debug);
     }
 
     drawCanvas() {
@@ -605,6 +616,17 @@ class XiaomiVacuumMapCard extends LitElement {
                 entity_id: this._config.entity,
                 command: "app_zoned_clean",
                 params: zone
+            }).then(() => this.showToast());
+        }
+    }
+    
+    vacuumReturnToBase(debug) {
+        if (debug && this._config.debug) {
+            alert(JSON.stringify([mapPos.x, mapPos.y]));
+        } else {
+            this._hass.callService(this.service_domain, this.service_method, {
+                entity_id: this._config.entity,
+                command: "app_charge"
             }).then(() => this.showToast());
         }
     }
