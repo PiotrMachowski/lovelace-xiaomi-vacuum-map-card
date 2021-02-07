@@ -61,6 +61,15 @@ const texts = {
         repeats: "Répéter:",
         confirmation: "Commande envoyée!"
     },
+    "hu": {
+        mode: "Mód",
+        goToTarget: "Mozgás a célponthoz",
+        zonedCleanup: "Zóna tisztítása",
+        zones: "Zónák",
+        run: "Indítás",
+        repeats: "Ismétlések:",
+        confirmation: "Parancs elküldve!"
+    },
     "it": {
         mode: "Modalità",
         goToTarget: "Raggiungi punto",
