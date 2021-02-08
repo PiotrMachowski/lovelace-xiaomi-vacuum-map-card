@@ -52,6 +52,15 @@ const texts = {
         repeats: "Veces:",
         confirmation: "Comando enviado!"
     },
+    "fi": {
+        mode: "Toiminto",
+        goToTarget: "Mene kohteeseen",
+        zonedCleanup: "Siivoa alue",
+        zones: "Alueet",
+        run: "Aloita",
+        repeats: "Toistot:",
+        confirmation: "Komento lähetetty!"
+    },
     "fr": {
         mode: "Mode",
         goToTarget: "Aller sur la cible",
