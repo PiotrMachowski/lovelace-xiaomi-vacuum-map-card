@@ -58,6 +58,15 @@ const texts = {
         confirmation: "Comando enviado!",
         returnToBase: "Volver a la base"
     },
+    "fi": {
+        mode: "Toiminto",
+        goToTarget: "Mene kohteeseen",
+        zonedCleanup: "Siivoa alue",
+        zones: "Alueet",
+        run: "Aloita",
+        repeats: "Toistot:",
+        confirmation: "Komento lähetetty!"
+    },
     "fr": {
         mode: "Mode",
         goToTarget: "Aller sur la cible",
@@ -67,6 +76,15 @@ const texts = {
         repeats: "Répéter:",
         confirmation: "Commande envoyée!",
         returnToBase: "Retourner à la base"
+    },
+    "hu": {
+        mode: "Mód",
+        goToTarget: "Mozgás a célponthoz",
+        zonedCleanup: "Zóna tisztítása",
+        zones: "Zónák",
+        run: "Indítás",
+        repeats: "Ismétlések:",
+        confirmation: "Parancs elküldve!"
     },
     "it": {
         mode: "Modalità",
