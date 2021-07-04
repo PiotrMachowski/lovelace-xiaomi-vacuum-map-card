@@ -34,6 +34,7 @@ This card enables you to specify a target or start a zoned cleanup using live or
 | `service` | `string` | `False` | `vacuum.send_command` | Allows to define service used after clicking `Start` button. See: [Defining service](#defining-service) |
 | `ignore_zones_limit` | `boolean` | `False` | `false` | Disables 5 zones limit. Possible values: `true`, `false`. See: [Defining service](#defining-service) |
 | `language` | `string` | `False` | `en` | Language used in the card. Possible values: `cz`, `en`, `de`, `dk`, `es`, `fi`, `fr`, `hu`, `it`, `nl`, `no`, `pl`, `pt`, `ru`, `se`, `sk`, `uk` |
+| `float_coordinates` | `boolean` | `False` | `false` | Coordinates are integers (default) or floats. For STYJ02YM and Viomi vacuums set it to `true` |
 
 ## Example usage:
 ```yaml
