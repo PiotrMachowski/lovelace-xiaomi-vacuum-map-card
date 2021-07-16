@@ -458,28 +458,28 @@ class XiaomiVacuumMapCard extends LitElement {
                 context.stroke();
             }
         } else if (this.mode === 3) {
-			//Check if coordinatesConverter has been initialized yet, since it might be waiting for camera data still.
-			if(this.coordinatesConverter != null) {
-				for (let i = 0; i < this._config.zones.length; i++) {
-					const zone = this._config.zones[i];
-					for (const rect of zone) {
-						const {x, y, w, h} = this.convertVacuumToMapZone(rect[0], rect[1], rect[2], rect[3]);
-						context.beginPath();
-						context.setLineDash([]);
-						if (!this.selectedZones.includes(i)) {
-							context.strokeStyle = 'red';
-							context.fillStyle = 'rgba(255, 0, 0, 0.25)';
-						} else {
-							context.strokeStyle = 'green';
-							context.fillStyle = 'rgba(0, 255, 0, 0.25)';
-						}
-						context.lineWidth = 1;
-						context.rect(x, y, w, h);
-						context.fillRect(x, y, w, h);
-						context.stroke();
-					}
-				}
-			}
+            //Check if coordinatesConverter has been initialized yet, since it might be waiting for camera data still.
+            if (this.coordinatesConverter != null) {
+                for (let i = 0; i < this._config.zones.length; i++) {
+                    const zone = this._config.zones[i];
+                    for (const rect of zone) {
+                        const {x, y, w, h} = this.convertVacuumToMapZone(rect[0], rect[1], rect[2], rect[3]);
+                        context.beginPath();
+                        context.setLineDash([]);
+                        if (!this.selectedZones.includes(i)) {
+                            context.strokeStyle = 'red';
+                            context.fillStyle = 'rgba(255, 0, 0, 0.25)';
+                        } else {
+                            context.strokeStyle = 'green';
+                            context.fillStyle = 'rgba(0, 255, 0, 0.25)';
+                        }
+                        context.lineWidth = 1;
+                        context.rect(x, y, w, h);
+                        context.fillRect(x, y, w, h);
+                        context.stroke();
+                    }
+                }
+            }
         }
         context.translate(-0.5, -0.5);
     }
