@@ -7,6 +7,15 @@ const repeats = "repeats";
 const confirmation = "confirmation";
 
 const texts = {
+    "cn": {
+        mode: "模式选择",
+        goToTarget: "前往目标点",
+        zonedCleanup: "清扫指定区域",
+        zones: "区域",
+        run: "开启",
+        repeats: "次数:",
+        confirmation: "指令已传达!"
+    },
     "cz": {
         mode: "Mód",
         goToTarget: "Poslat na zvolený bod",
