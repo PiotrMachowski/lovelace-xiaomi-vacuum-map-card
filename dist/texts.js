@@ -156,6 +156,15 @@ const texts = {
         confirmation: "Kommando skickat!",
         returnToBase: "Återgå till basen"
     },
+    "sk": {
+        mode: "Mód",
+        goToTarget: "Poslať na zvolený bod",
+        zonedCleanup: "Upratanie zóny",
+        zones: "Zóny",
+        run: "Štart",
+        repeats: "Opakovať:",
+        confirmation: "Príkaz odoslaný!"
+    },
     "uk": {
         mode: "Режим",
         goToTarget: "Рух до цілі",
