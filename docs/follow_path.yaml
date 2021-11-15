@@ -1,4 +1,4 @@
-follow_path:
+vacuum_follow_path:
   mode: single
   alias: Vacuum follow path
   fields:
