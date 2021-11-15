@@ -1,42 +1,503 @@
 # Lovelace Xiaomi Vacuum Map card
 
-[![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/custom-components/hacs)
-[![Community Forum](https://img.shields.io/badge/community-forum-brightgreen.svg?style=popout)](https://community.home-assistant.io/t/xiaomi-vacuum-interactive-map-card/123901)
-[![buymeacoffee_badge](https://img.shields.io/badge/Donate-Buy%20Me%20a%20Coffee-ff813f?style=flat)](https://www.buymeacoffee.com/PiotrMachowski)
-[![paypalme_badge](https://img.shields.io/badge/Donate-PayPal-0070ba?style=flat)](https://paypal.me/PiMachowski)
+[![HACS Default][hacs_shield]][hacs]
+[![GitHub Latest Release][releases_shield]][latest_release]
+[![GitHub All Releases][downloads_total_shield]][releases]
+[![Community Forum][community_forum_shield]][community_forum]
+[![Buy me a coffee][buy_me_a_coffee_shield]][buy_me_a_coffee]
+[![PayPal.Me][paypal_me_shield]][paypal_me]
 
 
-This card enables you to specify a target or start a zoned cleanup using live or static map, just like in Mi Home app. Additionally you can define a list of zones and choose the ones to be cleaned.
+[hacs_shield]: https://img.shields.io/static/v1.svg?label=HACS&message=Default&style=popout&color=green&labelColor=41bdf5&logo=HomeAssistantCommunityStore&logoColor=white
+[hacs]: https://hacs.xyz/docs/default_repositories
 
-## Go to target
-![Go to target](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/blob/master/s1.gif)
+[latest_release]: https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/releases/latest
+[releases_shield]: https://img.shields.io/github/release/PiotrMachowski/lovelace-xiaomi-vacuum-map-card.svg?style=popout
 
-## Zoned cleanup
-![Zoned cleanup](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/blob/master/s2.gif)
+[releases]: https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/releases
+[downloads_total_shield]: https://img.shields.io/github/downloads/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/total
 
-## Defined zones
-![Defined zones](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/blob/master/s3.gif)
+[community_forum_shield]: https://img.shields.io/static/v1.svg?label=%20&message=Forum&style=popout&color=41bdf5&logo=HomeAssistant&logoColor=white
+[community_forum]: https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/releases
 
-## Configuration options
+[buy_me_a_coffee_shield]: https://img.shields.io/static/v1.svg?label=%20&message=Buy%20me%20a%20coffee&color=6f4e37&logo=buy%20me%20a%20coffee&logoColor=white
+[buy_me_a_coffee]: https://www.buymeacoffee.com/PiotrMachowski
+
+[paypal_me_shield]: https://img.shields.io/static/v1.svg?label=%20&message=PayPal.Me&logo=paypal
+[paypal_me]: https://paypal.me/PiMachowski
+
+This card provides a user-friendly way to fully control Xiaomi (and possibly other) vacuums
+in [Home Assistant](https://www.home-assistant.io/).
+
+
+https://user-images.githubusercontent.com/6118709/140251738-7fb06e81-34b0-4bf8-b7b1-2221d0062331.mp4
+
+
+## Table of contents
+  - [Features](#features)
+  - [Installation](#installation)
+    - [HACS](#hacs)
+    - [Manual](#manual)
+  - [Configuration](#configuration)
+    - [Main options](#main-options)
+    - [Preset options](#preset-options)
+    - [Map source options](#map-source-options)
+      - [Cropping options](#cropping-options)
+    - [Calibration source options](#calibration-source-options)
+      - [Calibration points options](#calibration-points-options)
+    - [Supported vacuum platforms](#supported-vacuum-platforms)
+    - [Icon list entry options](#icon-list-entry-options)
+    - [Tile list entry options](#tile-list-entry-options)
+    - [Condition options](#condition-options)
+    - [Map modes options](#map-modes-options)
+      - [Supported templates](#supported-templates)
+      - [Supported selection types](#supported-selection-types)
+      - [Service call schema options](#service-call-schema-options)
+      - [Supported repeats types](#supported-repeats-types)
+      - [Predefined selection options](#predefined-selection-options)
+      - [Icon options](#icon-options)
+      - [Label options](#label-options)
+  - [Hints](#hints)
+  - [FAQ](#faq)
+  - [Migrating from v1.x.x](#migrating-from-v1xx)
+  - [Translations](#translations)
+
+## Features
+
+Features include:
+
+- Map-based controls:
+    - Zoned cleaning (manual and saved)
+    - Going to target (manual and saved)
+    - Room cleaning
+    - Following path
+    - Custom services
+- Icon controls:
+    - Conditional visibility
+    - Customizable service calls
+- Value tiles:
+    - Customizable content
+    - Conditional visibility
+    - Customizable service calls
+- General:
+    - Multiple vacuums support
+    - Multiple maps (camera/image) support
+    - Fully customizable styling
+  
+## Installation
+
+### HACS
+
+- Open HACS
+- Go to "Frontend" section
+- Click button with "+" icon
+- Search for "Xiaomi Vacuum Map"
+- Install repository in HACS
+- Make sure you have added this card to [Lovelace resources](https://my.home-assistant.io/redirect/lovelace_resources/)
+  ```yaml
+  url: /hacsfiles/lovelace-xiaomi-vacuum-map-card/xiaomi-vacuum-map-card.js
+  type: module
+  ```
+- Refresh your browser
+
+### Manual
+
+- Download `xiaomi-vacuum-map-card.js` file from the [latest release](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/releases/latest)
+- Save downloaded file somewhere in `<ha config>/www/` directory, e.g. `/config/www/custom_lovelace/xiaomi-vacuum-map-card.js`
+- Add saved file to [Lovelace resources](https://my.home-assistant.io/redirect/lovelace_resources/)
+  ```yaml
+  url: /local/custom_lovelace/xiaomi-vacuum-map-card.js
+  type: module
+  ```
+- Restart HA if you had to create `www` directory
+- Refresh your browser
+
+## Configuration
+
+This card contains UI configuration editor, but it is limited to only basic set of features.
+Its full potential can be achieved by manual yaml adjustments.
+
+You can use this configuration as an example:
+ * [demo config](/docs/demo_config.yaml) (configuration used in full_demo.mp4)
+
+### Main options
+
+<table>
+  <tr>
+    <th>Key</th>
+    <th>Type</th>
+    <th>Required</th>
+    <th>Default</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><code>title</code></td>
+    <td>string</td>
+    <td>no</td>
+    <td><i>empty</i></td>
+    <td>Card's title</td>
+  </tr>
+  <tr>
+    <td><code>additional_presets</code></td>
+    <td>list</td>
+    <td>no</td>
+    <td><i>empty</i></td>
+    <td>A list of additional <a href="#preset-options">presets</a> (e.g. with different map/vacuum)</td>
+  </tr>
+  <tr>
+    <td colspan="5" style="text-align: center">
+      All values from <a href="#preset-options">preset options</a> section
+    </td>
+  </tr>
+</table>
+
+### Preset options
 
 | Key | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
-| `entity` | `string` | `True` | - | ID of Xiaomi vacuum entity |
-| `map_image` | `string` | `False` | - | Path to image of map |
-| `map_camera` | `string` | `False` | - | ID of map camera entity (for map without root on a vacuum use [this](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor) integration) |
-| `camera_refresh_interval` | `integer` | `False` | 5 | Update interval for map camera in seconds |
-| `camera_calibration` | `boolean` | `False` | - | Automatic calibration if camera entity provides `calibration_points` attribute |
-| `calibration_points` | `list` | `False` | - | Pairs of coordinates: in vacuum system and on map image. See: [Calibration](#calibration)  |
-| `zones` | `list` | `False` | Empty | List of predefined zones |
-| `modes` | `list` | `False` | `[go_to_target, zoned_cleanup, predefined_zones]` | List of displayed modes. Possible values: `go_to_target`, `zoned_cleanup`, `predefined_zones` |
-| `default_mode` | `string` | `False` | - | Default selected mode. Possible values: `go_to_target`, `zoned_cleanup`, `predefined_zones` |
-| `debug` | `boolean` | `False` | `false` | Enables alerts with coordinates after holding `Start` button. Possible values: `true`, `false` |
-| `service` | `string` | `False` | `vacuum.send_command` | Allows to define service used after clicking `Start` button. See: [Defining service](#defining-service) |
-| `ignore_zones_limit` | `boolean` | `False` | `false` | Disables 5 zones limit. Possible values: `true`, `false`. See: [Defining service](#defining-service) |
-| `language` | `string` | `False` | `en` | Language used in the card. Possible values: `cz`, `en`, `de`, `dk`, `es`, `fi`, `fr`, `hu`, `it`, `nl`, `no`, `pl`, `pt`, `ru`, `se`, `sk`, `uk` |
+| `preset_name` | string | yes<br><small>(if multiple presets are configured)</small> | - | Name of the preset |
+| `entity` | string | yes | - | Vacuum entity |
+| `map_source` | string | yes | - | Preset's [map source](#map-source-options) |
+| `calibration_source` | object | yes | - | Preset's [calibration source](#calibration-source-options) |
+| `vacuum_platform` | string | no | `default` | Preset's [vacuum platform](#supported-vacuum-platforms) |
+| `map_locked` | boolean | no | `false` | Default state of pan/zoom |
+| `two_finger_pan` | string | no | `false` | Enables two finger map panning  |
+| `icons` | list | no | _autogenerated_ | Preset's [icons](#icon-list-entry-options) |
+| `tiles` | list | no | _autogenerated_ | Preset's [tiles](#tile-list-entry-options) |
+| `map_modes` | list | no | _autogenerated_ | Preset's [map modes](#map-modes-options) |
 
-## Example usage:
+### Map source options
+
+| Key | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `camera` | string | no<sup>1</sup> | - | Entity id of map camera |
+| `image` | string | no<sup>1</sup> | - | URL of map image |
+| `crop` | object | no | _no cropping_ | Images [cropping options](#cropping-options) |
+
+<sup>1</sup> Exactly one of `camera` or `image` must be provided
+
+#### Cropping options
+
+| Key | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `top` | number | no | 0 | Image cropping value from the top (in pixels) |
+| `bottom` | number | no | 0 | Image cropping value from the bottom (in pixels) |
+| `left` | number | no | 0 | Image cropping value from the left (in pixels) |
+| `right` | number | no | 0 | Image cropping value from the right (in pixels) |
+
+### Calibration source options
+
+| Key | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `camera` | string | no<sup>1</sup> | 0 | Camera with calibration ([Xiaomi Cloud Map Extractor](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor)) |
+| `entity` | string | no<sup>1</sup> | 0 | Entity with calibration returned as a state |
+| `attribute` | string | no | 0 | Enables usage of a configured attribute instead of state of given entity |
+| `calibration_points` | list | no<sup>1</sup> | 0 | List of 3 or 4 [calibration points](#calibration-points-options) |
+
+<sup>1</sup> Exactly one of `camera`, `entity` or `calibration_points` must be provided
+
+#### Calibration points options
+
+Each of calibration points must have a following structure:
 ```yaml
+vacuum: # coordinates of a point in a vacuum coordinate system
+  x: 25500 
+  y: 25500
+map: # coordinates of a point in a map coordinate system (can be read using e.g. Paint or Gimp)
+  x: 466
+  y: 1889
+```
+
+[Manual calibration guide](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/wiki)
+
+### Supported vacuum platforms
+
+Following vacuum platforms are supported at this moment:
+- `default`: [Built-in Home Assistant integration](https://www.home-assistant.io/integrations/xiaomi_miio/#xiaomi-mi-robot-vacuum)
+- `KrzysztofHajdamowicz/miio2`: [Custom miio2 integration by Krzysztof Hajdamowicz](https://github.com/KrzysztofHajdamowicz/home-assistant-vacuum-styj02ym)
+
+[Adding a new platform](CONTRIBUTING.md#adding-new-platform)
+
+### Icon list entry options
+
+![icons image](/docs/icons.png)
+
+| Key | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `icon` | string | yes | - | An icon to be displayed ([mdi](https://materialdesignicons.com/)) |
+| `tap_action` | action | no | _more-info_ | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when an icon is tapped |
+| `hold_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when an icon is held and released |
+| `double_tap_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when an icon is double-tapped |
+| `conditions` | list | no | - | List of [conditions](#condition-options) that need to be (all of them) met for an icon to be shown |
+
+### Tile list entry options
+
+![tiles image](/docs/tiles.png)
+
+| Key | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `label` | string | yes | - | Label of a tile |
+| `entity` | string | yes | - | Entity which should be shown on a tile |
+| `icon` | string | no | - | An icon to be displayed ([mdi](https://materialdesignicons.com/)) |
+| `attribute` | string | no | - | Attribute that should be shown on a tile |
+| `multiplier` | number | no | - | Multiplier that should be used to calculate value shown on a tile |
+| `precision` | number | no | - | Precision that should be used to present value on a tile |
+| `unit` | string | no | - | Unit to be used |
+| `tap_action` | action | no | _more-info_ | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is tapped |
+| `hold_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is held and released |
+| `double_tap_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is double-tapped |
+| `conditions` | list | no | - | List of [conditions](#condition-options) that need to be (all of them) met for a tile to be shown |
+
+### Condition options
+
+| Key | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `entity` | string | no | - | Entity id of map camera |
+| `attribute` | string | no* | - | URL of map image |
+| `value` | string | no* | - | URL of map image |
+| `value_not` | string | no* | - | URL of map image |
+
+### Map modes options
+
+![map modes image](/docs/map_modes.png)
+
+| Key | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `template` | string | no<sup>1</sup> | - | Map mode template to be used ([supported templates](#supported-templates)) |
+| `name` | string | yes<sup>2</sup> | - | Name of map mode |
+| `icon` | string | yes<sup>2</sup> | - | Icon of map mode ([mdi](https://materialdesignicons.com/)) |
+| `selection_type` | string | yes<sup>2</sup> | - | Type of selection, one of [supported ones](#supported-selection-types) |
+| `service_call_schema` | object | yes<sup>2</sup> | - | [Service call schema](#service-call-schema-options) that should be used in this mode |
+| `run_immediately` | boolean | no | `false` | Enables calling service immediately after choosing a selection |
+| `coordinates_rounding` | boolean | no | `true` | Enables coordinates rounding |
+| `max_selections` | integer | no | 1 | Maximal number of selections |
+| `repeats_type` | string | no | `NONE` | Type of repeats inclusion, one of [supported ones](#supported-repeats-types) |
+| `max_repeats` | integer | no | 1 | Maximal value of repeats |
+| `predefined_selections` | list | no<sup>3</sup> | - |   |
+
+> You can override any value from built-in template by providing it in your configuration
+
+<sup>1</sup> Not required if all parameters with (<sup>2</sup>) are provided
+
+<sup>2</sup> Required if `template` is not provided
+
+<sup>3</sup> Required if `template` is not provided and `selection_type` is one of: `PREDEFINED_RECTANGLE`, `PREDEFINED_POINT`, `ROOM`
+
+#### Supported templates
+
+List of supported templates depends on selected `vacuum_platform`:
+
+- `default`:
+  - `vacuum_clean_zone`: Free-drawn rectangular zones on the map
+  - `vacuum_clean_zone_predefined`: Rectangular zones that can be selected on the map from `predefined_selections`
+  - `vacuum_goto`: Point selected by clicking in an arbitrary place on the map
+  - `vacuum_goto_predefined`: Point selected on the map from `predefined_selections`
+  - `vacuum_clean_segment`: Identifier-based selection with free-drawn outline
+  - `vacuum_follow_path`: Path selected by clicking on the map (using [script](/docs/follow_path.yaml))
+- `KrzysztofHajdamowicz/miio2`
+  - `vacuum_clean_zone`: Free-drawn rectangular zones on the map
+  - `vacuum_clean_zone_predefined`: Rectangular zones that can be selected on the map from `predefined_selections`
+  - `vacuum_goto`: Point selected by clicking in an arbitrary place on the map
+  - `vacuum_goto_predefined`: Point selected on the map from `predefined_selections`
+  - `vacuum_clean_segment`: Identifier-based selection with free-drawn outline
+  - `vacuum_follow_path`: Path selected by clicking on the map (using [script](/docs/follow_path.yaml))
+
+> See [hints](#hints) to check how to easily retrieve zone/point coordinates.
+
+
+#### Supported selection types
+
+Following selection types are supported at this moment:
+ - `MANUAL_RECTANGLE`: Free-drawn rectangular zones on the map
+   <details>
+   <summary>Example video</summary>
+
+     https://user-images.githubusercontent.com/6118709/141666913-d95f082d-f5bf-4ab5-a478-ba44effe6f34.mp4
+
+   </details>
+ - `PREDEFINED_RECTANGLE`: Rectangular zones that can be selected on the map from `predefined_selections`
+   <details>
+   <summary>Example video</summary>
+
+     https://user-images.githubusercontent.com/6118709/141666920-492a000c-9a78-4c20-b4f5-9343928140c7.mp4
+
+   </details>
+ - `MANUAL_POINT`: Point selected by clicking in an arbitrary place on the map
+   <details>
+   <summary>Example video</summary>
+
+     https://user-images.githubusercontent.com/6118709/141666921-2f3d66da-6ffc-492a-8439-625da97651bd.mp4
+
+   </details>
+ - `PREDEFINED_POINT`: Point selected on the map from `predefined_selections`
+   <details>
+   <summary>Example video</summary>
+
+     https://user-images.githubusercontent.com/6118709/141666923-965679e9-25fb-44cd-be08-fc63e5c85ce0.mp4
+
+   </details>
+ - `ROOM`: Identifier-based selection with free-drawn outline
+   <details>
+   <summary>Example video</summary>
+
+     https://user-images.githubusercontent.com/6118709/141666925-34b01cde-82ff-447b-aecc-e9ced402b1ed.mp4
+
+   </details>
+ - `MANUAL_PATH`: Path selected by clicking on the map
+   <details>
+   <summary>Example video</summary>
+
+     https://user-images.githubusercontent.com/6118709/141666931-48d1717f-96d0-461d-84f4-788c071f3a78.mp4
+
+   </details>
+
+#### Service call schema options
+
+| Key | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `service` | string | yes | - | Service that should be called in a given mode |
+| `service_data` | object | no | - | Data that should be passed to service call |
+
+It is possible to use several placeholders in `service_data` section. They will be replaced by:
+ - `[[entity_id]]`: `entity_id` defined in preset's config
+ - `[[selection]]`: selection made on the map (zone, point or path)
+ - `[[repeats]]`:  selected number of repeats
+ - `[[point_x]]`: x coordinate of selected point (for `MANUAL_POINT` and `PREDEFINED_POINT` selection types)
+ - `[[point_y]]`: y coordinate of selected point (for `MANUAL_POINT` and `PREDEFINED_POINT` selection types)
+
+
+#### Supported repeats types
+
+Following repeats types are supported at this moment:
+ - `NONE`: No repeats
+ - `INTERNAL`: Repeats number included in coordinates array (`[25500, 25000, 26500, 26500, 2]`)
+ - `EXTERNAL`: Repeats number used as a separate attribute in `service_call_schema`
+
+#### Predefined selection options
+
+Format of data depends on selected `selection_type`:
+* `PREDEFINED_RECTANGLE`
+  
+  | Key | Type | Required | Default | Description |
+  | --- | --- | --- | --- | --- |
+  | `zones` | list | yes | - | List of lists containing zone's coordinates in `[x,y,width,height]` format (e.g. `[[25500, 25000, 26500, 26500]]`) |
+  | `icon` | object | no | - | [Icon definition](#icon-options) |
+  | `label` | object | no | - | [Label definition](#label-options) |
+
+  > See [hints](#hints) to check how to easily retrieve zone coordinates.
+  
+* `PREDEFINED_POINT`
+
+  | Key | Type | Required | Default | Description |
+  | --- | --- | --- | --- | --- |
+  | `position` | list | yes | - | Point's coordinates in `[x,y]` format (e.g. `[25500, 25000]`) |
+  | `icon` | object | no | - | [Icon definition](#icon-options) |
+  | `label` | object | no | - | [Label definition](#label-options) |
+
+  > See [hints](#hints) to check how to easily retrieve point coordinates. 
+  
+* `ROOM`
+
+  | Key | Type | Required | Default | Description |
+  | --- | --- | --- | --- | --- |
+  | `id` | string or number | yes | - | Room's identifier |
+  | `outline` | list | no | - | List of points forming an outline of a room (e.g. `[[25500,25500],[26500,25500],[25500,26500]]` |
+  | `icon` | object | no | - | [Icon definition](#icon-options) |
+  | `label` | object | no | - | [Label definition](#label-options) |
+
+  > See [hints](#hints) to check how to easily create outline.
+
+#### Icon options
+
+| Key | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `name` | string | yes | - | An icon to be displayed ([mdi](https://materialdesignicons.com/)) |
+| `x` | number | yes | - | X coordinate of an icon (in vacuum's coordinate system) |
+| `y` | number | yes | - | Y coordinate of an icon (in vacuum's coordinate system) |
+| `tooltip` | string | false | - | Tooltip to be displayed on hoover |
+
+#### Label options
+
+| Key | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `text` | string | yes | - | Text to be displayed |
+| `x` | number | yes | - | X coordinate of a label (in vacuum's coordinate system) |
+| `y` | number | yes | - | Y coordinate of a label (in vacuum's coordinate system) |
+| `tooltip` | string | false | - | Tooltip to be displayed on hoover |
+| `offset_x` | number | no | - | Offset that should be applied to label in X direction (in pixels) |
+| `offset_y` | number | no | - | Offset that should be applied to label in Y direction (in pixels) |
+
+## Hints
+
+- **Getting room/point coordinates**
+  
+  To get coordinates switch to a specific mode, create a selection and hold "Play" button.
+  A popup with full service call details will be shown.
+
+- **Creating outline**
+
+  To create an outline follow these steps:
+    - Add `- template: vacuum_follow_path` to `map_modes` section
+    - Select "Path" from modes dropdown
+    - Mark a selected outline on a map
+    - Hold "Play" button
+    - Your outline will be in `path` section of service data
+  
+- **Advanced styling**
+  
+  You can add any of [these variables](/docs/css_variables.md) to your theme to override default card styling.
+  
+  It is also possible to style this card using [card-mod](https://github.com/thomasloven/lovelace-card-mod).
+  
+  Example - changing room selection colors
+  ```yaml
+  ...
+  style: |
+    .room-1-wrapper {
+      --map-card-internal-room-outline-line-color: red;
+      --map-card-internal-room-outline-fill-color: rgba(255, 0, 0, 0.5)
+    }
+    .room-2-wrapper {
+      --map-card-internal-room-outline-line-color: blue;
+      --map-card-internal-room-outline-fill-color: rgba(0, 0, 255, 0.5)
+    }
+    .room-<room_id>-wrapper {
+      --map-card-internal-room-outline-line-color: green;
+      --map-card-internal-room-outline-fill-color: rgba(0, 255, 0, 0.5)
+    }
+  ```
+  
+- **Adding icons/tiles to the default configuration**
+  
+  Generated icons/tiles will be overwritten when `icons`/`tiles` config is provided.
+  To extract default generated configuration double-tap play icon: config will be available as a JSON in browser's console.
+  You can convert it to YAML using [json2yaml.com](https://www.json2yaml.com/).
+
+## FAQ
+
+- **Does this card require rooted device?**
+
+  No, it only utilizes features of Home Assistant.
+
+- **How to create a map?**
+
+  The easiest way is to use [Xiaomi Cloud Map Extractor](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor), but you can use any image (e.g. a screenshot from Mi Home/FloleVac).
+
+- **Can I use image that has a perspective distortion?**
+
+  Yes, you just have to provide 4 calibration points.
+
+## Migrating from v1.x.x
+
+<details>
+<summary>Configuration with <code>map_image</code></summary>
+<table>
+<tr>
+<th>Old config (<code>v1.x.x</code>)</th><th>New config (<code>v2.x.x)</code></th>
+</tr>
+<tr>
+<td>
+<pre>
 type: custom:xiaomi-vacuum-map-card
 entity: vacuum.xiaomi_vacuum
 map_image: '/local/custom_lovelace/xiaomi_vacuum_map_card/map.png'
@@ -61,82 +522,94 @@ calibration_points:
       y: 1625
 zones:
   - [[25500, 25500, 26500, 26500]]
-  - [[24215, 28125, 29465, 32175]]
   - [[24245, 25190, 27495, 27940], [27492, 26789, 28942, 27889]]
-  - [[28972, 26715, 31072, 27915], [29457, 27903, 31107, 29203], [30198, 29215, 31498, 31215], [29461, 31228, 31511, 32478]]
-```
+</pre>
+</td>
+<td>
+<pre>
+type: custom:xiaomi-vacuum-map-card
+entity: vacuum.xiaomi_vacuum
+map_source:
+  image: '/local/custom_lovelace/xiaomi_vacuum_map_card/map.png'
+calibration_source:
+  calibration_points:
+    - vacuum:
+        x: 25500
+        y: 25500
+      map:
+        x: 466
+        y: 1889
+    - vacuum:
+        x: 26500
+        y: 26500
+      map:
+        x: 730
+        y: 1625
+    - vacuum:
+        x: 25500
+        y: 26500
+      map:
+        x: 466
+        y: 1625
+map_modes:
+  - template: vacuum_clean_zone
+  - template: vacuum_goto
+  - template: vacuum_clean_zone_predefined
+    predefined_selections:
+      - zones: [[25500, 25500, 26500, 26500]]
+      - zones: [[24245, 25190, 27495, 27940], [27492, 26789, 28942, 27889]]
+</pre>
+</td>
+</tr>
+</table>
+</details>
+<br/>
+<details>
+<summary>Configuration with <code>map_camera</code></summary>
+<table>
+<tr>
+<th>Old config (<code>v1.x.x</code>)</th><th>New config (<code>v2.x.x)</code></th>
+</tr>
+<tr>
+<td>
+<pre>
+type: custom:xiaomi-vacuum-map-card
+entity: vacuum.xiaomi_vacuum
+map_camera: camera.xiaomi_cloud_map_extractor
+camera_calibration: true
+zones:
+  - [[25500, 25500, 26500, 26500]]
+  - [[24245, 25190, 27495, 27940], [27492, 26789, 28942, 27889]]
+</pre>
+</td>
+<td>
+<pre>
+type: custom:xiaomi-vacuum-map-card
+entity: vacuum.xiaomi_vacuum
+map_source:
+  camera: camera.xiaomi_cloud_map_extractor
+calibration_source:
+  camera: true
+map_modes:
+  - template: vacuum_clean_zone
+  - template: vacuum_goto
+  - template: vacuum_clean_zone_predefined
+    predefined_selections:
+      - zones: [[25500, 25500, 26500, 26500]]
+      - zones: [[24245, 25190, 27495, 27940], [27492, 26789, 28942, 27889]]
+</pre>
+</td>
+</tr>
+</table>
+</details>
 
-## Installation
-1. Download [*xiaomi-vacuum-map-card.js*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/dist/xiaomi-vacuum-map-card.js), [*coordinates-converter.js*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/dist/coordinates-converter.js), [*texts.js*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/dist/texts.js) and [*style.js*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/dist/style.js) to `/www/custom_lovelace/xiaomi_vacuum_map_card` directory:
-    ```bash
-    mkdir -p www/custom_lovelace/xiaomi_vacuum_map_card
-    cd www/custom_lovelace/xiaomi_vacuum_map_card/
-    wget https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/dist/xiaomi-vacuum-map-card.js
-    wget https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/dist/coordinates-converter.js
-    wget https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/dist/texts.js
-    wget https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/dist/style.js
-    ```
-2. Add the card to resources in `ui-lovelace.yaml` or in the raw editor if you are using the frontend UI editor:
-    ```yaml
-    resources:
-      - url: /local/custom_lovelace/xiaomi_vacuum_map_card/xiaomi-vacuum-map-card.js
-        type: module
-    ```
+## Translations
 
-## Calibration
+Currently, this card contains translations for following languages: 
+* English
+* Polish (Polski)
 
-To calibrate this card follow instructions from [this](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/wiki) guide.
-
-## Defining service
-
-You can use a `service` parameter for example to run a script instead of starting a vacuum directly. Provided service will be run with following parameters:
-* `entity_id` - id of a vacuum
-* `command` - one of two:
-  * `app_goto_target` - for _Go to target_ mode
-  * `zoned_cleanup` - for _Zoned cleanup_ and _Predefined zones_ modes
-* `params` - point or a list of zones (the same value as displayed in `debug` mode)
-
-| WARNING: In the current version of Home Assistant the service `vacuum.send_command` does not support templates! |
-| --- |
-| To overcome this issue you can use a [*script*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/examples/vacuum_send_command_multiple_zones.yaml) and a [*python script*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/examples/vacuum_send_command.py). |
-
-Example HA script that can be used with this card is available [*here*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/examples/vacuum_send_command.yaml).
-
-## Hints
-* To find out values for `calibration_points` you can use the service `vacuum.send_command` with data:
-  ```json
-  {
-    "entity_id": "vacuum.xiaomi_vacuum",
-    "command": "app_goto_target",
-    "params": [25500, 25500]
-  }
-  ```
-  Alternatively you can use `vacuum.xiaomi_clean_zone`:
-    ```json
-    {
-      "entity_id": "vacuum.xiaomi_vacuum",
-      "zone": [[25500, 25500, 26500, 26500]],
-      "repeats": 1
-    }
-    ```
-* You can find out coordinates for zones using two methods:
-  * Enabling `debug` in settings, drawing zone in `Zoned cleanup` mode and holding `Start` button. Note: this method also works for other modes.
-  * Android App [*FloleVac*](https://play.google.com/store/apps/details?id=de.flole.xiaomi)
-
-* To add another language modify file [*texts.js*](https://github.com/PiotrMachowski/Home-Assistant-Lovelace-Xiaomi-Vacuum-Map-card/raw/master/dist/texts.js) and set the `language` parameter in cards configuration.
-
-## FAQ
-* **Can this card show a live map?**
-
-  Yes, to show a camera feed as a background set property `map_camera` in configuration. To get this feature without rooting your vacuum use [this](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor) integration.
-
-* **Does this card require rooted device?**
-
-  No, it only utilizes features of Home Assistant and not communicates directly with a vacuum.
-
-* **How to create a map?**
-
-  You can use any image you want, the easiest way is to use a screenshot from Mi Home/FloleVac or [this](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor) integration to provide live map without rooting.
+[Adding a new language](CONTRIBUTING.md#adding-new-translations)
 
 
 <a href="https://www.buymeacoffee.com/PiotrMachowski" target="_blank"><img src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>

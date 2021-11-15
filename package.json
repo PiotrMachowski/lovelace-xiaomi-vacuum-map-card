@@ -1,0 +1,58 @@
+{
+    "name": "xiaomi-vacuum-map-card",
+    "version": "2.0.0",
+    "description": "Xiaomi Vacuum Map Card",
+    "keywords": [
+        "home-assistant",
+        "homeassistant",
+        "hass",
+        "automation",
+        "lovelace",
+        "custom-cards"
+    ],
+    "module": "xiaomi-vacuum-map-card.js",
+    "repository": "git@github.com:PiotrMachowski/lovelace-xiaomi-vacuum-map-card.git",
+    "author": "Piotr Machowski <piotr.machowski.dev@gmail.com>",
+    "license": "MIT",
+    "dependencies": {
+        "custom-card-helpers": "^1.7.2",
+        "home-assistant-js-websocket": "^5.11.1",
+        "lit": "^2.0.0-rc.2",
+        "pointer-tracker": "^2.4.0",
+        "transformation-matrix": "^2.8.0",
+        "change-perspective": "^1.0.1",
+        "@polymer/paper-dropdown-menu": "^3.2.0",
+        "@polymer/paper-item": "^3.0.1",
+        "@polymer/paper-listbox": "^3.0.1",
+        "compare-versions": "^4.0.1"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.15.0",
+        "@babel/plugin-proposal-class-properties": "^7.14.5",
+        "@babel/plugin-proposal-decorators": "^7.14.5",
+        "@rollup/plugin-json": "^4.1.0",
+        "@typescript-eslint/eslint-plugin": "^4.33.0",
+        "@typescript-eslint/parser": "^4.33.0",
+        "eslint": "^7.32.0",
+        "eslint-config-airbnb-base": "^14.2.1",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-import": "^2.24.0",
+        "eslint-plugin-prettier": "^4.0.0",
+        "prettier": "^2.4.1",
+        "rollup": "^2.58.0",
+        "rollup-plugin-babel": "^4.4.0",
+        "rollup-plugin-commonjs": "^10.1.0",
+        "rollup-plugin-node-resolve": "^5.2.0",
+        "rollup-plugin-serve": "^1.1.0",
+        "rollup-plugin-terser": "^7.0.2",
+        "rollup-plugin-typescript2": "^0.30.0",
+        "rollup-plugin-uglify": "^6.0.4",
+        "typescript": "^4.4.3"
+    },
+    "scripts": {
+        "start": "rollup -c rollup.config.dev.js --watch",
+        "build": "npm run lint && npm run rollup",
+        "lint": "eslint src/*.ts",
+        "rollup": "rollup -c"
+    }
+}

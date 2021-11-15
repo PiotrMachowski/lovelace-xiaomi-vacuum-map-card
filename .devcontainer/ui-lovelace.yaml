@@ -1,0 +1,6 @@
+resources:
+  - url: http://127.0.0.1:5000/xiaomi-vacuum-map-card.js
+    type: module
+views:
+  - cards:
+      - type: custom:xiaomi-vacuum-map-card

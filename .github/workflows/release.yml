@@ -1,0 +1,30 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release:
+    name: Prepare release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      # Build
+      - name: Build the file
+        run: |
+          cd /home/runner/work/lovelace-xiaomi-vacuum-map-card/lovelace-xiaomi-vacuum-map-card
+          npm install
+          npm run build
+
+      # Upload build file to the release as an asset.
+      - name: Upload zip to release
+        uses: svenstaro/upload-release-action@v1-release
+
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: /home/runner/work/lovelace-xiaomi-vacuum-map-card/lovelace-xiaomi-vacuum-map-card/dist/xiaomi-vacuum-map-card.js
+          asset_name: xiaomi-vacuum-map-card.js
+          tag: ${{ github.ref }}
+          overwrite: true
