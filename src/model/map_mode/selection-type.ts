@@ -1,0 +1,8 @@
+export enum SelectionType {
+    MANUAL_RECTANGLE,
+    PREDEFINED_RECTANGLE,
+    ROOM,
+    MANUAL_PATH,
+    MANUAL_POINT,
+    PREDEFINED_POINT,
+}

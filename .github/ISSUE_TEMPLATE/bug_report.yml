@@ -1,0 +1,101 @@
+name: Report an issue with Xiaomi Vacuum Map card
+description: Report an issue with Xiaomi Vacuum Map card.
+labels: bug
+assignees: 'PiotrMachowski'
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This issue form is for reporting bugs only!
+
+        If you have a question, feature or enhancement request, please use the dedicated form.
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I have updated the card to the latest version available
+          required: true
+        - label: I have cleared the cache of my browser
+          required: true
+        - label: I have checked if the problem is already reported
+          required: true
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: The problem
+      description: >-
+        Describe the issue you are experiencing here.
+  - type: markdown
+    attributes:
+      value: |
+        ## Environment
+  - type: input
+    id: card-version
+    validations:
+      required: true
+    attributes:
+      label: What version of a card has described problem?
+      placeholder: vX.X.X
+  - type: input
+    id: last-working-card-version
+    validations:
+      required: false
+    attributes:
+      label: What was the last working version card?
+      placeholder: vX.X.X
+      description: >
+        If known, otherwise leave blank.
+  - type: input
+    id: vacuum-model
+    validations:
+      required: true
+    attributes:
+      label: What vacuum model do you have problems with?
+      placeholder: roborock.vacuum.s5e
+  - type: input
+    id: ha-version
+    validations:
+      required: true
+    attributes:
+      label: What version of Home Assistant do you use?
+      placeholder: core-
+      description: >
+        Can be found in: [Configuration panel -> Info](https://my.home-assistant.io/redirect/info/).
+
+        [![Open your Home Assistant instance and show your Home Assistant version information.](https://my.home-assistant.io/badges/info.svg)](https://my.home-assistant.io/redirect/info/)
+  - type: dropdown
+    validations:
+      required: true
+    attributes:
+      label: What type of installation are you running?
+      description: >
+        Can be found in: [Configuration panel -> Info](https://my.home-assistant.io/redirect/info/).
+
+        [![Open your Home Assistant instance and show your Home Assistant version information.](https://my.home-assistant.io/badges/info.svg)](https://my.home-assistant.io/redirect/info/)
+      options:
+        - Home Assistant OS
+        - Home Assistant Container
+        - Home Assistant Supervised
+        - Home Assistant Core
+  - type: markdown
+    attributes:
+      value: |
+        # Details
+  - type: textarea
+    attributes:
+      label: Card's configuration
+      description: |
+        Please provide card's YAML configuration to help with problem reproduction.
+      render: yaml
+  - type: textarea
+    attributes:
+      label: Javascript errors shown in the browser's console (if applicable)
+      description: For example, error message, or stack traces. ([How to open browser's console](https://webmasters.stackexchange.com/questions/8525/how-do-i-open-the-javascript-console-in-different-browsers))
+      render: shell
+  - type: textarea
+    attributes:
+      label: Additional information
+      description: >
+        If you have any additional information, use the field below.

@@ -1,0 +1,475 @@
+type: custom:xiaomi-vacuum-map-card
+title: Xiaomi Vacuum Map Card
+preset_name: Live map
+entity: vacuum.xiaomi_vacuum
+map_source:
+  camera: camera.xiaomi_cloud_map_extractor
+calibration_source:
+  camera: true
+map_modes:
+  - template: vacuum_clean_zone
+  - template: vacuum_clean_zone_predefined
+    predefined_selections:
+      - zones: [[ 21485, 28767, 24236, 32131 ], [ 23217, 27379, 24216, 28737 ]]
+        label:
+          text: "Bedroom"
+          x: 22932
+          y: 30339
+          offset_y: 35
+        icon:
+          name: "mdi:bed"
+          x: 22932
+          y: 30339
+      - zones: [[ 27782, 27563, 29678, 29369 ]]
+        label:
+          text: "Kitchen"
+          x: 28760
+          y: 28403
+          offset_y: 35
+        icon:
+          name: "mdi:pot-mix"
+          x: 28760
+          y: 28403
+  - template: vacuum_clean_segment
+    predefined_selections:
+      - id: 1
+        outline: [[ 21458, 32131 ], [ 24235, 32152 ], [ 24194, 27409 ], [ 23181, 27409 ], [ 23160, 28807 ], [ 21417, 28807 ]]
+        label:
+          text: "Bedroom"
+          x: 22932
+          y: 30339
+          offset_y: 35
+        icon:
+          name: "mdi:bed"
+          x: 22932
+          y: 30339
+      - id: 2
+        outline: [[ 21478, 27237 ], [ 23048, 27250 ], [ 23061, 25655 ], [ 21478, 25680 ]]
+        label:
+          text: "Bathroom"
+          x: 22282
+          y: 26496
+          offset_y: 35
+        icon:
+          name: "mdi:shower"
+          x: 22282
+          y: 26496
+      - id: 3
+        outline: [[ 30417, 29895 ], [ 30694, 29895 ], [ 30694, 30338 ], [ 31358, 30319 ], [ 33221, 29194 ], [ 33055, 28954 ], [ 34715, 28087 ], [ 36172, 27350 ], [ 36153, 25966 ], [ 35969, 25911 ], [ 35969, 25155 ], [ 34217, 25155 ], [ 34180, 26151 ], [ 31671, 26169 ], [ 31653, 25173 ], [ 30343, 25173 ]]
+        label:
+          text: "Living room"
+          x: 33036
+          y: 27589
+          offset_y: 35
+        icon:
+          name: "mdi:television"
+          x: 33036
+          y: 27589
+  - template: vacuum_goto
+  - template: vacuum_goto_predefined
+    predefined_selections:
+      - position: [ 28006, 28036 ]
+        label:
+          text: "Emptying"
+          x: 28006
+          y: 28036
+          offset_y: 35
+        icon:
+          name: "mdi:broom"
+          x: 28006
+          y: 28036
+      - position: [ 32143, 26284 ]
+        label:
+          text: "Sofa"
+          x: 32143
+          y: 26284
+          offset_y: 35
+        icon:
+          name: "mdi:sofa"
+          x: 32143
+          y: 26284
+  - template: vacuum_follow_path
+additional_presets:
+  - preset_name: Static image
+    entity: vacuum.xiaomi_vacuum
+    map_source:
+      image: "/local/map_image.png"
+    calibration_source:
+      calibration_points:
+        - vacuum:
+            x: 22633
+            y: 31641
+          map:
+            x: 322
+            y: 172
+        - vacuum:
+            x: 22633
+            y: 26514
+          map:
+            x: 322
+            y: 1342
+        - vacuum:
+            x: 34283
+            y: 26514
+          map:
+            x: 2993
+            y: 1342
+    map_modes:
+      - name: Zones
+        icon: mdi:select-drag
+        selection_type: MANUAL_RECTANGLE
+        max_selections: 5
+        repeats_type: INTERNAL
+        max_repeats: 5
+        service_call_schema:
+          service: vacuum.do_zones
+          service_data:
+            zones: "[[selection]]"
+            repeats: "[[repeats]]"
+            predefined: "false"
+          target:
+            entity_id: "[[entity_id]]"
+      - name: Predefined zones
+        icon: mdi:texture-box
+        selection_type: PREDEFINED_RECTANGLE
+        max_selections: 5
+        repeats_type: INTERNAL
+        max_repeats: 5
+        service_call_schema:
+          service: vacuum.do_zones
+          service_data:
+            zones: "[[selection]]"
+            repeats: "[[repeats]]"
+            predefined: "true"
+          target:
+            entity_id: "[[entity_id]]"
+        predefined_selections:
+          - zones: [[ 21485, 28767, 24236, 32131 ], [ 23217, 27379, 24216, 28737 ]]
+            label:
+              text: "Bedroom"
+              x: 22932
+              y: 30339
+              offset_y: 35
+            icon:
+              name: "mdi:bed"
+              x: 22932
+              y: 30339
+          - zones: [[ 27782, 27563, 29678, 29369 ]]
+            label:
+              text: "Kitchen"
+              x: 28760
+              y: 28403
+              offset_y: 35
+            icon:
+              name: "mdi:pot-mix"
+              x: 28760
+              y: 28403
+      - name: Rooms
+        icon: mdi:floor-plan
+        selection_type: ROOM
+        max_selections: 5
+        repeats_type: NONE
+        max_repeats: 5
+        service_call_schema:
+          service: vacuum.do_rooms
+          service_data:
+            rooms: "[[selection]]"
+            predefined: "true"
+          target:
+            entity_id: "[[entity_id]]"
+        predefined_selections:
+          - id: 1
+            outline: [[ 21458, 32131 ], [ 24235, 32152 ], [ 24194, 27409 ], [ 23181, 27409 ], [ 23160, 28807 ], [ 21417, 28807 ]]
+            label:
+              text: "Bedroom"
+              x: 22932
+              y: 30339
+              offset_y: 35
+            icon:
+              name: "mdi:bed"
+              x: 22932
+              y: 30339
+          - id: 2
+            outline: [[ 21478, 27237 ], [ 23048, 27250 ], [ 23061, 25655 ], [ 21478, 25680 ]]
+            label:
+              text: "Bathroom"
+              x: 22282
+              y: 26496
+              offset_y: 35
+            icon:
+              name: "mdi:shower"
+              x: 22282
+              y: 26496
+          - id: 3
+            outline: [[ 30417, 29895 ], [ 30694, 29895 ], [ 30694, 30338 ], [ 31358, 30319 ], [ 33221, 29194 ], [ 33055, 28954 ], [ 34715, 28087 ], [ 36172, 27350 ], [ 36153, 25966 ], [ 35969, 25911 ], [ 35969, 25155 ], [ 34217, 25155 ], [ 34180, 26151 ], [ 31671, 26169 ], [ 31653, 25173 ], [ 30343, 25173 ]]
+            label:
+              text: "Living room"
+              x: 33036
+              y: 27589
+              offset_y: 35
+            icon:
+              name: "mdi:television"
+              x: 33036
+              y: 27589
+      - name: Path
+        icon: mdi:map-marker-path
+        selection_type: MANUAL_PATH
+        max_selections: 5
+        repeats_type: NONE
+        max_repeats: 5
+        service_call_schema:
+          service: vacuum.do_path
+          service_data:
+            path: "[[selection]]"
+            repeats: "[[repeats]]"
+            predefined: "false"
+          target:
+            entity_id: "[[entity_id]]"
+      - name: Manual Point
+        icon: mdi:map-marker-plus
+        selection_type: MANUAL_POINT
+        max_selections: 5
+        repeats_type: NONE
+        max_repeats: 5
+        service_call_schema:
+          service: vacuum.do_point
+          service_data:
+            point: "[[selection]]"
+            point_x: "[[point_x]]"
+            point_y: "[[point_y]]"
+            repeats: "[[repeats]]"
+            predefined: "false"
+          target:
+            entity_id: "[[entity_id]]"
+      - name: Predefined Point
+        icon: mdi:map-marker
+        selection_type: PREDEFINED_POINT
+        max_selections: 5
+        repeats_type: NONE
+        max_repeats: 5
+        service_call_schema:
+          service: vacuum.do_point
+          service_data:
+            point: "[[selection]]"
+            repeats: "[[repeats]]"
+            point_x: "[[point_x]]"
+            point_y: "[[point_y]]"
+            predefined: "true"
+          target:
+            entity_id: "[[entity_id]]"
+        predefined_selections:
+          - position: [ 28006, 28036 ]
+            label:
+              text: "Emptying"
+              x: 28006
+              y: 28036
+              offset_y: 35
+            icon:
+              name: "mdi:broom"
+              x: 28006
+              y: 28036
+          - position: [ 32143, 26284 ]
+            label:
+              text: "Sofa"
+              x: 32143
+              y: 26284
+              offset_y: 35
+            icon:
+              name: "mdi:sofa"
+              x: 32143
+              y: 26284
+  - preset_name: Image with perspective
+    entity: vacuum.xiaomi_vacuum
+    map_source:
+      image: "/local/map_image_perspective_crop.png"
+    calibration_source:
+      calibration_points:
+        - vacuum: ##494
+            x: 22633
+            y: 31641
+          map:
+            x: 995
+            y: 144
+        - vacuum:
+            x: 22633
+            y: 26514
+          map:
+            x: 603
+            y: 797
+        - vacuum:
+            x: 34283
+            y: 26514
+          map:
+            x: 2515
+            y: 523
+        - vacuum:
+            x: 34283
+            y: 31641
+          map:
+            x: 2350
+            y: 61
+    map_modes:
+      - name: Zones
+        icon: mdi:select-drag
+        selection_type: MANUAL_RECTANGLE
+        max_selections: 5
+        repeats_type: INTERNAL
+        max_repeats: 5
+        service_call_schema:
+          service: vacuum.do_zones
+          service_data:
+            zones: "[[selection]]"
+            repeats: "[[repeats]]"
+            predefined: "false"
+          target:
+            entity_id: "[[entity_id]]"
+      - name: Predefined zones
+        icon: mdi:texture-box
+        selection_type: PREDEFINED_RECTANGLE
+        max_selections: 5
+        repeats_type: INTERNAL
+        max_repeats: 5
+        service_call_schema:
+          service: vacuum.do_zones
+          service_data:
+            zones: "[[selection]]"
+            repeats: "[[repeats]]"
+            predefined: "true"
+          target:
+            entity_id: "[[entity_id]]"
+        predefined_selections:
+          - zones: [[ 21485, 28767, 24236, 32131 ], [ 23217, 27379, 24216, 28737 ]]
+            label:
+              text: "Bedroom"
+              x: 22932
+              y: 30339
+              offset_y: 35
+            icon:
+              name: "mdi:bed"
+              x: 22932
+              y: 30339
+          - zones: [[ 27782, 27563, 29678, 29369 ]]
+            label:
+              text: "Kitchen"
+              x: 28760
+              y: 28403
+              offset_y: 35
+            icon:
+              name: "mdi:pot-mix"
+              x: 28760
+              y: 28403
+          - zones: [[ 33914, 26472, 35355, 29940 ]]
+      - name: Rooms
+        icon: mdi:floor-plan
+        selection_type: ROOM
+        max_selections: 5
+        repeats_type: NONE
+        max_repeats: 5
+        service_call_schema:
+          service: vacuum.do_rooms
+          service_data:
+            rooms: "[[selection]]"
+            predefined: "true"
+          target:
+            entity_id: "[[entity_id]]"
+        predefined_selections:
+          - id: 1
+            outline: [[ 21458, 32131 ], [ 24235, 32152 ], [ 24194, 27409 ], [ 23181, 27409 ], [ 23160, 28807 ], [ 21417, 28807 ]]
+            label:
+              text: "Bedroom"
+              x: 22932
+              y: 30339
+              offset_y: 35
+            icon:
+              name: "mdi:bed"
+              x: 22932
+              y: 30339
+          - id: 2
+            outline: [[ 21478, 27237 ], [ 23048, 27250 ], [ 23061, 25655 ], [ 21478, 25680 ]]
+            label:
+              text: "Bathroom"
+              x: 22282
+              y: 26496
+              offset_y: 35
+            icon:
+              name: "mdi:shower"
+              x: 22282
+              y: 26496
+          - id: 3
+            outline: [[ 30417, 29895 ], [ 30694, 29895 ], [ 30694, 30338 ], [ 31358, 30319 ], [ 33221, 29194 ], [ 33055, 28954 ], [ 34715, 28087 ], [ 36172, 27350 ], [ 36153, 25966 ], [ 35969, 25911 ], [ 35969, 25155 ], [ 34217, 25155 ], [ 34180, 26151 ], [ 31671, 26169 ], [ 31653, 25173 ], [ 30343, 25173 ]]
+            label:
+              text: "Living room"
+              x: 33036
+              y: 27589
+              offset_y: 35
+            icon:
+              name: "mdi:television"
+              x: 33036
+              y: 27589
+      - name: Path
+        icon: mdi:map-marker-path
+        selection_type: MANUAL_PATH
+        max_selections: 5
+        repeats_type: NONE
+        max_repeats: 5
+        service_call_schema:
+          service: vacuum.do_path
+          service_data:
+            path: "[[selection]]"
+            repeats: "[[repeats]]"
+            predefined: "false"
+          target:
+            entity_id: "[[entity_id]]"
+      - name: Manual Point
+        icon: mdi:map-marker-plus
+        selection_type: MANUAL_POINT
+        max_selections: 5
+        repeats_type: NONE
+        max_repeats: 5
+        service_call_schema:
+          service: vacuum.do_point
+          service_data:
+            point: "[[selection]]"
+            point_x: "[[point_x]]"
+            point_y: "[[point_y]]"
+            repeats: "[[repeats]]"
+            predefined: "false"
+          target:
+            entity_id: "[[entity_id]]"
+      - name: Predefined Point
+        icon: mdi:map-marker
+        selection_type: PREDEFINED_POINT
+        max_selections: 5
+        repeats_type: NONE
+        max_repeats: 5
+        service_call_schema:
+          service: vacuum.do_point
+          service_data:
+            point: "[[selection]]"
+            repeats: "[[repeats]]"
+            point_x: "[[point_x]]"
+            point_y: "[[point_y]]"
+            predefined: "true"
+          target:
+            entity_id: "[[entity_id]]"
+        predefined_selections:
+          - position: [ 28006, 28036 ]
+            label:
+              text: "Emptying"
+              x: 28006
+              y: 28036
+              offset_y: 35
+            icon:
+              name: "mdi:broom"
+              x: 28006
+              y: 28036
+          - position: [ 32143, 26284 ]
+            label:
+              text: "Sofa"
+              x: 32143
+              y: 26284
+              offset_y: 35
+            icon:
+              name: "mdi:sofa"
+              x: 32143
+              y: 26284

@@ -1,0 +1,6 @@
+type: custom:xiaomi-vacuum-map-card
+entity: vacuum.roborock_vacuum_s5
+map_source:
+  camera: camera.xiaomi_cloud_map_extractor
+calibration_source:
+  camera: true

@@ -1,0 +1,174 @@
+{
+    "common": {
+        "version": "Wersja",
+        "invalid_configuration": "Nieprawidłowa konfiguracja {0}",
+        "description": "Karta pozwalająca na kontrolowanie odkurzacza",
+        "old_configuration": "Wykryto starą wersję konfiguracji. Dostosuj kartę do najnowszej wersji, albo utwórz ją od nowa.",
+        "old_configuration_migration_link": "Przewodnik po migracji"
+    },
+    "map_mode": {
+        "invalid": "Nieprawidłowa wartość template",
+        "vacuum_goto": "Idź do punktu",
+        "vacuum_goto_predefined": "Zapisane punkty",
+        "vacuum_clean_segment": "Pokoje",
+        "vacuum_clean_zone": "Sprzątanie strefowe",
+        "vacuum_clean_zone_predefined": "Zapisane strefy",
+        "vacuum_follow_path": "Ścieżka"
+    },
+    "validation": {
+        "preset": {
+            "entity": {
+                "missing": "Brakujący parametr: entity"
+            },
+            "preset_name": {
+                "missing": "Brakujący parametr: preset_name"
+            },
+            "platform": {
+                "invalid": "Nieprawidłowa platforma odkurzacza: {0}"
+            },
+            "map_source": {
+                "missing": "Brakujący parametr: map_source",
+                "none_provided": "Nie podano źródła mapy",
+                "ambiguous": "Można podać tylko jedno źródło mapy"
+            },
+            "calibration_source": {
+                "missing": "Brakujący parametr: calibration_source",
+                "ambiguous": "Można podać tylko jedno źródło kalibracji",
+                "none_provided": "Nie podano źródła kalibracji",
+                "calibration_points": {
+                    "invalid_number": "Wymagane 3 bądź 4 punkty kalibracyjne",
+                    "missing_map": "Każdy punkt kalibracyjny musi posiadać współrzędne na mapie",
+                    "missing_vacuum": "Każdy punkt kalibracyjny musi posiadać współrzędne w układzie odkurzacza",
+                    "missing_coordinate": "Każdy punkt kalibracyjny musi mieć współrzędne x i y"
+                }
+            },
+            "icons": {
+                "invalid": "Błąd w konfiguracji: icons",
+                "icon": {
+                    "missing": "Każda pozycja na liście ikon musi posiadać parametr \"icon\""
+                }
+            },
+            "tiles": {
+                "invalid": "Błąd w konfiguracji: tiles",
+                "entity": {
+                    "missing": "Każda pozycja na liście kafelków musi posiadać parametr \"entity\""
+                },
+                "label": {
+                    "missing": "Każda pozycja na liście kafelków musi posiadać parametr \"label\""
+                }
+            },
+            "map_modes": {
+                "invalid": "Błąd w konfiguracji: map_modes",
+                "icon": {
+                    "missing": "Brakująca ikona szablonu trybu mapy"
+                },
+                "name": {
+                    "missing": "Brakująca nazwa szablonu trybu mapy"
+                },
+                "template": {
+                    "invalid": "Nieprawidłowy szablon trybu mapy: {0}"
+                },
+                "predefined_selections": {
+                    "not_applicable": "Szablon {0} nie wspiera zapisywania zaznaczeń",
+                    "zones": {
+                        "missing": "Brakująca lista zapisanych stref",
+                        "invalid_parameters_number": "Każda zapisana strefa musi posiadać 4 współrzędne"
+                    },
+                    "points": {
+                        "position": {
+                            "missing": "Brakująca lista zapisanych punktów",
+                            "invalid_parameters_number": "Każdy zapisany punkt musi posiadać 2 współrzędne"
+                        }
+                    },
+                    "rooms": {
+                        "id": {
+                            "missing": "Brakujący identyfikator pokoju",
+                            "invalid_format": "Nieprawidłowy identyfikator pokoju: {0}"
+                        },
+                        "outline": {
+                            "invalid_parameters_number": "Każdy punkt obrysu pokoju musi posiadać 2 współrzędne"
+                        }
+                    },
+                    "label": {
+                        "x": {
+                            "missing": "Każda etykieta musi posiadać współrzędną x"
+                        },
+                        "y": {
+                            "missing": "Każda etykieta musi posiadać współrzędną y"
+                        },
+                        "text": {
+                            "missing": "Każda etykieta musi posiadać tekst"
+                        }
+                    },
+                    "icon": {
+                        "x": {
+                            "missing": "Każda ikona musi posiadać współrzędną x"
+                        },
+                        "y": {
+                            "missing": "Każda ikona musi posiadać współrzędną y"
+                        },
+                        "name": {
+                            "missing": "Każda ikona musi posiadać parametr \"name\""
+                        }
+                    }
+                },
+                "service_call_schema": {
+                    "missing": "Brakujący schemat wywołania usługi",
+                    "service": {
+                        "missing": "Każdy schemat usługi musi posiadać podaną nazwę usługi  ",
+                        "invalid": "Nieprawidłowa usługa: {0}"
+                    }
+                }
+            }
+        },
+        "invalid_entities": "Nieprawidłowe encje:",
+        "invalid_calibration": "Nieprawidłowa kalibracja, sprawdź konfigurację"
+    },
+    "label": {
+        "status": "Status",
+        "battery_level": "Bateria",
+        "fan_speed": "Moc",
+        "sensor_dirty_left": "Sensory",
+        "filter_left": "Filtr",
+        "main_brush_left": "Główna szczotka",
+        "side_brush_left": "Boczna szczotka",
+        "cleaning_count": "Licznik sprzątań",
+        "cleaned_area": "Powierzchnia",
+        "cleaning_time": "Czas sprzątania"
+    },
+    "icon": {
+        "vacuum_start": "Uruchom",
+        "vacuum_pause": "Wstrzymaj",
+        "vacuum_stop": "Zatrzymaj",
+        "vacuum_return_to_base": "Wróć do stacji dokującej",
+        "vacuum_clean_spot": "Wyczyść miejsce",
+        "vacuum_locate": "Zlokalizuj",
+        "vacuum_set_fan_speed": "Zmień prędkość wentylatora"
+    },
+    "unit": {
+        "hour_shortcut": "h",
+        "meter_shortcut": "m",
+        "meter_squared_shortcut": "m²",
+        "minute_shortcut": "min"
+    },
+    "popups": {
+        "success": "Usługa wywołana!",
+        "no_selection": "Nie wybrano zaznaczenia",
+        "failed": "Błąd wywołania usługi"
+    },
+    "editor": {
+        "description": {
+            "before_link": "Ten edytor interfejsu wspiera jedynie podstawową konfigurację dla kamery utworzonej przy użyciu ",
+            "link_text": "Xiaomi Cloud Map Extractora",
+            "after_link": ". W celu bardziej zaawansowanej konfiguracji użyj trybu YAML."
+        },
+        "label": {
+            "name": "Tytuł (opcjonalny)",
+            "entity": "Encja odkurzacza (wymagana)",
+            "camera": "Kamera z mapą (wymagana)",
+            "vacuum_platform": "Platforma integracji odkurzacza (wymagana)",
+            "map_locked": "Blokada mapy (opcjonalna)",
+            "two_finger_pan": "Przesuwanie mapy dwoma palcami (opcjonalne)"
+        }
+    }
+}

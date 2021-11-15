@@ -1,0 +1,24 @@
+follow_path:
+  mode: single
+  alias: Vacuum follow path
+  fields:
+    path:
+      name: Path
+    entity_id:
+      name: Vacuum entity
+  sequence:
+    - repeat:
+        count: "{{ path | length }}"
+        sequence:
+          - service: vacuum.send_command
+            data:
+              entity_id: "{{ entity_id }}"
+              command: app_goto_target
+              params: "{{ path[repeat.index-1] }}"
+          - wait_template: "{{ is_state(entity_id, 'cleaning') }}"
+            timeout: 00:00:30
+            continue_on_timeout: false
+          - delay: 00:00:01
+          - wait_template: "{{ is_state(entity_id, 'idle') or is_state(entity_id, 'paused') }}"
+            timeout: 00:05:00
+            continue_on_timeout: false
