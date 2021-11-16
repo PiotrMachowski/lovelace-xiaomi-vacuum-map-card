@@ -433,6 +433,7 @@ Format of data depends on selected `selection_type`:
   
   To get coordinates switch to a specific mode, create a selection and hold "Play" button.
   A popup with full service call details will be shown.
+  This feature replaces `debug` option from previous versions of the card.
 
 - **Creating outline**
 
