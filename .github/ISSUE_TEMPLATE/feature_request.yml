@@ -1,6 +1,6 @@
 name: Request a feature in Xiaomi Vacuum Map card
 description: Request a feature in Xiaomi Vacuum Map card
-labels: ennhancement
+labels: enhancement
 assignees: 'PiotrMachowski'
 body:
   - type: markdown
