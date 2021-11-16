@@ -1,3 +1,4 @@
+import * as it from "./languages/it.json";
 import * as en from "./languages/en.json";
 import * as es from "./languages/es.json";
 import * as fr from "./languages/fr.json";
@@ -5,6 +6,7 @@ import * as pl from "./languages/pl.json";
 import { TranslatableString } from "../types/types";
 
 const languages: Record<string, unknown> = {
+    it: it,
     en: en,
     es: es,
     fr: fr,
