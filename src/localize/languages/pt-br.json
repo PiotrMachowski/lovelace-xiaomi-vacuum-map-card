@@ -43,7 +43,7 @@
                 }
             },
             "icons": {
-                "invalid": "Erro na configuração: ícones",
+                "invalid": "Erro na configuração: icones",
                 "icon": {
                     "missing": "Cada entrada na lista de ícones deve conter a propriedade do ícone"
                 }
@@ -128,8 +128,8 @@
         "status": "Status",
         "battery_level": "Bateria",
         "fan_speed": "Velocidade",
-        "sensor_dirty_left": "Sensores da esquerda",
-        "filter_left": "Filtro da esquerda",
+        "sensor_dirty_left": "Sensores",
+        "filter_left": "Filtro",
         "main_brush_left": "Escova principal",
         "side_brush_left": "Escova lateral",
         "cleaning_count": "Contagem de limpezas",
@@ -140,7 +140,7 @@
         "vacuum_start": "Começar",
         "vacuum_pause": "Pausar",
         "vacuum_stop": "Parar",
-        "vacuum_return_to_base": "Retornar para a base",
+        "vacuum_return_to_base": "Voltar para a base",
         "vacuum_clean_spot": "Limpar local",
         "vacuum_locate": "Localizar",
         "vacuum_set_fan_speed": "Mudar velocidade"
