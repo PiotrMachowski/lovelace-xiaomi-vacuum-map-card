@@ -621,8 +621,9 @@ Currently, this card contains translations for following languages:
 
 I'd like to give special thanks to people who helped me with card's design and development:
 * [Bartosz Orczyk](www.bratver.com) 
-* [Marek Trochimiak](https://github.com/tromarek1)
+* [Filip Schramm](https://github.com/fi-sch)
 * [Kamil Dryzek](https://github.com/dryzek)
+* [Marek Trochimiak](https://github.com/tromarek1)
 
 
 <a href="https://www.buymeacoffee.com/PiotrMachowski" target="_blank"><img src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
