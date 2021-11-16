@@ -117,8 +117,11 @@ Features include:
 This card contains UI configuration editor, but it is limited to only basic set of features.
 Its full potential can be achieved by manual yaml adjustments.
 
-You can use this configuration as an example:
- * [demo config](/docs/demo_config.yaml) (configuration used in full_demo.mp4)
+:warning::warning::warning:
+
+You can use this configuration as an example: [demo config](/docs/demo_config.yaml) (configuration used in full_demo.mp4).
+
+:warning::warning::warning:
 
 ### Main options
 
