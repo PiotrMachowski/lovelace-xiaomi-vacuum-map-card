@@ -608,6 +608,7 @@ map_modes:
 Currently, this card contains translations for following languages: 
 * English
 * Polish (Polski)
+* Brazilian Portuguese (Português Brasileiro)
 
 [Adding a new language](CONTRIBUTING.md#adding-new-translations)
 
