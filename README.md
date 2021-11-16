@@ -61,6 +61,7 @@ https://user-images.githubusercontent.com/6118709/140251738-7fb06e81-34b0-4bf8-b
   - [FAQ](#faq)
   - [Migrating from v1.x.x](#migrating-from-v1xx)
   - [Translations](#translations)
+  - [Special thanks](#special-thanks)
 
 ## Features
 
@@ -615,6 +616,13 @@ Currently, this card contains translations for following languages:
 * Polish (Polski)
 
 [Adding a new language](CONTRIBUTING.md#adding-new-translations)
+
+## Special thanks
+
+I'd like to give special thanks to people who helped me with card's design and development:
+* [Bartosz Orczyk](www.bratver.com) 
+* [Marek Trochimiak](https://github.com/tromarek1)
+* [Kamil Dryzek](https://github.com/dryzek)
 
 
 <a href="https://www.buymeacoffee.com/PiotrMachowski" target="_blank"><img src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
