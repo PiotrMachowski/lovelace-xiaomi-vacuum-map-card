@@ -612,6 +612,7 @@ map_modes:
 
 Currently, this card contains translations for following languages: 
 * English
+* French (Français)
 * Polish (Polski)
 
 [Adding a new language](CONTRIBUTING.md#adding-new-translations)
