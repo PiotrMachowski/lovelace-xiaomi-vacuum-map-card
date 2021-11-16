@@ -1,10 +1,12 @@
 import * as en from "./languages/en.json";
 import * as pl from "./languages/pl.json";
+import * as pt-br from "./languages/pt-br.json";
 import { TranslatableString } from "../types/types";
 
 const languages: Record<string, unknown> = {
     en: en,
     pl: pl,
+    pt: pt-br,
 };
 
 export function localize(string: string, search = "", replace = ""): string {
