@@ -18,7 +18,7 @@
 [downloads_total_shield]: https://img.shields.io/github/downloads/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/total
 
 [community_forum_shield]: https://img.shields.io/static/v1.svg?label=%20&message=Forum&style=popout&color=41bdf5&logo=HomeAssistant&logoColor=white
-[community_forum]: https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/releases
+[community_forum]: https://community.home-assistant.io/t/xiaomi-vacuum-interactive-map-card/123901
 
 [buy_me_a_coffee_shield]: https://img.shields.io/static/v1.svg?label=%20&message=Buy%20me%20a%20coffee&color=6f4e37&logo=buy%20me%20a%20coffee&logoColor=white
 [buy_me_a_coffee]: https://www.buymeacoffee.com/PiotrMachowski
