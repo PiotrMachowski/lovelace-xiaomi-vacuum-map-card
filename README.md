@@ -620,6 +620,7 @@ Currently, this card contains translations for following languages:
 * Polish (Polski)
 * Spanish (Español)
 * Ukrainian (Українська)
+* Russian (Русский)
 
 [Adding a new language](CONTRIBUTING.md#adding-new-translations)
 
