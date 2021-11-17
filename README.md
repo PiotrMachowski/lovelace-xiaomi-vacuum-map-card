@@ -619,6 +619,7 @@ Currently, this card contains translations for following languages:
 * French (Français)
 * Polish (Polski)
 * Spanish (Español)
+* Ukrainian (Українська)
 
 [Adding a new language](CONTRIBUTING.md#adding-new-translations)
 
