@@ -61,6 +61,7 @@ https://user-images.githubusercontent.com/6118709/140251738-7fb06e81-34b0-4bf8-b
   - [FAQ](#faq)
   - [Migrating from v1.x.x](#migrating-from-v1xx)
   - [Translations](#translations)
+  - [Special thanks](#special-thanks)
 
 ## Features
 
@@ -117,8 +118,11 @@ Features include:
 This card contains UI configuration editor, but it is limited to only basic set of features.
 Its full potential can be achieved by manual yaml adjustments.
 
-You can use this configuration as an example:
- * [demo config](/docs/demo_config.yaml) (configuration used in full_demo.mp4)
+:warning::warning::warning:
+
+You can use this configuration as an example: [demo config](/docs/demo_config.yaml) (configuration used in full_demo.mp4).
+
+:warning::warning::warning:
 
 ### Main options
 
@@ -433,6 +437,8 @@ Format of data depends on selected `selection_type`:
   
   To get coordinates switch to a specific mode, create a selection and hold "Play" button.
   A popup with full service call details will be shown.
+  This feature replaces `debug` option from previous versions of the card.
+  Config will also be written in [browser's console](https://webmasters.stackexchange.com/questions/8525/how-do-i-open-the-javascript-console-in-different-browsers) to make it easier to copy.
 
 - **Creating outline**
 
@@ -474,6 +480,8 @@ Format of data depends on selected `selection_type`:
   You can convert it to YAML using [json2yaml.com](https://www.json2yaml.com/).
 
 ## FAQ
+
+- **Make sure to check out [FAQ section in Discussions](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/categories/faq), it contains a lot of useful information**
 
 - **Does this card require rooted device?**
 
@@ -606,11 +614,23 @@ map_modes:
 ## Translations
 
 Currently, this card contains translations for following languages: 
-* English
-* Polish (Polski)
 * Brazilian Portuguese (Português Brasileiro)
+* English
+* French (Français)
+* Italian
+* Polish (Polski)
+* Spanish (Español)
+* Ukrainian (Українська)
 
 [Adding a new language](CONTRIBUTING.md#adding-new-translations)
+
+## Special thanks
+
+I'd like to give special thanks to people who helped me with card's design and development:
+* [Bartosz Orczyk](www.bratver.com) 
+* [Filip Schramm](https://github.com/fi-sch)
+* [Kamil Dryzek](https://github.com/dryzek)
+* [Marek Trochimiak](https://github.com/tromarek1)
 
 
 <a href="https://www.buymeacoffee.com/PiotrMachowski" target="_blank"><img src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
