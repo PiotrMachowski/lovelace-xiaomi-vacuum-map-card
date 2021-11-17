@@ -614,9 +614,10 @@ map_modes:
 ## Translations
 
 Currently, this card contains translations for following languages: 
-* Italian
+* Brazilian Portuguese (Português Brasileiro)
 * English
 * French (Français)
+* Italian
 * Polish (Polski)
 * Spanish (Español)
 * Ukrainian (Українська)
