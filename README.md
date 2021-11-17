@@ -481,6 +481,8 @@ Format of data depends on selected `selection_type`:
 
 ## FAQ
 
+- **Make sure to check out [FAQ section in Discussions](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/categories/faq), it contains a lot of useful information**
+
 - **Does this card require rooted device?**
 
   No, it only utilizes features of Home Assistant.
