@@ -74,21 +74,18 @@ export class Room extends MapObject {
             .room-icon-wrapper {
                 x: var(--x-icon);
                 y: var(--y-icon);
-                height: var(--map-card-internal-room-icon-size);
-                width: var(--map-card-internal-room-icon-size);
-                border-radius: calc(var(--map-card-internal-room-icon-size) / 2);
+                height: var(--map-card-internal-room-icon-wrapper-size);
+                width: var(--map-card-internal-room-icon-wrapper-size);
+                border-radius: var(--map-card-internal-small-radius);
                 transform-box: fill-box;
                 transform: scale(calc(1 / var(--map-scale)))
                     translate(
-                        calc(var(--map-card-internal-room-icon-size) / -2),
-                        calc(var(--map-card-internal-room-icon-size) / -2)
+                        calc(var(--map-card-internal-room-icon-wrapper-size) / -2),
+                        calc(var(--map-card-internal-room-icon-wrapper-size) / -2)
                     );
                 background: var(--map-card-internal-room-icon-background-color);
                 color: var(--map-card-internal-room-icon-color);
-                padding: var(--map-card-internal-room-icon-padding);
-                --mdc-icon-size: calc(
-                    var(--map-card-internal-room-icon-size) - var(--map-card-internal-room-icon-padding) * 2
-                );
+                --mdc-icon-size: var(--map-card-internal-room-icon-size);
                 transition: color var(--map-card-internal-transitions-duration) ease,
                     background var(--map-card-internal-transitions-duration) ease;
             }

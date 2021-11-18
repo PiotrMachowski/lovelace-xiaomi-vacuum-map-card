@@ -14,7 +14,7 @@ import {
 
 import "./editor";
 import type { PredefinedPointConfig, RoomConfig, TileConfig, XiaomiVacuumMapCardConfig } from "./types/types";
-import { CalibrationPoint, CardPresetConfig, PredefinedZoneConfig } from "./types/types";
+import { CalibrationPoint, CardPresetConfig, PredefinedZoneConfig, TranslatableString } from "./types/types";
 import { actionHandler } from "./action-handler-directive";
 import { CARD_VERSION } from "./const";
 import { localize } from "./localize/localize";
@@ -47,6 +47,7 @@ import { IconRenderer } from "./renderers/icon-renderer";
 import { ToastRenderer } from "./renderers/toast-renderer";
 import { ModesMenuRenderer } from "./renderers/modes-menu-renderer";
 import { CoordinatesConverter } from "./model/map_objects/coordinates-converter";
+import { MapObject } from "./model/map_objects/map-object";
 
 /* eslint no-console: 0 */
 console.info(
@@ -135,7 +136,7 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     public setConfig(config: XiaomiVacuumMapCardConfig): void {
         if (!config) {
-            throw new Error(localize("common.invalid_configuration"));
+            throw new Error(this._localize("common.invalid_configuration"));
         }
         this.config = config;
         if (isOldConfig(config)) {
@@ -204,18 +205,27 @@ export class XiaomiVacuumMapCard extends LitElement {
             (config.map_modes?.length ?? 0) === 0
                 ? PlatformGenerator.generateDefaultModes(vacuumPlatform)
                 : config.map_modes ?? []
-        ).map(m => new MapMode(vacuumPlatform, m));
+        ).map(m => new MapMode(vacuumPlatform, m, this.config.language));
 
         this.presetIndex = index;
         this.currentPreset = config;
         this._setCurrentMode(0);
         const icons =
-            (config.icons?.length ?? -1) === -1 && this.hass
-                ? IconListGenerator.generate(this.hass, config.entity)
+            (config.icons?.length ?? -1) === -1
+                ? IconListGenerator.generate(this.hass, config.entity, this.config.language)
+                : config.append_icons
+                ? [
+                      ...IconListGenerator.generate(this.hass, config.entity, this.config.language),
+                      ...(config.icons ?? []),
+                  ]
                 : config.icons;
         const tilesGenerated: Promise<TileConfig[]> =
-            (config.tiles?.length ?? -1) === -1 && this.hass
-                ? TilesGenerator.generate(this.hass, config.entity, vacuumPlatform)
+            (config.tiles?.length ?? -1) === -1
+                ? TilesGenerator.generate(this.hass, config.entity, vacuumPlatform, this.config.language)
+                : config.append_tiles
+                ? TilesGenerator.generate(this.hass, config.entity, vacuumPlatform, this.config.language).then(
+                      tiles => [...tiles, ...(config.tiles ?? [])],
+                  )
                 : new Promise(resolve => resolve(config.tiles ?? []));
         tilesGenerated
             .then(tiles => this._setPreset({ ...config, tiles: tiles, icons: icons }))
@@ -251,7 +261,7 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     protected render(): TemplateResult | void {
         if (this.oldConfig) {
-            return XiaomiVacuumMapCard._showOldConfig();
+            return this._showOldConfig();
         }
         if (this.configErrors.length > 0) {
             return this._showConfigErrors(this.configErrors);
@@ -303,7 +313,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         );
         return html`
             <ha-card
-                .header=${this.config.title}
+                .header="${this.config.title}"
                 tabindex="0"
                 style="--map-scale: ${this.mapScale}; --real-scale: ${this.realScale};">
                 ${conditional(
@@ -313,7 +323,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                             <ha-icon
                                 icon="mdi:chevron-left"
                                 class="preset-selector-icon ${this.presetIndex === 0 ? "disabled" : ""}"
-                                @click=${(): void => this._setPresetIndex(this.presetIndex - 1, true)}></ha-icon>
+                                @click="${(): void => this._setPresetIndex(this.presetIndex - 1, true)}"></ha-icon>
                             <div class="preset-label-wrapper">
                                 <div class="preset-label">${preset.preset_name}</div>
                                 <div class="preset-indicator">
@@ -328,7 +338,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                                 this.config.additional_presets?.length
                                     ? "disabled"
                                     : ""}"
-                                @click=${(): void => this._setPresetIndex(this.presetIndex + 1, true)}></ha-icon>
+                                @click="${(): void => this._setPresetIndex(this.presetIndex + 1, true)}"></ha-icon>
                         </div>
                     `,
                 )}
@@ -337,7 +347,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                           <div id="map-wrapper" style="position: relative;">
                               ${this.mapLocked
                                   ? html`
-                                        <div min-scale="0.5" id="map-zoomer" @change=${this._calculateScale}>
+                                        <div min-scale="0.5" id="map-zoomer" @change="${this._calculateScale}">
                                             ${mapZoomerContent}
                                         </div>
                                     `
@@ -346,7 +356,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                                         <pinch-zoom
                                             min-scale="0.5"
                                             id="map-zoomer"
-                                            @change=${this._calculateScale}
+                                            @change="${this._calculateScale}"
                                             two-finger-pan="true"
                                             style="touch-action: none;">
                                             ${mapZoomerContent}
@@ -356,7 +366,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                                         <pinch-zoom
                                             min-scale="0.5"
                                             id="map-zoomer"
-                                            @change=${this._calculateScale}
+                                            @change="${this._calculateScale}"
                                             style="touch-action: none;">
                                             ${mapZoomerContent}
                                         </pinch-zoom>
@@ -390,7 +400,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                               </div>
                           </div>
                       `
-                    : XiaomiVacuumMapCard._showInvalidCalibrationWarning()}
+                    : this._showInvalidCalibrationWarning()}
                 <div class="controls-wrapper">
                     ${conditional(
                         validCalibration && (modes.length > 1 || mapControls.length > 0),
@@ -486,11 +496,11 @@ export class XiaomiVacuumMapCard extends LitElement {
             controls.push(html`
                 <paper-button
                     class="map-actions-item main clickable ripple"
-                    @action=${this._handleRunAction()}
-                    .actionHandler=${actionHandler({
+                    @action="${this._handleRunAction()}"
+                    .actionHandler="${actionHandler({
                         hasHold: true,
                         hasDoubleClick: true,
-                    })}>
+                    })}">
                     <ha-icon icon="mdi:play"></ha-icon>
                     <ha-icon
                         icon="${currentMode.icon}"
@@ -517,6 +527,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             () => this._getCurrentMode().maxSelections,
             property => this._getCssProperty(property),
             () => this._runImmediately(),
+            string => this._localize(string),
         );
     }
 
@@ -577,7 +588,8 @@ export class XiaomiVacuumMapCard extends LitElement {
                     .map(r => r.toVacuum(repeats))
                     .reduce((a, v) => a.concat(v), [] as unknown[]);
             case SelectionType.ROOM:
-                return this.selectedRooms.map(r => r.toVacuum());
+                const selectedRooms = this.selectedRooms.map(r => r.toVacuum());
+                return [...selectedRooms, ...(repeats && selectedRooms.length > 0 ? [repeats] : [])];
             case SelectionType.MANUAL_PATH:
                 return this.selectedManualPath.toVacuum(repeats);
             case SelectionType.MANUAL_POINT:
@@ -849,16 +861,16 @@ export class XiaomiVacuumMapCard extends LitElement {
         return html` ${errorCard} `;
     }
 
-    private static _showOldConfig(): TemplateResult {
+    private _showOldConfig(): TemplateResult {
         return html`
             <hui-warning>
                 <h1>Xiaomi Vacuum Map Card ${CARD_VERSION}</h1>
-                <p>${localize("common.old_configuration")}</p>
+                <p>${this._localize("common.old_configuration")}</p>
                 <p>
                     <a
                         href="https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card#migrating-from-v1xx"
                         target="_blank"
-                        >${localize("common.old_configuration_migration_link")}</a
+                        >${this._localize("common.old_configuration_migration_link")}</a
                     >
                 </p>
             </hui-warning>
@@ -868,7 +880,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     private _showInvalidEntities(entities: string[]): TemplateResult {
         return html`
             <hui-warning>
-                <h1>${localize("validation.invalid_entities")}</h1>
+                <h1>${this._localize("validation.invalid_entities")}</h1>
                 <ul>
                     ${entities.map(
                         e => html` <li>
@@ -880,8 +892,12 @@ export class XiaomiVacuumMapCard extends LitElement {
         `;
     }
 
-    private static _showInvalidCalibrationWarning(): TemplateResult {
-        return html` <hui-warning>${localize("validation.invalid_calibration")}</hui-warning> `;
+    private _showInvalidCalibrationWarning(): TemplateResult {
+        return html`<hui-warning>${this._localize("validation.invalid_calibration")}</hui-warning> `;
+    }
+
+    private _localize(ts: TranslatableString): string {
+        return localize(ts, this.config.language);
     }
 
     private async _delay(ms: number): Promise<void> {
@@ -894,7 +910,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         const toastIcon = this.shadowRoot?.getElementById("toast-icon");
         if (toast && toastText && toastIcon) {
             toast.className = "show";
-            toastText.innerText = localize(text) + (additionalText ? `\n${additionalText}` : "");
+            toastText.innerText = this._localize(text) + (additionalText ? `\n${additionalText}` : "");
             toastIcon.children[0].setAttribute("icon", icon);
             toastIcon.style.color = successful
                 ? "var(--map-card-internal-toast-successful-icon-color)"
@@ -928,8 +944,11 @@ export class XiaomiVacuumMapCard extends LitElement {
                 --map-card-internal-ripple-color: var(--map-card-ripple-color, #7a7f87);
                 --map-card-internal-big-radius: var(--map-card-big-radius, 25px);
                 --map-card-internal-small-radius: var(--map-card-small-radius, 18px);
-                --map-card-internal-predefined-point-icon-size: var(--map-card-predefined-point-icon-size, 36px);
-                --map-card-internal-predefined-point-icon-padding: var(--map-card-predefined-point-icon-padding, 6px);
+                --map-card-internal-predefined-point-icon-wrapper-size: var(
+                    --map-card-predefined-point-icon-wrapper-size,
+                    36px
+                );
+                --map-card-internal-predefined-point-icon-size: var(--map-card-predefined-point-icon-size, 24px);
                 --map-card-internal-predefined-point-icon-color: var(
                     --map-card-predefined-point-icon-color,
                     var(--map-card-internal-secondary-text-color)
@@ -958,20 +977,23 @@ export class XiaomiVacuumMapCard extends LitElement {
                     --map-card-predefined-point-label-font-size,
                     12px
                 );
-                --map-card-internal-manual-point-radius: var(--map-card-manual-point-radius, 5);
+                --map-card-internal-manual-point-radius: var(--map-card-manual-point-radius, 5px);
                 --map-card-internal-manual-point-line-color: var(--map-card-manual-point-line-color, yellow);
                 --map-card-internal-manual-point-fill-color: var(--map-card-manual-point-fill-color, transparent);
-                --map-card-internal-manual-point-line-width: var(--map-card-manual-point-line-width, 1);
-                --map-card-internal-manual-path-point-radius: var(--map-card-manual-path-point-radius, 5);
+                --map-card-internal-manual-point-line-width: var(--map-card-manual-point-line-width, 1px);
+                --map-card-internal-manual-path-point-radius: var(--map-card-manual-path-point-radius, 5px);
                 --map-card-internal-manual-path-point-line-color: var(--map-card-manual-path-point-line-color, yellow);
                 --map-card-internal-manual-path-point-fill-color: var(
                     --map-card-manual-path-point-fill-color,
                     transparent
                 );
-                --map-card-internal-manual-path-point-line-width: var(--map-card-manual-path-point-line-width, 1);
+                --map-card-internal-manual-path-point-line-width: var(--map-card-manual-path-point-line-width, 1px);
                 --map-card-internal-manual-path-line-color: var(--map-card-manual-path-line-color, yellow);
-                --map-card-internal-manual-path-line-width: var(--map-card-manual-path-line-width, 1);
-                --map-card-internal-predefined-rectangle-line-width: var(--map-card-predefined-rectangle-line-width, 1);
+                --map-card-internal-manual-path-line-width: var(--map-card-manual-path-line-width, 1px);
+                --map-card-internal-predefined-rectangle-line-width: var(
+                    --map-card-predefined-rectangle-line-width,
+                    1px
+                );
                 --map-card-internal-predefined-rectangle-line-color: var(
                     --map-card-predefined-rectangle-line-color,
                     white
@@ -990,19 +1012,19 @@ export class XiaomiVacuumMapCard extends LitElement {
                 );
                 --map-card-internal-predefined-rectangle-line-segment-line: var(
                     --map-card-predefined-rectangle-line-segment-line,
-                    10
+                    10px
                 );
                 --map-card-internal-predefined-rectangle-line-segment-gap: var(
                     --map-card-predefined-rectangle-line-segment-gap,
-                    5
+                    5px
+                );
+                --map-card-internal-predefined-rectangle-icon-wrapper-size: var(
+                    --map-card-predefined-rectangle-icon-wrapper-size,
+                    36px
                 );
                 --map-card-internal-predefined-rectangle-icon-size: var(
                     --map-card-predefined-rectangle-icon-size,
-                    36px
-                );
-                --map-card-internal-predefined-rectangle-icon-padding: var(
-                    --map-card-predefined-rectangle-icon-padding,
-                    6px
+                    24px
                 );
                 --map-card-internal-predefined-rectangle-icon-color: var(
                     --map-card-predefined-rectangle-icon-color,
@@ -1032,7 +1054,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                     --map-card-predefined-rectangle-label-font-size,
                     12px
                 );
-                --map-card-internal-manual-rectangle-line-width: var(--map-card-manual-rectangle-line-width, 1);
+                --map-card-internal-manual-rectangle-line-width: var(--map-card-manual-rectangle-line-width, 1px);
                 --map-card-internal-manual-rectangle-line-color: var(--map-card-manual-rectangle-line-color, white);
                 --map-card-internal-manual-rectangle-fill-color: var(
                     --map-card-manual-rectangle-fill-color,
@@ -1048,11 +1070,11 @@ export class XiaomiVacuumMapCard extends LitElement {
                 );
                 --map-card-internal-manual-rectangle-line-segment-line: var(
                     --map-card-manual-rectangle-line-segment-line,
-                    10
+                    10px
                 );
                 --map-card-internal-manual-rectangle-line-segment-gap: var(
                     --map-card-manual-rectangle-line-segment-gap,
-                    5
+                    5px
                 );
                 --map-card-internal-manual-rectangle-description-color: var(
                     --map-card-manual-rectangle-description-color,
@@ -1072,7 +1094,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                 );
                 --map-card-internal-manual-rectangle-delete-circle-radius: var(
                     --map-card-manual-rectangle-delete-circle-radius,
-                    13
+                    13px
                 );
                 --map-card-internal-manual-rectangle-delete-circle-line-color: var(
                     --map-card-manual-rectangle-delete-circle-line-color,
@@ -1092,7 +1114,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                 );
                 --map-card-internal-manual-rectangle-delete-circle-line-width: var(
                     --map-card-manual-rectangle-delete-circle-line-width,
-                    1
+                    1px
                 );
                 --map-card-internal-manual-rectangle-delete-icon-color: var(
                     --map-card-manual-rectangle-delete-icon-color,
@@ -1104,7 +1126,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                 );
                 --map-card-internal-manual-rectangle-resize-circle-radius: var(
                     --map-card-manual-rectangle-resize-circle-radius,
-                    13
+                    13px
                 );
                 --map-card-internal-manual-rectangle-resize-circle-line-color: var(
                     --map-card-manual-rectangle-resize-circle-line-color,
@@ -1124,7 +1146,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                 );
                 --map-card-internal-manual-rectangle-resize-circle-line-width: var(
                     --map-card-manual-rectangle-resize-circle-line-width,
-                    1
+                    1px
                 );
                 --map-card-internal-manual-rectangle-resize-icon-color: var(
                     --map-card-manual-rectangle-resize-icon-color,
@@ -1135,9 +1157,12 @@ export class XiaomiVacuumMapCard extends LitElement {
                     var(--map-card-internal-primary-text-color)
                 );
                 --map-card-internal-room-outline-line-color: var(--map-card-room-outline-line-color, white);
-                --map-card-internal-room-outline-line-width: var(--map-card-room-outline-line-width, 1);
-                --map-card-internal-room-outline-line-segment-line: var(--map-card-room-outline-line-segment-line, 10);
-                --map-card-internal-room-outline-line-segment-gap: var(--map-card-room-outline-line-segment-gap, 5);
+                --map-card-internal-room-outline-line-width: var(--map-card-room-outline-line-width, 1px);
+                --map-card-internal-room-outline-line-segment-line: var(
+                    --map-card-room-outline-line-segment-line,
+                    10px
+                );
+                --map-card-internal-room-outline-line-segment-gap: var(--map-card-room-outline-line-segment-gap, 5px);
                 --map-card-internal-room-outline-fill-color: var(--map-card-room-outline-fill-color, transparent);
                 --map-card-internal-room-outline-line-color-selected: var(
                     --map-card-room-outline-line-color-selected,
@@ -1147,8 +1172,8 @@ export class XiaomiVacuumMapCard extends LitElement {
                     --map-card-room-outline-fill-color-selected,
                     rgba(255, 255, 255, 0.3)
                 );
-                --map-card-internal-room-icon-size: var(--map-card-room-icon-size, 36px);
-                --map-card-internal-room-icon-padding: var(--map-card-room-icon-padding, 6px);
+                --map-card-internal-room-icon-wrapper-size: var(--map-card-room-icon-wrapper-size, 36px);
+                --map-card-internal-room-icon-size: var(--map-card-room-icon-size, 24px);
                 --map-card-internal-room-icon-color: var(
                     --map-card-room-icon-color,
                     var(--map-card-internal-secondary-text-color)
@@ -1377,6 +1402,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                 transition: 0s;
             }
 
+            ${MapObject.styles}
             ${ManualRectangle.styles}
             ${PredefinedMultiRectangle.styles}
             ${ManualPath.styles}

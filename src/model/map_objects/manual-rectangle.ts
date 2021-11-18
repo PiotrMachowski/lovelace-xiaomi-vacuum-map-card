@@ -7,7 +7,6 @@ import { Context } from "./context";
 import { deleteFromArray, stopEvent } from "../../utils";
 import { PointType, RectangleType, ZoneType } from "../../types/types";
 import { MapObject } from "./map-object";
-import { localize } from "../../localize/localize";
 
 enum DragMode {
     NONE,
@@ -96,13 +95,13 @@ export class ManualRectangle extends MapObject {
         const height = y2 - y1;
         const divider = this._context.roundingEnabled() ? 1000 : 1;
         const rounder = (v: number): string => (v / divider).toFixed(1);
-        return `${rounder(width)}${localize("unit.meter_shortcut")} x ${rounder(height)}${localize(
+        return `${rounder(width)}${this.localize("unit.meter_shortcut")} x ${rounder(height)}${this.localize(
             "unit.meter_shortcut",
         )}`;
     }
 
     private _startDrag(event: MouseEvent | TouchEvent): void {
-        if (event instanceof TouchEvent && (event as TouchEvent).touches.length > 1) {
+        if (window.TouchEvent && event instanceof TouchEvent && (event as TouchEvent).touches.length > 1) {
             return;
         }
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
@@ -138,7 +137,7 @@ export class ManualRectangle extends MapObject {
     }
 
     private _drag(event: MouseEvent | TouchEvent): void {
-        if (event instanceof TouchEvent && (event as TouchEvent).touches.length > 1) {
+        if (window.TouchEvent && event instanceof TouchEvent && (event as TouchEvent).touches.length > 1) {
             return;
         }
         if (this._selectedElement) {
@@ -160,6 +159,7 @@ export class ManualRectangle extends MapObject {
                         break;
                     case DragMode.RESIZE:
                         const topLeftVacuumPoint = this.vacuumToMapRect(this._vacRectSnapshot)[1][0];
+                        const tmpSnapshot = [...this._vacRect] as ZoneType;
                         if (topLeftVacuumPoint[0] === this._vacRectSnapshot[0]) {
                             this._vacRect[2] = this._vacRectSnapshot[2] + diffX;
                         } else {
@@ -170,6 +170,8 @@ export class ManualRectangle extends MapObject {
                         } else {
                             this._vacRect[1] = this._vacRectSnapshot[1] + diffY;
                         }
+                        if (this._vacRect[0] > this._vacRect[2] || this._vacRect[1] > this._vacRect[3])
+                            this._vacRect = tmpSnapshot;
                         this._setup(this.vacuumToMapRect(this._vacRect)[0]);
                         break;
                     case DragMode.NONE:
@@ -282,6 +284,7 @@ export class ManualRectangle extends MapObject {
                     rotate(var(--angle-description));
                 font-size: calc(var(--map-card-internal-manual-rectangle-description-font-size) / var(--map-scale));
                 fill: var(--map-card-internal-manual-rectangle-description-color);
+                background: transparent;
             }
 
             .manual-rectangle-delete-circle {

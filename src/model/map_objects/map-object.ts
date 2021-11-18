@@ -1,9 +1,9 @@
 // noinspection CssUnresolvedCustomProperty
-import { svg, SVGTemplateResult } from "lit";
+import { css, CSSResultGroup, svg, SVGTemplateResult } from "lit";
 
 import { Context } from "./context";
 import { MousePosition } from "./mouse-position";
-import { IconConfig, LabelConfig, PointType, RectangleType, ZoneType } from "../../types/types";
+import { IconConfig, LabelConfig, PointType, RectangleType, TranslatableString, ZoneType } from "../../types/types";
 import { conditional } from "../../utils";
 
 export abstract class MapObject {
@@ -22,7 +22,10 @@ export abstract class MapObject {
     }
 
     protected realScaled(value: number): number {
-        return value / this._context.realScale();
+        if (window["chrome"])
+            // noooooooo
+            return value / this._context.realScale();
+        return this.scaled(value / this._context.realScale());
     }
 
     protected realScaled2(value: number): number {
@@ -39,6 +42,10 @@ export abstract class MapObject {
 
     protected update(): void {
         this._context.update();
+    }
+
+    protected localize(string: TranslatableString): string {
+        return this._context.localize(string);
     }
 
     protected getMousePosition(event: MouseEvent | TouchEvent): MousePosition {
@@ -76,9 +83,11 @@ export abstract class MapObject {
             config != null && mapped.length > 0,
             () => svg`
                 <foreignObject class="${htmlClass}"
-                               style="--x-icon: ${mapped[0]}; --y-icon: ${mapped[1]}"
+                               style="--x-icon: ${mapped[0]}px; --y-icon: ${mapped[1]}px"
                                @click="${click}">
-                    <ha-icon icon="${config?.name}"></ha-icon>
+                    <div class="map-icon-wrapper">
+                        <ha-icon icon="${config?.name}"></ha-icon>
+                    </div>
                 </foreignObject>
             `,
         )}`;
@@ -138,4 +147,17 @@ export abstract class MapObject {
     }
 
     public abstract render(): SVGTemplateResult;
+
+    static get styles(): CSSResultGroup {
+        return css`
+            .map-icon-wrapper {
+                width: inherit;
+                height: inherit;
+                background: inherit;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        `;
+    }
 }

@@ -1,6 +1,6 @@
 import { HomeAssistant } from "custom-card-helpers";
 
-import { IconActionConfig } from "../../types/types";
+import { IconActionConfig, Language } from "../../types/types";
 import { localize } from "../../localize/localize";
 
 export class IconListGenerator {
@@ -13,7 +13,8 @@ export class IconListGenerator {
         Gentle: "mdi:waves",
     };
 
-    public static generate(hass: HomeAssistant, vacuumEntity: string): IconActionConfig[] {
+    public static generate(hass: HomeAssistant, vacuumEntity: string, language: Language): IconActionConfig[] {
+        if (!hass) return [];
         const state = hass.states[vacuumEntity];
         const icons: IconActionConfig[] = [];
         icons.push({
@@ -32,7 +33,7 @@ export class IconListGenerator {
                     value_not: "returning",
                 },
             ],
-            tooltip: localize("icon.vacuum_start"),
+            tooltip: localize("icon.vacuum_start", language),
             tap_action: {
                 action: "call-service",
                 service: "vacuum.start",
@@ -61,7 +62,7 @@ export class IconListGenerator {
                     value_not: "paused",
                 },
             ],
-            tooltip: localize("icon.vacuum_pause"),
+            tooltip: localize("icon.vacuum_pause", language),
             tap_action: {
                 action: "call-service",
                 service: "vacuum.pause",
@@ -90,7 +91,7 @@ export class IconListGenerator {
                     value_not: "paused",
                 },
             ],
-            tooltip: localize("icon.vacuum_stop"),
+            tooltip: localize("icon.vacuum_stop", language),
             tap_action: {
                 action: "call-service",
                 service: "vacuum.stop",
@@ -107,7 +108,7 @@ export class IconListGenerator {
                     value_not: "docked",
                 },
             ],
-            tooltip: localize("icon.vacuum_return_to_base"),
+            tooltip: localize("icon.vacuum_return_to_base", language),
             tap_action: {
                 action: "call-service",
                 service: "vacuum.return_to_base",
@@ -132,7 +133,7 @@ export class IconListGenerator {
                     value_not: "cleaning",
                 },
             ],
-            tooltip: localize("icon.vacuum_clean_spot"),
+            tooltip: localize("icon.vacuum_clean_spot", language),
             tap_action: {
                 action: "call-service",
                 service: "vacuum.clean_spot",
@@ -143,7 +144,7 @@ export class IconListGenerator {
         } as unknown as IconActionConfig);
         icons.push({
             icon: "mdi:map-marker",
-            tooltip: localize("icon.vacuum_locate"),
+            tooltip: localize("icon.vacuum_locate", language),
             tap_action: {
                 action: "call-service",
                 service: "vacuum.locate",
@@ -166,7 +167,7 @@ export class IconListGenerator {
                         value: fanSpeed,
                     },
                 ],
-                tooltip: localize("icon.vacuum_set_fan_speed"),
+                tooltip: localize("icon.vacuum_set_fan_speed", language),
                 tap_action: {
                     action: "call-service",
                     service: "vacuum.set_fan_speed",
