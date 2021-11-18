@@ -140,10 +140,10 @@
         "vacuum_start": "Start",
         "vacuum_pause": "Pause",
         "vacuum_stop": "Stop",
-        "vacuum_return_to_base": "Return to base",
-        "vacuum_clean_spot": "Clean spot",
-        "vacuum_locate": "Locate",
-        "vacuum_set_fan_speed": "Change fan speed"
+        "vacuum_return_to_base": "Returner",
+        "vacuum_clean_spot": "Spotrengør",
+        "vacuum_locate": "Find",
+        "vacuum_set_fan_speed": "Skift hastighed"
     },
     "unit": {
         "hour_shortcut": "h",
