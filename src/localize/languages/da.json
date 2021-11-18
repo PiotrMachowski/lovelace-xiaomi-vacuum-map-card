@@ -126,15 +126,15 @@
     },
     "label": {
         "status": "Status",
-        "battery_level": "Battery",
-        "fan_speed": "Fan speed",
-        "sensor_dirty_left": "Sensors left",
-        "filter_left": "Filter left",
-        "main_brush_left": "Main brush left",
-        "side_brush_left": "Side brush left",
-        "cleaning_count": "Cleaning count",
-        "cleaned_area": "Cleaned area",
-        "cleaning_time": "Cleaning time"
+        "battery_level": "Batteri",
+        "fan_speed": "Hastighed",
+        "sensor_dirty_left": "Sensor vedl.",
+        "filter_left": "Filter vedl.",
+        "main_brush_left": "Hovedbørste vedl.",
+        "side_brush_left": "Sidebørste vedl.",
+        "cleaning_count": "Rengøringstæller",
+        "cleaned_area": "Rengjort areal",
+        "cleaning_time": "Rengørings tid"
     },
     "icon": {
         "vacuum_start": "Start",
