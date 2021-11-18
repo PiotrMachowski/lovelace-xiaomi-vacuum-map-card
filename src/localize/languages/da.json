@@ -146,7 +146,7 @@
         "vacuum_set_fan_speed": "Skift hastighed"
     },
     "unit": {
-        "hour_shortcut": "h",
+        "hour_shortcut": "t",
         "meter_shortcut": "m",
         "meter_squared_shortcut": "m²",
         "minute_shortcut": "min"
