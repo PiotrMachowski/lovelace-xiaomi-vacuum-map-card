@@ -6,7 +6,6 @@
                 "name": "map_mode.vacuum_clean_segment",
                 "icon": "mdi:floor-plan",
                 "selection_type": "ROOM",
-                "max_selections": 5,
                 "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "xiaomi_miio.vacuum_clean_segment",
@@ -96,6 +95,7 @@
             }
         }
     },
+    "sensors_from": "2021.11.0",
     "tiles": {
         "from_attributes": [
             {

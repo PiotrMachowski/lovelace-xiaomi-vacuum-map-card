@@ -1,24 +1,43 @@
 import * as en from "./languages/en.json";
+import * as es from "./languages/es.json";
+import * as fr from "./languages/fr.json";
+import * as it from "./languages/it.json";
 import * as pl from "./languages/pl.json";
-import { TranslatableString } from "../types/types";
+import * as ptBr from "./languages/pt-BR.json";
+import * as ru from "./languages/ru.json";
+import * as uk from "./languages/uk.json";
+import { Language, TranslatableString } from "../types/types";
 
 const languages: Record<string, unknown> = {
     en: en,
+    es: es,
+    fr: fr,
+    it: it,
     pl: pl,
+    "pt-BR": ptBr,
+    ru: ru,
+    uk: uk,
 };
 
-export function localize(string: string, search = "", replace = ""): string {
-    const lang = (localStorage.getItem("selectedLanguage") || "en").replace(/['"]+/g, "").replace("-", "_");
+function localizeString(string: string, search = "", replace = "", lang: Language = ""): string {
+    const defaultLang = "en";
+    if (!lang) {
+        try {
+            lang = JSON.parse(localStorage.getItem("selectedLanguage") || `"${defaultLang}"`);
+        } catch {
+            lang = (localStorage.getItem("selectedLanguage") || defaultLang).replace(/['"]+/g, "");
+        }
+    }
 
     let translated: string;
 
     try {
-        translated = evaluateForLanguage(string, lang);
+        translated = evaluateForLanguage(string, lang ?? defaultLang);
     } catch (e) {
-        translated = evaluateForLanguage(string, "en");
+        translated = evaluateForLanguage(string, defaultLang);
     }
 
-    if (translated === undefined) translated = evaluateForLanguage(string, "en");
+    if (translated === undefined) translated = evaluateForLanguage(string, defaultLang);
 
     translated = translated ?? string;
     if (search !== "" && replace !== "") {
@@ -31,10 +50,10 @@ function evaluateForLanguage(string: string, lang: string): string {
     return string.split(".").reduce((o, i) => (o as Record<string, unknown>)[i], languages[lang]) as string;
 }
 
-export function localizeTranslatable(ts: TranslatableString): string {
+export function localize(ts: TranslatableString, lang?: Language): string {
     if (typeof ts === "string") {
-        return localize(ts as string);
+        return localizeString(ts as string, "", "", lang);
     } else {
-        return localize(...ts);
+        return localizeString(...ts, lang);
     }
 }

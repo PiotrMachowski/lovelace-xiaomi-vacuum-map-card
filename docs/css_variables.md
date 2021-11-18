@@ -10,8 +10,8 @@
 --map-card-ripple-color
 --map-card-big-radius
 --map-card-small-radius
+--map-card-predefined-point-icon-wrapper-size
 --map-card-predefined-point-icon-size
---map-card-predefined-point-icon-padding
 --map-card-predefined-point-icon-color
 --map-card-predefined-point-icon-color-selected
 --map-card-predefined-point-icon-background-color
@@ -36,8 +36,8 @@
 --map-card-predefined-rectangle-fill-color-selected
 --map-card-predefined-rectangle-line-segment-line
 --map-card-predefined-rectangle-line-segment-gap
+--map-card-predefined-rectangle-icon-wrapper-size
 --map-card-predefined-rectangle-icon-size
---map-card-predefined-rectangle-icon-padding
 --map-card-predefined-rectangle-icon-color
 --map-card-predefined-rectangle-icon-color-selected
 --map-card-predefined-rectangle-icon-background-color
@@ -79,8 +79,8 @@
 --map-card-room-outline-fill-color
 --map-card-room-outline-line-color-selected
 --map-card-room-outline-fill-color-selected
+--map-card-room-icon-wrapper-size
 --map-card-room-icon-size
---map-card-room-icon-padding
 --map-card-room-icon-color
 --map-card-room-icon-color-selected
 --map-card-room-icon-background-color

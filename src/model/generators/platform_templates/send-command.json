@@ -8,9 +8,10 @@
                 "selection_type": "ROOM",
                 "repeats_type": "NONE",
                 "service_call_schema": {
-                    "service": "vacuum.vacuum_clean_segment",
+                    "service": "vacuum.send_command",
                     "service_data": {
-                        "segments": "[[selection]]",
+                        "command": "app_segment_clean",
+                        "params": "[[selection]]",
                         "entity_id": "[[entity_id]]"
                     }
                 }
@@ -19,15 +20,15 @@
                 "name": "map_mode.vacuum_clean_zone",
                 "icon": "mdi:select-drag",
                 "selection_type": "MANUAL_RECTANGLE",
-                "coordinates_rounding": false,
+                "coordinates_rounding": true,
                 "max_selections": 5,
-                "repeats_type": "EXTERNAL",
+                "repeats_type": "INTERNAL",
                 "max_repeats": 3,
                 "service_call_schema": {
-                    "service": "vacuum.vacuum_clean_zone",
+                    "service": "vacuum.send_command",
                     "service_data": {
-                        "zone": "[[selection]]",
-                        "repeats": "[[repeats]]",
+                        "command": "app_zoned_clean",
+                        "params": "[[selection]]",
                         "entity_id": "[[entity_id]]"
                     }
                 }
@@ -37,14 +38,14 @@
                 "icon": "mdi:floor-plan",
                 "selection_type": "PREDEFINED_RECTANGLE",
                 "max_selections": 5,
-                "coordinates_rounding": false,
-                "repeats_type": "EXTERNAL",
+                "coordinates_rounding": true,
+                "repeats_type": "INTERNAL",
                 "max_repeats": 3,
                 "service_call_schema": {
-                    "service": "vacuum.vacuum_clean_zone",
+                    "service": "vacuum.send_command",
                     "service_data": {
-                        "zone": "[[selection]]",
-                        "repeats": "[[repeats]]",
+                        "command": "app_zoned_clean",
+                        "params": "[[selection]]",
                         "entity_id": "[[entity_id]]"
                     }
                 }
@@ -53,13 +54,13 @@
                 "name": "map_mode.vacuum_goto",
                 "icon": "mdi:map-marker-plus",
                 "selection_type": "MANUAL_POINT",
-                "coordinates_rounding": false,
+                "coordinates_rounding": true,
                 "repeats_type": "NONE",
                 "service_call_schema": {
-                    "service": "vacuum.vacuum_goto",
+                    "service": "vacuum.send_command",
                     "service_data": {
-                        "x_coord": "[[point_x]]",
-                        "y_coord": "[[point_y]]",
+                        "command": "app_goto_target",
+                        "params": "[[selection]]",
                         "entity_id": "[[entity_id]]"
                     }
                 }
@@ -68,13 +69,13 @@
                 "name": "map_mode.vacuum_goto_predefined",
                 "icon": "mdi:map-marker",
                 "selection_type": "PREDEFINED_POINT",
-                "coordinates_rounding": false,
+                "coordinates_rounding": true,
                 "repeats_type": "NONE",
                 "service_call_schema": {
-                    "service": "vacuum.vacuum_goto",
+                    "service": "vacuum.send_command",
                     "service_data": {
-                        "x_coord": "[[point_x]]",
-                        "y_coord": "[[point_y]]",
+                        "command": "app_goto_target",
+                        "params": "[[selection]]",
                         "entity_id": "[[entity_id]]"
                     }
                 }
@@ -83,7 +84,7 @@
                 "name": "map_mode.vacuum_follow_path",
                 "icon": "mdi:map-marker-path",
                 "selection_type": "MANUAL_PATH",
-                "coordinates_rounding": false,
+                "coordinates_rounding": true,
                 "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "script.vacuum_follow_path",
@@ -96,19 +97,7 @@
         }
     },
     "tiles": {
-        "from_attributes": [
-            {
-                "attribute": "cleaned_area",
-                "label": "label.cleaned_area",
-                "icon": "mdi:texture-box",
-                "unit": "unit.meter_squared_shortcut"
-            },
-            {
-                "attribute": "cleaning_time",
-                "label": "label.cleaning_time",
-                "icon": "mdi:timer-sand",
-                "unit": "unit.minute_shortcut"
-            }
-        ]
+        "from_attributes": [],
+        "from_sensors": []
     }
 }

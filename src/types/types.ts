@@ -14,6 +14,7 @@ export type PointType = [number, number];
 export type PointWithRepeatsType = [number, number, number];
 export type PredefinedSelectionConfig = PredefinedZoneConfig | PredefinedPointConfig | RoomConfig;
 export type TranslatableString = string | [string, string, string];
+export type Language = string | undefined;
 export type EntityRegistryEntry = {
     entity_id: string;
     original_icon: string;
@@ -25,6 +26,7 @@ export type EntityRegistryEntry = {
 export interface XiaomiVacuumMapCardConfig extends LovelaceCardConfig, CardPresetConfig {
     readonly title?: string;
     readonly additional_presets?: CardPresetConfig[];
+    readonly language?: Language;
 }
 
 export interface CardPresetConfig {
@@ -36,7 +38,9 @@ export interface CardPresetConfig {
     readonly two_finger_pan?: boolean;
     readonly calibration_source: CalibrationSourceConfig;
     readonly icons?: IconActionConfig[];
+    readonly append_icons?: boolean;
     readonly tiles?: TileConfig[];
+    readonly append_tiles?: boolean;
     readonly map_modes?: MapModeConfig[];
 }
 
@@ -72,6 +76,7 @@ export interface PlatformTemplate {
         readonly defaultTemplates: string[];
         readonly templates: { [templateName: string]: MapModeConfig };
     };
+    readonly sensors_from?: string;
     readonly tiles: {
         readonly from_attributes?: TileFromAttributeTemplate[];
         readonly from_sensors?: TileFromSensorTemplate[];

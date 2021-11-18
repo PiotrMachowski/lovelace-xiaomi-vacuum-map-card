@@ -7,6 +7,7 @@ import {
     ConditionalObjectConfig,
     ConditionConfig,
     EntityRegistryEntry,
+    Language,
     PredefinedPointConfig,
     PredefinedZoneConfig,
     XiaomiVacuumMapCardConfig,
@@ -49,7 +50,7 @@ export function getWatchedEntitiesForMapMode(mapMode: MapMode): Set<string> {
     return watchedEntities;
 }
 
-export function getWatchedEntitiesForPreset(config: CardPresetConfig): Set<string> {
+export function getWatchedEntitiesForPreset(config: CardPresetConfig, language: Language): Set<string> {
     const watchedEntities = new Set<string>();
     if (config.entity) {
         watchedEntities.add(config.entity);
@@ -76,7 +77,7 @@ export function getWatchedEntitiesForPreset(config: CardPresetConfig): Set<strin
             if (e) watchedEntities.add(e);
         });
     (config.map_modes ?? [])
-        .map(m => new MapMode(config.vacuum_platform ?? "default", m))
+        .map(m => new MapMode(config.vacuum_platform ?? "default", m, language))
         .forEach(m => getWatchedEntitiesForMapMode(m).forEach(e => watchedEntities.add(e)));
     return watchedEntities;
 }
@@ -84,7 +85,7 @@ export function getWatchedEntitiesForPreset(config: CardPresetConfig): Set<strin
 export function getWatchedEntities(config: XiaomiVacuumMapCardConfig): string[] {
     const watchedEntities = new Set<string>();
     [config, ...(config.additional_presets ?? [])]
-        .flatMap(p => [...getWatchedEntitiesForPreset(p)])
+        .flatMap(p => [...getWatchedEntitiesForPreset(p, config.language)])
         .forEach(e => watchedEntities.add(e));
     return [...watchedEntities];
 }
@@ -140,7 +141,7 @@ export function getMousePosition(event: MouseEvent | TouchEvent, element: SVGGra
         x = event.clientX;
         y = event.clientY;
     }
-    if (event instanceof TouchEvent && event.touches) {
+    if (window.TouchEvent && event instanceof TouchEvent && event.touches) {
         x = event.touches[0].clientX;
         y = event.touches[0].clientY;
     }
