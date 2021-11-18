@@ -18,111 +18,111 @@
     "validation": {
         "preset": {
             "entity": {
-                "missing": "Missing property: entity"
+                "missing": "Mangler indstilling: entity"
             },
             "preset_name": {
-                "missing": "Missing property: preset_name"
+                "missing": "Mangler indstilling: preset_name"
             },
             "platform": {
-                "invalid": "Invalid vacuum platform: {0}"
+                "invalid": "Ugyldig støvsuger platform: {0}"
             },
             "map_source": {
-                "missing": "Missing property: map_source",
-                "none_provided": "No camera neither image provided",
-                "ambiguous": "Only one map source allowed"
+                "missing": "Mangler indstilling: map_source",
+                "none_provided": "Intet kamera eller billede er angivet",
+                "ambiguous": "Kun en kort-kilde tilladt"
             },
             "calibration_source": {
-                "missing": "Missing property: calibration_source",
-                "ambiguous": "Only one calibration source allowed",
-                "none_provided": "No calibration source provided",
+                "missing": "Mangler indstilling: calibration_source",
+                "ambiguous": "Kun en kalibrerings-kilde tilladt",
+                "none_provided": "Ingen kalibrerings kilde angivet",
                 "calibration_points": {
-                    "invalid_number": "Exactly 3 or 4 calibration points required",
-                    "missing_map": "Each calibration point must contain map coordinates",
-                    "missing_vacuum": "Each calibration point must contain vacuum coordinates",
-                    "missing_coordinate": "Map and vacuum calibration points must contain both x and y coordinate"
+                    "invalid_number": "Nøjagtigt 3 eller 4 kalibreringspunkter påkrævet",
+                    "missing_map": "Alle kalibreringspunkter skal indeholde kort koordinater",
+                    "missing_vacuum": "Alle kalibreringspunkter skal indeholde støvsuger koordinater",
+                    "missing_coordinate": "Kort og støvsugers kalibreringspunkter skal indeholde både x og y koordinater"
                 }
             },
             "icons": {
-                "invalid": "Error in configuration: icons",
+                "invalid": "Fejl i konfiguration: icons",
                 "icon": {
-                    "missing": "Each entry of icons list must contain icon property"
+                    "missing": "Alle punkter i icons listen skal indeholde icon egenskaben"
                 }
             },
             "tiles": {
-                "invalid": "Error in configuration: tiles",
+                "invalid": "Fejl i konfiguration: tiles",
                 "entity": {
-                    "missing": "Each entry of tiles list must contain entity"
+                    "missing": "Alle punkter i tiles listen skal indehold entity egenskaben"
                 },
                 "label": {
-                    "missing": "Each entry of tiles list must contain label"
+                    "missing": "Alle punkter i tiles listen skal indehold label egenskaben"
                 }
             },
             "map_modes": {
-                "invalid": "Error in configuration: map_modes",
+                "invalid": "Fejl i konfiguration: map_modes",
                 "icon": {
-                    "missing": "Missing icon of map mode"
+                    "missing": "Ikon mangler"
                 },
                 "name": {
-                    "missing": "Missing name of map mode"
+                    "missing": "Navn mangler"
                 },
                 "template": {
-                    "invalid": "Invalid template: {0}"
+                    "invalid": "Ugyldigt template: {0}"
                 },
                 "predefined_selections": {
-                    "not_applicable": "Mode {0} does not support predefined selections",
+                    "not_applicable": "Mode {0} understøtter ikke predefinerede valg",
                     "zones": {
-                        "missing": "Missing zones configuration",
-                        "invalid_parameters_number": "Each zone must have 4 parameters"
+                        "missing": "Zone konfiguration mangler",
+                        "invalid_parameters_number": "En zone skal indeholde 4 parametre."
                     },
                     "points": {
                         "position": {
-                            "missing": "Missing points configuration",
-                            "invalid_parameters_number": "Each point must have 2 parameters"
+                            "missing": "Punkt konfiguration mangler",
+                            "invalid_parameters_number": "Et punkt skal indeholde 2 parametre"
                         }
                     },
                     "rooms": {
                         "id": {
-                            "missing": "Missing room id",
-                            "invalid_format": "Invalid room id: {0}"
+                            "missing": "Rummets id mangler",
+                            "invalid_format": "Ugyldigt rum id: {0}"
                         },
                         "outline": {
-                            "invalid_parameters_number": "Each point of room outline must have 2 parameters"
+                            "invalid_parameters_number": "Et punkt i rummets kant skal indeholde 2 parametre"
                         }
                     },
                     "label": {
                         "x": {
-                            "missing": "Label must have x property"
+                            "missing": "Label skal indeholde egenskaben x"
                         },
                         "y": {
-                            "missing": "Label must have y property"
+                            "missing": "Label skal indeholde egenskaben y"
                         },
                         "text": {
-                            "missing": "Label must have text property"
+                            "missing": "Label skal indeholde egenskaben text"
                         }
                     },
                     "icon": {
                         "x": {
-                            "missing": "Icon must have x property"
+                            "missing": "Icon skal indeholde egenskaben x"
                         },
                         "y": {
-                            "missing": "Icon must have y property"
+                            "missing": "Icon skal indeholde egenskaben y"
                         },
                         "name": {
-                            "missing": "Icon must have name property"
+                            "missing": "Icon skal indeholde egenskaben name"
                         }
                     }
                 },
                 "service_call_schema": {
-                    "missing": "Missing service call schema",
+                    "missing": "Service-kald indstillingerne mangler",
                     "service": {
-                        "missing": "Service call schema must contain service",
-                        "invalid": "Invalid service: {0}"
+                        "missing": "Service-kald indstillinger skal indeholde en service",
+                        "invalid": "Ugyldig service: {0}"
                     }
                 }
             }
         },
-        "invalid_entities": "Invalid entities:",
-        "invalid_calibration": "Invalid calibration, please check your configuration"
+        "invalid_entities": "Ugyldige entiteter:",
+        "invalid_calibration": "Ugyldig kalibrering, du bedes gennemgå din konfiguration"
     },
     "label": {
         "status": "Status",
