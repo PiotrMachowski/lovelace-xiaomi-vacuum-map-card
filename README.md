@@ -243,6 +243,7 @@ Following vacuum platforms are supported at this moment:
 | `hold_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when an icon is held and released |
 | `double_tap_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when an icon is double-tapped |
 | `conditions` | list | no | - | List of [conditions](#condition-options) that need to be (all of them) met for an icon to be shown |
+| `tooltip` | string | false | - | Tooltip to be displayed on hoover |
 
 ### Tile list entry options
 
@@ -261,6 +262,7 @@ Following vacuum platforms are supported at this moment:
 | `hold_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is held and released |
 | `double_tap_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is double-tapped |
 | `conditions` | list | no | - | List of [conditions](#condition-options) that need to be (all of them) met for a tile to be shown |
+| `tooltip` | string | false | - | Tooltip to be displayed on hoover |
 
 ### Condition options
 
@@ -435,7 +437,6 @@ Format of data depends on selected `selection_type`:
 | `name` | string | yes | - | An icon to be displayed ([mdi](https://materialdesignicons.com/)) |
 | `x` | number | yes | - | X coordinate of an icon (in vacuum's coordinate system) |
 | `y` | number | yes | - | Y coordinate of an icon (in vacuum's coordinate system) |
-| `tooltip` | string | false | - | Tooltip to be displayed on hoover |
 
 #### Label options
 
@@ -444,7 +445,6 @@ Format of data depends on selected `selection_type`:
 | `text` | string | yes | - | Text to be displayed |
 | `x` | number | yes | - | X coordinate of a label (in vacuum's coordinate system) |
 | `y` | number | yes | - | Y coordinate of a label (in vacuum's coordinate system) |
-| `tooltip` | string | false | - | Tooltip to be displayed on hoover |
 | `offset_x` | number | no | - | Offset that should be applied to label in X direction (in pixels) |
 | `offset_y` | number | no | - | Offset that should be applied to label in Y direction (in pixels) |
 
@@ -645,7 +645,7 @@ Currently, this card contains translations for following languages:
 ## Special thanks
 
 I'd like to give special thanks to people who helped me with card's design and development:
-* [Bartosz Orczyk](www.bratver.com) 
+* [Bartosz Orczyk](www.bratver.com)
 * [Filip Schramm](https://github.com/fi-sch)
 * [Kamil Dryzek](https://github.com/dryzek)
 * [Marek Trochimiak](https://github.com/tromarek1)
