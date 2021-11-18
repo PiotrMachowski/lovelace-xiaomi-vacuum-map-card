@@ -7,13 +7,13 @@
         "old_configuration_migration_link": "Migrerings vejledning"
     },
     "map_mode": {
-        "invalid": "Invalid template!",
-        "vacuum_goto": "Pin & Go",
-        "vacuum_goto_predefined": "Points",
-        "vacuum_clean_segment": "Rooms",
-        "vacuum_clean_zone": "Zone cleanup",
-        "vacuum_clean_zone_predefined": "Zones list",
-        "vacuum_follow_path": "Path"
+        "invalid": "Ugyldigt template!",
+        "vacuum_goto": "Klik & Gå",
+        "vacuum_goto_predefined": "Punkter",
+        "vacuum_clean_segment": "Rum",
+        "vacuum_clean_zone": "Zone rengøring",
+        "vacuum_clean_zone_predefined": "Zoner",
+        "vacuum_follow_path": "Sti"
     },
     "validation": {
         "preset": {
