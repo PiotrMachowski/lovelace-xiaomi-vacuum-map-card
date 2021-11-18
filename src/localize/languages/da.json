@@ -152,9 +152,9 @@
         "minute_shortcut": "min"
     },
     "popups": {
-        "success": "Success!",
-        "no_selection": "No selection provided",
-        "failed": "Failed to call service"
+        "success": "Succes!",
+        "no_selection": "Intet valg angivet",
+        "failed": "Service-kald fejlede"
     },
     "editor": {
         "description": {
