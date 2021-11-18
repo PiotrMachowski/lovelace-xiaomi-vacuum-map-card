@@ -158,17 +158,17 @@
     },
     "editor": {
         "description": {
-            "before_link": "This visual editor supports only a basic configuration with a camera entity created using ",
+            "before_link": "Den visuelle editor understøtter kun kun en konfiguration med en kamera entitet lavet med ",
             "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": ". For more advanced setup use YAML mode."
+            "after_link": ". For en mere advanceret konfiguration, brug YAML mode."
         },
         "label": {
-            "name": "Title (optional)",
-            "entity": "Vacuum entity (required)",
-            "camera": "Camera entity (required)",
-            "vacuum_platform": "Vacuum platform (required)",
-            "map_locked": "Map locked (optional)",
-            "two_finger_pan": "Two finger pan (optional)"
+            "name": "Titel (valgfrit)",
+            "entity": "Støvsuger entitet (påkrævet)",
+            "camera": "Kamera entitet (påkrævet)",
+            "vacuum_platform": "Støvsuger platform (påkrævet)",
+            "map_locked": "Kort låst (valgfrit)",
+            "two_finger_pan": "To-finger panorering (valgfrit)"
         }
     }
 }
