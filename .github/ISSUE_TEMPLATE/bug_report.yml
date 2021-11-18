@@ -61,7 +61,7 @@ body:
     attributes:
       label: Which integration do you use to control your vacuum (link)?
       description: Provide a link to (custom) integration that you use to control your vacuum. 
-      placeholder: link
+      placeholder: https://www.home-assistant.io/integrations/xiaomi_miio/
       value: https://www.home-assistant.io/integrations/xiaomi_miio/
   - type: input
     id: browser
@@ -69,6 +69,7 @@ body:
       required: true
     attributes:
       label: What browser (browsers/apps) does have this problem?
+      placeholder: Chrome/Safari/iOS app
   - type: input
     id: ha-version
     validations:
