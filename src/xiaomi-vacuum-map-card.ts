@@ -16,7 +16,7 @@ import "./editor";
 import type { PredefinedPointConfig, RoomConfig, TileConfig, XiaomiVacuumMapCardConfig } from "./types/types";
 import { CalibrationPoint, CardPresetConfig, PredefinedZoneConfig, TranslatableString } from "./types/types";
 import { actionHandler } from "./action-handler-directive";
-import { CARD_VERSION } from "./const";
+import { CARD_VERSION, CARD_CUSTOM_ELEMENT_NAME, EDITOR_CUSTOM_ELEMENT_NAME } from "./const";
 import { localize } from "./localize/localize";
 import PinchZoom from "./pinch-zoom";
 import "./pinch-zoom";
@@ -59,16 +59,16 @@ console.info(
 const windowWithCards = window as unknown as Window & { customCards: unknown[] };
 windowWithCards.customCards = windowWithCards.customCards || [];
 windowWithCards.customCards.push({
-    type: "xiaomi-vacuum-map-card",
+    type: CARD_CUSTOM_ELEMENT_NAME,
     name: "Xiaomi Vacuum Map Card",
     description: localize("common.description"),
     preview: true,
 });
 
-@customElement("xiaomi-vacuum-map-card")
+@customElement(CARD_CUSTOM_ELEMENT_NAME)
 export class XiaomiVacuumMapCard extends LitElement {
     public static async getConfigElement(): Promise<LovelaceCardEditor> {
-        return document.createElement("xiaomi-vacuum-map-card-editor");
+        return document.createElement(EDITOR_CUSTOM_ELEMENT_NAME);
     }
 
     public static getStubConfig(hass: HomeAssistant): XiaomiVacuumMapCardConfig | undefined {
@@ -81,7 +81,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             return undefined;
         }
         return {
-            type: "custom:xiaomi-vacuum-map-card",
+            type: "custom:" + CARD_CUSTOM_ELEMENT_NAME,
             map_source: {
                 camera: cameras[0],
             },
