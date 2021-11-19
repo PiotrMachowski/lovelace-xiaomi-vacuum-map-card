@@ -299,6 +299,8 @@ export class XiaomiVacuumMapCard extends LitElement {
                         src="${mapSrc}" />
                     <div id="map-image-overlay">
                         <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            version="1.1"
                             id="svg-wrapper"
                             width="100%"
                             height="100%"
@@ -700,10 +702,17 @@ export class XiaomiVacuumMapCard extends LitElement {
         const actualHeight = this.realImageHeight * this.realScale - marginTop - marginBottom;
         const actualWidth = this.realImageWidth * this.realScale - marginLeft - marginRight;
         const name = (this.selectedManualRectangles.length + 1).toString();
-        const x = (actualWidth / 3 + marginLeft - this.mapX) / this.mapScale;
-        const y = (actualHeight / 3 + marginTop - this.mapY) / this.mapScale;
-        const width = actualWidth / 3 / this.mapScale;
-        const height = actualHeight / 3 / this.mapScale;
+        let x = (actualWidth / 3 + marginLeft - this.mapX) / this.mapScale;
+        let y = (actualHeight / 3 + marginTop - this.mapY) / this.mapScale;
+        let width = actualWidth / 3 / this.mapScale;
+        let height = actualHeight / 3 / this.mapScale;
+        if (!window["chrome"]) {
+            x = x * this.mapScale;
+            y = y * this.mapScale;
+            width = width * this.mapScale;
+            height = height * this.mapScale;
+        }
+
         this.selectedManualRectangles.push(new ManualRectangle(x, y, width, height, name, this._getContext()));
         forwardHaptic("selection");
         this.requestUpdate();
@@ -713,7 +722,6 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (event instanceof MouseEvent && event.button != 0) {
             return;
         }
-        // stopEvent(event);
         this.shouldHandleMouseUp = true;
     }
 
@@ -723,7 +731,6 @@ export class XiaomiVacuumMapCard extends LitElement {
             return;
         }
         this.selectedManualRectangles.filter(r => r.isSelected()).forEach(r => r.externalDrag(event));
-        // stopEvent(event);
         this.shouldHandleMouseUp = false;
     }
 
@@ -893,7 +900,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     }
 
     private _showInvalidCalibrationWarning(): TemplateResult {
-        return html`<hui-warning>${this._localize("validation.invalid_calibration")}</hui-warning> `;
+        return html` <hui-warning>${this._localize("validation.invalid_calibration")}</hui-warning> `;
     }
 
     private _localize(ts: TranslatableString): string {
