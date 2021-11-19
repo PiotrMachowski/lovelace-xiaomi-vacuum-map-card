@@ -22,10 +22,7 @@ export abstract class MapObject {
     }
 
     protected realScaled(value: number): number {
-        if (window["chrome"])
-            // noooooooo
-            return value / this._context.realScale();
-        return this.scaled(value / this._context.realScale());
+        return value / this._context.realScale();
     }
 
     protected realScaled2(value: number): number {

@@ -702,17 +702,10 @@ export class XiaomiVacuumMapCard extends LitElement {
         const actualHeight = this.realImageHeight * this.realScale - marginTop - marginBottom;
         const actualWidth = this.realImageWidth * this.realScale - marginLeft - marginRight;
         const name = (this.selectedManualRectangles.length + 1).toString();
-        let x = (actualWidth / 3 + marginLeft - this.mapX) / this.mapScale;
-        let y = (actualHeight / 3 + marginTop - this.mapY) / this.mapScale;
-        let width = actualWidth / 3 / this.mapScale;
-        let height = actualHeight / 3 / this.mapScale;
-        if (!window["chrome"]) {
-            x = x * this.mapScale;
-            y = y * this.mapScale;
-            width = width * this.mapScale;
-            height = height * this.mapScale;
-        }
-
+        const x = (actualWidth / 3 + marginLeft - this.mapX) / this.mapScale;
+        const y = (actualHeight / 3 + marginTop - this.mapY) / this.mapScale;
+        const width = actualWidth / 3 / this.mapScale;
+        const height = actualHeight / 3 / this.mapScale;
         this.selectedManualRectangles.push(new ManualRectangle(x, y, width, height, name, this._getContext()));
         forwardHaptic("selection");
         this.requestUpdate();
@@ -736,15 +729,15 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _mouseUp(event: PointerEvent | MouseEvent | TouchEvent): void {
         if (!(event instanceof MouseEvent && event.button != 0) && this.shouldHandleMouseUp) {
-            const mousePosition = getMousePosition(event, this._getSvgWrapper());
+            const { x, y } = getMousePosition(event, this._getSvgWrapper());
             switch (this._getCurrentMode().selectionType) {
                 case SelectionType.MANUAL_PATH:
                     forwardHaptic("selection");
-                    this.selectedManualPath.addPoint(mousePosition.x, mousePosition.y);
+                    this.selectedManualPath.addPoint(x, y);
                     break;
                 case SelectionType.MANUAL_POINT:
                     forwardHaptic("selection");
-                    this.selectedManualPoint = new ManualPoint(mousePosition.x, mousePosition.y, this._getContext());
+                    this.selectedManualPoint = new ManualPoint(x, y, this._getContext());
                     break;
                 default:
                     return;
@@ -1411,15 +1404,15 @@ export class XiaomiVacuumMapCard extends LitElement {
 
             ${MapObject.styles}
             ${ManualRectangle.styles}
-            ${PredefinedMultiRectangle.styles}
-            ${ManualPath.styles}
-            ${ManualPoint.styles}
-            ${PredefinedPoint.styles}
-            ${Room.styles}
-            ${ModesMenuRenderer.styles}
-            ${IconRenderer.styles}
-            ${TileRenderer.styles}
-            ${ToastRenderer.styles}
+          ${PredefinedMultiRectangle.styles}
+          ${ManualPath.styles}
+          ${ManualPoint.styles}
+          ${PredefinedPoint.styles}
+          ${Room.styles}
+          ${ModesMenuRenderer.styles}
+          ${IconRenderer.styles}
+          ${TileRenderer.styles}
+          ${ToastRenderer.styles}
         `;
     }
 }
