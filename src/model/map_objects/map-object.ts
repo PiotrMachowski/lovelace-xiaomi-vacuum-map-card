@@ -134,8 +134,8 @@ export abstract class MapObject {
         const previous = rect[(topIndex + 3) % 4];
         const atanNext = MapObject.calcAngle(top, next);
         const atanPrevious = MapObject.calcAngle(top, previous);
-        if (atanNext < atanPrevious) return next;
-        return top;
+        const second = atanNext < atanPrevious ? next : previous;
+        return second[0] < top[0] ? second : top;
     }
 
     protected static calcAngle(p2: PointType, p1: PointType): number {
