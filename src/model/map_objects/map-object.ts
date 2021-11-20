@@ -79,12 +79,14 @@ export abstract class MapObject {
         return svg`${conditional(
             config != null && mapped.length > 0,
             () => svg`
-                <foreignObject class="${htmlClass}"
-                               style="--x-icon: ${mapped[0]}px; --y-icon: ${mapped[1]}px"
-                               @click="${click}">
-                    <div class="map-icon-wrapper">
-                        <ha-icon icon="${config?.name}"></ha-icon>
-                    </div>
+                <foreignObject class="icon-foreign-object"
+                               style="--x-icon: ${mapped[0]}px; --y-icon: ${mapped[1]}px;"
+                               x="${mapped[0]}px" y="${mapped[1]}px" width="36px" height="36px">         
+                    <body xmlns="http://www.w3.org/1999/xhtml">
+                      <div class="map-icon-wrapper ${htmlClass} clickable" @click="${click}" >
+                          <ha-icon icon="${config?.name}" style="background: transparent;"></ha-icon>
+                      </div>
+                    </body>
                 </foreignObject>
             `,
         )}`;
@@ -95,10 +97,9 @@ export abstract class MapObject {
         return svg`${conditional(
             config != null && mapped.length > 0,
             () => svg`
-                <text class="${htmlClass}"
-                      style="--offset-x: ${config?.offset_x ?? 0}px; --offset-y: ${config?.offset_y ?? 0}px"
-                      x="${mapped[0]}"
-                      y="${mapped[1]}">
+                <text class="label-text ${htmlClass}"
+                      x="${mapped[0] + this.scaled(config?.offset_x ?? 0)}px"
+                      y="${mapped[1] + this.scaled(config?.offset_y ?? 0)}px">
                     ${config?.text}
                 </text>
             `,
@@ -147,14 +148,18 @@ export abstract class MapObject {
 
     static get styles(): CSSResultGroup {
         return css`
-            .map-icon-wrapper {
-                width: inherit;
-                height: inherit;
-                background: inherit;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
+          .icon-foreign-object {
+            overflow: visible;
+            pointer-events: none;
+          }
+
+          .map-icon-wrapper {
+            position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+          }
         `;
     }
 }

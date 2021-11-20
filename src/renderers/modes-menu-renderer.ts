@@ -27,7 +27,7 @@ export class ModesMenuRenderer {
                     }}">
                     ${modes.map(
                         (mode, index) => html` <div mode-id="${index}">
-                            <div class="modes-dropdown-menu-entry ${getMode === index ? "selected" : ""}">
+                            <div class="modes-dropdown-menu-entry clickable ${getMode === index ? "selected" : ""}">
                                 <div
                                     class="modes-dropdown-menu-entry-button-wrapper ${index === 0
                                         ? "first"

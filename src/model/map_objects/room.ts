@@ -21,7 +21,7 @@ export class Room extends MapObject {
         const poly = (this._config?.outline ?? []).map(p => this.vacuumToScaledMap(p[0], p[1]));
         return svg`
             <g class="room-wrapper ${this._selected ? "selected" : ""} room-${this._config.id}-wrapper">
-                <polygon class="room-outline"
+                <polygon class="room-outline clickable"
                          points="${poly.map(p => p.join(", ")).join(" ")}"
                          @click="${(): void => this._click()}">
                 </polygon>
@@ -78,11 +78,11 @@ export class Room extends MapObject {
                 width: var(--map-card-internal-room-icon-wrapper-size);
                 border-radius: var(--map-card-internal-small-radius);
                 transform-box: fill-box;
-                transform: scale(calc(1 / var(--map-scale)))
-                    translate(
+                overflow: hidden;
+                transform: translate(
                         calc(var(--map-card-internal-room-icon-wrapper-size) / -2),
                         calc(var(--map-card-internal-room-icon-wrapper-size) / -2)
-                    );
+                    ) scale(calc(1 / var(--map-scale)));
                 background: var(--map-card-internal-room-icon-background-color);
                 color: var(--map-card-internal-room-icon-color);
                 --mdc-icon-size: var(--map-card-internal-room-icon-size);
@@ -94,10 +94,6 @@ export class Room extends MapObject {
                 text-anchor: middle;
                 dominant-baseline: middle;
                 pointer-events: none;
-                transform: translate(
-                    calc(var(--offset-x) / var(--map-scale)),
-                    calc(var(--offset-y) / var(--map-scale))
-                );
                 font-size: calc(var(--map-card-internal-room-label-font-size) / var(--map-scale));
                 fill: var(--map-card-internal-room-label-color);
                 transition: color var(--map-card-internal-transitions-duration) ease,
@@ -109,7 +105,7 @@ export class Room extends MapObject {
                 fill: var(--map-card-internal-room-outline-fill-color-selected);
             }
 
-            .room-wrapper.selected > .room-icon-wrapper {
+            .room-wrapper.selected > * > .room-icon-wrapper {
                 background: var(--map-card-internal-room-icon-background-color-selected);
                 color: var(--map-card-internal-room-icon-color-selected);
             }

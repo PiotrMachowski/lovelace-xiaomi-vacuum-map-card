@@ -196,6 +196,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         }
         this.mapLocked = config?.map_locked ?? false;
         this.selectedMode = 0;
+        this.realScale = 1;
         this.mapScale = 1;
         this.mapX = 0;
         this.mapY = 0;
@@ -300,7 +301,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                     <div id="map-image-overlay">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            version="1.1"
+                            version="2.0"
                             id="svg-wrapper"
                             width="100%"
                             height="100%"
@@ -644,7 +645,7 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected updated(_changedProperties: PropertyValues): void {
-        this._updateElements();
+        this._updateElements()
     }
 
     connectedCallback(): void {
@@ -660,7 +661,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (s) {
             s.style.borderRadius = this._getCssProperty("--map-card-internal-big-radius");
         }
-        this._calculateBasicScale();
+        this._delay(100).then(() => this._calculateBasicScale());
     }
 
     private _drawSelection(): SVGTemplateResult {
@@ -686,6 +687,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         this.mapScale = 1;
         this.mapLocked = !this.mapLocked;
         forwardHaptic("selection");
+        this._delay(500).then(() => this.requestUpdate());
     }
 
     private _addRectangle(): void {
