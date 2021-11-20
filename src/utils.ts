@@ -138,18 +138,14 @@ export function handleActionWithConfig(
 export function getMousePosition(event: MouseEvent | TouchEvent, element: SVGGraphicsElement): MousePosition {
     let x, y;
     if (event instanceof MouseEvent) {
-        x = event.clientX;
-        y = event.clientY;
+        x = event.offsetX;
+        y = event.offsetY;
     }
     if (window.TouchEvent && event instanceof TouchEvent && event.touches) {
-        x = event.touches[0].clientX;
-        y = event.touches[0].clientY;
+        x = event.touches[0].clientX - element.getBoundingClientRect().x;
+        y = event.touches[0].clientY - element.getBoundingClientRect().y;
     }
-    const CTM = element.getScreenCTM();
-    if (CTM) {
-        return new MousePosition((x - CTM.e) / CTM.a, (y - CTM.f) / CTM.d);
-    }
-    return new MousePosition(0, 0);
+    return new MousePosition(x, y);
 }
 
 export async function getAllEntitiesFromTheSameDevice(

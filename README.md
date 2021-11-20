@@ -202,10 +202,10 @@ You can use this configuration as an example: [demo config](/docs/demo_config.ya
 
 | Key | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
-| `camera` | string | no<sup>1</sup> | 0 | Camera with calibration ([Xiaomi Cloud Map Extractor](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor)) |
-| `entity` | string | no<sup>1</sup> | 0 | Entity with calibration returned as a state |
-| `attribute` | string | no | 0 | Enables usage of a configured attribute instead of state of given entity |
-| `calibration_points` | list | no<sup>1</sup> | 0 | List of 3 or 4 [calibration points](#calibration-points-options) |
+| `camera` | boolean | no<sup>1</sup> | - | Enables retrieving calibration from camera defined in `map_source` ([Xiaomi Cloud Map Extractor](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor)) |
+| `entity` | string | no<sup>1</sup> | - | Entity with calibration returned as a state |
+| `attribute` | string | no | - | Enables usage of a configured attribute instead of state of given entity |
+| `calibration_points` | list | no<sup>1</sup> | - | List of 3 or 4 [calibration points](#calibration-points-options) |
 
 <sup>1</sup> Exactly one of `camera`, `entity` or `calibration_points` must be provided
 
@@ -631,8 +631,9 @@ map_modes:
 ## Translations
 
 Currently, this card contains translations for following languages:
-* `en` - English
+* `da` - Danish
 * `de` - German (Deutsch)
+* `en` - English
 * `es` - Spanish (Español)
 * `fr` - French (Français)
 * `it` - Italian (Italiano)

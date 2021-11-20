@@ -16,7 +16,7 @@ import "./editor";
 import type { PredefinedPointConfig, RoomConfig, TileConfig, XiaomiVacuumMapCardConfig } from "./types/types";
 import { CalibrationPoint, CardPresetConfig, PredefinedZoneConfig, TranslatableString } from "./types/types";
 import { actionHandler } from "./action-handler-directive";
-import { CARD_VERSION } from "./const";
+import { CARD_VERSION, CARD_CUSTOM_ELEMENT_NAME, EDITOR_CUSTOM_ELEMENT_NAME } from "./const";
 import { localize } from "./localize/localize";
 import PinchZoom from "./pinch-zoom";
 import "./pinch-zoom";
@@ -59,16 +59,16 @@ console.info(
 const windowWithCards = window as unknown as Window & { customCards: unknown[] };
 windowWithCards.customCards = windowWithCards.customCards || [];
 windowWithCards.customCards.push({
-    type: "xiaomi-vacuum-map-card",
+    type: CARD_CUSTOM_ELEMENT_NAME,
     name: "Xiaomi Vacuum Map Card",
     description: localize("common.description"),
     preview: true,
 });
 
-@customElement("xiaomi-vacuum-map-card")
+@customElement(CARD_CUSTOM_ELEMENT_NAME)
 export class XiaomiVacuumMapCard extends LitElement {
     public static async getConfigElement(): Promise<LovelaceCardEditor> {
-        return document.createElement("xiaomi-vacuum-map-card-editor");
+        return document.createElement(EDITOR_CUSTOM_ELEMENT_NAME);
     }
 
     public static getStubConfig(hass: HomeAssistant): XiaomiVacuumMapCardConfig | undefined {
@@ -81,7 +81,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             return undefined;
         }
         return {
-            type: "custom:xiaomi-vacuum-map-card",
+            type: "custom:" + CARD_CUSTOM_ELEMENT_NAME,
             map_source: {
                 camera: cameras[0],
             },
@@ -196,6 +196,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         }
         this.mapLocked = config?.map_locked ?? false;
         this.selectedMode = 0;
+        this.realScale = 1;
         this.mapScale = 1;
         this.mapX = 0;
         this.mapY = 0;
@@ -299,6 +300,8 @@ export class XiaomiVacuumMapCard extends LitElement {
                         src="${mapSrc}" />
                     <div id="map-image-overlay">
                         <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            version="2.0"
                             id="svg-wrapper"
                             width="100%"
                             height="100%"
@@ -642,7 +645,7 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected updated(_changedProperties: PropertyValues): void {
-        this._updateElements();
+        this._updateElements()
     }
 
     connectedCallback(): void {
@@ -658,7 +661,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (s) {
             s.style.borderRadius = this._getCssProperty("--map-card-internal-big-radius");
         }
-        this._calculateBasicScale();
+        this._delay(100).then(() => this._calculateBasicScale());
     }
 
     private _drawSelection(): SVGTemplateResult {
@@ -684,6 +687,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         this.mapScale = 1;
         this.mapLocked = !this.mapLocked;
         forwardHaptic("selection");
+        this._delay(500).then(() => this.requestUpdate());
     }
 
     private _addRectangle(): void {
@@ -713,7 +717,6 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (event instanceof MouseEvent && event.button != 0) {
             return;
         }
-        // stopEvent(event);
         this.shouldHandleMouseUp = true;
     }
 
@@ -723,21 +726,20 @@ export class XiaomiVacuumMapCard extends LitElement {
             return;
         }
         this.selectedManualRectangles.filter(r => r.isSelected()).forEach(r => r.externalDrag(event));
-        // stopEvent(event);
         this.shouldHandleMouseUp = false;
     }
 
     private _mouseUp(event: PointerEvent | MouseEvent | TouchEvent): void {
         if (!(event instanceof MouseEvent && event.button != 0) && this.shouldHandleMouseUp) {
-            const mousePosition = getMousePosition(event, this._getSvgWrapper());
+            const { x, y } = getMousePosition(event, this._getSvgWrapper());
             switch (this._getCurrentMode().selectionType) {
                 case SelectionType.MANUAL_PATH:
                     forwardHaptic("selection");
-                    this.selectedManualPath.addPoint(mousePosition.x, mousePosition.y);
+                    this.selectedManualPath.addPoint(x, y);
                     break;
                 case SelectionType.MANUAL_POINT:
                     forwardHaptic("selection");
-                    this.selectedManualPoint = new ManualPoint(mousePosition.x, mousePosition.y, this._getContext());
+                    this.selectedManualPoint = new ManualPoint(x, y, this._getContext());
                     break;
                 default:
                     return;
@@ -893,7 +895,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     }
 
     private _showInvalidCalibrationWarning(): TemplateResult {
-        return html`<hui-warning>${this._localize("validation.invalid_calibration")}</hui-warning> `;
+        return html` <hui-warning>${this._localize("validation.invalid_calibration")}</hui-warning> `;
     }
 
     private _localize(ts: TranslatableString): string {
@@ -1404,15 +1406,15 @@ export class XiaomiVacuumMapCard extends LitElement {
 
             ${MapObject.styles}
             ${ManualRectangle.styles}
-            ${PredefinedMultiRectangle.styles}
-            ${ManualPath.styles}
-            ${ManualPoint.styles}
-            ${PredefinedPoint.styles}
-            ${Room.styles}
-            ${ModesMenuRenderer.styles}
-            ${IconRenderer.styles}
-            ${TileRenderer.styles}
-            ${ToastRenderer.styles}
+          ${PredefinedMultiRectangle.styles}
+          ${ManualPath.styles}
+          ${ManualPoint.styles}
+          ${PredefinedPoint.styles}
+          ${Room.styles}
+          ${ModesMenuRenderer.styles}
+          ${IconRenderer.styles}
+          ${TileRenderer.styles}
+          ${ToastRenderer.styles}
         `;
     }
 }

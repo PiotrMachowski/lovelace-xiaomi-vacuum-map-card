@@ -6,8 +6,9 @@ import { fireEvent, HomeAssistant, LovelaceCardEditor } from "custom-card-helper
 import { XiaomiVacuumMapCardConfig } from "./types/types";
 import { localize } from "./localize/localize";
 import { PlatformGenerator } from "./model/generators/platform-generator";
+import { EDITOR_CUSTOM_ELEMENT_NAME } from "./const";
 
-@customElement("xiaomi-vacuum-map-card-editor")
+@customElement(EDITOR_CUSTOM_ELEMENT_NAME)
 export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCardEditor {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: XiaomiVacuumMapCardConfig;

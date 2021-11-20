@@ -29,7 +29,7 @@ export class PredefinedMultiRectangle extends MapObject {
             <g class="predefined-rectangle-wrapper ${this._selected ? "selected" : ""}">
                 ${mappedRectangles.map(
                     r => svg`
-                    <polygon class="predefined-rectangle"
+                    <polygon class="predefined-rectangle clickable"
                              points="${r.map(p => p.join(", ")).join(" ")}"
                              @click="${(): void => this._click()}">
                     </polygon>
@@ -113,11 +113,10 @@ export class PredefinedMultiRectangle extends MapObject {
                 width: var(--map-card-internal-predefined-rectangle-icon-wrapper-size);
                 border-radius: var(--map-card-internal-small-radius);
                 transform-box: fill-box;
-                transform: scale(calc(1 / var(--map-scale)))
-                    translate(
+                transform: translate(
                         calc(var(--map-card-internal-predefined-rectangle-icon-wrapper-size) / -2),
                         calc(var(--map-card-internal-predefined-rectangle-icon-wrapper-size) / -2)
-                    );
+                    ) scale(calc(1 / var(--map-scale)));
                 background: var(--map-card-internal-predefined-rectangle-icon-background-color);
                 color: var(--map-card-internal-predefined-rectangle-icon-color);
                 --mdc-icon-size: var(--map-card-internal-predefined-rectangle-icon-size);
@@ -129,10 +128,6 @@ export class PredefinedMultiRectangle extends MapObject {
                 text-anchor: middle;
                 dominant-baseline: middle;
                 pointer-events: none;
-                transform: translate(
-                    calc(var(--offset-x) / var(--map-scale)),
-                    calc(var(--offset-y) / var(--map-scale))
-                );
                 font-size: calc(var(--map-card-internal-predefined-rectangle-label-font-size) / var(--map-scale));
                 fill: var(--map-card-internal-predefined-rectangle-label-color);
                 transition: color var(--map-card-internal-transitions-duration) ease,
@@ -144,7 +139,7 @@ export class PredefinedMultiRectangle extends MapObject {
                 fill: var(--map-card-internal-predefined-rectangle-fill-color-selected);
             }
 
-            .predefined-rectangle-wrapper.selected > .predefined-rectangle-icon-wrapper {
+            .predefined-rectangle-wrapper.selected > * > .predefined-rectangle-icon-wrapper {
                 background: var(--map-card-internal-predefined-rectangle-icon-background-color-selected);
                 color: var(--map-card-internal-predefined-rectangle-icon-color-selected);
             }

@@ -1,8 +1,13 @@
 import { ActionConfig, LovelaceCard, LovelaceCardConfig, LovelaceCardEditor } from "custom-card-helpers";
+import { ACTION_HANDLER_CUSTOM_ELEMENT_NAME, CARD_CUSTOM_ELEMENT_NAME, EDITOR_CUSTOM_ELEMENT_NAME } from "../const";
+import { XiaomiVacuumMapCardActionHandler } from "../action-handler-directive";
+import { XiaomiVacuumMapCard } from "../xiaomi-vacuum-map-card";
 
 declare global {
     interface HTMLElementTagNameMap {
-        "xiaomi-vacuum-map-card-editor": LovelaceCardEditor;
+        [CARD_CUSTOM_ELEMENT_NAME]: XiaomiVacuumMapCard;
+        [EDITOR_CUSTOM_ELEMENT_NAME]: LovelaceCardEditor;
+        [ACTION_HANDLER_CUSTOM_ELEMENT_NAME]: XiaomiVacuumMapCardActionHandler;
         "hui-error-card": LovelaceCard;
     }
 }

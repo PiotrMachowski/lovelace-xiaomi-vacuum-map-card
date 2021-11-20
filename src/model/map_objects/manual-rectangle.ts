@@ -163,10 +163,10 @@ export class ManualRectangle extends MapObject {
                         if (topLeftVacuumPoint[0] === this._vacRectSnapshot[0]) {
                             this._vacRect[2] = this._vacRectSnapshot[2] + diffX;
                         } else {
-                            this._vacRect[0] = this._vacRectSnapshot[0] - diffX;
+                            this._vacRect[0] = this._vacRectSnapshot[0] + diffX;
                         }
                         if (topLeftVacuumPoint[1] === this._vacRectSnapshot[1]) {
-                            this._vacRect[3] = this._vacRectSnapshot[3] - diffY;
+                            this._vacRect[3] = this._vacRectSnapshot[3] + diffY;
                         } else {
                             this._vacRect[1] = this._vacRectSnapshot[1] + diffY;
                         }
