@@ -317,7 +317,6 @@ export class XiaomiVacuumMapCard extends LitElement {
         return html`
             <ha-card
                 .header="${this.config.title}"
-                tabindex="0"
                 style="--map-scale: ${this.mapScale}; --real-scale: ${this.realScale};">
                 ${conditional(
                     (this.config.additional_presets?.length ?? 0) > 0,
