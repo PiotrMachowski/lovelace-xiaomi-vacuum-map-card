@@ -635,6 +635,7 @@ Currently, this card contains translations for following languages:
 * `es` - Spanish (Español)
 * `fr` - French (Français)
 * `it` - Italian (Italiano)
+* `nl` - Dutch (Nederlands)
 * `pl` - Polish (Polski)
 * `pt-BR` - Brazilian Portuguese (Português Brasileiro)
 * `ru` - Russian (Русский)
