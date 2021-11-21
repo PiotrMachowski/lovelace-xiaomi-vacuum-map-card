@@ -1,174 +1,174 @@
 {
     "common": {
-        "version": "Version",
-        "invalid_configuration": "Invalid configuration {0}",
-        "description": "A card that lets you control your vacuum",
-        "old_configuration": "Old configuration detected. Adjust your config to the latest schema or create a new card from the scratch.",
-        "old_configuration_migration_link": "Migration guide"
+        "version": "Versie",
+        "invalid_configuration": "Ongeldige configuratie {0}",
+        "description": "Een kaart waarmee je jouw robotstofzuiger kunt bedienen.",
+        "old_configuration": "Oude configuratie gevonden. Pas je configuratie aan op basis van de nieuwe versie of maak een volledig nieuwe kaart.",
+        "old_configuration_migration_link": "Uitleg configuratie aanpassen"
     },
     "map_mode": {
-        "invalid": "Invalid template!",
+        "invalid": "Ongeldig sjabloon!",
         "vacuum_goto": "Pin & Go",
-        "vacuum_goto_predefined": "Points",
-        "vacuum_clean_segment": "Rooms",
-        "vacuum_clean_zone": "Zone cleanup",
-        "vacuum_clean_zone_predefined": "Zones list",
-        "vacuum_follow_path": "Path"
+        "vacuum_goto_predefined": "Punten",
+        "vacuum_clean_segment": "Kamers",
+        "vacuum_clean_zone": "Zone schoonmaak",
+        "vacuum_clean_zone_predefined": "Zone lijst",
+        "vacuum_follow_path": "Pad"
     },
     "validation": {
         "preset": {
             "entity": {
-                "missing": "Missing property: entity"
+                "missing": "Ontbrekende parameter: entity"
             },
             "preset_name": {
-                "missing": "Missing property: preset_name"
+                "missing": "Ontbrekende parameter: preset_name"
             },
             "platform": {
-                "invalid": "Invalid vacuum platform: {0}"
+                "invalid": "Ongeldig stofzuigerplatform: {0}"
             },
             "map_source": {
-                "missing": "Missing property: map_source",
-                "none_provided": "No camera neither image provided",
-                "ambiguous": "Only one map source allowed"
+                "missing": "Ontbrekende parameter: map_source",
+                "none_provided": "Geen camera of afbeelding opgegeven",
+                "ambiguous": "Slechts één kaartbron toegestaan"
             },
             "calibration_source": {
-                "missing": "Missing property: calibration_source",
-                "ambiguous": "Only one calibration source allowed",
-                "none_provided": "No calibration source provided",
+                "missing": "Ontbrekende parameter: calibration_source",
+                "ambiguous": "Slechts één kalibratiebron toegestaan",
+                "none_provided": "Geen kalibratiebron opgegeven",
                 "calibration_points": {
-                    "invalid_number": "Exactly 3 or 4 calibration points required",
-                    "missing_map": "Each calibration point must contain map coordinates",
-                    "missing_vacuum": "Each calibration point must contain vacuum coordinates",
-                    "missing_coordinate": "Map and vacuum calibration points must contain both x and y coordinate"
+                    "invalid_number": "Precies 3 of 4 kalibratiepunten vereist",
+                    "missing_map": "Elk kalibratiepunt moet kaart coördinaten bevatten",
+                    "missing_vacuum": "Elk kalibratiepunt moet stofzuiger coördinaten bevatten",
+                    "missing_coordinate": "Kaart en stofzuiger kalibratiepunten moeten zowel een x als y coödinaat bevatten"
                 }
             },
             "icons": {
-                "invalid": "Error in configuration: icons",
+                "invalid": "Fout in configuratie: icons",
                 "icon": {
-                    "missing": "Each entry of icons list must contain icon property"
+                        "missing": "Elk item in de lijst moet de eigenschap « icon » bevatten"
                 }
             },
             "tiles": {
-                "invalid": "Error in configuration: tiles",
+                "invalid": "Fout in configuratie: tiles",
                 "entity": {
-                    "missing": "Each entry of tiles list must contain entity"
+                    "missing": "Elk item in de lijst moet de eigenschap « entity » bevatten"
                 },
                 "label": {
-                    "missing": "Each entry of tiles list must contain label"
+                    "missing": "Elk item in de lijst moet de eigenschap « label » bevatten"
                 }
             },
             "map_modes": {
-                "invalid": "Error in configuration: map_modes",
+                "invalid": "Fout in configuratie: map_modes",
                 "icon": {
-                    "missing": "Missing icon of map mode"
+                    "missing": "Pictogram van kaartmodus ontbreekt"
                 },
                 "name": {
-                    "missing": "Missing name of map mode"
+                    "missing": "Naam van kaartmodus ontbreekt"
                 },
                 "template": {
-                    "invalid": "Invalid template: {0}"
+                    "invalid": "Ongeldig sjabloon: {0}"
                 },
                 "predefined_selections": {
-                    "not_applicable": "Mode {0} does not support predefined selections",
+                    "not_applicable": "Modus {0} ondersteunt geen vooraf gedefinieerde selecties",
                     "zones": {
-                        "missing": "Missing zones configuration",
-                        "invalid_parameters_number": "Each zone must have 4 parameters"
+                        "missing": "Zone configuratie ontbreekt",
+                        "invalid_parameters_number": "Elke zone moet 4 coördinaten hebben"
                     },
                     "points": {
                         "position": {
-                            "missing": "Missing points configuration",
-                            "invalid_parameters_number": "Each point must have 2 parameters"
+                            "missing": "Punten configuratie ontbreekt",
+                            "invalid_parameters_number": "Elk punt moet 2 coördinaten hebben"
                         }
                     },
                     "rooms": {
                         "id": {
-                            "missing": "Missing room id",
-                            "invalid_format": "Invalid room id: {0}"
+                            "missing": "Kamer id ontbreekt",
+                            "invalid_format": "Ongeldige kamer id: {0}"
                         },
                         "outline": {
-                            "invalid_parameters_number": "Each point of room outline must have 2 parameters"
+                            "invalid_parameters_number": "Elk punt van de kamer omtrek moet 2 coördinaten hebben"
                         }
                     },
                     "label": {
                         "x": {
-                            "missing": "Label must have x property"
+                            "missing": "Elk label moet de eigenschap « x » bevatten"
                         },
                         "y": {
-                            "missing": "Label must have y property"
+                            "missing": "Elk label moet de eigenschap « y » bevatten"
                         },
                         "text": {
-                            "missing": "Label must have text property"
+                            "missing": "Elk label moet de eigenschap « text » bevatten"
                         }
                     },
                     "icon": {
                         "x": {
-                            "missing": "Icon must have x property"
+                            "missing": "Elk pictogram moet de eigenschap « x » bevatten"
                         },
                         "y": {
-                            "missing": "Icon must have y property"
+                            "missing": "Elk pictogram moet de eigenschap « y » bevatten"
                         },
                         "name": {
-                            "missing": "Icon must have name property"
+                            "missing": "Elk pictogram moet de eigenschap « name » bevatten"
                         }
                     }
                 },
                 "service_call_schema": {
-                    "missing": "Missing service call schema",
+                    "missing": "Serviceoproep schema",
                     "service": {
-                        "missing": "Service call schema must contain service",
-                        "invalid": "Invalid service: {0}"
+                        "missing": "Serviceoproep schema moet een service bevatten",
+                        "invalid": "Ongeldige service: {0}"
                     }
                 }
             }
         },
-        "invalid_entities": "Invalid entities:",
-        "invalid_calibration": "Invalid calibration, please check your configuration"
+        "invalid_entities": "Ongeldige entiteiten:",
+        "invalid_calibration": "Ongeldige kalibratie, controleer je configuratie"
     },
     "label": {
         "status": "Status",
-        "battery_level": "Battery",
-        "fan_speed": "Fan speed",
-        "sensor_dirty_left": "Sensors left",
-        "filter_left": "Filter left",
-        "main_brush_left": "Main brush left",
-        "side_brush_left": "Side brush left",
-        "cleaning_count": "Cleaning count",
-        "cleaned_area": "Cleaned area",
-        "cleaning_time": "Cleaning time"
+        "battery_level": "Batterij",
+        "fan_speed": "Fan snelheid",
+        "sensor_dirty_left": "Sensors",
+        "filter_left": "Filter",
+        "main_brush_left": "Hoofdborstel",
+        "side_brush_left": "Zijborstel",
+        "cleaning_count": "Schoonmaakteller",
+        "cleaned_area": "Oppervlakte",
+        "cleaning_time": "Schoonmaaktijd"
     },
     "icon": {
         "vacuum_start": "Start",
         "vacuum_pause": "Pause",
         "vacuum_stop": "Stop",
-        "vacuum_return_to_base": "Return to base",
-        "vacuum_clean_spot": "Clean spot",
-        "vacuum_locate": "Locate",
-        "vacuum_set_fan_speed": "Change fan speed"
+        "vacuum_return_to_base": "Terug naar basisstation",
+        "vacuum_clean_spot": "Spot schoonmaak",
+        "vacuum_locate": "Lokaliseren",
+        "vacuum_set_fan_speed": "Fan snelheid aanpassen"
     },
     "unit": {
-        "hour_shortcut": "h",
+        "hour_shortcut": "u",
         "meter_shortcut": "m",
         "meter_squared_shortcut": "m²",
         "minute_shortcut": "min"
     },
     "popups": {
-        "success": "Success!",
-        "no_selection": "No selection provided",
-        "failed": "Failed to call service"
+        "success": "Succes!",
+        "no_selection": "Geen selectie opgegeven",
+        "failed": "Fout bij aanroepen service"
     },
     "editor": {
         "description": {
-            "before_link": "This visual editor supports only a basic configuration with a camera entity created using ",
+            "before_link": "Deze grafische editor ondersteunt slechts een basis configuratie met een camera entiteit welke gemaakt is met ",
             "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": ". For more advanced setup use YAML mode."
+            "after_link": ". Gebruik de YAML modus voor een geavanceerde configuratie."
         },
         "label": {
-            "name": "Title (optional)",
-            "entity": "Vacuum entity (required)",
-            "camera": "Camera entity (required)",
-            "vacuum_platform": "Vacuum platform (required)",
-            "map_locked": "Map locked (optional)",
-            "two_finger_pan": "Two finger pan (optional)"
+            "name": "Titel (optioneel)",
+            "entity": "Stofzuiger entiteit (verplicht)",
+            "camera": "Camera entiteit (verplicht)",
+            "vacuum_platform": "stofzuigerplatform (verplicht)",
+            "map_locked": "Kaart vergrendelen (optioneel)",
+            "two_finger_pan": "Kaart verplaatsen met twee vingers (optioneel)"
         }
     }
 }
