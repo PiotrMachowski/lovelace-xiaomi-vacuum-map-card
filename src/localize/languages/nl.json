@@ -1,1 +1,174 @@
-
+{
+    "common": {
+        "version": "Version",
+        "invalid_configuration": "Invalid configuration {0}",
+        "description": "A card that lets you control your vacuum",
+        "old_configuration": "Old configuration detected. Adjust your config to the latest schema or create a new card from the scratch.",
+        "old_configuration_migration_link": "Migration guide"
+    },
+    "map_mode": {
+        "invalid": "Invalid template!",
+        "vacuum_goto": "Pin & Go",
+        "vacuum_goto_predefined": "Points",
+        "vacuum_clean_segment": "Rooms",
+        "vacuum_clean_zone": "Zone cleanup",
+        "vacuum_clean_zone_predefined": "Zones list",
+        "vacuum_follow_path": "Path"
+    },
+    "validation": {
+        "preset": {
+            "entity": {
+                "missing": "Missing property: entity"
+            },
+            "preset_name": {
+                "missing": "Missing property: preset_name"
+            },
+            "platform": {
+                "invalid": "Invalid vacuum platform: {0}"
+            },
+            "map_source": {
+                "missing": "Missing property: map_source",
+                "none_provided": "No camera neither image provided",
+                "ambiguous": "Only one map source allowed"
+            },
+            "calibration_source": {
+                "missing": "Missing property: calibration_source",
+                "ambiguous": "Only one calibration source allowed",
+                "none_provided": "No calibration source provided",
+                "calibration_points": {
+                    "invalid_number": "Exactly 3 or 4 calibration points required",
+                    "missing_map": "Each calibration point must contain map coordinates",
+                    "missing_vacuum": "Each calibration point must contain vacuum coordinates",
+                    "missing_coordinate": "Map and vacuum calibration points must contain both x and y coordinate"
+                }
+            },
+            "icons": {
+                "invalid": "Error in configuration: icons",
+                "icon": {
+                    "missing": "Each entry of icons list must contain icon property"
+                }
+            },
+            "tiles": {
+                "invalid": "Error in configuration: tiles",
+                "entity": {
+                    "missing": "Each entry of tiles list must contain entity"
+                },
+                "label": {
+                    "missing": "Each entry of tiles list must contain label"
+                }
+            },
+            "map_modes": {
+                "invalid": "Error in configuration: map_modes",
+                "icon": {
+                    "missing": "Missing icon of map mode"
+                },
+                "name": {
+                    "missing": "Missing name of map mode"
+                },
+                "template": {
+                    "invalid": "Invalid template: {0}"
+                },
+                "predefined_selections": {
+                    "not_applicable": "Mode {0} does not support predefined selections",
+                    "zones": {
+                        "missing": "Missing zones configuration",
+                        "invalid_parameters_number": "Each zone must have 4 parameters"
+                    },
+                    "points": {
+                        "position": {
+                            "missing": "Missing points configuration",
+                            "invalid_parameters_number": "Each point must have 2 parameters"
+                        }
+                    },
+                    "rooms": {
+                        "id": {
+                            "missing": "Missing room id",
+                            "invalid_format": "Invalid room id: {0}"
+                        },
+                        "outline": {
+                            "invalid_parameters_number": "Each point of room outline must have 2 parameters"
+                        }
+                    },
+                    "label": {
+                        "x": {
+                            "missing": "Label must have x property"
+                        },
+                        "y": {
+                            "missing": "Label must have y property"
+                        },
+                        "text": {
+                            "missing": "Label must have text property"
+                        }
+                    },
+                    "icon": {
+                        "x": {
+                            "missing": "Icon must have x property"
+                        },
+                        "y": {
+                            "missing": "Icon must have y property"
+                        },
+                        "name": {
+                            "missing": "Icon must have name property"
+                        }
+                    }
+                },
+                "service_call_schema": {
+                    "missing": "Missing service call schema",
+                    "service": {
+                        "missing": "Service call schema must contain service",
+                        "invalid": "Invalid service: {0}"
+                    }
+                }
+            }
+        },
+        "invalid_entities": "Invalid entities:",
+        "invalid_calibration": "Invalid calibration, please check your configuration"
+    },
+    "label": {
+        "status": "Status",
+        "battery_level": "Battery",
+        "fan_speed": "Fan speed",
+        "sensor_dirty_left": "Sensors left",
+        "filter_left": "Filter left",
+        "main_brush_left": "Main brush left",
+        "side_brush_left": "Side brush left",
+        "cleaning_count": "Cleaning count",
+        "cleaned_area": "Cleaned area",
+        "cleaning_time": "Cleaning time"
+    },
+    "icon": {
+        "vacuum_start": "Start",
+        "vacuum_pause": "Pause",
+        "vacuum_stop": "Stop",
+        "vacuum_return_to_base": "Return to base",
+        "vacuum_clean_spot": "Clean spot",
+        "vacuum_locate": "Locate",
+        "vacuum_set_fan_speed": "Change fan speed"
+    },
+    "unit": {
+        "hour_shortcut": "h",
+        "meter_shortcut": "m",
+        "meter_squared_shortcut": "m²",
+        "minute_shortcut": "min"
+    },
+    "popups": {
+        "success": "Success!",
+        "no_selection": "No selection provided",
+        "failed": "Failed to call service"
+    },
+    "editor": {
+        "description": {
+            "before_link": "This visual editor supports only a basic configuration with a camera entity created using ",
+            "link_text": "Xiaomi Cloud Map Extractor",
+            "after_link": ". For more advanced setup use YAML mode."
+        },
+        "label": {
+            "name": "Title (optional)",
+            "entity": "Vacuum entity (required)",
+            "camera": "Camera entity (required)",
+            "vacuum_platform": "Vacuum platform (required)",
+            "map_locked": "Map locked (optional)",
+            "two_finger_pan": "Two finger pan (optional)"
+        }
+    }
+}
