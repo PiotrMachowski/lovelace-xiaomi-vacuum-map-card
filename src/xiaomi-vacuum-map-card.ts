@@ -346,7 +346,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                 )}
                 ${validCalibration
                     ? html`
-                          <div id="map-wrapper" style="position: relative;">
+                          <div class="map-wrapper">
                               ${this.mapLocked
                                   ? html`
                                         <div min-scale="0.5" id="map-zoomer" @change="${this._calculateScale}">
@@ -407,7 +407,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                     ${conditional(
                         validCalibration && (modes.length > 1 || mapControls.length > 0),
                         () => html`
-                            <div>
+                            <div class="map-controls-wrapper">
                                 <div class="map-controls">
                                     ${conditional(modes.length > 1, () =>
                                         ModesMenuRenderer.render(modes, this.selectedMode, selected =>
@@ -644,7 +644,7 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected updated(_changedProperties: PropertyValues): void {
-        this._updateElements()
+        this._updateElements();
     }
 
     connectedCallback(): void {
@@ -1236,6 +1236,11 @@ export class XiaomiVacuumMapCard extends LitElement {
 
             .preset-indicator {
                 line-height: 50%;
+            }
+
+            .map-wrapper {
+                position: relative;
+                height: max-content;
             }
 
             #map-zoomer {

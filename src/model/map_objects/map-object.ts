@@ -148,18 +148,18 @@ export abstract class MapObject {
 
     static get styles(): CSSResultGroup {
         return css`
-          .icon-foreign-object {
-            overflow: visible;
-            pointer-events: none;
-          }
+            .icon-foreign-object {
+                overflow: visible;
+                pointer-events: none;
+            }
 
-          .map-icon-wrapper {
-            position: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            pointer-events: auto;
-          }
+            .map-icon-wrapper {
+                position: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                pointer-events: auto;
+            }
         `;
     }
 }

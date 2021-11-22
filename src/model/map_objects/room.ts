@@ -82,7 +82,8 @@ export class Room extends MapObject {
                 transform: translate(
                         calc(var(--map-card-internal-room-icon-wrapper-size) / -2),
                         calc(var(--map-card-internal-room-icon-wrapper-size) / -2)
-                    ) scale(calc(1 / var(--map-scale)));
+                    )
+                    scale(calc(1 / var(--map-scale)));
                 background: var(--map-card-internal-room-icon-background-color);
                 color: var(--map-card-internal-room-icon-color);
                 --mdc-icon-size: var(--map-card-internal-room-icon-size);

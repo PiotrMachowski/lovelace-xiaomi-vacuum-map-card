@@ -116,7 +116,8 @@ export class PredefinedMultiRectangle extends MapObject {
                 transform: translate(
                         calc(var(--map-card-internal-predefined-rectangle-icon-wrapper-size) / -2),
                         calc(var(--map-card-internal-predefined-rectangle-icon-wrapper-size) / -2)
-                    ) scale(calc(1 / var(--map-scale)));
+                    )
+                    scale(calc(1 / var(--map-scale)));
                 background: var(--map-card-internal-predefined-rectangle-icon-background-color);
                 color: var(--map-card-internal-predefined-rectangle-icon-color);
                 --mdc-icon-size: var(--map-card-internal-predefined-rectangle-icon-size);

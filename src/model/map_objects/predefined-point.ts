@@ -81,7 +81,8 @@ export class PredefinedPoint extends MapObject {
                 transform: translate(
                         calc(var(--map-card-internal-predefined-point-icon-wrapper-size) / -2),
                         calc(var(--map-card-internal-predefined-point-icon-wrapper-size) / -2)
-                    ) scale(calc(1 / var(--map-scale)));
+                    )
+                    scale(calc(1 / var(--map-scale)));
                 background: var(--map-card-internal-predefined-point-icon-background-color);
                 color: var(--map-card-internal-predefined-point-icon-color);
                 --mdc-icon-size: var(--map-card-internal-predefined-point-icon-size);
