@@ -268,10 +268,12 @@ Following vacuum platforms are supported at this moment:
 
 | Key | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
-| `entity` | string | no | - | Entity id of map camera |
-| `attribute` | string | no* | - | URL of map image |
-| `value` | string | no* | - | URL of map image |
-| `value_not` | string | no* | - | URL of map image |
+| `entity` | string | yes | - | Entity ID |
+| `attribute` | string | no | - | Attribute to use instead of entity state |
+| `value` | string | no<sup>1</sup> | - | Entity state/attribute has to be equal to this value |
+| `value_not` | string | no<sup>1</sup> | - | Entity state/attribute has to be unequal to this value |
+
+<sup>1</sup> Exactly one of them has to be provided
 
 ### Map modes options
 
