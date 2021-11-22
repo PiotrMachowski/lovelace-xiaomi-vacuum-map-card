@@ -22,10 +22,7 @@ export abstract class MapObject {
     }
 
     protected realScaled(value: number): number {
-        if (window["chrome"])
-            // noooooooo
-            return value / this._context.realScale();
-        return this.scaled(value / this._context.realScale());
+        return value / this._context.realScale();
     }
 
     protected realScaled2(value: number): number {
@@ -82,12 +79,14 @@ export abstract class MapObject {
         return svg`${conditional(
             config != null && mapped.length > 0,
             () => svg`
-                <foreignObject class="${htmlClass}"
-                               style="--x-icon: ${mapped[0]}px; --y-icon: ${mapped[1]}px"
-                               @click="${click}">
-                    <div class="map-icon-wrapper">
-                        <ha-icon icon="${config?.name}"></ha-icon>
-                    </div>
+                <foreignObject class="icon-foreign-object"
+                               style="--x-icon: ${mapped[0]}px; --y-icon: ${mapped[1]}px;"
+                               x="${mapped[0]}px" y="${mapped[1]}px" width="36px" height="36px">         
+                    <body xmlns="http://www.w3.org/1999/xhtml">
+                      <div class="map-icon-wrapper ${htmlClass} clickable" @click="${click}" >
+                          <ha-icon icon="${config?.name}" style="background: transparent;"></ha-icon>
+                      </div>
+                    </body>
                 </foreignObject>
             `,
         )}`;
@@ -98,10 +97,9 @@ export abstract class MapObject {
         return svg`${conditional(
             config != null && mapped.length > 0,
             () => svg`
-                <text class="${htmlClass}"
-                      style="--offset-x: ${config?.offset_x ?? 0}px; --offset-y: ${config?.offset_y ?? 0}px"
-                      x="${mapped[0]}"
-                      y="${mapped[1]}">
+                <text class="label-text ${htmlClass}"
+                      x="${mapped[0] + this.scaled(config?.offset_x ?? 0)}px"
+                      y="${mapped[1] + this.scaled(config?.offset_y ?? 0)}px">
                     ${config?.text}
                 </text>
             `,
@@ -134,8 +132,8 @@ export abstract class MapObject {
         const previous = rect[(topIndex + 3) % 4];
         const atanNext = MapObject.calcAngle(top, next);
         const atanPrevious = MapObject.calcAngle(top, previous);
-        if (atanNext < atanPrevious) return next;
-        return top;
+        const second = atanNext < atanPrevious ? next : previous;
+        return second[0] < top[0] ? second : top;
     }
 
     protected static calcAngle(p2: PointType, p1: PointType): number {
@@ -150,13 +148,17 @@ export abstract class MapObject {
 
     static get styles(): CSSResultGroup {
         return css`
+            .icon-foreign-object {
+                overflow: visible;
+                pointer-events: none;
+            }
+
             .map-icon-wrapper {
-                width: inherit;
-                height: inherit;
-                background: inherit;
+                position: center;
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                pointer-events: auto;
             }
         `;
     }
