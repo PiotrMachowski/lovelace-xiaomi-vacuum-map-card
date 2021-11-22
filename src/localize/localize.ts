@@ -1,8 +1,10 @@
-import * as nl from "./languages/nl.json";
+import * as da from "./languages/da.json";
+import * as de from "./languages/de.json";
 import * as en from "./languages/en.json";
 import * as es from "./languages/es.json";
 import * as fr from "./languages/fr.json";
 import * as it from "./languages/it.json";
+import * as nl from "./languages/nl.json";
 import * as pl from "./languages/pl.json";
 import * as ptBr from "./languages/pt-BR.json";
 import * as ru from "./languages/ru.json";
@@ -10,11 +12,13 @@ import * as uk from "./languages/uk.json";
 import { Language, TranslatableString } from "../types/types";
 
 const languages: Record<string, unknown> = {
-    nl: nl,
+    da: da,
+    de: de,
     en: en,
     es: es,
     fr: fr,
     it: it,
+    nl: nl,
     pl: pl,
     "pt-BR": ptBr,
     ru: ru,

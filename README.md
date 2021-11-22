@@ -84,7 +84,7 @@ Features include:
     - Multiple vacuums support
     - Multiple maps (camera/image) support
     - Fully customizable styling
-  
+
 ## Installation
 
 ### HACS
@@ -214,7 +214,7 @@ You can use this configuration as an example: [demo config](/docs/demo_config.ya
 Each of calibration points must have a following structure:
 ```yaml
 vacuum: # coordinates of a point in a vacuum coordinate system
-  x: 25500 
+  x: 25500
   y: 25500
 map: # coordinates of a point in a map coordinate system (can be read using e.g. Paint or Gimp)
   x: 466
@@ -268,10 +268,12 @@ Following vacuum platforms are supported at this moment:
 
 | Key | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
-| `entity` | string | no | - | Entity id of map camera |
-| `attribute` | string | no* | - | URL of map image |
-| `value` | string | no* | - | URL of map image |
-| `value_not` | string | no* | - | URL of map image |
+| `entity` | string | yes | - | Entity ID |
+| `attribute` | string | no | - | Attribute to use instead of entity state |
+| `value` | string | no<sup>1</sup> | - | Entity state/attribute has to be equal to this value |
+| `value_not` | string | no<sup>1</sup> | - | Entity state/attribute has to be unequal to this value |
+
+<sup>1</sup> Exactly one of them has to be provided
 
 ### Map modes options
 
@@ -400,7 +402,7 @@ Following repeats types are supported at this moment:
 
 Format of data depends on selected `selection_type`:
 * `PREDEFINED_RECTANGLE`
-  
+
   | Key | Type | Required | Default | Description |
   | --- | --- | --- | --- | --- |
   | `zones` | list | yes | - | List of lists containing zone's coordinates in `[x,y,width,height]` format (e.g. `[[25500, 25000, 26500, 26500]]`) |
@@ -408,7 +410,7 @@ Format of data depends on selected `selection_type`:
   | `label` | object | no | - | [Label definition](#label-options) |
 
   > See [hints](#hints) to check how to easily retrieve zone coordinates.
-  
+
 * `PREDEFINED_POINT`
 
   | Key | Type | Required | Default | Description |
@@ -417,8 +419,8 @@ Format of data depends on selected `selection_type`:
   | `icon` | object | no | - | [Icon definition](#icon-options) |
   | `label` | object | no | - | [Label definition](#label-options) |
 
-  > See [hints](#hints) to check how to easily retrieve point coordinates. 
-  
+  > See [hints](#hints) to check how to easily retrieve point coordinates.
+
 * `ROOM`
 
   | Key | Type | Required | Default | Description |
@@ -451,7 +453,7 @@ Format of data depends on selected `selection_type`:
 ## Hints
 
 - **Getting room/point coordinates**
-  
+
   To get coordinates switch to a specific mode, create a selection and hold "Play" button.
   A popup with full service call details will be shown.
   This feature replaces `debug` option from previous versions of the card.
@@ -465,13 +467,13 @@ Format of data depends on selected `selection_type`:
     - Mark a selected outline on a map
     - Hold "Play" button
     - Your outline will be in `path` section of service data
-  
+
 - **Advanced styling**
-  
+
   You can add any of [these variables](/docs/css_variables.md) to your theme to override default card styling.
-  
+
   It is also possible to style this card using [card-mod](https://github.com/thomasloven/lovelace-card-mod).
-  
+
   Example - changing room selection colors
   ```yaml
   ...
@@ -489,9 +491,9 @@ Format of data depends on selected `selection_type`:
       --map-card-internal-room-outline-fill-color: rgba(0, 255, 0, 0.5)
     }
   ```
-  
+
 - **Adding icons/tiles to the default configuration**
-  
+
   Generated icons/tiles will be overwritten when `icons`/`tiles` config is provided.
   To extract default generated configuration double-tap play icon: config will be available as a JSON in browser's console.
   You can convert it to YAML using [json2yaml.com](https://www.json2yaml.com/).
@@ -630,7 +632,9 @@ map_modes:
 
 ## Translations
 
-Currently, this card contains translations for following languages: 
+Currently, this card contains translations for following languages:
+* `da` - Danish
+* `de` - German (Deutsch)
 * `en` - English
 * `es` - Spanish (Español)
 * `fr` - French (Français)
