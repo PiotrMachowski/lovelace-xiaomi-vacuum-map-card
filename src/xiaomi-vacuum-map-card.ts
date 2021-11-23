@@ -258,9 +258,11 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _getMapSrc(config: CardPresetConfig): string {
         if (config.map_source.camera) {
-            if (this.connected
-                && this.lastHassUpdate
-                && this.lastHassUpdate.getTime() + DISCONNECTION_TIME >= new Date().getTime())
+            if (
+                this.connected &&
+                this.lastHassUpdate &&
+                this.lastHassUpdate.getTime() + DISCONNECTION_TIME >= new Date().getTime()
+            )
                 return `${this.hass.states[config.map_source.camera].attributes.entity_picture}&v=${+new Date()}`;
             console.log(`DISCONNECTED ${new Date()}`);
             return DISCONNECTED_IMAGE;
