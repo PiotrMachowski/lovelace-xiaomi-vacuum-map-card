@@ -264,7 +264,6 @@ export class XiaomiVacuumMapCard extends LitElement {
                 this.lastHassUpdate.getTime() + DISCONNECTION_TIME >= new Date().getTime()
             )
                 return `${this.hass.states[config.map_source.camera].attributes.entity_picture}&v=${+new Date()}`;
-            console.log(`DISCONNECTED ${new Date()}`);
             return DISCONNECTED_IMAGE;
         }
         if (config.map_source.image) {
@@ -671,14 +670,12 @@ export class XiaomiVacuumMapCard extends LitElement {
         super.connectedCallback();
         this.connected = true;
         this._updateElements();
-        console.log(`CONNECTING ${new Date()}`);
         this._delay(100).then(() => this.requestUpdate());
     }
 
     disconnectedCallback(): void {
         super.disconnectedCallback();
         this.connected = false;
-        console.log(`DISCONNECTING ${new Date()}`);
     }
 
     private _updateElements(): void {
