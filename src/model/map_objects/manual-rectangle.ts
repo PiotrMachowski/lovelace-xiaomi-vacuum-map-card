@@ -60,9 +60,11 @@ export class ManualRectangle extends MapObject {
                          @touchcancel="${(e: MouseEvent): void => this._endDrag(e)}"
                          points="${ManualRectangle._toPoints(mapRect)}">
                 </polygon>
-                <text class="manual-rectangle-description">
-                    ${this._id} ${this._getDimensions()}
-                </text>
+                <g class="manual-rectangle-description">
+                    <text>
+                        ${this._id} ${this._getDimensions()}
+                    </text>
+                </g>
                 <circle class="manual-rectangle-delete-circle clickable"
                         @mouseup="${(e: MouseEvent): void => this._delete(e)}"></circle>
                 <path class="manual-rectangle-delete-icon"
@@ -216,7 +218,12 @@ export class ManualRectangle extends MapObject {
     }
 
     private static _toPoints(rect: RectangleType): string {
-        return rect.map(p => p.join(", ")).join(" ");
+        const points = rect
+            .filter(p => !isNaN(p[0]) && !isNaN(p[1]))
+            .map(p => p.join(", "))
+            .join(" ");
+        if (points.length == 3) console.warn(`Points: ${points}`);
+        return points;
     }
 
     private _toVacuumFromDimensions(x, y, width, height): [number, number, number, number] {
