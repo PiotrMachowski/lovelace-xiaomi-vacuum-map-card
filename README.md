@@ -644,6 +644,7 @@ Currently, this card contains translations for following languages:
 * `pt-BR` - Brazilian Portuguese (Português Brasileiro)
 * `ru` - Russian (Русский)
 * `uk` - Ukrainian (Українська)
+* `hu` - Hungarian (Magyar)
 
 [Adding a new language](CONTRIBUTING.md#adding-new-translations)
 
