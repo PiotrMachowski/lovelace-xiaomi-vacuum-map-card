@@ -106,8 +106,7 @@ export abstract class MapObject {
         )}`;
     }
 
-    protected vacuumToMapRect(zone: ZoneType): [RectangleType, RectangleType] {
-        const [vacX1, vacY1, vacX2, vacY2] = zone;
+    protected vacuumToMapRect([vacX1, vacY1, vacX2, vacY2]: ZoneType): [RectangleType, RectangleType] {
         const v1 = [vacX1, vacY1];
         const v2 = [vacX2, vacY1];
         const v3 = [vacX2, vacY2];
@@ -121,8 +120,18 @@ export abstract class MapObject {
         const mapPoints = [m1, m2, m3, m4] as RectangleType;
         const first = mapPointsCycled.indexOf(MapObject.findTopLeft(mapPoints));
         const outputMapPoints = mapPointsCycled.slice(first, first + 4) as RectangleType;
+        const counterClockwise = this._isCounterClockwise(outputMapPoints);
         const outputVacuumPoints = vacuumPointsCycled.slice(first, first + 4) as RectangleType;
+        if (counterClockwise) {
+            return [MapObject._reverse(outputMapPoints), MapObject._reverse(outputVacuumPoints)];
+        }
         return [outputMapPoints, outputVacuumPoints];
+    }
+
+    private _isCounterClockwise(rect: RectangleType): boolean {
+        let sum = 0;
+        rect.forEach((p, i) => (sum += (rect[(i + 1) % 4][0] - p[0]) * (rect[(i + 1) % 4][1] + p[1])));
+        return sum < 0;
     }
 
     protected static findTopLeft(rect: RectangleType): PointType {
@@ -142,6 +151,10 @@ export abstract class MapObject {
             atan = Math.PI - atan;
         }
         return atan;
+    }
+
+    private static _reverse([m1, m2, m3, m4]: RectangleType): RectangleType {
+        return [m1, m4, m3, m2];
     }
 
     public abstract render(): SVGTemplateResult;

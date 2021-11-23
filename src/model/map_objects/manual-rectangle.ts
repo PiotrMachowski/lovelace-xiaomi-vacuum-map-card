@@ -93,8 +93,8 @@ export class ManualRectangle extends MapObject {
 
     private _getDimensions(): string {
         const [x1, y1, x2, y2] = this.toVacuum();
-        const width = x2 - x1;
-        const height = y2 - y1;
+        const width = Math.abs(x2 - x1);
+        const height = Math.abs(y2 - y1);
         const divider = this._context.roundingEnabled() ? 1000 : 1;
         const rounder = (v: number): string => (v / divider).toFixed(1);
         return `${rounder(width)}${this.localize("unit.meter_shortcut")} x ${rounder(height)}${this.localize(
@@ -172,7 +172,11 @@ export class ManualRectangle extends MapObject {
                         } else {
                             this._vacRect[1] = this._vacRectSnapshot[1] + diffY;
                         }
-                        if (this._vacRect[0] > this._vacRect[2] || this._vacRect[1] > this._vacRect[3])
+                        if (
+                            Math.sign(this._vacRect[0] - this._vacRect[2]) !=
+                                Math.sign(tmpSnapshot[0] - tmpSnapshot[2]) ||
+                            Math.sign(this._vacRect[1] - this._vacRect[3]) != Math.sign(tmpSnapshot[1] - tmpSnapshot[3])
+                        )
                             this._vacRect = tmpSnapshot;
                         this._setup(this.vacuumToMapRect(this._vacRect)[0]);
                         break;
@@ -241,10 +245,12 @@ export class ManualRectangle extends MapObject {
     public toVacuum(
         repeats: number | null = null,
     ): [number, number, number, number] | [number, number, number, number, number] {
+        const [x1, y1, x2, y2] = this._vacRect;
+        const ordered = [Math.min(x1, x2), Math.min(y1, y2), Math.max(x1, x2), Math.max(y1, y2)] as ZoneType;
         if (repeats != null) {
-            return [...this._vacRect, repeats];
+            return [...ordered, repeats];
         }
-        return this._vacRect;
+        return ordered;
     }
 
     public static get styles(): CSSResultGroup {
