@@ -89,6 +89,8 @@
                 "service_call_schema": {
                     "service": "script.vacuum_follow_path",
                     "service_data": {
+                        "service": "vacuum.send_command",
+                        "mode": "send_command",
                         "path": "[[selection]]",
                         "entity_id": "[[entity_id]]"
                     }

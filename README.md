@@ -638,6 +638,7 @@ Currently, this card contains translations for following languages:
 * `en` - English
 * `es` - Spanish (Español)
 * `fr` - French (Français)
+* `hu` - Hungarian (Magyar)
 * `it` - Italian (Italiano)
 * `nl` - Dutch (Nederlands)
 * `pl` - Polish (Polski)

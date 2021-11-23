@@ -88,6 +88,8 @@
                 "service_call_schema": {
                     "service": "script.vacuum_follow_path",
                     "service_data": {
+                        "service": "vacuum.vacuum_goto",
+                        "mode": "individual",
                         "path": "[[selection]]",
                         "entity_id": "[[entity_id]]"
                     }

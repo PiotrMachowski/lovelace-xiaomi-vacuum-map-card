@@ -66,7 +66,7 @@ export class XiaomiVacuumMapCardActionHandler extends HTMLElement implements Xia
         });
     }
 
-    public bind(element: XiaomiVacuumMapCardActionHandlerElement, options): void {
+    public bind(element: XiaomiVacuumMapCardActionHandlerElement, options: ActionHandlerOptions): void {
         if (element.actionHandler) {
             return;
         }

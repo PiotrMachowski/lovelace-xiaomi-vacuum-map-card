@@ -45,7 +45,7 @@
             "icons": {
                 "invalid": "Fout in configuratie: icons",
                 "icon": {
-                        "missing": "Elk item in de lijst moet de eigenschap « icon » bevatten"
+                    "missing": "Elk item in de lijst moet de eigenschap « icon » bevatten"
                 }
             },
             "tiles": {
