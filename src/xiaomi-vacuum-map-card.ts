@@ -16,8 +16,14 @@ import "./editor";
 import type { PredefinedPointConfig, RoomConfig, TileConfig, XiaomiVacuumMapCardConfig } from "./types/types";
 import { CalibrationPoint, CardPresetConfig, PredefinedZoneConfig, TranslatableString } from "./types/types";
 import { actionHandler } from "./action-handler-directive";
-import { CARD_VERSION, CARD_CUSTOM_ELEMENT_NAME, EDITOR_CUSTOM_ELEMENT_NAME } from "./const";
-import { localize } from "./localize/localize";
+import {
+    CARD_CUSTOM_ELEMENT_NAME,
+    CARD_VERSION,
+    DISCONNECTED_IMAGE,
+    DISCONNECTION_TIME,
+    EDITOR_CUSTOM_ELEMENT_NAME,
+} from "./const";
+import { localize, localizeWithHass } from "./localize/localize";
 import PinchZoom from "./pinch-zoom";
 import "./pinch-zoom";
 import { ManualRectangle } from "./model/map_objects/manual-rectangle";
@@ -49,9 +55,13 @@ import { ModesMenuRenderer } from "./renderers/modes-menu-renderer";
 import { CoordinatesConverter } from "./model/map_objects/coordinates-converter";
 import { MapObject } from "./model/map_objects/map-object";
 
+const line1 = "   XIAOMI-VACUUM-MAP-CARD";
+const line2 = `   ${localize("common.version")} ${CARD_VERSION}`;
+const length = Math.max(line1.length, line2.length) + 3;
+const pad = (text: string, length: number) => text + " ".repeat(length - text.length);
 /* eslint no-console: 0 */
 console.info(
-    `%c  XIAOMI-VACUUM-MAP-CARD \n%c  ${localize("common.version")} ${CARD_VERSION}    `,
+    `%c${pad(line1, length)}\n%c${pad(line2, length)}`,
     "color: orange; font-weight: bold; background: black",
     "color: white; font-weight: bold; background: dimgray",
 );
@@ -97,8 +107,6 @@ export class XiaomiVacuumMapCard extends LitElement {
     @state() private oldConfig = false;
     @state() private config!: XiaomiVacuumMapCardConfig;
     @state() private presetIndex!: number;
-    private currentPreset!: CardPresetConfig;
-    private watchedEntities: string[] = [];
     @state() private realScale!: number;
     @state() private realImageWidth!: number;
     @state() private realImageHeight!: number;
@@ -109,6 +117,9 @@ export class XiaomiVacuumMapCard extends LitElement {
     @state() private selectedMode = 0;
     @state() private mapLocked = false;
     @state() private configErrors: string[] = [];
+    @state() private connected = false;
+    private currentPreset!: CardPresetConfig;
+    private watchedEntities: string[] = [];
     private selectedManualRectangles: ManualRectangle[] = [];
     private selectedManualPoint?: ManualPoint;
     private selectedManualPath: ManualPath = new ManualPath([], this._getContext());
@@ -121,10 +132,12 @@ export class XiaomiVacuumMapCard extends LitElement {
     private coordinatesConverter?: CoordinatesConverter;
     private modes: MapMode[] = [];
     private shouldHandleMouseUp!: boolean;
+    private lastHassUpdate!: Date;
 
     public set hass(hass: HomeAssistant) {
         const firstHass = !this._hass && hass;
         this._hass = hass;
+        this.lastHassUpdate = new Date();
         if (firstHass) {
             this._firstHass();
         }
@@ -210,7 +223,6 @@ export class XiaomiVacuumMapCard extends LitElement {
 
         this.presetIndex = index;
         this.currentPreset = config;
-        this._setCurrentMode(0);
         const icons =
             (config.icons?.length ?? -1) === -1
                 ? IconListGenerator.generate(this.hass, config.entity, this.config.language)
@@ -230,7 +242,8 @@ export class XiaomiVacuumMapCard extends LitElement {
                 : new Promise(resolve => resolve(config.tiles ?? []));
         tilesGenerated
             .then(tiles => this._setPreset({ ...config, tiles: tiles, icons: icons }))
-            .then(() => this.requestUpdate());
+            .then(() => setTimeout(() => this.requestUpdate(), 100))
+            .then(() => this._setCurrentMode(0, false));
     }
 
     private _setPreset(config: CardPresetConfig): void {
@@ -245,12 +258,17 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _getMapSrc(config: CardPresetConfig): string {
         if (config.map_source.camera) {
-            return `${this.hass.states[config.map_source.camera].attributes.entity_picture}&v=${+new Date()}`;
+            if (this.connected
+                && this.lastHassUpdate
+                && this.lastHassUpdate.getTime() + DISCONNECTION_TIME >= new Date().getTime())
+                return `${this.hass.states[config.map_source.camera].attributes.entity_picture}&v=${+new Date()}`;
+            console.log(`DISCONNECTED ${new Date()}`);
+            return DISCONNECTED_IMAGE;
         }
         if (config.map_source.image) {
             return `${config.map_source.image}`;
         }
-        throw new Error("No map SRC!");
+        return DISCONNECTED_IMAGE;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
@@ -533,7 +551,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         );
     }
 
-    private _setCurrentMode(newModeIndex: number): void {
+    private _setCurrentMode(newModeIndex: number, manual = true): void {
         const newMode = this.modes[newModeIndex];
         this.selectedManualRectangles = [];
         this.selectedManualPoint = undefined;
@@ -572,7 +590,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                 this.selectablePredefinedPoints = pointsFromEntities.concat(manualPoints);
                 break;
         }
-        if (this.selectedMode != newModeIndex) forwardHaptic("selection");
+        if (this.selectedMode != newModeIndex && manual) forwardHaptic("selection");
         this.selectedMode = newModeIndex;
     }
 
@@ -649,8 +667,16 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     connectedCallback(): void {
         super.connectedCallback();
+        this.connected = true;
         this._updateElements();
+        console.log(`CONNECTING ${new Date()}`);
         this._delay(100).then(() => this.requestUpdate());
+    }
+
+    disconnectedCallback(): void {
+        super.disconnectedCallback();
+        this.connected = false;
+        console.log(`DISCONNECTING ${new Date()}`);
     }
 
     private _updateElements(): void {
@@ -898,7 +924,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     }
 
     private _localize(ts: TranslatableString): string {
-        return localize(ts, this.config.language);
+        return localizeWithHass(ts, this.hass, this.config);
     }
 
     private async _delay(ms: number): Promise<void> {

@@ -10,7 +10,8 @@ import * as ptBr from "./languages/pt-BR.json";
 import * as ru from "./languages/ru.json";
 import * as uk from "./languages/uk.json";
 import * as hu from "./languages/hu.json";
-import { Language, TranslatableString } from "../types/types";
+import { Language, TranslatableString, XiaomiVacuumMapCardConfig } from "../types/types";
+import { HomeAssistant } from "custom-card-helpers";
 
 const languages: Record<string, unknown> = {
     da: da,
@@ -63,4 +64,12 @@ export function localize(ts: TranslatableString, lang?: Language): string {
     } else {
         return localizeString(...ts, lang);
     }
+}
+
+export function localizeWithHass(
+    ts: TranslatableString,
+    hass?: HomeAssistant,
+    config?: XiaomiVacuumMapCardConfig,
+): string {
+    return localize(ts, config?.language ?? hass?.locale?.language);
 }
