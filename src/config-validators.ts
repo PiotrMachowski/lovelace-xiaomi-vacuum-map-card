@@ -42,7 +42,9 @@ function validateCalibrationPoint(calibrationPoint: CalibrationPoint): Translata
     if (!calibrationPoint?.vacuum) {
         errors.push("validation.preset.calibration_source.calibration_points.missing_vacuum");
     }
-    if ([calibrationPoint?.map, calibrationPoint?.vacuum].filter(p => !p.x || !p.y).length > 0) {
+    if (
+        [calibrationPoint?.map, calibrationPoint?.vacuum].filter(p => p.x === undefined || p.y === undefined).length > 0
+    ) {
         errors.push("validation.preset.calibration_source.calibration_points.missing_coordinate");
     }
     return errors;
@@ -87,10 +89,10 @@ function validateSensorConfig(config: TileConfig): TranslatableString[] {
 }
 
 function validateIcon(config: IconConfig): TranslatableString[] {
-    if (!config.x) {
+    if (config.x === undefined) {
         return ["validation.preset.map_modes.predefined_selections.icon.x.missing"];
     }
-    if (!config.y) {
+    if (config.y === undefined) {
         return ["validation.preset.map_modes.predefined_selections.icon.y.missing"];
     }
     if (!config.name) {
@@ -100,10 +102,10 @@ function validateIcon(config: IconConfig): TranslatableString[] {
 }
 
 function validateLabel(config: LabelConfig): TranslatableString[] {
-    if (!config.x) {
+    if (config.x === undefined) {
         return ["validation.preset.map_modes.predefined_selections.label.x.missing"];
     }
-    if (!config.y) {
+    if (config.y === undefined) {
         return ["validation.preset.map_modes.predefined_selections.label.y.missing"];
     }
     if (!config.text) {
@@ -151,7 +153,7 @@ function validatePredefinedPointConfig(ps: PredefinedSelectionConfig): Translata
 function validateRoomConfig(ps: PredefinedSelectionConfig): TranslatableString[] {
     const config = ps as RoomConfig;
     const errors: TranslatableString[] = [];
-    if (!config.id) {
+    if (config.id === undefined) {
         errors.push("validation.preset.map_modes.predefined_selections.rooms.id.missing");
     }
     if (!config.id.toString().match(/^[a-z0-9]+$/i)) {
