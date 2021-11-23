@@ -104,7 +104,7 @@
                         "x": {
                             "missing": "Az ikonnak x tulajdonsággal kell rendelkeznie"
                         },
-                        "y": 
+                        "y": {
                             "missing": "Az ikonnak y tulajdonsággal kell rendelkeznie"
                         },
                         "name": {
