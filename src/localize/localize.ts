@@ -9,6 +9,7 @@ import * as pl from "./languages/pl.json";
 import * as ptBr from "./languages/pt-BR.json";
 import * as ru from "./languages/ru.json";
 import * as uk from "./languages/uk.json";
+import * as hu from "./languages/hu.json";
 import { Language, TranslatableString } from "../types/types";
 
 const languages: Record<string, unknown> = {
