@@ -1,5 +1,5 @@
 import { ActionHandlerEvent, handleAction, HomeAssistant } from "custom-card-helpers";
-import { PropertyValues } from "lit-element";
+import { PropertyValues } from "lit";
 
 import {
     ActionableObjectConfig,
