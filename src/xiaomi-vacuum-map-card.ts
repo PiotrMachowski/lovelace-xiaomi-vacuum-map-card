@@ -16,7 +16,13 @@ import "./editor";
 import type { PredefinedPointConfig, RoomConfig, TileConfig, XiaomiVacuumMapCardConfig } from "./types/types";
 import { CalibrationPoint, CardPresetConfig, PredefinedZoneConfig, TranslatableString } from "./types/types";
 import { actionHandler } from "./action-handler-directive";
-import { CARD_CUSTOM_ELEMENT_NAME, CARD_VERSION, DISCONNECTED_IMAGE, EDITOR_CUSTOM_ELEMENT_NAME } from "./const";
+import {
+    CARD_CUSTOM_ELEMENT_NAME,
+    CARD_VERSION,
+    DISCONNECTED_IMAGE,
+    DISCONNECTION_TIME,
+    EDITOR_CUSTOM_ELEMENT_NAME,
+} from "./const";
 import { localize, localizeWithHass } from "./localize/localize";
 import PinchZoom from "./pinch-zoom";
 import "./pinch-zoom";
@@ -127,10 +133,12 @@ export class XiaomiVacuumMapCard extends LitElement {
     private coordinatesConverter?: CoordinatesConverter;
     private modes: MapMode[] = [];
     private shouldHandleMouseUp!: boolean;
+    private lastHassUpdate!: Date;
 
     public set hass(hass: HomeAssistant) {
         const firstHass = !this._hass && hass;
         this._hass = hass;
+        this.lastHassUpdate = new Date();
         if (firstHass) {
             this._firstHass();
         }
@@ -156,6 +164,10 @@ export class XiaomiVacuumMapCard extends LitElement {
         this.watchedEntities = getWatchedEntities(this.config);
         this._setPresetIndex(0, false, true);
         this.requestUpdate("config");
+    }
+
+    public getCardSize(): number {
+        return 12;
     }
 
     private _getCurrentPreset(): CardPresetConfig {
@@ -251,8 +263,13 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _getMapSrc(config: CardPresetConfig): string {
         if (config.map_source.camera) {
-            if (this.connected)
+            if (
+                this.connected &&
+                this.lastHassUpdate &&
+                this.lastHassUpdate.getTime() + DISCONNECTION_TIME >= new Date().getTime()
+            ) {
                 return `${this.hass.states[config.map_source.camera].attributes.entity_picture}&v=${+new Date()}`;
+            }
             return DISCONNECTED_IMAGE;
         }
         if (config.map_source.image) {
@@ -1235,8 +1252,13 @@ export class XiaomiVacuumMapCard extends LitElement {
                 place-items: center;
             }
 
+            .preset-selector-icon {
+                cursor: pointer;
+            }
+
             .preset-selector-icon.disabled {
                 color: var(--map-card-internal-disabled-text-color);
+                cursor: default;
             }
 
             .preset-label-wrapper {

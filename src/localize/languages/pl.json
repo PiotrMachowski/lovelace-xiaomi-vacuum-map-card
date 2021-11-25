@@ -11,6 +11,8 @@
         "vacuum_goto": "Idź do punktu",
         "vacuum_goto_predefined": "Zapisane punkty",
         "vacuum_clean_segment": "Pokoje",
+        "vacuum_clean_point": "Sprzątanie punktowe",
+        "vacuum_clean_point_predefined": "Zapisane punkty",
         "vacuum_clean_zone": "Sprzątanie strefowe",
         "vacuum_clean_zone_predefined": "Zapisane strefy",
         "vacuum_follow_path": "Ścieżka"
@@ -134,7 +136,8 @@
         "side_brush_left": "Boczna szczotka",
         "cleaning_count": "Licznik sprzątań",
         "cleaned_area": "Powierzchnia",
-        "cleaning_time": "Czas sprzątania"
+        "cleaning_time": "Czas sprzątania",
+        "mop_left": "Mop"
     },
     "icon": {
         "vacuum_start": "Uruchom",

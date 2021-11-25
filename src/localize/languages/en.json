@@ -11,6 +11,8 @@
         "vacuum_goto": "Pin & Go",
         "vacuum_goto_predefined": "Points",
         "vacuum_clean_segment": "Rooms",
+        "vacuum_clean_point": "Clean point",
+        "vacuum_clean_point_predefined": "Points",
         "vacuum_clean_zone": "Zone cleanup",
         "vacuum_clean_zone_predefined": "Zones list",
         "vacuum_follow_path": "Path"
@@ -134,7 +136,8 @@
         "side_brush_left": "Side brush left",
         "cleaning_count": "Cleaning count",
         "cleaned_area": "Cleaned area",
-        "cleaning_time": "Cleaning time"
+        "cleaning_time": "Cleaning time",
+        "mop_left": "Mop left"
     },
     "icon": {
         "vacuum_start": "Start",

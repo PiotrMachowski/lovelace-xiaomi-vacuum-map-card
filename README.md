@@ -227,7 +227,8 @@ map: # coordinates of a point in a map coordinate system (can be read using e.g.
 
 Following vacuum platforms are supported at this moment:
 - `default`: [Built-in Home Assistant integration](https://www.home-assistant.io/integrations/xiaomi_miio/#xiaomi-mi-robot-vacuum)
-- `KrzysztofHajdamowicz/miio2`: [Custom miio2 integration by Krzysztof Hajdamowicz](https://github.com/KrzysztofHajdamowicz/home-assistant-vacuum-styj02ym)
+- `KrzysztofHajdamowicz/miio2`: [Custom miio2 integration by KrzysztofHajdamowicz](https://github.com/KrzysztofHajdamowicz/home-assistant-vacuum-styj02ym)
+- `marotoweb/viomise`: [Custom Viomi SE integration by marotoweb](https://github.com/marotoweb/home-assistant-vacuum-viomise)
 - `send_command`: Uses `vacuum.send_command` service with commands: `app_zoned_clean`, `app_goto_target`, `app_segment_clean`
 
 [Adding a new platform](CONTRIBUTING.md#adding-new-platform)
@@ -306,26 +307,31 @@ Following vacuum platforms are supported at this moment:
 List of supported templates depends on selected `vacuum_platform`:
 
 - `default`:
-  - `vacuum_clean_zone`: Free-drawn rectangular zones on the map
-  - `vacuum_clean_zone_predefined`: Rectangular zones that can be selected on the map from `predefined_selections`
-  - `vacuum_goto`: Point selected by clicking in an arbitrary place on the map
-  - `vacuum_goto_predefined`: Point selected on the map from `predefined_selections`
-  - `vacuum_clean_segment`: Identifier-based selection with free-drawn outline
-  - `vacuum_follow_path`: Path selected by clicking on the map (using [script](/docs/follow_path.yaml))
+  - `vacuum_clean_zone`: Cleaning free-drawn rectangular zones on the map
+  - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections`
+  - `vacuum_goto`: Going to point selected by clicking in an arbitrary place on the map
+  - `vacuum_goto_predefined`: Going to point selected on the map from `predefined_selections`
+  - `vacuum_clean_segment`: Room cleaning based on identifier
+  - `vacuum_follow_path`: Following path selected by clicking on the map (using [script](/docs/follow_path.yaml))
 - `KrzysztofHajdamowicz/miio2`
-  - `vacuum_clean_zone`: Free-drawn rectangular zones on the map
-  - `vacuum_clean_zone_predefined`: Rectangular zones that can be selected on the map from `predefined_selections`
-  - `vacuum_goto`: Point selected by clicking in an arbitrary place on the map
-  - `vacuum_goto_predefined`: Point selected on the map from `predefined_selections`
-  - `vacuum_clean_segment`: Identifier-based selection with free-drawn outline
-  - `vacuum_follow_path`: Path selected by clicking on the map (using [script](/docs/follow_path.yaml))
+  - `vacuum_clean_zone`: Cleaning free-drawn rectangular zones on the map
+  - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections`
+  - `vacuum_goto`: Going to point selected by clicking in an arbitrary place on the map
+  - `vacuum_goto_predefined`: Going to point selected on the map from `predefined_selections`
+  - `vacuum_clean_segment`: Room cleaning based on identifier
+  - `vacuum_follow_path`: Following path selected by clicking on the map (using [script](/docs/follow_path.yaml))
+- `marotoweb/viomise`
+  - `vacuum_clean_zone`: Cleaning free-drawn rectangular zones on the map
+  - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections`
+  - `vacuum_clean_point`: Cleaning around point selected by clicking in an arbitrary place on the map
+  - `vacuum_clean_point_predefined`: Cleaning around point selected on the map from `predefined_selections`
 - `send_command`
-  - `vacuum_clean_zone`: Free-drawn rectangular zones on the map
-  - `vacuum_clean_zone_predefined`: Rectangular zones that can be selected on the map from `predefined_selections`
-  - `vacuum_goto`: Point selected by clicking in an arbitrary place on the map
-  - `vacuum_goto_predefined`: Point selected on the map from `predefined_selections`
-  - `vacuum_clean_segment`: Identifier-based selection with free-drawn outline
-  - `vacuum_follow_path`: Path selected by clicking on the map (using [script](/docs/follow_path.yaml))
+  - `vacuum_clean_zone`: Cleaning free-drawn rectangular zones on the map
+  - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections`
+  - `vacuum_goto`: Going to point selected by clicking in an arbitrary place on the map
+  - `vacuum_goto_predefined`: Going to point selected on the map from `predefined_selections`
+  - `vacuum_clean_segment`: Room cleaning based on identifier
+  - `vacuum_follow_path`: Following path selected by clicking on the map (using [script](/docs/follow_path.yaml))
 
 > See [hints](#hints) to check how to easily retrieve zone/point coordinates.
 
