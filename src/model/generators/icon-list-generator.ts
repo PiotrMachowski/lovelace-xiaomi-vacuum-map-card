@@ -107,6 +107,10 @@ export class IconListGenerator {
                     entity: vacuumEntity,
                     value_not: "docked",
                 },
+                {
+                    entity: vacuumEntity,
+                    value_not: "returning",
+                },
             ],
             tooltip: localize("icon.vacuum_return_to_base", language),
             tap_action: {
@@ -131,6 +135,10 @@ export class IconListGenerator {
                 {
                     entity: vacuumEntity,
                     value_not: "cleaning",
+                },
+                {
+                    entity: vacuumEntity,
+                    value_not: "returning",
                 },
             ],
             tooltip: localize("icon.vacuum_clean_spot", language),
