@@ -330,10 +330,14 @@ export class XiaomiVacuumMapCard extends LitElement {
                     (this.config.additional_presets?.length ?? 0) > 0,
                     () => html`
                         <div class="preset-selector-wrapper">
-                            <ha-icon
-                                icon="mdi:chevron-left"
-                                class="preset-selector-icon ${this.presetIndex === 0 ? "disabled" : ""}"
-                                @click="${(): void => this._setPresetIndex(this.presetIndex - 1, true)}"></ha-icon>
+                            <div
+                                class="preset-selector-icon-wrapper"
+                                @click="${(): void => this._setPresetIndex(this.presetIndex - 1, true)}">
+                                <ha-icon
+                                    icon="mdi:chevron-left"
+                                    class="preset-selector-icon ${this.presetIndex === 0 ? "disabled" : ""}">
+                                </ha-icon>
+                            </div>
                             <div class="preset-label-wrapper">
                                 <div class="preset-label">${preset.preset_name}</div>
                                 <div class="preset-indicator">
@@ -342,13 +346,17 @@ export class XiaomiVacuumMapCard extends LitElement {
                                         .map((_, i) => (i === this.presetIndex ? "●" : "○"))}
                                 </div>
                             </div>
-                            <ha-icon
-                                icon="mdi:chevron-right"
-                                class="preset-selector-icon ${this.presetIndex ===
-                                this.config.additional_presets?.length
-                                    ? "disabled"
-                                    : ""}"
-                                @click="${(): void => this._setPresetIndex(this.presetIndex + 1, true)}"></ha-icon>
+                            <div
+                                class="preset-selector-icon-wrapper"
+                                @click="${(): void => this._setPresetIndex(this.presetIndex + 1, true)}">
+                                <ha-icon
+                                    icon="mdi:chevron-right"
+                                    class="preset-selector-icon ${this.presetIndex ===
+                                    this.config.additional_presets?.length
+                                        ? "disabled"
+                                        : ""}">
+                                </ha-icon>
+                            </div>
                         </div>
                     `,
                 )}
@@ -1213,12 +1221,18 @@ export class XiaomiVacuumMapCard extends LitElement {
             }
 
             .preset-selector-wrapper {
-                width: calc(100% - 20px);
+                width: 100%;
                 display: inline-flex;
                 align-content: center;
                 justify-content: space-between;
                 align-items: center;
-                margin: 10px;
+            }
+
+            .preset-selector-icon-wrapper {
+                height: 44px;
+                width: 44px;
+                display: grid;
+                place-items: center;
             }
 
             .preset-selector-icon.disabled {
