@@ -166,6 +166,10 @@ export class XiaomiVacuumMapCard extends LitElement {
         this.requestUpdate("config");
     }
 
+    public getCardSize(): number {
+        return 12;
+    }
+
     private _getCurrentPreset(): CardPresetConfig {
         return this.currentPreset;
     }
