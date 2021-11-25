@@ -1248,8 +1248,13 @@ export class XiaomiVacuumMapCard extends LitElement {
                 place-items: center;
             }
 
+            .preset-selector-icon {
+                cursor: pointer;
+            }
+
             .preset-selector-icon.disabled {
                 color: var(--map-card-internal-disabled-text-color);
+                cursor: default;
             }
 
             .preset-label-wrapper {
