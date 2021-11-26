@@ -11,7 +11,7 @@
         "vacuum_goto": "Точка назначения",
         "vacuum_goto_predefined": "Предустановленные точки",
         "vacuum_clean_segment": "Комнаты",
-		"vacuum_clean_point": "Уборка точки",
+        "vacuum_clean_point": "Уборка точки",
         "vacuum_clean_point_predefined": "Список точек",
         "vacuum_clean_zone": "Уборка зоны",
         "vacuum_clean_zone_predefined": "Список зон",
@@ -136,8 +136,8 @@
         "side_brush_left": "Ресурс боковой щётки",
         "cleaning_count": "Число уборок",
         "cleaned_area": "Площадь уборки",
-        "cleaning_time": "Время уборки"
-		"mop_left": "Ресурс тряпки"
+        "cleaning_time": "Время уборки",
+        "mop_left": "Ресурс тряпки"
     },
     "icon": {
         "vacuum_start": "Старт",
