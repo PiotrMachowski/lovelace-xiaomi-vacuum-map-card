@@ -3,7 +3,7 @@
         "version": "版本",
         "invalid_configuration": "配置无效 {0}",
         "description": "一个可以控制扫地机的卡片",
-        "old_configuration": "检测到旧版本的配置。请按照新版本说明修改配置或者重新设置新卡片",
+        "old_configuration": "检测到旧版本的配置。请按照新版本说明修改配置或者重新创建新卡片",
         "old_configuration_migration_link": "迁移向导"
     },
     "map_mode": {
