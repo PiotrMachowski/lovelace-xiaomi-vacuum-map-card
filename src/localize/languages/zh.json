@@ -26,7 +26,7 @@
                 "missing": "缺少属性：preset_name"
             },
             "platform": {
-                "invalid": "吸尘器平台无效：{0}"
+                "invalid": "扫地机平台无效：{0}"
             },
             "map_source": {
                 "missing": "缺少属性：map_source",
