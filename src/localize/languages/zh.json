@@ -10,11 +10,11 @@
         "invalid": "模板无效！",
         "vacuum_goto": "指哪到哪",
         "vacuum_goto_predefined": "目标点",
-        "vacuum_clean_segment": "划区清扫",
+        "vacuum_clean_segment": "选区清扫",
         "vacuum_clean_point": "局部清扫",
-        "vacuum_clean_point_predefined": "清扫目标",
-        "vacuum_clean_zone": "选区清扫",
-        "vacuum_clean_zone_predefined": "区域列表",
+        "vacuum_clean_point_predefined": "局部目标",
+        "vacuum_clean_zone": "划区清扫",
+        "vacuum_clean_zone_predefined": "目标区域",
         "vacuum_follow_path": "路径规划"
     },
     "validation": {
