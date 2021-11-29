@@ -651,6 +651,7 @@ Currently, this card contains translations for following languages:
 * `pt-BR` - Brazilian Portuguese (Português Brasileiro)
 * `ru` - Russian (Русский)
 * `uk` - Ukrainian (Українська)
+* `zh` - Chinese (中文)
 
 [Adding a new language](CONTRIBUTING.md#adding-new-translations)
 
