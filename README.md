@@ -644,6 +644,7 @@ Currently, this card contains translations for following languages:
 * `en` - English
 * `es` - Spanish (Español)
 * `fr` - French (Français)
+* `he` - Hebrew (עברית)
 * `hu` - Hungarian (Magyar)
 * `it` - Italian (Italiano)
 * `nl` - Dutch (Nederlands)
