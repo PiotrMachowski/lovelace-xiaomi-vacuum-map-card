@@ -133,7 +133,7 @@
         "sensor_dirty_left": "נותר לחיישנים",
         "filter_left": "נותר למסנן",
         "main_brush_left": "נותר למברשת ראשית",
-        "side_brush_left": "נותר למרשת צד",
+        "side_brush_left": "נותר למברשת צד",
         "cleaning_count": "כמות נקיונות",
         "cleaned_area": "שטח שנוקה",
         "cleaning_time": "זמן ניקיון",
@@ -143,9 +143,9 @@
         "vacuum_start": "התחל",
         "vacuum_pause": "השהה",
         "vacuum_stop": "עצור",
-        "vacuum_return_to_base": "חזור לתחנת עגינה",
+        "vacuum_return_to_base": "חוזר לתחנת עגינה",
         "vacuum_clean_spot": "ניקוי נקודה",
-        "vacuum_locate": "אתר",
+        "vacuum_locate": "איתור",
         "vacuum_set_fan_speed": "שנה מהירות מאוורר"
     },
     "unit": {
