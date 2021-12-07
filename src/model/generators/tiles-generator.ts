@@ -31,14 +31,14 @@ export class TilesGenerator {
 
     private static getCommonTiles(state: HassEntity, vacuumEntity: string, language: Language): TileConfig[] {
         const tiles: TileConfig[] = [];
-        if ("status" in state.attributes)
+        if (state && "status" in state.attributes)
             tiles.push({
                 entity: vacuumEntity,
                 label: localize("label.status", language),
                 attribute: "status",
                 icon: "mdi:robot-vacuum",
             } as unknown as TileConfig);
-        if ("battery_level" in state.attributes && "battery_icon" in state.attributes)
+        if (state && "battery_level" in state.attributes && "battery_icon" in state.attributes)
             tiles.push({
                 entity: vacuumEntity,
                 label: localize("label.battery_level", language),
@@ -46,7 +46,7 @@ export class TilesGenerator {
                 icon: state.attributes["battery_icon"],
                 unit: "%",
             } as unknown as TileConfig);
-        if ("battery_level" in state.attributes && !("battery_icon" in state.attributes))
+        if (state && "battery_level" in state.attributes && !("battery_icon" in state.attributes))
             tiles.push({
                 entity: vacuumEntity,
                 label: localize("label.battery_level", language),
@@ -54,7 +54,7 @@ export class TilesGenerator {
                 icon: "mdi:battery",
                 unit: "%",
             } as unknown as TileConfig);
-        if ("fan_speed" in state.attributes)
+        if (state && "fan_speed" in state.attributes)
             tiles.push({
                 entity: vacuumEntity,
                 label: localize("label.fan_speed", language),
