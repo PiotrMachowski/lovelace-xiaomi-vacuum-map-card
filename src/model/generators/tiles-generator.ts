@@ -18,6 +18,9 @@ export class TilesGenerator {
 
         const state = hass.states[vacuumEntity];
         const tiles: TileConfig[] = [];
+        if (!state) {
+            return new Promise<TileConfig[]>(resolve => resolve(tiles));
+        }
 
         tiles.push(...this.getCommonTiles(state, vacuumEntity, language));
         if (useNewGenerator) {
@@ -31,14 +34,14 @@ export class TilesGenerator {
 
     private static getCommonTiles(state: HassEntity, vacuumEntity: string, language: Language): TileConfig[] {
         const tiles: TileConfig[] = [];
-        if (state && "status" in state.attributes)
+        if ("status" in state.attributes)
             tiles.push({
                 entity: vacuumEntity,
                 label: localize("label.status", language),
                 attribute: "status",
                 icon: "mdi:robot-vacuum",
             } as unknown as TileConfig);
-        if (state && "battery_level" in state.attributes && "battery_icon" in state.attributes)
+        if ("battery_level" in state.attributes && "battery_icon" in state.attributes)
             tiles.push({
                 entity: vacuumEntity,
                 label: localize("label.battery_level", language),
@@ -46,7 +49,7 @@ export class TilesGenerator {
                 icon: state.attributes["battery_icon"],
                 unit: "%",
             } as unknown as TileConfig);
-        if (state && "battery_level" in state.attributes && !("battery_icon" in state.attributes))
+        if ("battery_level" in state.attributes && !("battery_icon" in state.attributes))
             tiles.push({
                 entity: vacuumEntity,
                 label: localize("label.battery_level", language),
@@ -54,7 +57,7 @@ export class TilesGenerator {
                 icon: "mdi:battery",
                 unit: "%",
             } as unknown as TileConfig);
-        if (state && "fan_speed" in state.attributes)
+        if ("fan_speed" in state.attributes)
             tiles.push({
                 entity: vacuumEntity,
                 label: localize("label.fan_speed", language),
