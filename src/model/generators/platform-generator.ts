@@ -49,7 +49,7 @@ export class PlatformGenerator {
     public static usesSensors(hass: HomeAssistant, platform: string): boolean {
         const sensorsFrom = this.getPlatformTemplate(platform).sensors_from;
         if (sensorsFrom) {
-            return compare(hass.config.version, sensorsFrom, ">=");
+            return compare(hass.config.version.replace(/b.*/, ""), sensorsFrom, ">=");
         }
         return false;
     }

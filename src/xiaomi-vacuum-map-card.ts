@@ -322,7 +322,8 @@ export class XiaomiVacuumMapCard extends LitElement {
                         id="map-image"
                         alt="camera_image"
                         class="${this.mapScale * this.realScale > 1 ? "zoomed" : ""}"
-                        src="${mapSrc}" />
+                        src="${mapSrc}"
+                        @load="${() => this._calculateBasicScale()}" />
                     <div id="map-image-overlay">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"

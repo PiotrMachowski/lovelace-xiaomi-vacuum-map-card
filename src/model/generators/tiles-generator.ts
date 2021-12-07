@@ -18,6 +18,9 @@ export class TilesGenerator {
 
         const state = hass.states[vacuumEntity];
         const tiles: TileConfig[] = [];
+        if (!state) {
+            return new Promise<TileConfig[]>(resolve => resolve(tiles));
+        }
 
         tiles.push(...this.getCommonTiles(state, vacuumEntity, language));
         if (useNewGenerator) {

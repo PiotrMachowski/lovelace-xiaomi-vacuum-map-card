@@ -162,7 +162,7 @@ export class IconListGenerator {
             },
         } as unknown as IconActionConfig);
 
-        const fanSpeeds = "fan_speed_list" in state.attributes ? state.attributes["fan_speed_list"] : [];
+        const fanSpeeds = state && state.attributes ? state.attributes["fan_speed_list"] : [];
         for (let i = 0; i < fanSpeeds.length; i++) {
             const fanSpeed = fanSpeeds[i];
             const nextFanSpeed = fanSpeeds[(i + 1) % fanSpeeds.length];
