@@ -1330,6 +1330,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                 color: var(--map-card-internal-secondary-text-color);
                 border-radius: var(--map-card-internal-small-radius);
                 margin: 5px;
+                direction: ltr;
             }
 
             .map-zoom-icons-main {
