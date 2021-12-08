@@ -27,6 +27,7 @@ export class ToastRenderer {
                 z-index: 1;
                 bottom: 30px;
                 font-size: 17px;
+                direction: ltr;
             }
 
             #toast #toast-icon {
