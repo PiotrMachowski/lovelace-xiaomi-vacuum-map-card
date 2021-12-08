@@ -1365,6 +1365,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                 gap: 10px;
                 place-content: space-between;
                 flex-wrap: wrap;
+                direction: ltr; // Temporary FIX for RTL languages
             }
 
             .map-actions-list {
