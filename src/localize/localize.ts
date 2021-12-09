@@ -1,5 +1,6 @@
 import * as da from "./languages/da.json";
 import * as de from "./languages/de.json";
+import * as el from "./languages/el.json";
 import * as en from "./languages/en.json";
 import * as es from "./languages/es.json";
 import * as fr from "./languages/fr.json";
@@ -18,6 +19,7 @@ import { HomeAssistant } from "custom-card-helpers";
 const languages: Record<string, unknown> = {
     da: da,
     de: de,
+    el: el,
     en: en,
     es: es,
     fr: fr,
