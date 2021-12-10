@@ -641,6 +641,7 @@ map_modes:
 Currently, this card contains translations for following languages:
 * `da` - Danish
 * `de` - German (Deutsch)
+* `el` - Greek (Ελληνικά)
 * `en` - English
 * `es` - Spanish (Español)
 * `fr` - French (Français)
