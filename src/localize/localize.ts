@@ -12,6 +12,7 @@ import * as ptBr from "./languages/pt-BR.json";
 import * as ru from "./languages/ru.json";
 import * as uk from "./languages/uk.json";
 import * as zh from "./languages/zh.json";
+import * as zhHant from "./languages/zh-Hant.json";
 import { Language, TranslatableString, XiaomiVacuumMapCardConfig } from "../types/types";
 import { HomeAssistant } from "custom-card-helpers";
 
@@ -30,6 +31,7 @@ const languages: Record<string, unknown> = {
     ru: ru,
     uk: uk,
     zh: zh,
+    "zh-Hant": zhHant,
 };
 
 function localizeString(string: string, search = "", replace = "", lang: Language = ""): string {
