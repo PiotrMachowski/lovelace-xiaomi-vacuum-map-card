@@ -156,7 +156,7 @@
     },
     "popups": {
         "success": "Success!",
-        "no_selection": "無效的選擇",
+        "no_selection": "未選取任何選項",
         "failed": "執行服務失敗"
     },
     "editor": {
