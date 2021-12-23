@@ -156,7 +156,7 @@
     },
     "popups": {
         "success": "Success!",
-        "no_selection": "未選取任何選項",
+        "no_selection": "未選擇目標",
         "failed": "執行服務失敗"
     },
     "editor": {
