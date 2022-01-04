@@ -186,6 +186,21 @@ export class IconListGenerator {
                 },
             } as unknown as IconActionConfig);
         }
+        if (fanSpeeds.length != 0) {
+            icons.push({
+                icon: "mdi:fan-alert",
+                conditions: fanSpeeds.map(f => ({ entity: vacuumEntity, attribute: "fan_speed", value_not: f })),
+                tooltip: localize("icon.vacuum_set_fan_speed", language),
+                tap_action: {
+                    action: "call-service",
+                    service: "vacuum.set_fan_speed",
+                    service_data: {
+                        entity_id: vacuumEntity,
+                        fan_speed: fanSpeeds[0],
+                    },
+                },
+            });
+        }
         return icons;
     }
 }
