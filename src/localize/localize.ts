@@ -10,6 +10,7 @@ import * as nl from "./languages/nl.json";
 import * as pl from "./languages/pl.json";
 import * as ptBr from "./languages/pt-BR.json";
 import * as ru from "./languages/ru.json";
+import * as sv from "./languages/sv.json";
 import * as uk from "./languages/uk.json";
 import * as zh from "./languages/zh.json";
 import { Language, TranslatableString, XiaomiVacuumMapCardConfig } from "../types/types";
@@ -28,6 +29,7 @@ const languages: Record<string, unknown> = {
     pl: pl,
     "pt-BR": ptBr,
     ru: ru,
+    sv: sv,
     uk: uk,
     zh: zh,
 };
