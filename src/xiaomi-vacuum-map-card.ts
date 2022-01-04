@@ -175,6 +175,13 @@ export class XiaomiVacuumMapCard extends LitElement {
     }
 
     private _getCalibration(config: CardPresetConfig): CalibrationPoint[] | undefined {
+        if (config.calibration_source.identity) {
+            return [
+                { map: { x: 0, y: 0 }, vacuum: { x: 0, y: 0 } },
+                { map: { x: 1, y: 0 }, vacuum: { x: 1, y: 0 } },
+                { map: { x: 0, y: 1 }, vacuum: { x: 0, y: 1 } },
+            ];
+        }
         if (
             config.calibration_source.calibration_points &&
             [3, 4].includes(config.calibration_source.calibration_points.length)

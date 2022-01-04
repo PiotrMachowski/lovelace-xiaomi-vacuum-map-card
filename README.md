@@ -206,8 +206,9 @@ You can use this configuration as an example: [demo config](/docs/demo_config.ya
 | `entity` | string | no<sup>1</sup> | - | Entity with calibration returned as a state |
 | `attribute` | string | no | - | Enables usage of a configured attribute instead of state of given entity |
 | `calibration_points` | list | no<sup>1</sup> | - | List of 3 or 4 [calibration points](#calibration-points-options) |
+| `identity` | boolean | no<sup>1</sup> | - | Enables using image coordinates on map (e.g. when map is used just for rooms) |
 
-<sup>1</sup> Exactly one of `camera`, `entity` or `calibration_points` must be provided
+<sup>1</sup> Exactly one of `camera`, `entity`, `calibration_points` or `identity` must be provided
 
 #### Calibration points options
 
