@@ -1,5 +1,3 @@
-# Lovelace Xiaomi Vacuum Map card
-
 [![HACS Default][hacs_shield]][hacs]
 [![GitHub Latest Release][releases_shield]][latest_release]
 [![GitHub All Releases][downloads_total_shield]][releases]
@@ -25,6 +23,9 @@
 
 [paypal_me_shield]: https://img.shields.io/static/v1.svg?label=%20&message=PayPal.Me&logo=paypal
 [paypal_me]: https://paypal.me/PiMachowski
+
+
+# Lovelace Xiaomi Vacuum Map card
 
 This card provides a user-friendly way to fully control Xiaomi (and possibly other) vacuums
 in [Home Assistant](https://www.home-assistant.io/).
