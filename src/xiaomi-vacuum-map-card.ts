@@ -297,6 +297,8 @@ export class XiaomiVacuumMapCard extends LitElement {
             return this._showInvalidEntities(invalidEntities);
         }
 
+        const rtl = getComputedStyle(this)?.getPropertyValue("direction") === "rtl";
+
         const preset = this._getCurrentPreset();
         this._updateCalibration(preset);
 
@@ -352,7 +354,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                                 class="preset-selector-icon-wrapper"
                                 @click="${(): void => this._setPresetIndex(this.presetIndex - 1, true)}">
                                 <ha-icon
-                                    icon="mdi:chevron-left"
+                                    icon="mdi:chevron-${rtl ? "right" : "left"}"
                                     class="preset-selector-icon ${this.presetIndex === 0 ? "disabled" : ""}">
                                 </ha-icon>
                             </div>
@@ -368,7 +370,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                                 class="preset-selector-icon-wrapper"
                                 @click="${(): void => this._setPresetIndex(this.presetIndex + 1, true)}">
                                 <ha-icon
-                                    icon="mdi:chevron-right"
+                                    icon="mdi:chevron-${rtl ? "left" : "right"}"
                                     class="preset-selector-icon ${this.presetIndex ===
                                     this.config.additional_presets?.length
                                         ? "disabled"
@@ -1365,7 +1367,6 @@ export class XiaomiVacuumMapCard extends LitElement {
                 gap: 10px;
                 place-content: space-between;
                 flex-wrap: wrap;
-                direction: ltr;
             }
 
             .map-actions-list {
@@ -1373,7 +1374,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                 overflow: hidden;
                 background-color: var(--map-card-internal-secondary-color);
                 color: var(--map-card-internal-secondary-text-color);
-                margin-left: auto;
+                margin-inline-start: auto;
                 display: inline-flex;
             }
 

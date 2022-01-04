@@ -22,12 +22,11 @@ export class ToastRenderer {
                 color: var(--primary-text-color);
                 text-align: center;
                 border-radius: var(--map-card-internal-small-radius);
-                padding-left: 30px;
+                padding-inline-start: 30px;
                 position: absolute;
                 z-index: 1;
                 bottom: 30px;
                 font-size: 17px;
-                direction: ltr;
             }
 
             #toast #toast-icon {
@@ -36,8 +35,8 @@ export class ToastRenderer {
                 align-items: center;
                 width: 50px;
                 background-color: var(--map-card-internal-primary-color);
-                border-top-left-radius: var(--map-card-internal-small-radius);
-                border-bottom-left-radius: var(--map-card-internal-small-radius);
+                border-start-start-radius: var(--map-card-internal-small-radius);
+                border-end-start-radius: var(--map-card-internal-small-radius);
                 color: #0f0;
             }
 
@@ -56,8 +55,8 @@ export class ToastRenderer {
                 border-color: var(--map-card-internal-primary-color);
                 border-style: solid;
                 border-width: 1px;
-                border-top-right-radius: var(--map-card-internal-small-radius);
-                border-bottom-right-radius: var(--map-card-internal-small-radius);
+                border-start-end-radius: var(--map-card-internal-small-radius);
+                border-end-end-radius: var(--map-card-internal-small-radius);
             }
 
             #toast.show {
