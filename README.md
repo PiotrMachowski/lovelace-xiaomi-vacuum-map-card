@@ -651,6 +651,7 @@ Currently, this card contains translations for following languages:
 * `pl` - Polish (Polski)
 * `pt-BR` - Brazilian Portuguese (Português Brasileiro)
 * `ru` - Russian (Русский)
+* `sv` - Swedish (Svenska)
 * `uk` - Ukrainian (Українська)
 * `zh` - Chinese (中文)
 
