@@ -603,25 +603,36 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _getSelection(mode: MapMode): unknown[] {
         const repeats = mode.repeatsType === RepeatsType.INTERNAL ? this.repeats : null;
+        let selection : unknown[] = [];
         switch (mode.selectionType) {
             case SelectionType.MANUAL_RECTANGLE:
-                return this.selectedManualRectangles.map(r => r.toVacuum(repeats));
+                selection = this.selectedManualRectangles.map(r => r.toVacuum(repeats));
+                break;
             case SelectionType.PREDEFINED_RECTANGLE:
-                return this.selectedPredefinedRectangles
+                selection = this.selectedPredefinedRectangles
                     .map(r => r.toVacuum(repeats))
                     .reduce((a, v) => a.concat(v), [] as unknown[]);
+                break;
             case SelectionType.ROOM:
                 const selectedRooms = this.selectedRooms.map(r => r.toVacuum());
-                return [...selectedRooms, ...(repeats && selectedRooms.length > 0 ? [repeats] : [])];
+                selection = [...selectedRooms, ...(repeats && selectedRooms.length > 0 ? [repeats] : [])];
+                break;
             case SelectionType.MANUAL_PATH:
-                return this.selectedManualPath.toVacuum(repeats);
+                selection = this.selectedManualPath.toVacuum(repeats);
+                break;
             case SelectionType.MANUAL_POINT:
-                return this.selectedManualPoint?.toVacuum(repeats) ?? [];
+                selection = this.selectedManualPoint?.toVacuum(repeats) ?? [];
+                break;
             case SelectionType.PREDEFINED_POINT:
-                return this.selectedPredefinedPoint
+                selection = this.selectedPredefinedPoint
                     .map(p => p.toVacuum(repeats))
                     .reduce((a, v) => a.concat(v), [] as unknown[]);
+                break;
         }
+        if (mode.repeatsType === RepeatsType.REPEAT) {
+            selection = Array(this.repeats).fill(0).flatMap(() => selection);
+        }
+        return selection;
     }
 
     private _runImmediately(): boolean {

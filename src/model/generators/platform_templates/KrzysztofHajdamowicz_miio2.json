@@ -6,7 +6,8 @@
                 "name": "map_mode.vacuum_clean_segment",
                 "icon": "mdi:floor-plan",
                 "selection_type": "ROOM",
-                "repeats_type": "NONE",
+                "repeats_type": "REPEAT",
+                "max_repeats": 3,
                 "service_call_schema": {
                     "service": "vacuum.vacuum_clean_segment",
                     "service_data": {
