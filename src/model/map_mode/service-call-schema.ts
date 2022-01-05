@@ -1,5 +1,7 @@
 import { ServiceCallSchemaConfig } from "../../types/types";
+import { TemplatableValue } from "./templatable-value";
 import { ServiceCall } from "./service-call";
+import { Modifier } from "./modifier";
 
 type ReplacedKey = string | Record<string, unknown> | number | unknown[];
 type KeyReplacer = (key: string) => ReplacedKey;
@@ -57,20 +59,42 @@ export class ServiceCallSchema {
         selection: unknown[],
         repeats: number,
     ): ReplacedKey {
-        switch (value) {
-            case "[[entity_id]]":
-                return entityId;
-            case "[[selection]]":
-                return selection;
-            case "[[repeats]]":
-                return repeats;
-            case "[[point_x]]":
-                return this.isPoint(selection) ? (selection[0] as number) : value;
-            case "[[point_y]]":
-                return this.isPoint(selection) ? (selection[1] as number) : value;
-            default:
-                return value;
+        const fullValueReplacer = (v: string): ReplacedKey | null => {
+            switch (v) {
+                case TemplatableValue.ENTITY_ID:
+                    return entityId;
+                case TemplatableValue.SELECTION:
+                    return selection;
+                case TemplatableValue.SELECTION_SIZE:
+                    return selection.length;
+                case TemplatableValue.SELECTION_UNWRAPPED:
+                    return JSON.stringify(selection).replaceAll("[", "").replaceAll("]", "");
+                case TemplatableValue.REPEATS:
+                    return repeats;
+                case TemplatableValue.POINT_X:
+                    return this.isPoint(selection) ? (selection[0] as number) : value;
+                case TemplatableValue.POINT_Y:
+                    return this.isPoint(selection) ? (selection[1] as number) : value;
+                default:
+                    return null;
+            }
+        };
+        return fullValueReplacer(value) ?? ServiceCallSchema.replaceInStr(value, fullValueReplacer);
+    }
+
+    private static replaceInStr(value: string, kr: (string) => ReplacedKey | null): ReplacedKey {
+        let output = value;
+        Object.values(TemplatableValue).forEach(tv => {
+            let replaced = kr(tv);
+            if (typeof replaced == "object") {
+                replaced = JSON.stringify(replaced);
+            }
+            output = output.replaceAll(tv, `${replaced}`);
+        });
+        if (output.endsWith(Modifier.JSONIFY)) {
+            return JSON.parse(output.replace(Modifier.JSONIFY, ""));
         }
+        return output;
     }
 
     private static isPoint(selection: unknown[]): boolean {

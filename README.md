@@ -394,9 +394,14 @@ Following selection types are supported at this moment:
 It is possible to use several placeholders in `service_data` section. They will be replaced by:
  - `[[entity_id]]`: `entity_id` defined in preset's config
  - `[[selection]]`: selection made on the map (zone, point or path)
+ - `[[selection_size]]`: number of selections made on the map
+ - `[[selection_unwrapped]]`: the same as `[[selection]]`, but passed as string unwrapped from brackets
  - `[[repeats]]`:  selected number of repeats
  - `[[point_x]]`: x coordinate of selected point (for `MANUAL_POINT` and `PREDEFINED_POINT` selection types)
  - `[[point_y]]`: y coordinate of selected point (for `MANUAL_POINT` and `PREDEFINED_POINT` selection types)
+
+It is possible to use following modifiers in `service_data` section:
+- `|[[jsonize]]`: if value ends with this modifier it will be decoded as a JSON
 
 
 #### Supported repeats types
