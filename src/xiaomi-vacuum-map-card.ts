@@ -603,7 +603,7 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _getSelection(mode: MapMode): unknown[] {
         const repeats = mode.repeatsType === RepeatsType.INTERNAL ? this.repeats : null;
-        let selection : unknown[] = [];
+        let selection: unknown[] = [];
         switch (mode.selectionType) {
             case SelectionType.MANUAL_RECTANGLE:
                 selection = this.selectedManualRectangles.map(r => r.toVacuum(repeats));
@@ -630,7 +630,9 @@ export class XiaomiVacuumMapCard extends LitElement {
                 break;
         }
         if (mode.repeatsType === RepeatsType.REPEAT) {
-            selection = Array(this.repeats).fill(0).flatMap(() => selection);
+            selection = Array(this.repeats)
+                .fill(0)
+                .flatMap(() => selection);
         }
         return selection;
     }
