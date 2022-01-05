@@ -99,8 +99,8 @@ export class ModesMenuRenderer {
             }
 
             .modes-dropdown-menu-entry-button.selected {
-                border-top-left-radius: var(--map-card-internal-big-radius);
-                border-bottom-left-radius: var(--map-card-internal-big-radius);
+                border-start-start-radius: var(--map-card-internal-big-radius);
+                border-end-start-radius: var(--map-card-internal-big-radius);
                 background-color: var(--map-card-internal-primary-color);
                 color: var(--map-card-internal-primary-text-color);
             }

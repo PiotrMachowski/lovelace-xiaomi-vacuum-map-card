@@ -162,7 +162,7 @@ export class IconListGenerator {
             },
         } as unknown as IconActionConfig);
 
-        const fanSpeeds = state && state.attributes ? state.attributes["fan_speed_list"] : [];
+        const fanSpeeds = state && state.attributes ? state.attributes["fan_speed_list"] ?? [] : [];
         for (let i = 0; i < fanSpeeds.length; i++) {
             const fanSpeed = fanSpeeds[i];
             const nextFanSpeed = fanSpeeds[(i + 1) % fanSpeeds.length];
@@ -185,6 +185,21 @@ export class IconListGenerator {
                     },
                 },
             } as unknown as IconActionConfig);
+        }
+        if (fanSpeeds.length != 0) {
+            icons.push({
+                icon: "mdi:fan-alert",
+                conditions: fanSpeeds.map(f => ({ entity: vacuumEntity, attribute: "fan_speed", value_not: f })),
+                tooltip: localize("icon.vacuum_set_fan_speed", language),
+                tap_action: {
+                    action: "call-service",
+                    service: "vacuum.set_fan_speed",
+                    service_data: {
+                        entity_id: vacuumEntity,
+                        fan_speed: fanSpeeds[0],
+                    },
+                },
+            });
         }
         return icons;
     }

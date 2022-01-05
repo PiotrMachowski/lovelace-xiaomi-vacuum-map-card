@@ -175,6 +175,13 @@ export class XiaomiVacuumMapCard extends LitElement {
     }
 
     private _getCalibration(config: CardPresetConfig): CalibrationPoint[] | undefined {
+        if (config.calibration_source.identity) {
+            return [
+                { map: { x: 0, y: 0 }, vacuum: { x: 0, y: 0 } },
+                { map: { x: 1, y: 0 }, vacuum: { x: 1, y: 0 } },
+                { map: { x: 0, y: 1 }, vacuum: { x: 0, y: 1 } },
+            ];
+        }
         if (
             config.calibration_source.calibration_points &&
             [3, 4].includes(config.calibration_source.calibration_points.length)
@@ -297,6 +304,8 @@ export class XiaomiVacuumMapCard extends LitElement {
             return this._showInvalidEntities(invalidEntities);
         }
 
+        const rtl = getComputedStyle(this)?.getPropertyValue("direction") === "rtl";
+
         const preset = this._getCurrentPreset();
         this._updateCalibration(preset);
 
@@ -308,38 +317,35 @@ export class XiaomiVacuumMapCard extends LitElement {
         const validCalibration = !!this.coordinatesConverter && this.coordinatesConverter.calibrated;
         const mapControls = validCalibration ? this._createMapControls() : [];
 
-        const mapZoomerContent = conditional(
-            validCalibration,
-            () => html`
-                <div
-                    id="map-zoomer-content"
-                    style="
+        const mapZoomerContent = html`
+            <div
+                id="map-zoomer-content"
+                style="
                  margin-top: ${(preset.map_source.crop?.top ?? 0) * -1}px;
                  margin-bottom: ${(preset.map_source.crop?.bottom ?? 0) * -1}px;
                  margin-left: ${(preset.map_source.crop?.left ?? 0) * -1}px;
                  margin-right: ${(preset.map_source.crop?.right ?? 0) * -1}px;">
-                    <img
-                        id="map-image"
-                        alt="camera_image"
-                        class="${this.mapScale * this.realScale > 1 ? "zoomed" : ""}"
-                        src="${mapSrc}"
-                        @load="${() => this._calculateBasicScale()}" />
-                    <div id="map-image-overlay">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            version="2.0"
-                            id="svg-wrapper"
-                            width="100%"
-                            height="100%"
-                            @mousedown="${(e: MouseEvent): void => this._mouseDown(e)}"
-                            @mousemove="${(e: MouseEvent): void => this._mouseMove(e)}"
-                            @mouseup="${(e: PointerEvent): void => this._mouseUp(e)}">
-                            ${this._drawSelection()}
-                        </svg>
-                    </div>
+                <img
+                    id="map-image"
+                    alt="camera_image"
+                    class="${this.mapScale * this.realScale > 1 ? "zoomed" : ""}"
+                    src="${mapSrc}"
+                    @load="${() => this._calculateBasicScale()}" />
+                <div id="map-image-overlay">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        version="2.0"
+                        id="svg-wrapper"
+                        width="100%"
+                        height="100%"
+                        @mousedown="${(e: MouseEvent): void => this._mouseDown(e)}"
+                        @mousemove="${(e: MouseEvent): void => this._mouseMove(e)}"
+                        @mouseup="${(e: PointerEvent): void => this._mouseUp(e)}">
+                        ${validCalibration ? this._drawSelection() : null}
+                    </svg>
                 </div>
-            `,
-        );
+            </div>
+        `;
         return html`
             <ha-card
                 .header="${this.config.title}"
@@ -352,7 +358,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                                 class="preset-selector-icon-wrapper"
                                 @click="${(): void => this._setPresetIndex(this.presetIndex - 1, true)}">
                                 <ha-icon
-                                    icon="mdi:chevron-left"
+                                    icon="mdi:chevron-${rtl ? "right" : "left"}"
                                     class="preset-selector-icon ${this.presetIndex === 0 ? "disabled" : ""}">
                                 </ha-icon>
                             </div>
@@ -368,7 +374,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                                 class="preset-selector-icon-wrapper"
                                 @click="${(): void => this._setPresetIndex(this.presetIndex + 1, true)}">
                                 <ha-icon
-                                    icon="mdi:chevron-right"
+                                    icon="mdi:chevron-${rtl ? "left" : "right"}"
                                     class="preset-selector-icon ${this.presetIndex ===
                                     this.config.additional_presets?.length
                                         ? "disabled"
@@ -378,47 +384,42 @@ export class XiaomiVacuumMapCard extends LitElement {
                         </div>
                     `,
                 )}
-                ${validCalibration
-                    ? html`
-                          <div class="map-wrapper">
-                              <pinch-zoom
-                                  min-scale="0.5"
-                                  id="map-zoomer"
-                                  @change="${this._calculateScale}"
-                                  two-finger-pan="${preset.two_finger_pan}"
-                                  locked="${this.mapLocked}"
-                                  style="touch-action: none;">
-                                  ${mapZoomerContent}
-                              </pinch-zoom>
-                              <div id="map-zoomer-overlay">
-                                  <div style="right: 0; top: 0; position: absolute;">
-                                      <ha-icon
-                                          icon="${this.mapLocked ? "mdi:lock" : "mdi:lock-open"}"
-                                          class="standalone-icon-on-map clickable ripple"
-                                          @click="${this._toggleLock}"></ha-icon>
-                                  </div>
-                                  <div
-                                      class="map-zoom-icons"
-                                      style="visibility: ${this.mapLocked ? "hidden" : "visible"}">
-                                      <ha-icon
-                                          icon="mdi:restore"
-                                          class="icon-on-map clickable ripple"
-                                          @click="${this._restoreMap}"></ha-icon>
-                                      <div class="map-zoom-icons-main">
-                                          <ha-icon
-                                              icon="mdi:magnify-minus"
-                                              class="icon-on-map clickable ripple"
-                                              @click="${this._zoomOut}"></ha-icon>
-                                          <ha-icon
-                                              icon="mdi:magnify-plus"
-                                              class="icon-on-map clickable ripple"
-                                              @click="${this._zoomIn}"></ha-icon>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      `
-                    : this._showInvalidCalibrationWarning()}
+                <div class="map-wrapper">
+                    <pinch-zoom
+                        min-scale="0.5"
+                        id="map-zoomer"
+                        @change="${this._calculateScale}"
+                        two-finger-pan="${preset.two_finger_pan}"
+                        locked="${this.mapLocked}"
+                        style="touch-action: none;">
+                        ${mapZoomerContent}
+                    </pinch-zoom>
+                    <div id="map-zoomer-overlay">
+                        <div style="right: 0; top: 0; position: absolute;">
+                            <ha-icon
+                                icon="${this.mapLocked ? "mdi:lock" : "mdi:lock-open"}"
+                                class="standalone-icon-on-map clickable ripple"
+                                @click="${this._toggleLock}"></ha-icon>
+                        </div>
+                        <div class="map-zoom-icons" style="visibility: ${this.mapLocked ? "hidden" : "visible"}">
+                            <ha-icon
+                                icon="mdi:restore"
+                                class="icon-on-map clickable ripple"
+                                @click="${this._restoreMap}"></ha-icon>
+                            <div class="map-zoom-icons-main">
+                                <ha-icon
+                                    icon="mdi:magnify-minus"
+                                    class="icon-on-map clickable ripple"
+                                    @click="${this._zoomOut}"></ha-icon>
+                                <ha-icon
+                                    icon="mdi:magnify-plus"
+                                    class="icon-on-map clickable ripple"
+                                    @click="${this._zoomIn}"></ha-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                ${conditional(!validCalibration, () => this._showInvalidCalibrationWarning())}
                 <div class="controls-wrapper">
                     ${conditional(
                         validCalibration && (modes.length > 1 || mapControls.length > 0),
@@ -602,25 +603,38 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _getSelection(mode: MapMode): unknown[] {
         const repeats = mode.repeatsType === RepeatsType.INTERNAL ? this.repeats : null;
+        let selection: unknown[] = [];
         switch (mode.selectionType) {
             case SelectionType.MANUAL_RECTANGLE:
-                return this.selectedManualRectangles.map(r => r.toVacuum(repeats));
+                selection = this.selectedManualRectangles.map(r => r.toVacuum(repeats));
+                break;
             case SelectionType.PREDEFINED_RECTANGLE:
-                return this.selectedPredefinedRectangles
+                selection = this.selectedPredefinedRectangles
                     .map(r => r.toVacuum(repeats))
                     .reduce((a, v) => a.concat(v), [] as unknown[]);
+                break;
             case SelectionType.ROOM:
                 const selectedRooms = this.selectedRooms.map(r => r.toVacuum());
-                return [...selectedRooms, ...(repeats && selectedRooms.length > 0 ? [repeats] : [])];
+                selection = [...selectedRooms, ...(repeats && selectedRooms.length > 0 ? [repeats] : [])];
+                break;
             case SelectionType.MANUAL_PATH:
-                return this.selectedManualPath.toVacuum(repeats);
+                selection = this.selectedManualPath.toVacuum(repeats);
+                break;
             case SelectionType.MANUAL_POINT:
-                return this.selectedManualPoint?.toVacuum(repeats) ?? [];
+                selection = this.selectedManualPoint?.toVacuum(repeats) ?? [];
+                break;
             case SelectionType.PREDEFINED_POINT:
-                return this.selectedPredefinedPoint
+                selection = this.selectedPredefinedPoint
                     .map(p => p.toVacuum(repeats))
                     .reduce((a, v) => a.concat(v), [] as unknown[]);
+                break;
         }
+        if (mode.repeatsType === RepeatsType.REPEAT) {
+            selection = Array(this.repeats)
+                .fill(0)
+                .flatMap(() => selection);
+        }
+        return selection;
     }
 
     private _runImmediately(): boolean {
@@ -642,7 +656,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             const repeats = this.repeats;
             const serviceCall = currentMode.getServiceCall(currentPreset.entity, selection, repeats);
             const message = JSON.stringify(serviceCall, null, 2);
-            if (debug) {
+            if (debug || (this.config.debug ?? false)) {
                 this._showToast("popups.success", "mdi:check", true);
                 console.log(message);
                 window.alert(message);
@@ -1330,6 +1344,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                 color: var(--map-card-internal-secondary-text-color);
                 border-radius: var(--map-card-internal-small-radius);
                 margin: 5px;
+                direction: ltr;
             }
 
             .map-zoom-icons-main {
@@ -1371,7 +1386,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                 overflow: hidden;
                 background-color: var(--map-card-internal-secondary-color);
                 color: var(--map-card-internal-secondary-text-color);
-                margin-left: auto;
+                margin-inline-start: auto;
                 display: inline-flex;
             }
 
@@ -1444,15 +1459,15 @@ export class XiaomiVacuumMapCard extends LitElement {
 
             ${MapObject.styles}
             ${ManualRectangle.styles}
-          ${PredefinedMultiRectangle.styles}
-          ${ManualPath.styles}
-          ${ManualPoint.styles}
-          ${PredefinedPoint.styles}
-          ${Room.styles}
-          ${ModesMenuRenderer.styles}
-          ${IconRenderer.styles}
-          ${TileRenderer.styles}
-          ${ToastRenderer.styles}
+            ${PredefinedMultiRectangle.styles}
+            ${ManualPath.styles}
+            ${ManualPoint.styles}
+            ${PredefinedPoint.styles}
+            ${Room.styles}
+            ${ModesMenuRenderer.styles}
+            ${IconRenderer.styles}
+            ${TileRenderer.styles}
+            ${ToastRenderer.styles}
         `;
     }
 }

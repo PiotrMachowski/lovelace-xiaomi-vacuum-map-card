@@ -1,5 +1,6 @@
 import * as da from "./languages/da.json";
 import * as de from "./languages/de.json";
+import * as el from "./languages/el.json";
 import * as en from "./languages/en.json";
 import * as es from "./languages/es.json";
 import * as fr from "./languages/fr.json";
@@ -10,14 +11,17 @@ import * as nl from "./languages/nl.json";
 import * as pl from "./languages/pl.json";
 import * as ptBr from "./languages/pt-BR.json";
 import * as ru from "./languages/ru.json";
+import * as sv from "./languages/sv.json";
 import * as uk from "./languages/uk.json";
 import * as zh from "./languages/zh.json";
+import * as zhHant from "./languages/zh-Hant.json";
 import { Language, TranslatableString, XiaomiVacuumMapCardConfig } from "../types/types";
 import { HomeAssistant } from "custom-card-helpers";
 
 const languages: Record<string, unknown> = {
     da: da,
     de: de,
+    el: el,
     en: en,
     es: es,
     fr: fr,
@@ -28,8 +32,10 @@ const languages: Record<string, unknown> = {
     pl: pl,
     "pt-BR": ptBr,
     ru: ru,
+    sv: sv,
     uk: uk,
     zh: zh,
+    "zh-Hant": zhHant,
 };
 
 function localizeString(string: string, search = "", replace = "", lang: Language = ""): string {

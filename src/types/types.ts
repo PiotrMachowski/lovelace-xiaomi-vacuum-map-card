@@ -32,6 +32,7 @@ export interface XiaomiVacuumMapCardConfig extends LovelaceCardConfig, CardPrese
     readonly title?: string;
     readonly additional_presets?: CardPresetConfig[];
     readonly language?: Language;
+    readonly debug?: boolean;
 }
 
 export interface CardPresetConfig {
@@ -57,6 +58,7 @@ export interface MapSourceConfig {
 
 export interface CalibrationSourceConfig {
     readonly camera?: boolean;
+    readonly identity?: boolean;
     readonly entity?: string;
     readonly attribute?: string;
     readonly calibration_points?: CalibrationPoint[];
