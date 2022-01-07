@@ -655,6 +655,7 @@ Currently, this card contains translations for following languages:
 * `fr` - French (Français)
 * `he` - Hebrew (עברית)
 * `hu` - Hungarian (Magyar)
+* `is` - Icelandic (Íslenska)
 * `it` - Italian (Italiano)
 * `nl` - Dutch (Nederlands)
 * `pl` - Polish (Polski)
