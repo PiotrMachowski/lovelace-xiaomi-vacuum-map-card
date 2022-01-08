@@ -6,6 +6,7 @@ import * as es from "./languages/es.json";
 import * as fr from "./languages/fr.json";
 import * as he from "./languages/he.json";
 import * as hu from "./languages/hu.json";
+import * as is from "./languages/is.json";
 import * as it from "./languages/it.json";
 import * as nl from "./languages/nl.json";
 import * as pl from "./languages/pl.json";
@@ -27,6 +28,7 @@ const languages: Record<string, unknown> = {
     fr: fr,
     he: he,
     hu: hu,
+    is: is,
     it: it,
     nl: nl,
     pl: pl,
