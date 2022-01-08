@@ -1,3 +1,4 @@
+import * as cs from "./languages/cs.json";
 import * as da from "./languages/da.json";
 import * as de from "./languages/de.json";
 import * as el from "./languages/el.json";
@@ -20,6 +21,7 @@ import { Language, TranslatableString, XiaomiVacuumMapCardConfig } from "../type
 import { HomeAssistant } from "custom-card-helpers";
 
 const languages: Record<string, unknown> = {
+    cs: cs,
     da: da,
     de: de,
     el: el,
