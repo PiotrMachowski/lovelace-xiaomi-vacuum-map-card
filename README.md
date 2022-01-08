@@ -647,6 +647,7 @@ map_modes:
 ## Translations
 
 Currently, this card contains translations for following languages:
+* `cs` - Čeština (Czech)
 * `da` - Danish
 * `de` - German (Deutsch)
 * `el` - Greek (Ελληνικά)
