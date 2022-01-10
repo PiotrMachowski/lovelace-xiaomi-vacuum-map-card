@@ -59,9 +59,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCar
         this._helpers.importMoreInfoControl("climate");
 
         const entityIds = Object.keys(this.hass.states);
-        const cameras = entityIds
-            .filter(e => e.substr(0, e.indexOf(".")) === "camera")
-            .filter(e => this.hass?.states[e].attributes["calibration_points"]);
+        const cameras = entityIds.filter(e => e.substr(0, e.indexOf(".")) === "camera");
         const vacuums = entityIds.filter(e => e.substr(0, e.indexOf(".")) === "vacuum");
         const platforms = PlatformGenerator.getPlatforms();
 
