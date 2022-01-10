@@ -1,0 +1,31 @@
+{
+    "map_modes": {
+        "defaultTemplates": ["vacuum_clean_zone"],
+        "templates": {
+            "vacuum_clean_zone": {
+                "name": "map_mode.vacuum_clean_segment",
+                "icon": "mdi:floor-plan",
+                "selection_type": "ROOM",
+                "repeats_type": "REPEAT",
+                "max_repeats": 3,
+                "service_call_schema": {
+                    "service": "neato.custom_cleaning",
+                    "service_data": {
+                        "zone": "[[selection_unwrapped]]",
+                        "entity_id": "[[entity_id]]"
+                    }
+                }
+            }
+        }
+    },
+    "tiles": {
+        "from_attributes": [
+            {
+                "attribute": "clean_area",
+                "label": "tile.cleaned_area.label",
+                "icon": "mdi:texture-box",
+                "unit": "unit.meter_squared_shortcut"
+            }
+        ]
+    }
+}

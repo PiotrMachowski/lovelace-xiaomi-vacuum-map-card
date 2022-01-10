@@ -228,10 +228,11 @@ map: # coordinates of a point in a map coordinate system (can be read using e.g.
 ### Supported vacuum platforms
 
 Following vacuum platforms are supported at this moment:
-- `default`: [Built-in Home Assistant integration](https://www.home-assistant.io/integrations/xiaomi_miio/#xiaomi-mi-robot-vacuum)
+- `default`: [Built-in Xiaomi Miio integration](https://www.home-assistant.io/integrations/xiaomi_miio/#xiaomi-mi-robot-vacuum)
 - `KrzysztofHajdamowicz/miio2`: [Custom miio2 integration by KrzysztofHajdamowicz](https://github.com/KrzysztofHajdamowicz/home-assistant-vacuum-styj02ym)
 - `marotoweb/viomise`: [Custom Viomi SE integration by marotoweb](https://github.com/marotoweb/home-assistant-vacuum-viomise)
 - `send_command`: Uses `vacuum.send_command` service with commands: `app_zoned_clean`, `app_goto_target`, `app_segment_clean`
+- `Neato`:  [Built-in Neato integration](https://www.home-assistant.io/integrations/neato)
 
 [Adding a new platform](CONTRIBUTING.md#adding-new-platform)
 

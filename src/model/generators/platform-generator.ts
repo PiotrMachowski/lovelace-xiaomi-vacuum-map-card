@@ -2,6 +2,7 @@ import * as defaultTemplate from "./platform_templates/default.json";
 import * as krzysztofHajdamowiczMiio2Template from "./platform_templates/KrzysztofHajdamowicz_miio2.json";
 import * as marotowebViomiseTemplate from "./platform_templates/marotoweb_viomise.json";
 import * as sendCommandTemplate from "./platform_templates/send-command.json";
+import * as neatoTemplate from "./platform_templates/neato.json";
 import { MapModeConfig, PlatformTemplate, TileFromAttributeTemplate, TileFromSensorTemplate } from "../../types/types";
 import { HomeAssistant } from "custom-card-helpers";
 import { compare } from "compare-versions";
@@ -11,12 +12,14 @@ export class PlatformGenerator {
     public static KRZYSZTOFHAJDAMOWICZ_MIIO2_PLATFORM = "KrzysztofHajdamowicz/miio2";
     public static MAROTOWEB_VIOMISE_PLATFORM = "marotoweb/viomise";
     public static SEND_COMMAND_PLATFORM = "send_command";
+    public static NEATO_PLATFORM = "Neato";
 
     private static TEMPLATES = new Map<string, PlatformTemplate>([
         [PlatformGenerator.DEFAULT_PLATFORM, defaultTemplate],
         [PlatformGenerator.KRZYSZTOFHAJDAMOWICZ_MIIO2_PLATFORM, krzysztofHajdamowiczMiio2Template],
         [PlatformGenerator.MAROTOWEB_VIOMISE_PLATFORM, marotowebViomiseTemplate],
         [PlatformGenerator.SEND_COMMAND_PLATFORM, sendCommandTemplate],
+        [PlatformGenerator.NEATO_PLATFORM, neatoTemplate],
     ]);
 
     public static getPlatforms(): string[] {
