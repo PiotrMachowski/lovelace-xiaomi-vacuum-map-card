@@ -266,6 +266,7 @@ Following vacuum platforms are supported at this moment:
 | `double_tap_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is double-tapped |
 | `conditions` | list | no | - | List of [conditions](#condition-options) that need to be (all of them) met for a tile to be shown |
 | `tooltip` | string | false | - | Tooltip to be displayed on hoover |
+| `translations` | map | false | - | Translations that should be applied to tile's value |
 
 ### Condition options
 
@@ -647,8 +648,8 @@ map_modes:
 ## Translations
 
 Currently, this card contains translations for following languages:
-* `cs` - Čeština (Czech)
-* `da` - Danish
+* `cs` - Czech (Čeština)
+* `da` - Danish (Dansk)
 * `de` - German (Deutsch)
 * `el` - Greek (Ελληνικά)
 * `en` - English

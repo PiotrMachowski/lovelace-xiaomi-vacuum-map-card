@@ -126,18 +126,40 @@
         "invalid_entities": "Ogiltiga entiteter:",
         "invalid_calibration": "Ogiltig kalibrering, vänligen se över din konfiguration"
     },
-    "label": {
-        "status": "Status",
-        "battery_level": "Batteri",
-        "fan_speed": "Fläkthastighet",
-        "sensor_dirty_left": "Sensorer kvar",
-        "filter_left": "Filter kvar",
-        "main_brush_left": "Huvudborste kvar",
-        "side_brush_left": "Sidoborste kvar",
-        "cleaning_count": "Antal städningar",
-        "cleaned_area": "Städat område",
-        "cleaning_time": "Städtid",
-        "mop_left": "Mopp kvar"
+    "tile": {
+        "status": {
+            "value": "Status"
+        },
+        "battery_level": {
+            "value": "Batteri"
+        },
+        "fan_speed": {
+            "value": "Fläkthastighet"
+        },
+        "sensor_dirty_left": {
+            "value": "Sensorer kvar"
+        },
+        "filter_left": {
+            "value": "Filter kvar"
+        },
+        "main_brush_left": {
+            "value": "Huvudborste kvar"
+        },
+        "side_brush_left": {
+            "value": "Sidoborste kvar"
+        },
+        "cleaning_count": {
+            "value": "Antal städningar"
+        },
+        "cleaned_area": {
+            "value": "Städat område"
+        },
+        "cleaning_time": {
+            "value": "Städtid"
+        },
+        "mop_left": {
+            "value": "Mopp kvar"
+        }
     },
     "icon": {
         "vacuum_start": "Start",

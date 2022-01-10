@@ -126,18 +126,40 @@
         "invalid_entities": "Λάθος οντότητες:",
         "invalid_calibration": "Λάθος βαθμονόμηση, παρακαλώ ελέγξτε τις ρυθμίσεις σας"
     },
-    "label": {
-        "status": "Κατάσταση",
-        "battery_level": "Μπαταρία",
-        "fan_speed": "Ταχύτητα Ανεμιστήρα",
-        "sensor_dirty_left": "Συντήρηση αισθητήρων",
-        "filter_left": "Συντήρηση φίλτρου",
-        "main_brush_left": "Συντήρηση κύριας βούρτσας",
-        "side_brush_left": "Συντήρηση πλαϊνής βούρτσας",
-        "cleaning_count": "Αριθμός σκουπισμάτων",
-        "cleaned_area": "Έκταση που καθαρίστηκε",
-        "cleaning_time": "Χρόνος καθαρισμού",
-        "mop_left": "Συντήρηση σφουγγαρίστρας"
+    "tile": {
+        "status": {
+            "label": "Κατάσταση"
+        },
+        "battery_level": {
+            "label": "Μπαταρία"
+        },
+        "fan_speed": {
+            "label": "Ταχύτητα Ανεμιστήρα"
+        },
+        "sensor_dirty_left": {
+            "label": "Συντήρηση αισθητήρων"
+        },
+        "filter_left": {
+            "label": "Συντήρηση φίλτρου"
+        },
+        "main_brush_left": {
+            "label": "Συντήρηση κύριας βούρτσας"
+        },
+        "side_brush_left": {
+            "label": "Συντήρηση πλαϊνής βούρτσας"
+        },
+        "cleaning_count": {
+            "label": "Αριθμός σκουπισμάτων"
+        },
+        "cleaned_area": {
+            "label": "Έκταση που καθαρίστηκε"
+        },
+        "cleaning_time": {
+            "label": "Χρόνος καθαρισμού"
+        },
+        "mop_left": {
+            "label": "Συντήρηση σφουγγαρίστρας"
+        }
     },
     "icon": {
         "vacuum_start": "Έναρξη",

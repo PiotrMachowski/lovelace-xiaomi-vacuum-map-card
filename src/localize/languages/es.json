@@ -124,17 +124,37 @@
         "invalid_entities": "Entidades inválidas:",
         "invalid_calibration": "Calibración inválida, verifique la configuración."
     },
-    "label": {
-        "status": "Estado",
-        "battery_level": "Batería",
-        "fan_speed": "Velocidad del ventilador",
-        "sensor_dirty_left": "Sensores",
-        "filter_left": "Filtro",
-        "main_brush_left": "Cepillo principal",
-        "side_brush_left": "Cepillo lateral",
-        "cleaning_count": "Contador de limpieza",
-        "cleaned_area": "Área limpia",
-        "cleaning_time": "Tiempo de limpieza"
+    "tile": {
+        "status": {
+            "label": "Estado"
+        },
+        "battery_level": {
+            "label": "Batería"
+        },
+        "fan_speed": {
+            "label": "Velocidad del ventilador"
+        },
+        "sensor_dirty_left": {
+            "label": "Sensores"
+        },
+        "filter_left": {
+            "label": "Filtro"
+        },
+        "main_brush_left": {
+            "label": "Cepillo principal"
+        },
+        "side_brush_left": {
+            "label": "Cepillo lateral"
+        },
+        "cleaning_count": {
+            "label": "Contador de limpieza"
+        },
+        "cleaned_area": {
+            "label": "Área limpia"
+        },
+        "cleaning_time": {
+            "label": "Tiempo de limpieza"
+        }
     },
     "icon": {
         "vacuum_start": "Comenzar",

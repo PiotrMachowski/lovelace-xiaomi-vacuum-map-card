@@ -126,18 +126,40 @@
         "invalid_entities": "Некорректные сущности:",
         "invalid_calibration": "Некорректная калибровка, проверьте вашу конфигурацию"
     },
-    "label": {
-        "status": "Статус",
-        "battery_level": "Уровень заряда",
-        "fan_speed": "Мощность всасывания",
-        "sensor_dirty_left": "Уровень загрязнения датчиков",
-        "filter_left": "Ресурс фильтра",
-        "main_brush_left": "Ресурс основной щётки",
-        "side_brush_left": "Ресурс боковой щётки",
-        "cleaning_count": "Число уборок",
-        "cleaned_area": "Площадь уборки",
-        "cleaning_time": "Время уборки",
-        "mop_left": "Ресурс тряпки"
+    "tile": {
+        "status": {
+            "value": "Статус"
+        },
+        "battery_level": {
+            "value": "Уровень заряда"
+        },
+        "fan_speed": {
+            "value": "Мощность всасывания"
+        },
+        "sensor_dirty_left": {
+            "value": "Уровень загрязнения датчиков"
+        },
+        "filter_left": {
+            "value": "Ресурс фильтра"
+        },
+        "main_brush_left": {
+            "value": "Ресурс основной щётки"
+        },
+        "side_brush_left": {
+            "value": "Ресурс боковой щётки"
+        },
+        "cleaning_count": {
+            "value": "Число уборок"
+        },
+        "cleaned_area": {
+            "value": "Площадь уборки"
+        },
+        "cleaning_time": {
+            "value": "Время уборки"
+        },
+        "mop_left": {
+            "value": "Ресурс тряпки"
+        }
     },
     "icon": {
         "vacuum_start": "Старт",

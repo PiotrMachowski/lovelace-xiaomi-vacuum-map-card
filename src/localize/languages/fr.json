@@ -124,17 +124,37 @@
         "invalid_entities": "Entités incorrectes :",
         "invalid_calibration": "Calibration incorrecte, vérifiez votre configuration"
     },
-    "label": {
-        "status": "Statut",
-        "battery_level": "Batterie",
-        "fan_speed": "Puissance",
-        "sensor_dirty_left": "Capteurs",
-        "filter_left": "Filtre",
-        "main_brush_left": "Brosse princ.",
-        "side_brush_left": "Brosse lat.",
-        "cleaning_count": "Nbr de nettoyages",
-        "cleaned_area": "Surface nettoyée",
-        "cleaning_time": "Temps de nettoyage"
+    "tile": {
+        "status": {
+            "label": "Statut"
+        },
+        "battery_level": {
+            "label": "Batterie"
+        },
+        "fan_speed": {
+            "label": "Puissance"
+        },
+        "sensor_dirty_left": {
+            "label": "Capteurs"
+        },
+        "filter_left": {
+            "label": "Filtre"
+        },
+        "main_brush_left": {
+            "label": "Brosse princ."
+        },
+        "side_brush_left": {
+            "label": "Brosse lat."
+        },
+        "cleaning_count": {
+            "label": "Nbr de nettoyages"
+        },
+        "cleaned_area": {
+            "label": "Surface nettoyée"
+        },
+        "cleaning_time": {
+            "label": "Temps de nettoyage"
+        }
     },
     "icon": {
         "vacuum_start": "Démarrage",

@@ -102,13 +102,13 @@
         "from_attributes": [
             {
                 "attribute": "cleaned_area",
-                "label": "label.cleaned_area",
+                "label": "tile.cleaned_area.label",
                 "icon": "mdi:texture-box",
                 "unit": "unit.meter_squared_shortcut"
             },
             {
                 "attribute": "cleaning_time",
-                "label": "label.cleaning_time",
+                "label": "tile.cleaning_time.label",
                 "icon": "mdi:timer-sand",
                 "unit": "unit.minute_shortcut"
             }

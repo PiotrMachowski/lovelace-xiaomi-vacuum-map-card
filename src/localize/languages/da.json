@@ -124,17 +124,37 @@
         "invalid_entities": "Ugyldige entiteter:",
         "invalid_calibration": "Ugyldig kalibrering, du bedes gennemgå din konfiguration"
     },
-    "label": {
-        "status": "Status",
-        "battery_level": "Batteri",
-        "fan_speed": "Hastighed",
-        "sensor_dirty_left": "Sensor vedl.",
-        "filter_left": "Filter vedl.",
-        "main_brush_left": "Hovedbørste vedl.",
-        "side_brush_left": "Sidebørste vedl.",
-        "cleaning_count": "Rengøringstæller",
-        "cleaned_area": "Rengjort areal",
-        "cleaning_time": "Rengørings tid"
+    "tile": {
+        "status": {
+            "label": "Status"
+        },
+        "battery_level": {
+            "label": "Batteri"
+        },
+        "fan_speed": {
+            "label": "Hastighed"
+        },
+        "sensor_dirty_left": {
+            "label": "Sensor vedl."
+        },
+        "filter_left": {
+            "label": "Filter vedl."
+        },
+        "main_brush_left": {
+            "label": "Hovedbørste vedl."
+        },
+        "side_brush_left": {
+            "label": "Sidebørste vedl."
+        },
+        "cleaning_count": {
+            "label": "Rengøringstæller"
+        },
+        "cleaned_area": {
+            "label": "Rengjort areal"
+        },
+        "cleaning_time": {
+            "label": "Rengørings tid"
+        }
     },
     "icon": {
         "vacuum_start": "Start",

@@ -121,6 +121,7 @@ export interface TileConfig extends ActionableObjectConfig, ConditionalObjectCon
     readonly unit?: string;
     readonly multiplier?: number;
     readonly precision?: number;
+    readonly translations?: Record<string, string>;
 }
 
 export interface ActionableObjectConfig {

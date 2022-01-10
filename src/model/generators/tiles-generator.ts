@@ -37,33 +37,65 @@ export class TilesGenerator {
         if ("status" in state.attributes)
             tiles.push({
                 entity: vacuumEntity,
-                label: localize("label.status", language),
+                label: localize("tile.status.label", language),
                 attribute: "status",
                 icon: "mdi:robot-vacuum",
-            } as unknown as TileConfig);
+                translations: this.generateTranslationKeys(
+                    [
+                        "Starting",
+                        "Charger disconnected",
+                        "Idle",
+                        "Remote control active",
+                        "Cleaning",
+                        "Returning home",
+                        "Manual mode",
+                        "Charging",
+                        "Charging problem",
+                        "Paused",
+                        "Spot cleaning",
+                        "Error",
+                        "Shutting down",
+                        "Updating",
+                        "Docking",
+                        "Going to target",
+                        "Zoned cleaning",
+                        "Segment cleaning",
+                        "Emptying the bin",
+                        "Charging complete",
+                        "Device offline",
+                    ],
+                    "status",
+                    language,
+                ),
+            });
         if ("battery_level" in state.attributes && "battery_icon" in state.attributes)
             tiles.push({
                 entity: vacuumEntity,
-                label: localize("label.battery_level", language),
+                label: localize("tile.battery_level.label", language),
                 attribute: "battery_level",
                 icon: state.attributes["battery_icon"],
                 unit: "%",
-            } as unknown as TileConfig);
+            });
         if ("battery_level" in state.attributes && !("battery_icon" in state.attributes))
             tiles.push({
                 entity: vacuumEntity,
-                label: localize("label.battery_level", language),
+                label: localize("tile.battery_level.label", language),
                 attribute: "battery_level",
                 icon: "mdi:battery",
                 unit: "%",
-            } as unknown as TileConfig);
+            });
         if ("fan_speed" in state.attributes)
             tiles.push({
                 entity: vacuumEntity,
-                label: localize("label.fan_speed", language),
+                label: localize("tile.fan_speed.label", language),
                 attribute: "fan_speed",
                 icon: "mdi:fan",
-            } as unknown as TileConfig);
+                translations: this.generateTranslationKeys(
+                    ["Silent", "Standard", "Medium", "Turbo", "Auto", "Gentle"],
+                    "fan_speed",
+                    language,
+                ),
+            });
         return tiles;
     }
 
@@ -126,5 +158,18 @@ export class TilesGenerator {
             precision: multiplier ? 1 : undefined,
             unit: unit ? localize(unit, language) : undefined,
         };
+    }
+
+    private static generateTranslationKeys(
+        keys: Array<string>,
+        tile: string,
+        language: Language,
+    ): Record<string, string> {
+        const output = {};
+        keys.forEach(k => {
+            const translation = localize(`tile.${tile}.value.${k}`, language, "");
+            if (translation) output[k] = translation;
+        });
+        return output;
     }
 }

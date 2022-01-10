@@ -124,17 +124,37 @@
         "invalid_entities": "Недійсні сутності:",
         "invalid_calibration": "Неправильне калібрування, перевірте конфігурацію"
     },
-    "label": {
-        "status": "Статус",
-        "battery_level": "Батарея",
-        "fan_speed": "Потужність",
-        "sensor_dirty_left": "Сенсор",
-        "filter_left": "Фільтр",
-        "main_brush_left": "Основна щітка",
-        "side_brush_left": "Бокова щітка",
-        "cleaning_count": "Лічильник прибирань",
-        "cleaned_area": "Прибрано",
-        "cleaning_time": "Час прибирання"
+    "tile": {
+        "status": {
+            "value": "Статус"
+        },
+        "battery_level": {
+            "value": "Батарея"
+        },
+        "fan_speed": {
+            "value": "Потужність"
+        },
+        "sensor_dirty_left": {
+            "value": "Сенсор"
+        },
+        "filter_left": {
+            "value": "Фільтр"
+        },
+        "main_brush_left": {
+            "value": "Основна щітка"
+        },
+        "side_brush_left": {
+            "value": "Бокова щітка"
+        },
+        "cleaning_count": {
+            "value": "Лічильник прибирань"
+        },
+        "cleaned_area": {
+            "value": "Прибрано"
+        },
+        "cleaning_time": {
+            "value": "Час прибирання"
+        }
     },
     "icon": {
         "vacuum_start": "Старт",

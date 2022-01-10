@@ -126,18 +126,40 @@
         "invalid_entities": "Röng einindi:",
         "invalid_calibration": "Röng kvörðun, athugaðu stillingarnar þínar"
     },
-    "label": {
-        "status": "Staða",
-        "battery_level": "Rafhlaða",
-        "fan_speed": "Viftuhraði",
-        "sensor_dirty_left": "Skynjarar eftir",
-        "filter_left": "Sía eftir",
-        "main_brush_left": "Aðal bursti eftir",
-        "side_brush_left": "Hliðar bursti eftir",
-        "cleaning_count": "Fjöldi þrifa",
-        "cleaned_area": "Svæði þrifið",
-        "cleaning_time": "Þriftími",
-        "mop_left": "Moppa eftir"
+    "tile": {
+        "status": {
+            "label": "Staða"
+        },
+        "battery_level": {
+            "label": "Rafhlaða"
+        },
+        "fan_speed": {
+            "label": "Viftuhraði"
+        },
+        "sensor_dirty_left": {
+            "label": "Skynjarar eftir"
+        },
+        "filter_left": {
+            "label": "Sía eftir"
+        },
+        "main_brush_left": {
+            "label": "Aðal bursti eftir"
+        },
+        "side_brush_left": {
+            "label": "Hliðar bursti eftir"
+        },
+        "cleaning_count": {
+            "label": "Fjöldi þrifa"
+        },
+        "cleaned_area": {
+            "label": "Svæði þrifið"
+        },
+        "cleaning_time": {
+            "label": "Þriftími"
+        },
+        "mop_left": {
+            "label": "Moppa eftir"
+        }
     },
     "icon": {
         "vacuum_start": "Ræsa",
