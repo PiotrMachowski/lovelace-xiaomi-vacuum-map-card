@@ -20,7 +20,8 @@ export class Room extends MapObject {
     public render(): SVGTemplateResult {
         const poly = (this._config?.outline ?? []).map(p => this.vacuumToScaledMap(p[0], p[1]));
         return svg`
-            <g class="room-wrapper ${this._selected ? "selected" : ""} room-${this._config.id}-wrapper">
+            <g class="room-wrapper ${this._selected ? "selected" : ""} 
+            room-${`${this._config.id}`.replace(" ", "_")}-wrapper">
                 <polygon class="room-outline clickable"
                          points="${poly.map(p => p.join(", ")).join(" ")}"
                          @click="${(): void => this._click()}">
