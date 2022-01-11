@@ -11,6 +11,8 @@
         "vacuum_goto": "Рух до цілі",
         "vacuum_goto_predefined": "Збережені точки",
         "vacuum_clean_segment": "Кімнати",
+        "vacuum_clean_point": "Точкове прибирання",
+        "vacuum_clean_point_predefined": "Збережені точки",
         "vacuum_clean_zone": "Зональне прибирання",
         "vacuum_clean_zone_predefined": "Список зон",
         "vacuum_follow_path": "Шлях"
@@ -126,34 +128,68 @@
     },
     "tile": {
         "status": {
-            "value": "Статус"
+            "label": "Статус",
+            "value": {
+                "Starting": "Початок",
+                "Charger disconnected": "Зарядний пристрій відключено",
+                "Idle": "Неактивний",
+                "Remote control active": "Пульт",
+                "Cleaning": "Прибирання",
+                "Returning home": "Повернення до док-станції",
+                "Manual mode": "Ручний режим",
+                "Charging": "Заряджання",
+                "Charging problem": "Проблема з заряджанням",
+                "Paused": "Призупинено",
+                "Spot cleaning": "Точкове очищення",
+                "Error": "Помилка",
+                "Shutting down": "Вимкнення",
+                "Updating": "Оновлення",
+                "Docking": "Стиковка",
+                "Going to target": "По шляху до цілі",
+                "Zoned cleaning": "Зональне прибирання",
+                "Segment cleaning": "Прибирання кімнати",
+                "Emptying the bin": "Спорожнення контейнера",
+                "Charging complete": "Заряджання завершено",
+                "Device offline": "Офлайн"
+            }
         },
         "battery_level": {
-            "value": "Батарея"
+            "label": "Батарея"
         },
         "fan_speed": {
-            "value": "Потужність"
+            "label": "Потужність",
+            "value": {
+                "Silent": "Тихий",
+                "Standard": "Стандарт",
+                "Medium": "Середній",
+                "Turbo": "Турбо",
+                "Auto": "Авто",
+                "Gentle": "Делікатний"
+            }
         },
         "sensor_dirty_left": {
-            "value": "Сенсор"
+            "label": "Сенсор"
         },
         "filter_left": {
-            "value": "Фільтр"
+            "label": "Фільтр"
         },
         "main_brush_left": {
-            "value": "Основна щітка"
+            "label": "Основна щітка"
         },
         "side_brush_left": {
-            "value": "Бокова щітка"
+            "label": "Бокова щітка"
         },
         "cleaning_count": {
-            "value": "Лічильник прибирань"
+            "label": "Лічильник прибирань"
         },
         "cleaned_area": {
-            "value": "Прибрано"
+            "label": "Прибрано"
         },
         "cleaning_time": {
-            "value": "Час прибирання"
+            "label": "Час прибирання"
+        },
+        "mop_left": {
+            "label": "Швабра"
         }
     },
     "icon": {

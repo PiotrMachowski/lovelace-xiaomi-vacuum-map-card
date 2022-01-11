@@ -128,37 +128,68 @@
     },
     "tile": {
         "status": {
-            "value": "Status"
+            "label": "Status",
+            "value": {
+                "Starting": "Startar",
+                "Charger disconnected": "Laddare frånkopplad",
+                "Idle": "Inaktiv",
+                "Remote control active": "Fjärrkontroll aktiv",
+                "Cleaning": "Städar",
+                "Returning home": "Återvänder hem",
+                "Manual mode": "Manuellt läge",
+                "Charging": "Laddar",
+                "Charging problem": "Laddningsproblem",
+                "Paused": "Pausad",
+                "Spot cleaning": "Spot-rengöring",
+                "Error": "Fel",
+                "Shutting down": "Stänger av",
+                "Updating": "Uppdaterar",
+                "Docking": "Dockar",
+                "Going to target": "Går till destination",
+                "Zoned cleaning": "Städning av zon",
+                "Segment cleaning": "Städning av rum",
+                "Emptying the bin": "Tömmer behållaren",
+                "Charging complete": "Färdigladdad",
+                "Device offline": "Enhet offline"
+            }
         },
         "battery_level": {
-            "value": "Batteri"
+            "label": "Batteri"
         },
         "fan_speed": {
-            "value": "Fläkthastighet"
+            "label": "Fläkthastighet",
+            "value": {
+                "Silent": "Tyst",
+                "Standard": "Standard",
+                "Medium": "Medium",
+                "Turbo": "Turbo",
+                "Auto": "Auto",
+                "Gentle": "Försiktig"
+            }
         },
         "sensor_dirty_left": {
-            "value": "Sensorer kvar"
+            "label": "Sensorer kvar"
         },
         "filter_left": {
-            "value": "Filter kvar"
+            "label": "Filter kvar"
         },
         "main_brush_left": {
-            "value": "Huvudborste kvar"
+            "label": "Huvudborste kvar"
         },
         "side_brush_left": {
-            "value": "Sidoborste kvar"
+            "label": "Sidoborste kvar"
         },
         "cleaning_count": {
-            "value": "Antal städningar"
+            "label": "Antal städningar"
         },
         "cleaned_area": {
-            "value": "Städat område"
+            "label": "Städat område"
         },
         "cleaning_time": {
-            "value": "Städtid"
+            "label": "Städtid"
         },
         "mop_left": {
-            "value": "Mopp kvar"
+            "label": "Mopp kvar"
         }
     },
     "icon": {
