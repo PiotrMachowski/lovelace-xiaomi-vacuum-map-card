@@ -128,13 +128,44 @@
     },
     "tile": {
         "status": {
-            "value": "Статус"
+            "label": "Статус",
+            "value": {
+                "Starting": "Начало уборки",
+                "Charger disconnected": "Зарядное устройство отключено",
+                "Idle": "Ожидание",
+                "Remote control active": "Включено управление через пульт",
+                "Cleaning": "Уборка",
+                "Returning home": "Возвращение на базу",
+                "Manual mode": "Ручной режим",
+                "Charging": "Зарядка",
+                "Charging problem": "Проблема с зарядкой",
+                "Paused": "Пауза",
+                "Spot cleaning": "Уборка точки",
+                "Error": "Ошибка",
+                "Shutting down": "Выключение",
+                "Updating": "Обновление",
+                "Docking": "Остановка у базы",
+                "Going to target": "Направление до точки",
+                "Zoned cleaning": "Уборка зоны",
+                "Segment cleaning": "Уборка",
+                "Emptying the bin": "Очистка бака",
+                "Charging complete": "Зарядка завершена",
+                "Device offline": "Устройство не в сети"
+            }
         },
         "battery_level": {
             "value": "Уровень заряда"
         },
         "fan_speed": {
-            "value": "Мощность всасывания"
+            "label": "Мощность всасывания",
+            "value": {
+                "Silent": "Тихий",
+                "Standard": "Стандарт",
+                "Medium": "Средний",
+                "Turbo": "Турбо",
+                "Auto": "Авто",
+                "Gentle": "Слабый"
+            }
         },
         "sensor_dirty_left": {
             "value": "Уровень загрязнения датчиков"
