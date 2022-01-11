@@ -128,13 +128,44 @@
     },
     "tile": {
         "status": {
-            "label": "Stav"
+            "label": "Stav",
+            "value": {
+                "Starting": "Zapínání",
+                "Charger disconnected": "Nabíječka odpojena",
+                "Idle": "Nečinný",
+                "Remote control active": "Dálkové ovládání aktivní",
+                "Cleaning": "Uklízení",
+                "Returning home": "Návrat do základny",
+                "Manual mode": "Manuální režim",
+                "Charging": "Nabíjení",
+                "Charging problem": "Problém s nabíjením",
+                "Paused": "Pozastaven",
+                "Spot cleaning": "Uklízení bodu",
+                "Error": "Chyba",
+                "Shutting down": "Vypínání",
+                "Updating": "Probíhá aktualizace",
+                "Docking": "Parkování",
+                "Going to target": "Přesun na bod",
+                "Zoned cleaning": "Uklízení oblasti",
+                "Segment cleaning": "Uklízení místnosti",
+                "Emptying the bin": "Vyprazdňování zásobníku",
+                "Charging complete": "Nabíjení dokončeno",
+                "Device offline": "Zařízení je nedostupné"
+            }
         },
         "battery_level": {
             "label": "Baterie"
         },
         "fan_speed": {
-            "label": "Úroveň vysávání"
+            "label": "Stupeň vysávání",
+            "value": {
+                "Silent": "Tichý",
+                "Standard": "Standardní",
+                "Medium": "Střední",
+                "Turbo": "Turbo",
+                "Auto": "Automatický",
+                "Gentle": "Slabý"
+            }
         },
         "sensor_dirty_left": {
             "label": "Čistota senzorů"
@@ -168,7 +199,7 @@
         "vacuum_return_to_base": "Návrat do základny",
         "vacuum_clean_spot": "Uklidit bod",
         "vacuum_locate": "Najít",
-        "vacuum_set_fan_speed": "Nastavit úroveň vysávání"
+        "vacuum_set_fan_speed": "Nastavit stupeň vysávání"
     },
     "unit": {
         "hour_shortcut": "h",
