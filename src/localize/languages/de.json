@@ -11,6 +11,8 @@
         "vacuum_goto": "Pin & Go",
         "vacuum_goto_predefined": "Punkte",
         "vacuum_clean_segment": "Räume",
+        "vacuum_clean_point": "Reinige Punkte",
+        "vacuum_clean_point_predefined": "Punkte",
         "vacuum_clean_zone": "Zone reinigen",
         "vacuum_clean_zone_predefined": "Zonenliste",
         "vacuum_follow_path": "Pfad"
@@ -126,13 +128,44 @@
     },
     "tile": {
         "status": {
-            "label": "Status"
+            "label": "Status",
+            "value": {
+              "Starting": "Starte",
+              "Charger disconnected": "Ladegerät getrennt",
+              "Idle": "Inaktiv",
+              "Remote control active": "Fernsteuerung aktiv",
+              "Cleaning": "Säubern",
+              "Returning home": "Kehre zur Ladestation zurück",
+              "Manual mode": "Manueller Modus",
+              "Charging": "Lade",
+              "Charging problem": "Lade-Problem",
+              "Paused": "Pause",
+              "Spot cleaning": "Spot-Reinigung",
+              "Error": "Fehler",
+              "Shutting down": "Herunterfahren",
+              "Updating": "Aktualisiere",
+              "Docking": "Andocken",
+              "Going to target": "Fahre zum Ziel",
+              "Zoned cleaning": "Zonen-Reinigung",
+              "Segment cleaning": "Segment-Reinigung",
+              "Emptying the bin": "Leere den Staubbehälter",
+              "Charging complete": "Ladung vollständig",
+              "Device offline": "Gerät offline"
+            }
         },
         "battery_level": {
             "label": "Batterie"
         },
         "fan_speed": {
-            "label": "Lüftergeschwindigkeit"
+            "label": "Lüftergeschwindigkeit",
+            "value": {
+              "Silent": "Leise",
+              "Standard": "Standard",
+              "Medium": "Medium",
+              "Turbo": "Turbo",
+              "Auto": "Auto",
+              "Gentle": "Sanft"
+            }
         },
         "sensor_dirty_left": {
             "label": "Sensoren verbleibend"
