@@ -128,13 +128,44 @@
     },
     "tile": {
         "status": {
-            "label": "Status"
+            "label": "Status",
+            "value": {
+                "Starting": "Startar",
+                "Charger disconnected": "Laddare frånkopplad",
+                "Idle": "Inaktiv",
+                "Remote control active": "Fjärrkontroll aktiv",
+                "Cleaning": "Städar",
+                "Returning home": "Återvänder hem",
+                "Manual mode": "Manuellt läge",
+                "Charging": "Laddar",
+                "Charging problem": "Laddningsproblem",
+                "Paused": "Pausad",
+                "Spot cleaning": "Spot-rengöring",
+                "Error": "Fel",
+                "Shutting down": "Stänger av",
+                "Updating": "Uppdaterar",
+                "Docking": "Dockar",
+                "Going to target": "Går till destination",
+                "Zoned cleaning": "Städning av zon",
+                "Segment cleaning": "Städning av rum",
+                "Emptying the bin": "Tömmer behållaren",
+                "Charging complete": "Färdigladdad",
+                "Device offline": "Enhet offline"
+            }
         },
         "battery_level": {
             "label": "Batteri"
         },
         "fan_speed": {
-            "label": "Fläkthastighet"
+            "label": "Fläkthastighet",
+            "value": {
+                "Silent": "Tyst",
+                "Standard": "Standard",
+                "Medium": "Medium",
+                "Turbo": "Turbo",
+                "Auto": "Auto",
+                "Gentle": "Försiktig"
+            }
         },
         "sensor_dirty_left": {
             "label": "Sensorer kvar"
