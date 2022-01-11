@@ -48,6 +48,7 @@ export interface CardPresetConfig {
     readonly tiles?: TileConfig[];
     readonly append_tiles?: boolean;
     readonly map_modes?: MapModeConfig[];
+    readonly on_activation?: ServiceCallSchemaConfig;
 }
 
 export interface MapSourceConfig {

@@ -55,6 +55,7 @@ import { ModesMenuRenderer } from "./renderers/modes-menu-renderer";
 import { CoordinatesConverter } from "./model/map_objects/coordinates-converter";
 import { MapObject } from "./model/map_objects/map-object";
 import { MousePosition } from "./model/map_objects/mouse-position";
+import { ServiceCallSchema } from "./model/map_mode/service-call-schema";
 
 const line1 = "   XIAOMI-VACUUM-MAP-CARD";
 const line2 = `   ${localize("common.version")} ${CARD_VERSION}`;
@@ -256,6 +257,12 @@ export class XiaomiVacuumMapCard extends LitElement {
             .then(tiles => this._setPreset({ ...config, tiles: tiles, icons: icons }))
             .then(() => setTimeout(() => this.requestUpdate(), 100))
             .then(() => this._setCurrentMode(0, false));
+
+        if (user && this.currentPreset.on_activation) {
+            const schema = new ServiceCallSchema(this.currentPreset.on_activation);
+            const serviceCall = schema.apply(this.currentPreset.entity, [], 0);
+            this.hass.callService(serviceCall.domain, serviceCall.service, serviceCall.serviceData);
+        }
     }
 
     private _setPreset(config: CardPresetConfig): void {
