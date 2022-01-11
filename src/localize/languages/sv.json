@@ -24,10 +24,10 @@
             },
             "preset_name": {
                 "missing": "Saknar egenskap: preset_name"
-             },
+            },
             "platform": {
                 "invalid": "Ogiltig dammsugarplattform: {0}"
-             },
+            },
             "map_source": {
                 "missing": "Saknar egenskap: map_source",
                 "none_provided": "Ingen kamera elle bild angiven",
@@ -56,7 +56,7 @@
                     "missing": "Varje post med tiles måste innehålla entity"
                 },
                 "label": {
-                   "missing": "Varje post med tiles måste innehålla label"
+                    "missing": "Varje post med tiles måste innehålla label"
                 }
             },
             "map_modes": {
@@ -73,8 +73,8 @@
                 "predefined_selections": {
                     "not_applicable": "Läge {0} har inte stöd för fördefinierade val",
                     "zones": {
-                       "missing": "Zonens konfiguration saknas",
-                       "invalid_parameters_number": "Varje zon måste ha 4 parametrar"
+                        "missing": "Zonens konfiguration saknas",
+                        "invalid_parameters_number": "Varje zon måste ha 4 parametrar"
                     },
                     "points": {
                         "position": {
@@ -168,7 +168,7 @@
             }
         },
         "sensor_dirty_left": {
-            "label": "Sensors kvar"
+            "label": "Sensorer kvar"
         },
         "filter_left": {
             "label": "Filter kvar"
@@ -214,7 +214,7 @@
     },
     "editor": {
         "description": {
-           "before_link": "Denna visuella redigerare stöder endast en grundläggande konfiguration med en kameraenhet skapad med hjälp av ",
+            "before_link": "Denna visuella redigerare stöder endast en grundläggande konfiguration med en kameraenhet skapad med hjälp av ",
             "link_text": "Xiaomi Cloud Map Extractor",
             "after_link": ". Använd YAML-läget för avancerade inställningar."
         },
