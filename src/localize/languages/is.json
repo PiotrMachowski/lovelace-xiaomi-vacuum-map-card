@@ -128,34 +128,65 @@
     },
     "tile": {
         "status": {
-            "label": "Staða"
+            "label": "Staða",
+            "value": {
+                "Starting": "Ræsi",
+                "Charger disconnected": "Hleðslutæki aftengt",
+                "Idle": "Aðgerðarlaus",
+                "Remote control active": "Fjarstýring virk",
+                "Cleaning": "Að þrífa",
+                "Returning home": "Á leiðinni heim",
+                "Manual mode": "Handvirk stýring",
+                "Charging": "Í hleðslu",
+                "Charging problem": "Vandamál við hleðslu",
+                "Paused": "Í bið",
+                "Spot cleaning": "Hreinsa blett",
+                "Error": "Villa",
+                "Shutting down": "Slekk á",
+                "Updating": "Uppfæri",
+                "Docking": "Við hleðslustöð",
+                "Going to target": "Fer á skotmark",
+                "Zoned cleaning": "Þrífa svæði",
+                "Segment cleaning": "Þrífa herbergi",
+                "Emptying the bin": "Tæma ruslatunnu",
+                "Charging complete": "Hleðslu lokið",
+                "Device offline": "Tæki er ótengt"
+            }
         },
         "battery_level": {
             "label": "Rafhlaða"
         },
         "fan_speed": {
-            "label": "Viftuhraði"
+            "label": "Viftuhraði",
+            "value": {
+                "Silent": "Hljóðlátur",
+                "Standard": "Venjulegur",
+                "Medium": "Miðlungs",
+                "Turbo": "Túrbó",
+                "Auto": "Sjálfvirkt",
+                "Gentle": "Þægilegur"
+            }
         },
         "sensor_dirty_left": {
-            "label": "Skynjarar eftir"
+            "label": "Vegg og fallskynjarar eftir"
         },
         "filter_left": {
             "label": "Sía eftir"
         },
         "main_brush_left": {
-            "label": "Aðal bursti eftir"
+            "label": "Aðalbursti eftir"
         },
         "side_brush_left": {
-            "label": "Hliðar bursti eftir"
+            "label": "Hliðarbursti eftir"
         },
         "cleaning_count": {
             "label": "Fjöldi þrifa"
         },
         "cleaned_area": {
-            "label": "Svæði þrifið"
+            "label": "Hreinsað svæði"
         },
         "cleaning_time": {
-            "label": "Þriftími"
+            "label": "Þrif tími"
         },
         "mop_left": {
             "label": "Moppa eftir"
