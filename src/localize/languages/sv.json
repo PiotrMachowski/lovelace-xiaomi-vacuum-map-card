@@ -24,10 +24,10 @@
             },
             "preset_name": {
                 "missing": "Saknar egenskap: preset_name"
-            },
+             },
             "platform": {
                 "invalid": "Ogiltig dammsugarplattform: {0}"
-            },
+             },
             "map_source": {
                 "missing": "Saknar egenskap: map_source",
                 "none_provided": "Ingen kamera elle bild angiven",
@@ -56,7 +56,7 @@
                     "missing": "Varje post med tiles måste innehålla entity"
                 },
                 "label": {
-                    "missing": "Varje post med tiles måste innehålla label"
+                   "missing": "Varje post med tiles måste innehålla label"
                 }
             },
             "map_modes": {
@@ -73,8 +73,8 @@
                 "predefined_selections": {
                     "not_applicable": "Läge {0} har inte stöd för fördefinierade val",
                     "zones": {
-                        "missing": "Zonens konfiguration saknas",
-                        "invalid_parameters_number": "Varje zon måste ha 4 parametrar"
+                       "missing": "Zonens konfiguration saknas",
+                       "invalid_parameters_number": "Varje zon måste ha 4 parametrar"
                     },
                     "points": {
                         "position": {
@@ -128,16 +128,47 @@
     },
     "tile": {
         "status": {
-            "label": "Status"
+            "label": "Status",
+            "value": {
+                "Starting": "Startar",
+                "Charger disconnected": "Laddare frånkopplad",
+                "Idle": "Inaktiv",
+                "Remote control active": "Fjärrkontroll aktiv",
+                "Cleaning": "Städar",
+                "Returning home": "Återvänder hem",
+                "Manual mode": "Manuellt läge",
+                "Charging": "Laddar",
+                "Charging problem": "Laddningsproblem",
+                "Paused": "Pausad",
+                "Spot cleaning": "Spot-rengöring",
+                "Error": "Fel",
+                "Shutting down": "Stänger av",
+                "Updating": "Uppdaterar",
+                "Docking": "Dockar",
+                "Going to target": "Går till destination",
+                "Zoned cleaning": "Städning av zon",
+                "Segment cleaning": "Städning av rum",
+                "Emptying the bin": "Tömmer behållaren",
+                "Charging complete": "Färdigladdad",
+                "Device offline": "Enhet offline"
+            }
         },
         "battery_level": {
             "label": "Batteri"
         },
         "fan_speed": {
-            "label": "Fläkthastighet"
+            "label": "Fläkthastighet",
+            "value": {
+                "Silent": "Tyst",
+                "Standard": "Standard",
+                "Medium": "Medium",
+                "Turbo": "Turbo",
+                "Auto": "Auto",
+                "Gentle": "Försiktig"
+            }
         },
         "sensor_dirty_left": {
-            "label": "Sensorer kvar"
+            "label": "Sensors kvar"
         },
         "filter_left": {
             "label": "Filter kvar"
@@ -183,7 +214,7 @@
     },
     "editor": {
         "description": {
-            "before_link": "Denna visuella redigerare stöder endast en grundläggande konfiguration med en kameraenhet skapad med hjälp av ",
+           "before_link": "Denna visuella redigerare stöder endast en grundläggande konfiguration med en kameraenhet skapad med hjälp av ",
             "link_text": "Xiaomi Cloud Map Extractor",
             "after_link": ". Använd YAML-läget för avancerade inställningar."
         },
