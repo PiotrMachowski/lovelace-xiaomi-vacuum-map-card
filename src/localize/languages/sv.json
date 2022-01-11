@@ -128,37 +128,37 @@
     },
     "tile": {
         "status": {
-            "value": "Status"
+            "label": "Status"
         },
         "battery_level": {
-            "value": "Batteri"
+            "label": "Batteri"
         },
         "fan_speed": {
-            "value": "Fläkthastighet"
+            "label": "Fläkthastighet"
         },
         "sensor_dirty_left": {
-            "value": "Sensorer kvar"
+            "label": "Sensorer kvar"
         },
         "filter_left": {
-            "value": "Filter kvar"
+            "label": "Filter kvar"
         },
         "main_brush_left": {
-            "value": "Huvudborste kvar"
+            "label": "Huvudborste kvar"
         },
         "side_brush_left": {
-            "value": "Sidoborste kvar"
+            "label": "Sidoborste kvar"
         },
         "cleaning_count": {
-            "value": "Antal städningar"
+            "label": "Antal städningar"
         },
         "cleaned_area": {
-            "value": "Städat område"
+            "label": "Städat område"
         },
         "cleaning_time": {
-            "value": "Städtid"
+            "label": "Städtid"
         },
         "mop_left": {
-            "value": "Mopp kvar"
+            "label": "Mopp kvar"
         }
     },
     "icon": {
