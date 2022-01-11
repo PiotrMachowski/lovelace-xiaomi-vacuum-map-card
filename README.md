@@ -27,8 +27,8 @@
 
 # Lovelace Xiaomi Vacuum Map card
 
-This card provides a user-friendly way to fully control Xiaomi (and possibly other) vacuums
-in [Home Assistant](https://www.home-assistant.io/).
+This card provides a user-friendly way to fully control Xiaomi (Roborock/Viomi/Dreame/Roidmi) and Neato (+ possibly
+other) vacuums in [Home Assistant](https://www.home-assistant.io/).
 
 
 https://user-images.githubusercontent.com/6118709/140251738-7fb06e81-34b0-4bf8-b7b1-2221d0062331.mp4
