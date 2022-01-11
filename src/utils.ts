@@ -61,7 +61,8 @@ export function getWatchedEntitiesForPreset(config: CardPresetConfig, language: 
     if (config.calibration_source.entity) {
         watchedEntities.add(config.calibration_source.entity);
     }
-    (config.conditions ?? []).map(c => c?.entity)
+    (config.conditions ?? [])
+        .map(c => c?.entity)
         .forEach(e => {
             if (e) watchedEntities.add(e);
         });
@@ -104,7 +105,6 @@ export function isConditionMet(condition: ConditionConfig, hass: HomeAssistant):
     if (condition.value_not) {
         return currentValue != condition.value_not;
     }
-    console.log("DUPA: " + currentValue + '|' + condition.value+ '|' + condition.value_not);
     return false;
 }
 

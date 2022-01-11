@@ -207,7 +207,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     private _firstHass(): void {
         if (this.configErrors.length === 0 && !this.oldConfig) {
             const allPresets = this._getAllPresets();
-            const allAvailablePresets  = this._getAllAvailablePresets();
+            const allAvailablePresets = this._getAllAvailablePresets();
             const index = allPresets.indexOf(allAvailablePresets[0]);
             this._setPresetIndex(index, false, true);
         }
@@ -225,21 +225,19 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _getPreviousPresetIndex(): number {
         const allPresets = this._getAllPresets();
-        const previousPresets = allPresets
-            .filter((p, i) => i < this.presetIndex
-                && ((p.conditions?.length ?? 0) === 0 || areConditionsMet(p, this.hass)));
-        if (previousPresets.length == 0)
-            return -1;
+        const previousPresets = allPresets.filter(
+            (p, i) => i < this.presetIndex && ((p.conditions?.length ?? 0) === 0 || areConditionsMet(p, this.hass)),
+        );
+        if (previousPresets.length == 0) return -1;
         return allPresets.indexOf(previousPresets[previousPresets.length - 1]);
     }
 
     private _getNextPresetIndex(): number {
         const allPresets = this._getAllPresets();
-        const previousPresets = allPresets
-            .filter((p, i) => i > this.presetIndex
-                && ((p.conditions?.length ?? 0) === 0 || areConditionsMet(p, this.hass)));
-        if (previousPresets.length == 0)
-            return -1;
+        const previousPresets = allPresets.filter(
+            (p, i) => i > this.presetIndex && ((p.conditions?.length ?? 0) === 0 || areConditionsMet(p, this.hass)),
+        );
+        if (previousPresets.length == 0) return -1;
         return allPresets.indexOf(previousPresets[0]);
     }
 
@@ -314,7 +312,8 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (this.currentPreset.activate) {
             const schema = new ServiceCallSchema(this.currentPreset.activate);
             const serviceCall = schema.apply(this.currentPreset.entity, [], 0);
-            this.hass.callService(serviceCall.domain, serviceCall.service, serviceCall.serviceData)
+            this.hass
+                .callService(serviceCall.domain, serviceCall.service, serviceCall.serviceData)
                 .then(() => forwardHaptic("success"));
         }
     }
@@ -419,8 +418,9 @@ export class XiaomiVacuumMapCard extends LitElement {
         return html`
             <ha-card style="--map-scale: ${this.mapScale}; --real-scale: ${this.realScale};">
                 ${conditional(
-                    (this.config.title ?? "").length > 0, 
-                    () => html`<h1 class="card-header">${this.config.title}</h1>`)}
+                    (this.config.title ?? "").length > 0,
+                    () => html`<h1 class="card-header">${this.config.title}</h1>`,
+                )}
                 ${conditional(
                     availablePresets.length > 1,
                     () => html`
@@ -430,10 +430,13 @@ export class XiaomiVacuumMapCard extends LitElement {
                                 @click="${(): void => this._openPreviousPreset()}">
                                 <ha-icon
                                     icon="mdi:chevron-${rtl ? "right" : "left"}"
-                                    class="preset-selector-icon ${this._getPreviousPresetIndex() === -1 ? "disabled" : ""}">
+                                    class="preset-selector-icon ${this._getPreviousPresetIndex() === -1
+                                        ? "disabled"
+                                        : ""}">
                                 </ha-icon>
                             </div>
-                            <div class="preset-label-wrapper ${preset.activate?"clickable":""}"
+                            <div
+                                class="preset-label-wrapper ${preset.activate ? "clickable" : ""}"
                                 @click="${(): void => this._executePresetsActivation()}">
                                 <div class="preset-label">${preset.preset_name}</div>
                                 <div class="preset-indicator">
@@ -442,9 +445,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                                         .map((_, i) => (i === availablePresetIndex ? "●" : "○"))}
                                 </div>
                             </div>
-                            <div
-                                class="preset-selector-icon-wrapper"
-                                @click="${(): void => this._openNextPreset()}">
+                            <div class="preset-selector-icon-wrapper" @click="${(): void => this._openNextPreset()}">
                                 <ha-icon
                                     icon="mdi:chevron-${rtl ? "left" : "right"}"
                                     class="preset-selector-icon ${this._getNextPresetIndex() === -1 ? "disabled" : ""}">
