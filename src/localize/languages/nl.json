@@ -11,6 +11,8 @@
         "vacuum_goto": "Pin & Go",
         "vacuum_goto_predefined": "Punten",
         "vacuum_clean_segment": "Kamers",
+        "vacuum_clean_point": "Schoonmaak punten",
+        "vacuum_clean_point_predefined": "Punten",
         "vacuum_clean_zone": "Zone schoonmaak",
         "vacuum_clean_zone_predefined": "Zone lijst",
         "vacuum_follow_path": "Pad"
@@ -126,13 +128,44 @@
     },
     "tile": {
         "status": {
-            "label": "Status"
+            "label": "Status",
+            "value": {
+                "Starting": "Starten",
+                "Charger disconnected": "Lader niet aangesloten",
+                "Idle": "Inactief",
+                "Remote control active": "Afstandsbediening actief",
+                "Cleaning": "Schoonmaken",
+                "Returning home": "Terugkeren naar basisstation",
+                "Manual mode": "Handmatige modus",
+                "Charging": "Laden",
+                "Charging problem": "Laadprobleem",
+                "Paused": "Gepauzeerd",
+                "Spot cleaning": "Spot schoonmaken",
+                "Error": "Fout",
+                "Shutting down": "Afsluiten",
+                "Updating": "Updaten",
+                "Docking": "Docking",
+                "Going to target": "Onderweg naar doel",
+                "Zoned cleaning": "Zone schoonmaken",
+                "Segment cleaning": "Kamers schoonmaken",
+                "Emptying the bin": "Opvangbak leegmaken",
+                "Charging complete": "Opladen voltooid",
+                "Device offline": "Apparaat offline"
+            }
         },
         "battery_level": {
             "label": "Batterij"
         },
         "fan_speed": {
-            "label": "Fan snelheid"
+            "label": "Fan snelheid",
+            "value": {
+                "Silent": "Stil",
+                "Standard": "Standaard",
+                "Medium": "Medium",
+                "Turbo": "Turbo",
+                "Auto": "Automatisch",
+                "Gentle": "Zacht"
+            }
         },
         "sensor_dirty_left": {
             "label": "Sensors"
@@ -154,6 +187,9 @@
         },
         "cleaning_time": {
             "label": "Schoonmaaktijd"
+        },
+        "mop_left": {
+            "label": "Dweil"
         }
     },
     "icon": {
