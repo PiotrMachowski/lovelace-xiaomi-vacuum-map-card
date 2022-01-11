@@ -183,10 +183,10 @@
             "label": "Fjöldi þrifa"
         },
         "cleaned_area": {
-            "label": "Hreinsað svæði"
+            "label": "Svæði þrifið"
         },
         "cleaning_time": {
-            "label": "Þrif tími"
+            "label": "Þriftími"
         },
         "mop_left": {
             "label": "Moppa eftir"
