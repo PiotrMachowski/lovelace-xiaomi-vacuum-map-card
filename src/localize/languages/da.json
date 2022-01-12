@@ -126,13 +126,44 @@
     },
     "tile": {
         "status": {
-            "label": "Status"
+            "label": "Status",
+            "value": {
+                "Starting": "Starter",
+                "Charger disconnected": "Oplader koblet fra",
+                "Idle": "Ledig",
+                "Remote control active": "Fjernstyring aktivt",
+                "Cleaning": "Rengører",
+                "Returning home": "Vender hjem",
+                "Manual mode": "Manuel tilstand",
+                "Charging": "Oplader",
+                "Charging problem": "Opladnings-problem",
+                "Paused": "Sat på pause",
+                "Spot cleaning": "Spot rengøring",
+                "Error": "Fejl",
+                "Shutting down": "Slukker",
+                "Updating": "Opdaterer",
+                "Docking": "Docker",
+                "Going to target": "Går til mål",
+                "Zoned cleaning": "Zone rengøring",
+                "Segment cleaning": "Segment rengøring",
+                "Emptying the bin": "Tømmes",
+                "Charging complete": "Fuldt opladt",
+                "Device offline": "Enhed offline"
+            }
         },
         "battery_level": {
             "label": "Batteri"
         },
         "fan_speed": {
-            "label": "Hastighed"
+            "label": "Hastighed",
+            "value": {
+                "Silent": "Stille",
+                "Standard": "Standard",
+                "Medium": "Medium",
+                "Turbo": "Turbo",
+                "Auto": "Auto",
+                "Gentle": "Mild"
+            }
         },
         "sensor_dirty_left": {
             "label": "Sensor vedl."
