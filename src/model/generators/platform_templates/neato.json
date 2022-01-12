@@ -1,13 +1,12 @@
 {
     "map_modes": {
-        "defaultTemplates": ["vacuum_clean_zone"],
+        "defaultTemplates": ["vacuum_clean_segment"],
         "templates": {
-            "vacuum_clean_zone": {
+            "vacuum_clean_segment": {
                 "name": "map_mode.vacuum_clean_segment",
                 "icon": "mdi:floor-plan",
                 "selection_type": "ROOM",
-                "repeats_type": "REPEAT",
-                "max_repeats": 3,
+                "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "neato.custom_cleaning",
                     "service_data": {
