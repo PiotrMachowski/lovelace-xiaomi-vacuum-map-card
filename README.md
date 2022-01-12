@@ -1,5 +1,3 @@
-# Lovelace Xiaomi Vacuum Map card
-
 [![HACS Default][hacs_shield]][hacs]
 [![GitHub Latest Release][releases_shield]][latest_release]
 [![GitHub All Releases][downloads_total_shield]][releases]
@@ -25,6 +23,9 @@
 
 [paypal_me_shield]: https://img.shields.io/static/v1.svg?label=%20&message=PayPal.Me&logo=paypal
 [paypal_me]: https://paypal.me/PiMachowski
+
+
+# Lovelace Xiaomi Vacuum Map card
 
 This card provides a user-friendly way to fully control Xiaomi (and possibly other) vacuums
 in [Home Assistant](https://www.home-assistant.io/).
@@ -209,8 +210,9 @@ You can use this configuration as an example: [demo config](/docs/demo_config.ya
 | `entity` | string | no<sup>1</sup> | - | Entity with calibration returned as a state |
 | `attribute` | string | no | - | Enables usage of a configured attribute instead of state of given entity |
 | `calibration_points` | list | no<sup>1</sup> | - | List of 3 or 4 [calibration points](#calibration-points-options) |
+| `identity` | boolean | no<sup>1</sup> | - | Enables using image coordinates on map (e.g. when map is used just for rooms) |
 
-<sup>1</sup> Exactly one of `camera`, `entity` or `calibration_points` must be provided
+<sup>1</sup> Exactly one of `camera`, `entity`, `calibration_points` or `identity` must be provided
 
 #### Calibration points options
 
@@ -397,9 +399,14 @@ Following selection types are supported at this moment:
 It is possible to use several placeholders in `service_data` section. They will be replaced by:
  - `[[entity_id]]`: `entity_id` defined in preset's config
  - `[[selection]]`: selection made on the map (zone, point or path)
+ - `[[selection_size]]`: number of selections made on the map
+ - `[[selection_unwrapped]]`: the same as `[[selection]]`, but passed as string unwrapped from brackets
  - `[[repeats]]`:  selected number of repeats
  - `[[point_x]]`: x coordinate of selected point (for `MANUAL_POINT` and `PREDEFINED_POINT` selection types)
  - `[[point_y]]`: y coordinate of selected point (for `MANUAL_POINT` and `PREDEFINED_POINT` selection types)
+
+It is possible to use following modifiers in `service_data` section:
+- `|[[jsonize]]`: if value ends with this modifier it will be decoded as a JSON
 
 
 #### Supported repeats types
@@ -408,6 +415,7 @@ Following repeats types are supported at this moment:
  - `NONE`: No repeats
  - `INTERNAL`: Repeats number included in coordinates array (`[25500, 25000, 26500, 26500, 2]`)
  - `EXTERNAL`: Repeats number used as a separate attribute in `service_call_schema`
+ - `REPEAT`: Repeats selection (repeats: `2`, selection: `[5,6]` => `[5,6,5,6]`)
 
 #### Predefined selection options
 
@@ -647,9 +655,11 @@ Currently, this card contains translations for following languages:
 * `cs` - Czech (Čeština)
 * `da` - Danish (Dansk)
 * `de` - German (Deutsch)
+* `el` - Greek (Ελληνικά)
 * `en` - English
 * `es` - Spanish (Español)
 * `fr` - French (Français)
+* `he` - Hebrew (עברית)
 * `hu` - Hungarian (Magyar)
 * `is` - Icelandic (Íslenska)
 * `it` - Italian (Italiano)
@@ -657,8 +667,10 @@ Currently, this card contains translations for following languages:
 * `pl` - Polish (Polski)
 * `pt-BR` - Brazilian Portuguese (Português Brasileiro)
 * `ru` - Russian (Русский)
+* `sv` - Swedish (Svenska)
 * `uk` - Ukrainian (Українська)
 * `zh` - Chinese (中文)
+* `zh-Hant` - Traditional Chinese (正體中文)
 
 [Adding a new language](CONTRIBUTING.md#adding-new-translations)
 
