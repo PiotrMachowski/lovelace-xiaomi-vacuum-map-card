@@ -182,6 +182,7 @@ You can use this configuration as an example: [demo config](/docs/demo_config.ya
 | `activate` | object | no | - | [Service call](#service-call-schema-options) that should be executed after clicking preset name |
 | `activate_on_switch` | boolean | no | `false` | Enables executing `activate` service call after switching map preset |
 | `conditions` | list | no | - | List of [conditions](#condition-options) that need to be (all of them) met for preset to be shown |
+| `clean_selection_on_start` | boolean | no | `true` | Allows to disable cleaning selection on cleanup start |
 
 ### Map source options
 

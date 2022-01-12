@@ -50,6 +50,7 @@ export interface CardPresetConfig extends ConditionalObjectConfig {
     readonly map_modes?: MapModeConfig[];
     readonly activate?: ServiceCallSchemaConfig;
     readonly activate_on_switch?: boolean;
+    readonly clean_selection_on_start?: boolean;
 }
 
 export interface MapSourceConfig {

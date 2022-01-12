@@ -744,6 +744,9 @@ export class XiaomiVacuumMapCard extends LitElement {
                 );
             }
         }
+        if (currentPreset.clean_selection_on_start ?? true) {
+            this._setCurrentMode(this.selectedMode);
+        }
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
