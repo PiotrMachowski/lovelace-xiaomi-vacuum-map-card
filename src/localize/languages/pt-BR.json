@@ -1,0 +1,194 @@
+{
+    "common": {
+        "version": "Versão",
+        "invalid_configuration": "configuração inválida {0}",
+        "description": "Um cartão que permite que você controlar seu aspirador",
+        "old_configuration": "Configuração antiga detectada. Ajuste sua configuração para a versão mais recente ou crie um novo cartão do zero.",
+        "old_configuration_migration_link": "Guia de migração"
+    },
+    "map_mode": {
+        "invalid": "template inválido!",
+        "vacuum_goto": "Click & vai",
+        "vacuum_goto_predefined": "Local",
+        "vacuum_clean_segment": "Quartos",
+        "vacuum_clean_zone": "Limpar zona",
+        "vacuum_clean_zone_predefined": "Lista de zonas",
+        "vacuum_follow_path": "Seguir caminho"
+    },
+    "validation": {
+        "preset": {
+            "entity": {
+                "missing": "Propriedade ausente: entidade"
+            },
+            "preset_name": {
+                "missing": "Propriedade ausente: preset_name"
+            },
+            "platform": {
+                "invalid": "Plataforma de aspirador inválida: {0}"
+            },
+            "map_source": {
+                "missing": "Propriedade ausente: map_source",
+                "none_provided": "Nenhuma câmera nem imagem fornecida",
+                "ambiguous": "Apenas uma fonte de mapa permitida"
+            },
+            "calibration_source": {
+                "missing": "Propriedade ausente: calibration_source",
+                "ambiguous": "Apenas uma fonte de calibração permitida",
+                "none_provided": "Nenhuma fonte de calibração fornecida",
+                "calibration_points": {
+                    "invalid_number": "Exatamente 3 ou 4 pontos de calibração são necessários",
+                    "missing_map": "Cada ponto de calibração deve conter coordenadas do mapa",
+                    "missing_vacuum": "Cada ponto de calibração deve conter coordenadas do aspirador",
+                    "missing_coordinate": "Os pontos de calibração do mapa e do aspirador devem conter as coordenadas x e y"
+                }
+            },
+            "icons": {
+                "invalid": "Erro na configuração: icones",
+                "icon": {
+                    "missing": "Cada entrada na lista de ícones deve conter a propriedade do ícone"
+                }
+            },
+            "tiles": {
+                "invalid": "Erro na configuração: tiles",
+                "entity": {
+                    "missing": "Cada entrada da lista de tiles deve conter entidade"
+                },
+                "label": {
+                    "missing": "Cada entrada da lista de tiles deve conter label"
+                }
+            },
+            "map_modes": {
+                "invalid": "Erro na configuração: map_modes",
+                "icon": {
+                    "missing": "Falta o ícone no modo de mapa"
+                },
+                "name": {
+                    "missing": "Falta o nome no modo de mapa"
+                },
+                "template": {
+                    "invalid": "Template inválido: {0}"
+                },
+                "predefined_selections": {
+                    "not_applicable": "O modo {0} não oferece suporte a seleções predefinidas",
+                    "zones": {
+                        "missing": "Falta a Configuração de zonas",
+                        "invalid_parameters_number": "Cada zona deve ter 4 parâmetros"
+                    },
+                    "points": {
+                        "position": {
+                            "missing": "Falta a configuração do local",
+                            "invalid_parameters_number": "Cada local deve ter 2 parâmetros"
+                        }
+                    },
+                    "rooms": {
+                        "id": {
+                            "missing": "Falta o id do quarto",
+                            "invalid_format": "Id inválido do quarto: {0}"
+                        },
+                        "outline": {
+                            "invalid_parameters_number": "Cada local da borda do quarto deve ter 2 parâmetros"
+                        }
+                    },
+                    "label": {
+                        "x": {
+                            "missing": "A label deve ter a propriedade x"
+                        },
+                        "y": {
+                            "missing": "A label deve ter a propriedade y"
+                        },
+                        "text": {
+                            "missing": "A label deve ter um texto"
+                        }
+                    },
+                    "icon": {
+                        "x": {
+                            "missing": "O ícone deve ter a propriedade x"
+                        },
+                        "y": {
+                            "missing": "O ícone deve ter a propriedade y"
+                        },
+                        "name": {
+                            "missing": "O ícone deve ter um nome"
+                        }
+                    }
+                },
+                "service_call_schema": {
+                    "missing": "Falta o call service",
+                    "service": {
+                        "missing": "O call service deve conter o serviço",
+                        "invalid": "serviço inválido: {0}"
+                    }
+                }
+            }
+        },
+        "invalid_entities": "entidades inválidas:",
+        "invalid_calibration": "Calibração inválida, verifique sua configuração"
+    },
+    "tile": {
+        "status": {
+            "label": "Status"
+        },
+        "battery_level": {
+            "label": "Bateria"
+        },
+        "fan_speed": {
+            "label": "Velocidade"
+        },
+        "sensor_dirty_left": {
+            "label": "Sensores"
+        },
+        "filter_left": {
+            "label": "Filtro"
+        },
+        "main_brush_left": {
+            "label": "Escova principal"
+        },
+        "side_brush_left": {
+            "label": "Escova lateral"
+        },
+        "cleaning_count": {
+            "label": "Contagem de limpezas"
+        },
+        "cleaned_area": {
+            "label": "Área limpa"
+        },
+        "cleaning_time": {
+            "label": "Tempo de limpeza"
+        }
+    },
+    "icon": {
+        "vacuum_start": "Começar",
+        "vacuum_pause": "Pausar",
+        "vacuum_stop": "Parar",
+        "vacuum_return_to_base": "Voltar para a base",
+        "vacuum_clean_spot": "Limpar local",
+        "vacuum_locate": "Localizar",
+        "vacuum_set_fan_speed": "Mudar velocidade"
+    },
+    "unit": {
+        "hour_shortcut": "h",
+        "meter_shortcut": "m",
+        "meter_squared_shortcut": "m²",
+        "minute_shortcut": "min"
+    },
+    "popups": {
+        "success": "Successo!",
+        "no_selection": "Nenhuma seleção fornecida",
+        "failed": "Falha em chamar o serviço"
+    },
+    "editor": {
+        "description": {
+            "before_link": "Este editor suporta apenas uma configuração básica usando uma entidade de câmera",
+            "link_text": "Xiaomi Cloud Map Extractor",
+            "after_link": ". Para um setup avancado use o YAML mode."
+        },
+        "label": {
+            "name": "Título (opicional)",
+            "entity": "Entidade do aspirador (Obrigatório)",
+            "camera": "Entidade da camera (Obrigatório)",
+            "vacuum_platform": "Plataforma do aspirador (Obrigatório)",
+            "map_locked": "Mapa travado (Opicional)",
+            "two_finger_pan": "Movimente com dois dedos (Opicional)"
+        }
+    }
+}

@@ -1,0 +1,230 @@
+{
+    "common": {
+        "version": "Verze",
+        "invalid_configuration": "Neplatná konfigurace {0}",
+        "description": "Karta pomocí které můžete ovládat váš vysavač",
+        "old_configuration": "Detekována zastaralá konfigurace. Upravte prosím konfiguraci nebo kartu vytvořte znovu od začátku.",
+        "old_configuration_migration_link": "Návod na úpravu konfigurace"
+    },
+    "map_mode": {
+        "invalid": "Neplatná šablona",
+        "vacuum_goto": "Přesun na bod",
+        "vacuum_goto_predefined": "Přesun na bod ze seznamu",
+        "vacuum_clean_segment": "Úklid místnosti",
+        "vacuum_clean_point": "Úklid bodu",
+        "vacuum_clean_point_predefined": "Úklid bodu ze seznamu",
+        "vacuum_clean_zone": "Úklid oblasti",
+        "vacuum_clean_zone_predefined": "Úklid oblasti ze seznamu",
+        "vacuum_follow_path": "Trasa"
+    },
+    "validation": {
+        "preset": {
+            "entity": {
+                "missing": "Chybějící položka \"entity\""
+            },
+            "preset_name": {
+                "missing": "Chybějící položka \"preset_name\""
+            },
+            "platform": {
+                "invalid": "Neplatná platforma vysavače: {0}"
+            },
+            "map_source": {
+                "missing": "Chybějící položka \"map_source\"",
+                "none_provided": "Chybějící odkaz na kameru nebo obrázek s mapou",
+                "ambiguous": "Povolen pouze jeden zdroj mapy"
+            },
+            "calibration_source": {
+                "missing": "Chybějící položka \"calibration_source\"",
+                "ambiguous": "Povolen pouze jeden zdroj kalibrace",
+                "none_provided": "Chybějící zdroj kalibrace",
+                "calibration_points": {
+                    "invalid_number": "Požadovány 3 nebo 4 kalibrační body",
+                    "missing_map": "Každý kalibrační bod musí obsahovat souřadnice mapy",
+                    "missing_vacuum": "Každý kalibrační bod musí obsahovat souřadnice vysavače",
+                    "missing_coordinate": "Souřadnice mapy i vysavače musí vždy obsahovat položku \"x\" a \"y\""
+                }
+            },
+            "icons": {
+                "invalid": "Neplatná konfigurace pro položku \"icons\"",
+                "icon": {
+                    "missing": "Každý záznam v seznamu ikon musí vždy obsahovat položku \"icon\""
+                }
+            },
+            "tiles": {
+                "invalid": "Neplatná konfigurace pro položku \"tiles\"",
+                "entity": {
+                    "missing": "Každý záznam v seznamu dlaždic musí vždy obsahovat položku \"entity\""
+                },
+                "label": {
+                    "missing": "Každý záznam v seznamu dlaždic musí vždy obsahovat položku \"label\""
+                }
+            },
+            "map_modes": {
+                "invalid": "Neplatná konfigurace pro položku \"map_modes\"",
+                "icon": {
+                    "missing": "Chybějící ikona pro mapový režim"
+                },
+                "name": {
+                    "missing": "Chybějící název pro mapový režim"
+                },
+                "template": {
+                    "invalid": "Neplatná šablona: {0}"
+                },
+                "predefined_selections": {
+                    "not_applicable": "Režim {0} nepodporuje výběr z přednastavených možností",
+                    "zones": {
+                        "missing": "Chybějící konfigurace oblastí",
+                        "invalid_parameters_number": "Každá oblast musí mít 4 parametry"
+                    },
+                    "points": {
+                        "position": {
+                            "missing": "Chybějící konfigurace bodů",
+                            "invalid_parameters_number": "Každý bod musí mít 2 parametry"
+                        }
+                    },
+                    "rooms": {
+                        "id": {
+                            "missing": "Chybějící identifikátor místnosti",
+                            "invalid_format": "Neplatný identifikátor místnosti: {0}"
+                        },
+                        "outline": {
+                            "invalid_parameters_number": "Každý bod ohraničení místnosti musí mít 2 parametry"
+                        }
+                    },
+                    "label": {
+                        "x": {
+                            "missing": "Popisek musí mít položku \"x\""
+                        },
+                        "y": {
+                            "missing": "Popisek musí mít položku \"y\""
+                        },
+                        "text": {
+                            "missing": "Popisek musí mít položku \"text\""
+                        }
+                    },
+                    "icon": {
+                        "x": {
+                            "missing": "Ikona musí mít položku \"x\""
+                        },
+                        "y": {
+                            "missing": "Ikona musí mít položku \"y\""
+                        },
+                        "name": {
+                            "missing": "Ikona musí mít položku \"name\""
+                        }
+                    }
+                },
+                "service_call_schema": {
+                    "missing": "Chybějící formát volání služby",
+                    "service": {
+                        "missing": "Formát volání služby musí obsahovat položku \"service\"",
+                        "invalid": "Neplatná služba: {0}"
+                    }
+                }
+            }
+        },
+        "invalid_entities": "Neplatné entity:",
+        "invalid_calibration": "Neplatná kalibrace, prosím zkontrolujte konfiguraci"
+    },
+    "tile": {
+        "status": {
+            "label": "Stav",
+            "value": {
+                "Starting": "Zapínání",
+                "Charger disconnected": "Nabíječka odpojena",
+                "Idle": "Nečinný",
+                "Remote control active": "Dálkové ovládání aktivní",
+                "Cleaning": "Uklízení",
+                "Returning home": "Návrat do základny",
+                "Manual mode": "Manuální režim",
+                "Charging": "Nabíjení",
+                "Charging problem": "Problém s nabíjením",
+                "Paused": "Pozastaven",
+                "Spot cleaning": "Uklízení bodu",
+                "Error": "Chyba",
+                "Shutting down": "Vypínání",
+                "Updating": "Probíhá aktualizace",
+                "Docking": "Parkování",
+                "Going to target": "Přesun na bod",
+                "Zoned cleaning": "Uklízení oblasti",
+                "Segment cleaning": "Uklízení místnosti",
+                "Emptying the bin": "Vyprazdňování zásobníku",
+                "Charging complete": "Nabíjení dokončeno",
+                "Device offline": "Zařízení je nedostupné"
+            }
+        },
+        "battery_level": {
+            "label": "Baterie"
+        },
+        "fan_speed": {
+            "label": "Stupeň vysávání",
+            "value": {
+                "Silent": "Tichý",
+                "Standard": "Standardní",
+                "Medium": "Střední",
+                "Turbo": "Turbo",
+                "Auto": "Automatický",
+                "Gentle": "Slabý"
+            }
+        },
+        "sensor_dirty_left": {
+            "label": "Čistota senzorů"
+        },
+        "filter_left": {
+            "label": "Životnost filtru"
+        },
+        "main_brush_left": {
+            "label": "Životnost hlavního kartáče"
+        },
+        "side_brush_left": {
+            "label": "Životnost bočních kartáčů"
+        },
+        "cleaning_count": {
+            "label": "Počet úklidů"
+        },
+        "cleaned_area": {
+            "label": "Uklizená plocha"
+        },
+        "cleaning_time": {
+            "label": "Doba uklízení"
+        },
+        "mop_left": {
+            "label": "Životnost mopu"
+        }
+    },
+    "icon": {
+        "vacuum_start": "Zahájit úklid",
+        "vacuum_pause": "Pozastavit úklid",
+        "vacuum_stop": "Ukončit úklid",
+        "vacuum_return_to_base": "Návrat do základny",
+        "vacuum_clean_spot": "Uklidit bod",
+        "vacuum_locate": "Najít",
+        "vacuum_set_fan_speed": "Nastavit stupeň vysávání"
+    },
+    "unit": {
+        "hour_shortcut": "h",
+        "meter_shortcut": "m",
+        "meter_squared_shortcut": "m²",
+        "minute_shortcut": "min"
+    },
+    "popups": {
+        "success": "Volání služby bylo úspěšné",
+        "no_selection": "Nebyl proveden žádný výběr",
+        "failed": "Volání služby selhalo"
+    },
+    "editor": {
+        "description": {
+            "before_link": "Tento editor podporuje pouze základní konfiguraci s použitím entity kamera vytvořené pomocí ",
+            "link_text": "Xiaomi Cloud Map Extractor",
+            "after_link": ". Pro pokročilá nastavení použijte editor kódu."
+        },
+        "label": {
+            "name": "Titulek (volitelná položka)",
+            "entity": "Entita vysavače (povinná položka)",
+            "camera": "Entita kamery (povinná položka)",
+            "vacuum_platform": "Platforma vysavače (povinná položka)",
+            "map_locked": "Uzamčení mapy",
+            "two_finger_pan": "Posuv mapy dvěma prsty"
+        }
+    }
+}

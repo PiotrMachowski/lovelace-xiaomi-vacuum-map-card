@@ -1,0 +1,227 @@
+{
+    "common": {
+        "version": "Version",
+        "invalid_configuration": "Ungültige Konfiguration {0}",
+        "description": "Eine Karte, mit der Sie Ihren Staubsauger kontrollieren können.",
+        "old_configuration": "Es wurde eine alte Konfiguration erkannt. Passen Sie Ihre Konfiguration an das neueste Schema an oder erstellen Sie eine neue Karte von Grund auf.",
+        "old_configuration_migration_link": "Migrationsanleitung"
+    },
+    "map_mode": {
+        "invalid": "Ungültige Vorlage!",
+        "vacuum_goto": "Pin & Go",
+        "vacuum_goto_predefined": "Punkte",
+        "vacuum_clean_segment": "Räume",
+        "vacuum_clean_point": "Reinige Punkte",
+        "vacuum_clean_point_predefined": "Punkte",
+        "vacuum_clean_zone": "Zone reinigen",
+        "vacuum_clean_zone_predefined": "Zonenliste",
+        "vacuum_follow_path": "Pfad"
+    },
+    "validation": {
+        "preset": {
+            "entity": {
+                "missing": "Fehlende Eigenschaft: entity"
+            },
+            "preset_name": {
+                "missing": "Fehlende Eigenschaft: preset_name,"
+            },
+            "platform": {
+                "invalid": "Ungültige Staubsauger-Plattform: {0}"
+            },
+            "map_source": {
+                "missing": "Fehlende Eigenschaft: map_source",
+                "none_provided": "Keine Kamera und kein Bild vorhanden",
+                "ambiguous": "Nur eine Kartenquelle erlaubt"
+            },
+            "calibration_source": {
+                "missing": "Fehlende Eigenschaft: calibration_source",
+                "ambiguous": "Nur eine Kalibrierungsquelle erlaubt",
+                "none_provided": "Keine Kalibrierungsquelle vorhanden",
+                "calibration_points": {
+                    "invalid_number": "Genau 3 oder 4 Kalibrierungspunkte erforderlich",
+                    "missing_map": "Jeder Kalibrierungspunkt muss Kartenkoordinaten enthalten",
+                    "missing_vacuum": "Jeder Kalibrierungspunkt muss Stabsauger-Koordinaten enthalten",
+                    "missing_coordinate": "Karten- und Vakuumkalibrierungspunkte müssen sowohl x- als auch y-Koordinaten enthalten"
+                }
+            },
+            "icons": {
+                "invalid": "Fehler in der Konfiguration: icons",
+                "icon": {
+                    "missing": "Jeder Eintrag der Icon-Liste muss die Ikoneneigenschaft"
+                }
+            },
+            "tiles": {
+                "invalid": "Fehler in der Konfiguration: tiles",
+                "entity": {
+                    "missing": "Jeder Eintrag der Kachel-Liste muss eine Entität enthalten"
+                },
+                "label": {
+                    "missing": "Jeder Eintrag der Kachel-Liste muss ein Label enthalten"
+                }
+            },
+            "map_modes": {
+                "invalid": "Fehler in der Konfiguration: map_modes",
+                "icon": {
+                    "missing": "Fehlendes Symbol für den Kartenmodus"
+                },
+                "name": {
+                    "missing": "Fehlender Name für den Kartenmodus"
+                },
+                "template": {
+                    "invalid": "Ungültige Vorlage: {0}"
+                },
+                "predefined_selections": {
+                    "not_applicable": "Modus {0} unterstützt keine vordefinierte Auswahl",
+                    "zones": {
+                        "missing": "Fehlende Zonenkonfiguration",
+                        "invalid_parameters_number": "Jede Zone muss 4 Parameter haben"
+                    },
+                    "points": {
+                        "position": {
+                            "missing": "Konfiguration der fehlenden Punkte",
+                            "invalid_parameters_number": "Jeder Punkt muss 2 Parameter haben"
+                        }
+                    },
+                    "rooms": {
+                        "id": {
+                            "missing": "Fehlende Raum ID",
+                            "invalid_format": "Ungültige Raum ID: {0}"
+                        },
+                        "outline": {
+                            "invalid_parameters_number": "Jeder Punkt des Raumes muss 2 Parameter haben."
+                        }
+                    },
+                    "label": {
+                        "x": {
+                            "missing": "Das Label muss die Eigenschaft x haben"
+                        },
+                        "y": {
+                            "missing": "Das Label muss die Eigenschaft y haben"
+                        },
+                        "text": {
+                            "missing": "Das Label muss eine Text-Eigenschaft haben"
+                        }
+                    },
+                    "icon": {
+                        "x": {
+                            "missing": "Das Icon muss die Eigenschaft x haben"
+                        },
+                        "y": {
+                            "missing": "Das Icon muss die Eigenschaft y haben"
+                        },
+                        "name": {
+                            "missing": "Das Icon muss eine Text-Eigenschaft haben"
+                        }
+                    }
+                },
+                "service_call_schema": {
+                    "missing": "Fehlendes Schema des Service-Aufrufs",
+                    "service": {
+                        "missing": "Schema des Service-Aufrufs muss Dienst enthalten",
+                        "invalid": "Ungültiger Service: {0}"
+                    }
+                }
+            }
+        },
+        "invalid_entities": "Ungültige Entitäten:",
+        "invalid_calibration": "Ungültige Kalibrierung, bitte überprüfen Sie Ihre Konfiguration"
+    },
+    "tile": {
+        "status": {
+            "label": "Status",
+            "value": {
+              "Starting": "Starte",
+              "Charger disconnected": "Ladegerät getrennt",
+              "Idle": "Inaktiv",
+              "Remote control active": "Fernsteuerung aktiv",
+              "Cleaning": "Säubern",
+              "Returning home": "Kehre zur Ladestation zurück",
+              "Manual mode": "Manueller Modus",
+              "Charging": "Lade",
+              "Charging problem": "Lade-Problem",
+              "Paused": "Pause",
+              "Spot cleaning": "Spot-Reinigung",
+              "Error": "Fehler",
+              "Shutting down": "Herunterfahren",
+              "Updating": "Aktualisiere",
+              "Docking": "Andocken",
+              "Going to target": "Fahre zum Ziel",
+              "Zoned cleaning": "Zonen-Reinigung",
+              "Segment cleaning": "Segment-Reinigung",
+              "Emptying the bin": "Leere den Staubbehälter",
+              "Charging complete": "Ladung vollständig",
+              "Device offline": "Gerät offline"
+            }
+        },
+        "battery_level": {
+            "label": "Batterie"
+        },
+        "fan_speed": {
+            "label": "Lüftergeschwindigkeit",
+            "value": {
+              "Silent": "Leise",
+              "Standard": "Standard",
+              "Medium": "Medium",
+              "Turbo": "Turbo",
+              "Auto": "Auto",
+              "Gentle": "Sanft"
+            }
+        },
+        "sensor_dirty_left": {
+            "label": "Sensoren verbleibend"
+        },
+        "filter_left": {
+            "label": "Filter verbleibend"
+        },
+        "main_brush_left": {
+            "label": "Hauptbürste verbleibend"
+        },
+        "side_brush_left": {
+            "label": "Seitenbürste verbleibend"
+        },
+        "cleaning_count": {
+            "label": "Anzahl der Reinigungen"
+        },
+        "cleaned_area": {
+            "label": "Gereinigte Fläche"
+        },
+        "cleaning_time": {
+            "label": "Zeit der Reinigung"
+        }
+    },
+    "icon": {
+        "vacuum_start": "Start",
+        "vacuum_pause": "Pause",
+        "vacuum_stop": "Stop",
+        "vacuum_return_to_base": "Rückkehr zur Basis",
+        "vacuum_clean_spot": "Reinige Stelle",
+        "vacuum_locate": "Finden",
+        "vacuum_set_fan_speed": "Lüftergeschwindigkeit ändern"
+    },
+    "unit": {
+        "hour_shortcut": "h",
+        "meter_shortcut": "m",
+        "meter_squared_shortcut": "m²",
+        "minute_shortcut": "min"
+    },
+    "popups": {
+        "success": "Erfolg!",
+        "no_selection": "Keine Auswahl vorgesehen",
+        "failed": "Der Dienst konnte nicht aufgerufen werden"
+    },
+    "editor": {
+        "description": {
+            "before_link": "Dieser visuelle Editor unterstützt nur eine einfache Konfiguration mit einer Kameraeinheit, die mit ",
+            "link_text": "Xiaomi Cloud Map Extractor",
+            "after_link": ". Für erweiterte Einstellungen verwenden Sie den YAML-Modus."
+        },
+        "label": {
+            "name": "Titel (optional)",
+            "entity": "Staubsauger Entität (required)",
+            "camera": "Kamera Entität (required)",
+            "vacuum_platform": "Staubsauger-Plattform (required)",
+            "map_locked": "Karte gesperrt (optional)",
+            "two_finger_pan": "Zwei-Finger-Pan (optional)"
+        }
+    }
+}

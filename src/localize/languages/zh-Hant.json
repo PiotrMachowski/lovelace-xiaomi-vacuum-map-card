@@ -1,0 +1,199 @@
+{
+    "common": {
+        "version": "版本",
+        "invalid_configuration": "設定錯誤 {0}",
+        "description": "一張能讓您控制掃地機器人的卡片",
+        "old_configuration": "檢測到設定已過時，請按照新版本說明並進行修正或重新新增一張新的卡片",
+        "old_configuration_migration_link": "移轉指南"
+    },
+    "map_mode": {
+        "invalid": "模板錯誤!",
+        "vacuum_goto": "指哪到哪",
+        "vacuum_goto_predefined": "目標點",
+        "vacuum_clean_segment": "選區清掃",
+        "vacuum_clean_point": "局部清掃",
+        "vacuum_clean_point_predefined": "局部目標",
+        "vacuum_clean_zone": "劃區清掃",
+        "vacuum_clean_zone_predefined": "目標區域",
+        "vacuum_follow_path": "路徑規劃"
+    },
+    "validation": {
+        "preset": {
+            "entity": {
+                "missing": "設定錯誤: entity"
+            },
+            "preset_name": {
+                "missing": "設定錯誤: preset_name"
+            },
+            "platform": {
+                "invalid": "錯誤的 vacuum platform: {0}"
+            },
+            "map_source": {
+                "missing": "設定錯誤: map_source",
+                "none_provided": "未提供攝影機或圖片",
+                "ambiguous": "只允許一張地圖源"
+            },
+            "calibration_source": {
+                "missing": "設定錯誤: calibration_source",
+                "ambiguous": "只允許一個校準源",
+                "none_provided": "未提供校準源",
+                "calibration_points": {
+                    "invalid_number": "需要 3 或 4 個校準點",
+                    "missing_map": "每個校準點必須包含地圖座標",
+                    "missing_vacuum": "每個校準點必須包含吸塵器座標",
+                    "missing_coordinate": "地圖校準點和吸塵器校準點必須同時包含 x 座標和 y 座標"
+                }
+            },
+            "icons": {
+                "invalid": "設定錯誤: icons",
+                "icon": {
+                    "missing": "Icon list 必須包含 icon"
+                }
+            },
+            "tiles": {
+                "invalid": "設定錯誤: tiles",
+                "entity": {
+                    "missing": "tiles list 必須包含 entity"
+                },
+                "label": {
+                    "missing": "tiles list 必須包含 label"
+                }
+            },
+            "map_modes": {
+                "invalid": "設定錯誤: map_modes",
+                "icon": {
+                    "missing": "Map modes 的 icon(圖標) 設定錯誤"
+                },
+                "name": {
+                    "missing": "Map modes 的 name(名稱) 設定錯誤"
+                },
+                "template": {
+                    "invalid": "模板錯誤: {0}"
+                },
+                "predefined_selections": {
+                    "not_applicable": "Mode {0} 不支援 predefined selections",
+                    "zones": {
+                        "missing": "zones 設定錯誤",
+                        "invalid_parameters_number": "zones 必須包含 4 個參數"
+                    },
+                    "points": {
+                        "position": {
+                            "missing": "points 設定錯誤",
+                            "invalid_parameters_number": "points 必須包含 2 個參數"
+                        }
+                    },
+                    "rooms": {
+                        "id": {
+                            "missing": "room id 錯誤",
+                            "invalid_format": "room id 錯誤: {0}"
+                        },
+                        "outline": {
+                            "invalid_parameters_number": "room 的 point(座標) 必須包含 2 個參數"
+                        }
+                    },
+                    "label": {
+                        "x": {
+                            "missing": "label 必須包含 x 值"
+                        },
+                        "y": {
+                            "missing": "label 必須包含 y 值"
+                        },
+                        "text": {
+                            "missing": "label 必須包含 text"
+                        }
+                    },
+                    "icon": {
+                        "x": {
+                            "missing": "icon 必須包含 x 值"
+                        },
+                        "y": {
+                            "missing": "icon 必須包含 y 值"
+                        },
+                        "name": {
+                            "missing": "icon 必須包含 name"
+                        }
+                    }
+                },
+                "service_call_schema": {
+                    "missing": "服務執行失敗",
+                    "service": {
+                        "missing": "執行服務(service)必須包含該服務(service)",
+                        "invalid": "服務錯誤: {0}"
+                    }
+                }
+            }
+        },
+        "invalid_entities": "錯誤的 entities(實體): ",
+        "invalid_calibration": "calibration(校準)失敗，請檢查設定"
+    },
+    "tile": {
+        "status": {
+            "label": "狀態"
+        },
+        "battery_level": {
+            "label": "剩餘電量"
+        },
+        "fan_speed": {
+            "label": "吸力"
+        },
+        "sensor_dirty_left": {
+            "label": "感應器剩餘"
+        },
+        "filter_left": {
+            "label": "濾網剩餘"
+        },
+        "main_brush_left": {
+            "label": "主刷剩餘"
+        },
+        "side_brush_left": {
+            "label": "邊刷剩餘"
+        },
+        "cleaning_count": {
+            "label": "累積清掃次數"
+        },
+        "cleaned_area": {
+            "label": "累積清掃面積"
+        },
+        "cleaning_time": {
+            "label": "累積清掃時間"
+        },
+        "mop_left": {
+            "label": "抹布剩餘"
+        }
+    },
+    "icon": {
+        "vacuum_start": "開始",
+        "vacuum_pause": "暫停",
+        "vacuum_stop": "停止",
+        "vacuum_return_to_base": "回充",
+        "vacuum_clean_spot": "局部清掃",
+        "vacuum_locate": "定位",
+        "vacuum_set_fan_speed": "調整吸力"
+    },
+    "unit": {
+        "hour_shortcut": "小時",
+        "meter_shortcut": "m",
+        "meter_squared_shortcut": "m²",
+        "minute_shortcut": "分鐘"
+    },
+    "popups": {
+        "success": "Success!",
+        "no_selection": "未選擇目標",
+        "failed": "執行服務失敗"
+    },
+    "editor": {
+        "description": {
+            "before_link": "此面板僅支援基本的設定，並且只能使用以下的附加元件新增攝影機實體: ",
+            "link_text": "Xiaomi Cloud Map Extractor",
+            "after_link": "。如需更豐富的進階設定，請使用 YAML 編輯"
+        },
+        "label": {
+            "name": "標題（選填）",
+            "entity": "掃地機器人實體（必填）",
+            "camera": "攝影機實體（必填）",
+            "vacuum_platform": "vacuum platform（必填）",
+            "map_locked": "鎖定地圖（選填）",
+            "two_finger_pan": "雙指縮放（選填）"
+        }
+    }
+}

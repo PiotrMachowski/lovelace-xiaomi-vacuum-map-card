@@ -1,0 +1,230 @@
+{
+    "common": {
+        "version": "Útgáfa",
+        "invalid_configuration": "Ógildar stillingar {0}",
+        "description": "Spjald sem leyfir þér að stjórna ryksuguvélmenni þínu",
+        "old_configuration": "Gamlar stillingar fundust. Uppfærðu stillingarnar fyrir nýjustu útgáfu eða búðu til nýtt spjald frá grunni.",
+        "old_configuration_migration_link": "Aðlögunar leiðbeiningar"
+    },
+    "map_mode": {
+        "invalid": "Ógilt sniðmát!",
+        "vacuum_goto": "Velja og af stað!",
+        "vacuum_goto_predefined": "Deplar",
+        "vacuum_clean_segment": "Herbergi",
+        "vacuum_clean_point": "Hreinn depill",
+        "vacuum_clean_point_predefined": "Deplar",
+        "vacuum_clean_zone": "Þrífa svæði",
+        "vacuum_clean_zone_predefined": "Svæðislistar",
+        "vacuum_follow_path": "Ferill"
+    },
+    "validation": {
+        "preset": {
+            "entity": {
+                "missing": "Vantar einingu: entity"
+            },
+            "preset_name": {
+                "missing": "Vantar einingu: preset_name"
+            },
+            "platform": {
+                "invalid": "Rangt ryksugu sniðmát: {0}"
+            },
+            "map_source": {
+                "missing": "Vantar einingu: map_source",
+                "none_provided": "Enginn myndavél né mynd er skráð",
+                "ambiguous": "Aðeins einn uppruni fyrir kort leyfður"
+            },
+            "calibration_source": {
+                "missing": "Vantar einindi: calibration_source",
+                "ambiguous": "Aðeins ein kvörðunar stilling leyfð",
+                "none_provided": "Engin kvörðunarstilling er skilgreind",
+                "calibration_points": {
+                    "invalid_number": ":Þú verður að skilagreina nákvæmlega 3 eða 4 kvörðunar punkta",
+                    "missing_map": "Hver punktur verður að vera hnit á kortinu",
+                    "missing_vacuum": "Hver punktur á kortinu verður að vera hnit fyrir ryksuguna.",
+                    "missing_coordinate": "Kort og ryksugu stillingar verða að innihalda x og y hnit"
+                }
+            },
+            "icons": {
+                "invalid": "Villa í stillingum: icons",
+                "icon": {
+                    "missing": "Hver færsla fyrir smámynd verður að innihalda \"icon\" stillingu"
+                }
+            },
+            "tiles": {
+                "invalid": "Villa í stillingum: tiles",
+                "entity": {
+                    "missing": "Hver færsla á lista verður að innihalda \"entity\""
+                },
+                "label": {
+                    "missing": "Hver færsla á lista verður að innihalda \"label\""
+                }
+            },
+            "map_modes": {
+                "invalid": "Villa í stillingum: map_modes",
+                "icon": {
+                    "missing": "Það vantar \"icon\" fyrir kortaham"
+                },
+                "name": {
+                    "missing": "Það vantar \"name\" einindið fyrir kortaham"
+                },
+                "template": {
+                    "invalid": "Rangt sniðmát: {0}"
+                },
+                "predefined_selections": {
+                    "not_applicable": "Hamur {0} styður ekki fyrirfram skilgreint val",
+                    "zones": {
+                        "missing": "Það vantar skilgreiningar fyrir svæði",
+                        "invalid_parameters_number": "Hvert svæði verður að hafa 4 færibreytur"
+                    },
+                    "points": {
+                        "position": {
+                            "missing": "Það vantar stillingar fyrir hnit",
+                            "invalid_parameters_number": "Hvert hnit verður að hafa 2 færibreytur"
+                        }
+                    },
+                    "rooms": {
+                        "id": {
+                            "missing": "Það vantar auðkenni herbergis",
+                            "invalid_format": "Vitlaust auðkenni : {0}"
+                        },
+                        "outline": {
+                            "invalid_parameters_number": "Hvert hnit í útlínum fyrir herbergi verður að innihalda 2 færibreytur"
+                        }
+                    },
+                    "label": {
+                        "x": {
+                            "missing": "Merkimiði verður að innihalda x einingu"
+                        },
+                        "y": {
+                            "missing": "Merkimiði verður að innihalda y einingu"
+                        },
+                        "text": {
+                            "missing": "Merkimiði verður að innihalda \"text\" einingu"
+                        }
+                    },
+                    "icon": {
+                        "x": {
+                            "missing": "Smámynd verður að innihalda x einingu"
+                        },
+                        "y": {
+                            "missing": "Smámynd verður að innihalda y einingu"
+                        },
+                        "name": {
+                            "missing": "Smámynd verður að innihalda \"name\" einingu"
+                        }
+                    }
+                },
+                "service_call_schema": {
+                    "missing": "Skema fyrir þjónustukall vantar",
+                    "service": {
+                        "missing": "Skema fyrir þjónustukall verður að innihalda \"service\"",
+                        "invalid": "Röng þjónusta: {0}"
+                    }
+                }
+            }
+        },
+        "invalid_entities": "Röng einindi:",
+        "invalid_calibration": "Röng kvörðun, athugaðu stillingarnar þínar"
+    },
+    "tile": {
+        "status": {
+            "label": "Staða",
+            "value": {
+                "Starting": "Ræsi",
+                "Charger disconnected": "Hleðslutæki aftengt",
+                "Idle": "Aðgerðarlaus",
+                "Remote control active": "Fjarstýring virk",
+                "Cleaning": "Að þrífa",
+                "Returning home": "Á leiðinni heim",
+                "Manual mode": "Handvirk stýring",
+                "Charging": "Í hleðslu",
+                "Charging problem": "Vandamál við hleðslu",
+                "Paused": "Í bið",
+                "Spot cleaning": "Hreinsa blett",
+                "Error": "Villa",
+                "Shutting down": "Slekk á",
+                "Updating": "Uppfæri",
+                "Docking": "Við hleðslustöð",
+                "Going to target": "Fer á skotmark",
+                "Zoned cleaning": "Þrífa svæði",
+                "Segment cleaning": "Þrífa herbergi",
+                "Emptying the bin": "Tæma ruslatunnu",
+                "Charging complete": "Hleðslu lokið",
+                "Device offline": "Tæki er ótengt"
+            }
+        },
+        "battery_level": {
+            "label": "Rafhlaða"
+        },
+        "fan_speed": {
+            "label": "Viftuhraði",
+            "value": {
+                "Silent": "Hljóðlátur",
+                "Standard": "Venjulegur",
+                "Medium": "Miðlungs",
+                "Turbo": "Túrbó",
+                "Auto": "Sjálfvirkt",
+                "Gentle": "Þægilegur"
+            }
+        },
+        "sensor_dirty_left": {
+            "label": "Vegg og fallskynjarar eftir"
+        },
+        "filter_left": {
+            "label": "Sía eftir"
+        },
+        "main_brush_left": {
+            "label": "Aðalbursti eftir"
+        },
+        "side_brush_left": {
+            "label": "Hliðarbursti eftir"
+        },
+        "cleaning_count": {
+            "label": "Fjöldi þrifa"
+        },
+        "cleaned_area": {
+            "label": "Svæði þrifið"
+        },
+        "cleaning_time": {
+            "label": "Þriftími"
+        },
+        "mop_left": {
+            "label": "Moppa eftir"
+        }
+    },
+    "icon": {
+        "vacuum_start": "Ræsa",
+        "vacuum_pause": "Gera hlé",
+        "vacuum_stop": "Stoppa",
+        "vacuum_return_to_base": "Tilbaka á stöð",
+        "vacuum_clean_spot": "Hreinsa blett",
+        "vacuum_locate": "Finna",
+        "vacuum_set_fan_speed": "Breyta viftuhraða"
+    },
+    "unit": {
+        "hour_shortcut": "k",
+        "meter_shortcut": "m",
+        "meter_squared_shortcut": "m²",
+        "minute_shortcut": "mín"
+    },
+    "popups": {
+        "success": "Virkaði!",
+        "no_selection": "Ekkert val",
+        "failed": "Villa við þjónustukall"
+    },
+    "editor": {
+        "description": {
+            "before_link": "Sjónrænn ritill styður aðeins grunn stillingar með \"camera\" einingunni sem notar ",
+            "link_text": "Xiaomi Cloud Map Extractor",
+            "after_link": ". Fyrir ítarstillingar, notaðu YAML ham."
+        },
+        "label": {
+            "name": "Titill (valkvætt)",
+            "entity": "Vacuum eining (nauðsynlegt)",
+            "camera": "Camera eining (nauðsynlegt)",
+            "vacuum_platform": "Vacuum platform (nauðsynlegt)",
+            "map_locked": "Læsa korti (valkvætt)",
+            "two_finger_pan": "Val með 2 fingrum (valkvætt)"
+        }
+    }
+}

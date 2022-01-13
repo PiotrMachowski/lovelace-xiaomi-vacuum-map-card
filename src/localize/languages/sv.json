@@ -1,0 +1,230 @@
+{
+    "common": {
+        "version": "Version",
+        "invalid_configuration": "Ogiltig configuration {0}",
+        "description": "Ett kort som låter dig kontrollera din dammsugare",
+        "old_configuration": "Gammal konfiguration upptäckt. Editera din konfiguration till senaste schema eller skapa ett nytt kort från början.",
+        "old_configuration_migration_link": "Guide för migrering"
+    },
+    "map_mode": {
+        "invalid": "Ogiltig template!",
+        "vacuum_goto": "Klicka & Gå",
+        "vacuum_goto_predefined": "Punkter",
+        "vacuum_clean_segment": "Rum",
+        "vacuum_clean_point": "Städpunkt",
+        "vacuum_clean_point_predefined": "Punkter",
+        "vacuum_clean_zone": "Zonstädning",
+        "vacuum_clean_zone_predefined": "Zonlista",
+        "vacuum_follow_path": "Bana"
+    },
+    "validation": {
+        "preset": {
+            "entity": {
+                "missing": "Saknar egenskap: entity"
+            },
+            "preset_name": {
+                "missing": "Saknar egenskap: preset_name"
+            },
+            "platform": {
+                "invalid": "Ogiltig dammsugarplattform: {0}"
+            },
+            "map_source": {
+                "missing": "Saknar egenskap: map_source",
+                "none_provided": "Ingen kamera elle bild angiven",
+                "ambiguous": "Endast en kartkälla tillåts"
+            },
+            "calibration_source": {
+                "missing": "Saknar egenskap: calibration_source",
+                "ambiguous": "Endast en kalibreringskälla tillåts",
+                "none_provided": "Ingen kallibreringskälla angiven",
+                "calibration_points": {
+                    "invalid_number": "Exakt 3 eller 4 kalibreringspunkter krävs",
+                    "missing_map": "Varje kalibreringspunkt måste innehålla koordinater för karta",
+                    "missing_vacuum": "Varje kalibreringspunkt måste innehålla koordinater för dammsugare",
+                    "missing_coordinate": "Kalibreringspunkter för karta och dammsugare måste innehålla både x och y koordinater"
+                }
+            },
+            "icons": {
+                "invalid": "Fel i konfigurationen: icons",
+                "icon": {
+                    "missing": "Varje post med icons måste innehålla icon-egenskap"
+                }
+            },
+            "tiles": {
+                "invalid": "Fel i konfigurationen: tiles",
+                "entity": {
+                    "missing": "Varje post med tiles måste innehålla entity"
+                },
+                "label": {
+                    "missing": "Varje post med tiles måste innehålla label"
+                }
+            },
+            "map_modes": {
+                "invalid": "Fel i konfigurationen: map_modes",
+                "icon": {
+                    "missing": "Saknar ikon för map mode"
+                },
+                "name": {
+                    "missing": "Saknar namn för map mode"
+                },
+                "template": {
+                    "invalid": "Ogiltig template: {0}"
+                },
+                "predefined_selections": {
+                    "not_applicable": "Läge {0} har inte stöd för fördefinierade val",
+                    "zones": {
+                        "missing": "Zonens konfiguration saknas",
+                        "invalid_parameters_number": "Varje zon måste ha 4 parametrar"
+                    },
+                    "points": {
+                        "position": {
+                            "missing": "Punktens konfiguration saknas",
+                            "invalid_parameters_number": "Varje punkt måste ha 2 parametrar"
+                        }
+                    },
+                    "rooms": {
+                        "id": {
+                            "missing": "Rummets id saknas",
+                            "invalid_format": "Felaktigt id för rum: {0}"
+                        },
+                        "outline": {
+                            "invalid_parameters_number": "Varje punk för rumskonturen måste ha 2 parametrar"
+                        }
+                    },
+                    "label": {
+                        "x": {
+                            "missing": "Label måste ha egenskapen x"
+                        },
+                        "y": {
+                            "missing": "Label måste ha egenskapen y"
+                        },
+                        "text": {
+                            "missing": "Label måste ha egenskapen text"
+                        }
+                    },
+                    "icon": {
+                        "x": {
+                            "missing": "Icon måste ha egenskapen x"
+                        },
+                        "y": {
+                            "missing": "Icon måste ha egenskapen y"
+                        },
+                        "name": {
+                            "missing": "Icon måste ha egenskapen name"
+                        }
+                    }
+                },
+                "service_call_schema": {
+                    "missing": "Service call schema saknas",
+                    "service": {
+                        "missing": "Service call schema måste innehålla service",
+                        "invalid": "Ogiltig service: {0}"
+                    }
+                }
+            }
+        },
+        "invalid_entities": "Ogiltiga entiteter:",
+        "invalid_calibration": "Ogiltig kalibrering, vänligen se över din konfiguration"
+    },
+    "tile": {
+        "status": {
+            "label": "Status",
+            "value": {
+                "Starting": "Startar",
+                "Charger disconnected": "Laddare frånkopplad",
+                "Idle": "Inaktiv",
+                "Remote control active": "Fjärrkontroll aktiv",
+                "Cleaning": "Städar",
+                "Returning home": "Återvänder hem",
+                "Manual mode": "Manuellt läge",
+                "Charging": "Laddar",
+                "Charging problem": "Laddningsproblem",
+                "Paused": "Pausad",
+                "Spot cleaning": "Spot-rengöring",
+                "Error": "Fel",
+                "Shutting down": "Stänger av",
+                "Updating": "Uppdaterar",
+                "Docking": "Dockar",
+                "Going to target": "Går till destination",
+                "Zoned cleaning": "Städning av zon",
+                "Segment cleaning": "Städning av rum",
+                "Emptying the bin": "Tömmer behållaren",
+                "Charging complete": "Färdigladdad",
+                "Device offline": "Enhet offline"
+            }
+        },
+        "battery_level": {
+            "label": "Batteri"
+        },
+        "fan_speed": {
+            "label": "Fläkthastighet",
+            "value": {
+                "Silent": "Tyst",
+                "Standard": "Standard",
+                "Medium": "Medium",
+                "Turbo": "Turbo",
+                "Auto": "Auto",
+                "Gentle": "Försiktig"
+            }
+        },
+        "sensor_dirty_left": {
+            "label": "Sensorer kvar"
+        },
+        "filter_left": {
+            "label": "Filter kvar"
+        },
+        "main_brush_left": {
+            "label": "Huvudborste kvar"
+        },
+        "side_brush_left": {
+            "label": "Sidoborste kvar"
+        },
+        "cleaning_count": {
+            "label": "Antal städningar"
+        },
+        "cleaned_area": {
+            "label": "Städat område"
+        },
+        "cleaning_time": {
+            "label": "Städtid"
+        },
+        "mop_left": {
+            "label": "Mopp kvar"
+        }
+    },
+    "icon": {
+        "vacuum_start": "Start",
+        "vacuum_pause": "Paus",
+        "vacuum_stop": "Stopp",
+        "vacuum_return_to_base": "Återgå till basen",
+        "vacuum_clean_spot": "Spot-rengöring",
+        "vacuum_locate": "Lokalisera",
+        "vacuum_set_fan_speed": "Ändra fläkthastighet"
+    },
+    "unit": {
+        "hour_shortcut": "h",
+        "meter_shortcut": "m",
+        "meter_squared_shortcut": "m²",
+        "minute_shortcut": "min"
+    },
+    "popups": {
+        "success": "Lyckades!",
+        "no_selection": "Inget urval tillhandahålls",
+        "failed": "Mysslyckades kalla på tjänsten"
+    },
+    "editor": {
+        "description": {
+            "before_link": "Denna visuella redigerare stöder endast en grundläggande konfiguration med en kameraenhet skapad med hjälp av ",
+            "link_text": "Xiaomi Cloud Map Extractor",
+            "after_link": ". Använd YAML-läget för avancerade inställningar."
+        },
+        "label": {
+            "name": "Titel (valfritt)",
+            "entity": "Dammsugar-entitet (obligatoriskt)",
+            "camera": "Kamera-entitet (obligatoriskt)",
+            "vacuum_platform": "Dammsugarplattform (obligatoriskt)",
+            "map_locked": "Låst karta (valfritt)",
+            "two_finger_pan": "Panorering med två fingrar (valfritt)"
+        }
+    }
+}

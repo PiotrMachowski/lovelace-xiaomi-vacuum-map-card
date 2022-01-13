@@ -1,0 +1,230 @@
+{
+    "common": {
+        "version": "Version",
+        "invalid_configuration": "Недійсна конфігурація {0}",
+        "description": "Картка, яка дає змогу контролювати пилосос",
+        "old_configuration": "Виявлено стару конфігурацію. Налаштуйте конфігурацію до останньої схеми або створіть нову картку з початку.",
+        "old_configuration_migration_link": "Посібник з міграції"
+    },
+    "map_mode": {
+        "invalid": "Недійсний шаблон!",
+        "vacuum_goto": "Рух до цілі",
+        "vacuum_goto_predefined": "Збережені точки",
+        "vacuum_clean_segment": "Кімнати",
+        "vacuum_clean_point": "Точкове прибирання",
+        "vacuum_clean_point_predefined": "Збережені точки",
+        "vacuum_clean_zone": "Зональне прибирання",
+        "vacuum_clean_zone_predefined": "Список зон",
+        "vacuum_follow_path": "Шлях"
+    },
+    "validation": {
+        "preset": {
+            "entity": {
+                "missing": "Відсутній параметр: entity"
+            },
+            "preset_name": {
+                "missing": "Відсутній параметр: preset_name"
+            },
+            "platform": {
+                "invalid": "Недійсна платформа пилососа: {0}"
+            },
+            "map_source": {
+                "missing": "Відсутній параметр: map_source",
+                "none_provided": "Не вказано джерело мапи",
+                "ambiguous": "Дозволено тільки одне джерело мапи"
+            },
+            "calibration_source": {
+                "missing": "Відсутній параметр: calibration_source",
+                "ambiguous": "Дозволено тільки одне джерело калібрування",
+                "none_provided": "Не вказано джерело калібрування",
+                "calibration_points": {
+                    "invalid_number": "Потрібні 3 або 4 точки калібрування",
+                    "missing_map": "Кожна точка калібрування повинна мати координати на мапі",
+                    "missing_vacuum": "Кожна точка калібрування повинна мати координати в системі пилососа",
+                    "missing_coordinate": "Кожна точка калібрування повинна мати координати x і y"
+                }
+            },
+            "icons": {
+                "invalid": "Помилка в конфігурації: icons",
+                "icon": {
+                    "missing": "Кожен елемент у списку піктограм повинен мати параметр \"icon\""
+                }
+            },
+            "tiles": {
+                "invalid": "Помилка в конфігурації: tiles",
+                "entity": {
+                    "missing": "Кожен елемент у списку плиток повинен мати параметр \"entity\""
+                },
+                "label": {
+                    "missing": "Кожен елемент у списку плиток повинен мати параметр \"label\""
+                }
+            },
+            "map_modes": {
+                "invalid": "Помилка в конфігурації: map_modes",
+                "icon": {
+                    "missing": "Відсутня піктограма шаблону режиму мапи"
+                },
+                "name": {
+                    "missing": "Відсутня назва шаблону режиму мапи"
+                },
+                "template": {
+                    "invalid": "Недійсний шаблон: {0}"
+                },
+                "predefined_selections": {
+                    "not_applicable": "Шаблон {0} не підтримує збереження вибраних елементів",
+                    "zones": {
+                        "missing": "Відсутній список збережених зон",
+                        "invalid_parameters_number": "Кожна збережена зона повинна мати 4 координати"
+                    },
+                    "points": {
+                        "position": {
+                            "missing": "Відсутній список збережених точок",
+                            "invalid_parameters_number": "Кожна записана точка повинна мати 2 координати"
+                        }
+                    },
+                    "rooms": {
+                        "id": {
+                            "missing": "Відсутній ідентифікатор кімнати",
+                            "invalid_format": "Недійсний ідентифікатор кімнати: {0}"
+                        },
+                        "outline": {
+                            "invalid_parameters_number": "Кожна точка контуру кімнати повинна мати 2 координати"
+                        }
+                    },
+                    "label": {
+                        "x": {
+                            "missing": "Кожна мітка повинна мати координату x"
+                        },
+                        "y": {
+                            "missing": "Кожна мітка повинна мати координату y"
+                        },
+                        "text": {
+                            "missing": "Кожна мітка повинна містити текст"
+                        }
+                    },
+                    "icon": {
+                        "x": {
+                            "missing": "Кожна піктограма повинна мати координату x"
+                        },
+                        "y": {
+                            "missing": "Кожна піктограма повинна мати координату y"
+                        },
+                        "name": {
+                            "missing": "Кожна піктограма повинна мати параметр \"name\""
+                        }
+                    }
+                },
+                "service_call_schema": {
+                    "missing": "Відсутня схема виклику служби",
+                    "service": {
+                        "missing": "Кожна схема служби повинна мати назву служби",
+                        "invalid": "Недійсна служба: {0}"
+                    }
+                }
+            }
+        },
+        "invalid_entities": "Недійсні сутності:",
+        "invalid_calibration": "Неправильне калібрування, перевірте конфігурацію"
+    },
+    "tile": {
+        "status": {
+            "label": "Статус",
+            "value": {
+                "Starting": "Початок",
+                "Charger disconnected": "Зарядний пристрій відключено",
+                "Idle": "Неактивний",
+                "Remote control active": "Пульт",
+                "Cleaning": "Прибирання",
+                "Returning home": "Повернення до док-станції",
+                "Manual mode": "Ручний режим",
+                "Charging": "Заряджання",
+                "Charging problem": "Проблема з заряджанням",
+                "Paused": "Призупинено",
+                "Spot cleaning": "Точкове очищення",
+                "Error": "Помилка",
+                "Shutting down": "Вимкнення",
+                "Updating": "Оновлення",
+                "Docking": "Стиковка",
+                "Going to target": "По шляху до цілі",
+                "Zoned cleaning": "Зональне прибирання",
+                "Segment cleaning": "Прибирання кімнати",
+                "Emptying the bin": "Спорожнення контейнера",
+                "Charging complete": "Заряджання завершено",
+                "Device offline": "Офлайн"
+            }
+        },
+        "battery_level": {
+            "label": "Батарея"
+        },
+        "fan_speed": {
+            "label": "Потужність",
+            "value": {
+                "Silent": "Тихий",
+                "Standard": "Стандарт",
+                "Medium": "Середній",
+                "Turbo": "Турбо",
+                "Auto": "Авто",
+                "Gentle": "Делікатний"
+            }
+        },
+        "sensor_dirty_left": {
+            "label": "Сенсор"
+        },
+        "filter_left": {
+            "label": "Фільтр"
+        },
+        "main_brush_left": {
+            "label": "Основна щітка"
+        },
+        "side_brush_left": {
+            "label": "Бокова щітка"
+        },
+        "cleaning_count": {
+            "label": "Лічильник прибирань"
+        },
+        "cleaned_area": {
+            "label": "Прибрано"
+        },
+        "cleaning_time": {
+            "label": "Час прибирання"
+        },
+        "mop_left": {
+            "label": "Швабра"
+        }
+    },
+    "icon": {
+        "vacuum_start": "Старт",
+        "vacuum_pause": "Пауза",
+        "vacuum_stop": "Стоп",
+        "vacuum_return_to_base": "Повернення на базу",
+        "vacuum_clean_spot": "Прибрати місце",
+        "vacuum_locate": "Пошук",
+        "vacuum_set_fan_speed": "Зміна потужності"
+    },
+    "unit": {
+        "hour_shortcut": "h",
+        "meter_shortcut": "m",
+        "meter_squared_shortcut": "m²",
+        "minute_shortcut": "min"
+    },
+    "popups": {
+        "success": "Успіх!",
+        "no_selection": "Виділення не зроблено",
+        "failed": "Не вдалося викликати службу"
+    },
+    "editor": {
+        "description": {
+            "before_link": "Цей редактор інтерфейсу підтримує лише базову конфігурацію для камери, створеної за допомогою ",
+            "link_text": "Xiaomi Cloud Map Extractor",
+            "after_link": ". Для більш розширеного налаштування використовуйте режим YAML."
+        },
+        "label": {
+            "name": "Назва (опція)",
+            "entity": "Сутність пилососу (необхідно)",
+            "camera": "Сутність камери (необхідно)",
+            "vacuum_platform": "Платформа інтеграції пилососу (необхідно)",
+            "map_locked": "Блокування мапи (опція)",
+            "two_finger_pan": "Переміщеня мапи двома пальцями (опція)"
+        }
+    }
+}

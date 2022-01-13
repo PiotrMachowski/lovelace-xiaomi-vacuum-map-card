@@ -1,8 +1,13 @@
 import { ActionConfig, LovelaceCard, LovelaceCardConfig, LovelaceCardEditor } from "custom-card-helpers";
+import { ACTION_HANDLER_CUSTOM_ELEMENT_NAME, CARD_CUSTOM_ELEMENT_NAME, EDITOR_CUSTOM_ELEMENT_NAME } from "../const";
+import { XiaomiVacuumMapCardActionHandler } from "../action-handler-directive";
+import { XiaomiVacuumMapCard } from "../xiaomi-vacuum-map-card";
 
 declare global {
     interface HTMLElementTagNameMap {
-        "xiaomi-vacuum-map-card-editor": LovelaceCardEditor;
+        [CARD_CUSTOM_ELEMENT_NAME]: XiaomiVacuumMapCard;
+        [EDITOR_CUSTOM_ELEMENT_NAME]: LovelaceCardEditor;
+        [ACTION_HANDLER_CUSTOM_ELEMENT_NAME]: XiaomiVacuumMapCardActionHandler;
         "hui-error-card": LovelaceCard;
     }
 }
@@ -14,6 +19,7 @@ export type PointType = [number, number];
 export type PointWithRepeatsType = [number, number, number];
 export type PredefinedSelectionConfig = PredefinedZoneConfig | PredefinedPointConfig | RoomConfig;
 export type TranslatableString = string | [string, string, string];
+export type Language = string | undefined;
 export type EntityRegistryEntry = {
     entity_id: string;
     original_icon: string;
@@ -25,9 +31,11 @@ export type EntityRegistryEntry = {
 export interface XiaomiVacuumMapCardConfig extends LovelaceCardConfig, CardPresetConfig {
     readonly title?: string;
     readonly additional_presets?: CardPresetConfig[];
+    readonly language?: Language;
+    readonly debug?: boolean;
 }
 
-export interface CardPresetConfig {
+export interface CardPresetConfig extends ConditionalObjectConfig {
     readonly preset_name?: string;
     readonly entity: string;
     readonly vacuum_platform?: string;
@@ -36,8 +44,13 @@ export interface CardPresetConfig {
     readonly two_finger_pan?: boolean;
     readonly calibration_source: CalibrationSourceConfig;
     readonly icons?: IconActionConfig[];
+    readonly append_icons?: boolean;
     readonly tiles?: TileConfig[];
+    readonly append_tiles?: boolean;
     readonly map_modes?: MapModeConfig[];
+    readonly activate?: ServiceCallSchemaConfig;
+    readonly activate_on_switch?: boolean;
+    readonly clean_selection_on_start?: boolean;
 }
 
 export interface MapSourceConfig {
@@ -48,6 +61,7 @@ export interface MapSourceConfig {
 
 export interface CalibrationSourceConfig {
     readonly camera?: boolean;
+    readonly identity?: boolean;
     readonly entity?: string;
     readonly attribute?: string;
     readonly calibration_points?: CalibrationPoint[];
@@ -72,6 +86,7 @@ export interface PlatformTemplate {
         readonly defaultTemplates: string[];
         readonly templates: { [templateName: string]: MapModeConfig };
     };
+    readonly sensors_from?: string;
     readonly tiles: {
         readonly from_attributes?: TileFromAttributeTemplate[];
         readonly from_sensors?: TileFromSensorTemplate[];
@@ -109,6 +124,7 @@ export interface TileConfig extends ActionableObjectConfig, ConditionalObjectCon
     readonly unit?: string;
     readonly multiplier?: number;
     readonly precision?: number;
+    readonly translations?: Record<string, string>;
 }
 
 export interface ActionableObjectConfig {

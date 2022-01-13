@@ -3,11 +3,12 @@ import { css, CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators";
 import { fireEvent, HomeAssistant, LovelaceCardEditor } from "custom-card-helpers";
 
-import { XiaomiVacuumMapCardConfig } from "./types/types";
-import { localize } from "./localize/localize";
+import { TranslatableString, XiaomiVacuumMapCardConfig } from "./types/types";
+import { localizeWithHass } from "./localize/localize";
 import { PlatformGenerator } from "./model/generators/platform-generator";
+import { EDITOR_CUSTOM_ELEMENT_NAME } from "./const";
 
-@customElement("xiaomi-vacuum-map-card-editor")
+@customElement(EDITOR_CUSTOM_ELEMENT_NAME)
 export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCardEditor {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: XiaomiVacuumMapCardConfig;
@@ -58,31 +59,29 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCar
         this._helpers.importMoreInfoControl("climate");
 
         const entityIds = Object.keys(this.hass.states);
-        const cameras = entityIds
-            .filter(e => e.substr(0, e.indexOf(".")) === "camera")
-            .filter(e => this.hass?.states[e].attributes["calibration_points"]);
+        const cameras = entityIds.filter(e => e.substr(0, e.indexOf(".")) === "camera");
         const vacuums = entityIds.filter(e => e.substr(0, e.indexOf(".")) === "vacuum");
         const platforms = PlatformGenerator.getPlatforms();
 
         return html`
             <div class="card-config">
                 <div class="description">
-                    ${localize("editor.description.before_link")}<a
+                    ${this._localize("editor.description.before_link")}<a
                         target="_blank"
                         href="https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor"
-                        >${localize("editor.description.link_text")}</a
-                    >${localize("editor.description.after_link")}
+                        >${this._localize("editor.description.link_text")}</a
+                    >${this._localize("editor.description.after_link")}
                 </div>
                 <div class="values">
                     <paper-input
-                        label=${localize("editor.label.name")}
+                        label=${this._localize("editor.label.name")}
                         .value=${this._title}
                         .configValue=${"title"}
                         @value-changed=${this._titleChanged}></paper-input>
                 </div>
                 <div class="values">
                     <paper-dropdown-menu
-                        label=${localize("editor.label.entity")}
+                        label=${this._localize("editor.label.entity")}
                         @value-changed=${this._entityChanged}
                         .configValue=${"entity"}>
                         <paper-listbox slot="dropdown-content" .selected=${vacuums.indexOf(this._entity)}>
@@ -94,7 +93,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCar
                 </div>
                 <div class="values">
                     <paper-dropdown-menu
-                        label=${localize("editor.label.vacuum_platform")}
+                        label=${this._localize("editor.label.vacuum_platform")}
                         @value-changed=${this._entityChanged}
                         .configValue=${"vacuum_platform"}>
                         <paper-listbox slot="dropdown-content" .selected=${platforms.indexOf(this._vacuum_platform)}>
@@ -106,7 +105,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCar
                 </div>
                 <div class="values">
                     <paper-dropdown-menu
-                        label=${localize("editor.label.camera")}
+                        label=${this._localize("editor.label.camera")}
                         @value-changed=${this._cameraChanged}
                         .configValue=${"camera"}>
                         <paper-listbox slot="dropdown-content" .selected=${cameras.indexOf(this._camera)}>
@@ -117,7 +116,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCar
                     </paper-dropdown-menu>
                 </div>
                 <div class="values">
-                    <ha-formfield .label=${localize("editor.label.map_locked")}>
+                    <ha-formfield .label=${this._localize("editor.label.map_locked")}>
                         <ha-switch
                             .checked=${this._map_locked}
                             .configValue=${"map_locked"}
@@ -125,7 +124,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCar
                     </ha-formfield>
                 </div>
                 <div class="values">
-                    <ha-formfield .label=${localize("editor.label.two_finger_pan")}>
+                    <ha-formfield .label=${this._localize("editor.label.two_finger_pan")}>
                         <ha-switch
                             .checked=${this._two_finger_pan}
                             .configValue=${"two_finger_pan"}
@@ -187,6 +186,10 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCar
             };
         }
         fireEvent(this, "config-changed", { config: this._config });
+    }
+
+    private _localize(ts: TranslatableString): string {
+        return localizeWithHass(ts, this.hass);
     }
 
     static get styles(): CSSResultGroup {

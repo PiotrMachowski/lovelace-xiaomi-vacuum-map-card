@@ -34,6 +34,7 @@ type ScaleRelativeToValues = "container" | "content";
 
 const minScaleAttr = "min-scale";
 const maxScaleAttr = "max-scale";
+const lockedAttr = "locked";
 const noDefaultPanAttr = "no-default-pan";
 const twoFingerPanAttr = "two-finger-pan";
 
@@ -98,10 +99,11 @@ export default class PinchZoom extends HTMLElement {
 
     //if we are allowing panning
     private _enablePan = true;
+    private _locked = false;
     private _twoFingerPan = false;
 
     static get observedAttributes() {
-        return [minScaleAttr, maxScaleAttr, noDefaultPanAttr, twoFingerPanAttr];
+        return [minScaleAttr, maxScaleAttr, noDefaultPanAttr, twoFingerPanAttr, lockedAttr];
     }
 
     constructor() {
@@ -121,7 +123,7 @@ export default class PinchZoom extends HTMLElement {
                 )
                     return false;
                 // We only want to track 2 pointers at most
-                if (pointerTracker.currentPointers.length === 2 || !this._positioningEl) return false;
+                if (pointerTracker.currentPointers.length === 2 || !this._positioningEl || this.locked) return false;
 
                 //we allow default for the first pointer if enablePan is false or we are using a mouse
                 if (
@@ -171,7 +173,11 @@ export default class PinchZoom extends HTMLElement {
                 this.enablePan = false;
             } else {
                 this.twoFingerPan = false;
+                this.enablePan = true;
             }
+        }
+        if (name === lockedAttr) {
+            this.locked = newValue == "1" || newValue == "true";
         }
     }
 
@@ -215,6 +221,14 @@ export default class PinchZoom extends HTMLElement {
 
     get enablePan() {
         return this._enablePan;
+    }
+
+    set locked(value: boolean) {
+        this._locked = value;
+    }
+
+    get locked() {
+        return this._locked;
     }
 
     set twoFingerPan(value: boolean) {
@@ -387,7 +401,7 @@ export default class PinchZoom extends HTMLElement {
     }
 
     private _onWheel(event: WheelEvent) {
-        if (!this._positioningEl) return;
+        if (!this._positioningEl || this.locked) return;
         event.preventDefault();
 
         const currentRect = this._positioningEl.getBoundingClientRect();

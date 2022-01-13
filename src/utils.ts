@@ -1,5 +1,5 @@
 import { ActionHandlerEvent, handleAction, HomeAssistant } from "custom-card-helpers";
-import { PropertyValues } from "lit-element";
+import { PropertyValues } from "lit";
 
 import {
     ActionableObjectConfig,
@@ -7,6 +7,7 @@ import {
     ConditionalObjectConfig,
     ConditionConfig,
     EntityRegistryEntry,
+    Language,
     PredefinedPointConfig,
     PredefinedZoneConfig,
     XiaomiVacuumMapCardConfig,
@@ -49,7 +50,7 @@ export function getWatchedEntitiesForMapMode(mapMode: MapMode): Set<string> {
     return watchedEntities;
 }
 
-export function getWatchedEntitiesForPreset(config: CardPresetConfig): Set<string> {
+export function getWatchedEntitiesForPreset(config: CardPresetConfig, language: Language): Set<string> {
     const watchedEntities = new Set<string>();
     if (config.entity) {
         watchedEntities.add(config.entity);
@@ -60,6 +61,11 @@ export function getWatchedEntitiesForPreset(config: CardPresetConfig): Set<strin
     if (config.calibration_source.entity) {
         watchedEntities.add(config.calibration_source.entity);
     }
+    (config.conditions ?? [])
+        .map(c => c?.entity)
+        .forEach(e => {
+            if (e) watchedEntities.add(e);
+        });
     (config.icons ?? [])
         .filter(i => i.conditions)
         .flatMap(i => i.conditions)
@@ -76,7 +82,7 @@ export function getWatchedEntitiesForPreset(config: CardPresetConfig): Set<strin
             if (e) watchedEntities.add(e);
         });
     (config.map_modes ?? [])
-        .map(m => new MapMode(config.vacuum_platform ?? "default", m))
+        .map(m => new MapMode(config.vacuum_platform ?? "default", m, language))
         .forEach(m => getWatchedEntitiesForMapMode(m).forEach(e => watchedEntities.add(e)));
     return watchedEntities;
 }
@@ -84,7 +90,7 @@ export function getWatchedEntitiesForPreset(config: CardPresetConfig): Set<strin
 export function getWatchedEntities(config: XiaomiVacuumMapCardConfig): string[] {
     const watchedEntities = new Set<string>();
     [config, ...(config.additional_presets ?? [])]
-        .flatMap(p => [...getWatchedEntitiesForPreset(p)])
+        .flatMap(p => [...getWatchedEntitiesForPreset(p, config.language)])
         .forEach(e => watchedEntities.add(e));
     return [...watchedEntities];
 }
@@ -134,21 +140,21 @@ export function handleActionWithConfig(
     };
 }
 
-export function getMousePosition(event: MouseEvent | TouchEvent, element: SVGGraphicsElement): MousePosition {
+export function getMousePosition(
+    event: MouseEvent | TouchEvent,
+    element: SVGGraphicsElement,
+    scale: number,
+): MousePosition {
     let x, y;
     if (event instanceof MouseEvent) {
-        x = event.clientX;
-        y = event.clientY;
+        x = event.offsetX;
+        y = event.offsetY;
     }
-    if (event instanceof TouchEvent && event.touches) {
-        x = event.touches[0].clientX;
-        y = event.touches[0].clientY;
+    if (window.TouchEvent && event instanceof TouchEvent && event.touches) {
+        x = (event.touches[0].clientX - element.getBoundingClientRect().x) / scale;
+        y = (event.touches[0].clientY - element.getBoundingClientRect().y) / scale;
     }
-    const CTM = element.getScreenCTM();
-    if (CTM) {
-        return new MousePosition((x - CTM.e) / CTM.a, (y - CTM.f) / CTM.d);
-    }
-    return new MousePosition(0, 0);
+    return new MousePosition(x, y);
 }
 
 export async function getAllEntitiesFromTheSameDevice(

@@ -1,0 +1,230 @@
+{
+    "common": {
+        "version": "Versie",
+        "invalid_configuration": "Ongeldige configuratie {0}",
+        "description": "Een kaart waarmee je jouw robotstofzuiger kunt bedienen.",
+        "old_configuration": "Oude configuratie gevonden. Pas je configuratie aan op basis van de nieuwe versie of maak een volledig nieuwe kaart.",
+        "old_configuration_migration_link": "Uitleg configuratie aanpassen"
+    },
+    "map_mode": {
+        "invalid": "Ongeldig sjabloon!",
+        "vacuum_goto": "Pin & Go",
+        "vacuum_goto_predefined": "Punten",
+        "vacuum_clean_segment": "Kamers",
+        "vacuum_clean_point": "Schoonmaak punten",
+        "vacuum_clean_point_predefined": "Punten",
+        "vacuum_clean_zone": "Zone schoonmaak",
+        "vacuum_clean_zone_predefined": "Zone lijst",
+        "vacuum_follow_path": "Pad"
+    },
+    "validation": {
+        "preset": {
+            "entity": {
+                "missing": "Ontbrekende parameter: entity"
+            },
+            "preset_name": {
+                "missing": "Ontbrekende parameter: preset_name"
+            },
+            "platform": {
+                "invalid": "Ongeldig stofzuigerplatform: {0}"
+            },
+            "map_source": {
+                "missing": "Ontbrekende parameter: map_source",
+                "none_provided": "Geen camera of afbeelding opgegeven",
+                "ambiguous": "Slechts één kaartbron toegestaan"
+            },
+            "calibration_source": {
+                "missing": "Ontbrekende parameter: calibration_source",
+                "ambiguous": "Slechts één kalibratiebron toegestaan",
+                "none_provided": "Geen kalibratiebron opgegeven",
+                "calibration_points": {
+                    "invalid_number": "Precies 3 of 4 kalibratiepunten vereist",
+                    "missing_map": "Elk kalibratiepunt moet kaart coördinaten bevatten",
+                    "missing_vacuum": "Elk kalibratiepunt moet stofzuiger coördinaten bevatten",
+                    "missing_coordinate": "Kaart en stofzuiger kalibratiepunten moeten zowel een x als y coödinaat bevatten"
+                }
+            },
+            "icons": {
+                "invalid": "Fout in configuratie: icons",
+                "icon": {
+                    "missing": "Elk item in de lijst moet de eigenschap « icon » bevatten"
+                }
+            },
+            "tiles": {
+                "invalid": "Fout in configuratie: tiles",
+                "entity": {
+                    "missing": "Elk item in de lijst moet de eigenschap « entity » bevatten"
+                },
+                "label": {
+                    "missing": "Elk item in de lijst moet de eigenschap « label » bevatten"
+                }
+            },
+            "map_modes": {
+                "invalid": "Fout in configuratie: map_modes",
+                "icon": {
+                    "missing": "Pictogram van kaartmodus ontbreekt"
+                },
+                "name": {
+                    "missing": "Naam van kaartmodus ontbreekt"
+                },
+                "template": {
+                    "invalid": "Ongeldig sjabloon: {0}"
+                },
+                "predefined_selections": {
+                    "not_applicable": "Modus {0} ondersteunt geen vooraf gedefinieerde selecties",
+                    "zones": {
+                        "missing": "Zone configuratie ontbreekt",
+                        "invalid_parameters_number": "Elke zone moet 4 coördinaten hebben"
+                    },
+                    "points": {
+                        "position": {
+                            "missing": "Punten configuratie ontbreekt",
+                            "invalid_parameters_number": "Elk punt moet 2 coördinaten hebben"
+                        }
+                    },
+                    "rooms": {
+                        "id": {
+                            "missing": "Kamer id ontbreekt",
+                            "invalid_format": "Ongeldige kamer id: {0}"
+                        },
+                        "outline": {
+                            "invalid_parameters_number": "Elk punt van de kamer omtrek moet 2 coördinaten hebben"
+                        }
+                    },
+                    "label": {
+                        "x": {
+                            "missing": "Elk label moet de eigenschap « x » bevatten"
+                        },
+                        "y": {
+                            "missing": "Elk label moet de eigenschap « y » bevatten"
+                        },
+                        "text": {
+                            "missing": "Elk label moet de eigenschap « text » bevatten"
+                        }
+                    },
+                    "icon": {
+                        "x": {
+                            "missing": "Elk pictogram moet de eigenschap « x » bevatten"
+                        },
+                        "y": {
+                            "missing": "Elk pictogram moet de eigenschap « y » bevatten"
+                        },
+                        "name": {
+                            "missing": "Elk pictogram moet de eigenschap « name » bevatten"
+                        }
+                    }
+                },
+                "service_call_schema": {
+                    "missing": "Serviceoproep schema",
+                    "service": {
+                        "missing": "Serviceoproep schema moet een service bevatten",
+                        "invalid": "Ongeldige service: {0}"
+                    }
+                }
+            }
+        },
+        "invalid_entities": "Ongeldige entiteiten:",
+        "invalid_calibration": "Ongeldige kalibratie, controleer je configuratie"
+    },
+    "tile": {
+        "status": {
+            "label": "Status",
+            "value": {
+                "Starting": "Starten",
+                "Charger disconnected": "Lader niet aangesloten",
+                "Idle": "Inactief",
+                "Remote control active": "Afstandsbediening actief",
+                "Cleaning": "Schoonmaken",
+                "Returning home": "Terugkeren naar basisstation",
+                "Manual mode": "Handmatige modus",
+                "Charging": "Laden",
+                "Charging problem": "Laadprobleem",
+                "Paused": "Gepauzeerd",
+                "Spot cleaning": "Spot schoonmaken",
+                "Error": "Fout",
+                "Shutting down": "Afsluiten",
+                "Updating": "Updaten",
+                "Docking": "Docking",
+                "Going to target": "Onderweg naar doel",
+                "Zoned cleaning": "Zone schoonmaken",
+                "Segment cleaning": "Kamers schoonmaken",
+                "Emptying the bin": "Opvangbak leegmaken",
+                "Charging complete": "Opladen voltooid",
+                "Device offline": "Apparaat offline"
+            }
+        },
+        "battery_level": {
+            "label": "Batterij"
+        },
+        "fan_speed": {
+            "label": "Fan snelheid",
+            "value": {
+                "Silent": "Stil",
+                "Standard": "Standaard",
+                "Medium": "Medium",
+                "Turbo": "Turbo",
+                "Auto": "Automatisch",
+                "Gentle": "Zacht"
+            }
+        },
+        "sensor_dirty_left": {
+            "label": "Sensors"
+        },
+        "filter_left": {
+            "label": "Filter"
+        },
+        "main_brush_left": {
+            "label": "Hoofdborstel"
+        },
+        "side_brush_left": {
+            "label": "Zijborstel"
+        },
+        "cleaning_count": {
+            "label": "Schoonmaakteller"
+        },
+        "cleaned_area": {
+            "label": "Oppervlakte"
+        },
+        "cleaning_time": {
+            "label": "Schoonmaaktijd"
+        },
+        "mop_left": {
+            "label": "Dweil"
+        }
+    },
+    "icon": {
+        "vacuum_start": "Start",
+        "vacuum_pause": "Pause",
+        "vacuum_stop": "Stop",
+        "vacuum_return_to_base": "Terug naar basisstation",
+        "vacuum_clean_spot": "Spot schoonmaak",
+        "vacuum_locate": "Lokaliseren",
+        "vacuum_set_fan_speed": "Fan snelheid aanpassen"
+    },
+    "unit": {
+        "hour_shortcut": "u",
+        "meter_shortcut": "m",
+        "meter_squared_shortcut": "m²",
+        "minute_shortcut": "min"
+    },
+    "popups": {
+        "success": "Succes!",
+        "no_selection": "Geen selectie opgegeven",
+        "failed": "Fout bij aanroepen service"
+    },
+    "editor": {
+        "description": {
+            "before_link": "Deze grafische editor ondersteunt slechts een basis configuratie met een camera entiteit welke gemaakt is met ",
+            "link_text": "Xiaomi Cloud Map Extractor",
+            "after_link": ". Gebruik de YAML modus voor een geavanceerde configuratie."
+        },
+        "label": {
+            "name": "Titel (optioneel)",
+            "entity": "Stofzuiger entiteit (verplicht)",
+            "camera": "Camera entiteit (verplicht)",
+            "vacuum_platform": "stofzuigerplatform (verplicht)",
+            "map_locked": "Kaart vergrendelen (optioneel)",
+            "two_finger_pan": "Kaart verplaatsen met twee vingers (optioneel)"
+        }
+    }
+}

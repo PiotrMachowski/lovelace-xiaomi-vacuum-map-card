@@ -1,0 +1,225 @@
+{
+    "common": {
+        "version": "Version",
+        "invalid_configuration": "Ugyldig konfiguration {0}",
+        "description": "Et kort som lader dig styre din robotstøvsuger",
+        "old_configuration": "Gammel opsætning fundet. Juster dine indstillinger til det seneste format, eller lav et nyt kort fra bunden.",
+        "old_configuration_migration_link": "Migrerings vejledning"
+    },
+    "map_mode": {
+        "invalid": "Ugyldigt template!",
+        "vacuum_goto": "Klik & Gå",
+        "vacuum_goto_predefined": "Punkter",
+        "vacuum_clean_segment": "Rum",
+        "vacuum_clean_zone": "Zone rengøring",
+        "vacuum_clean_zone_predefined": "Zoner",
+        "vacuum_follow_path": "Sti"
+    },
+    "validation": {
+        "preset": {
+            "entity": {
+                "missing": "Mangler indstilling: entity"
+            },
+            "preset_name": {
+                "missing": "Mangler indstilling: preset_name"
+            },
+            "platform": {
+                "invalid": "Ugyldig støvsuger platform: {0}"
+            },
+            "map_source": {
+                "missing": "Mangler indstilling: map_source",
+                "none_provided": "Intet kamera eller billede er angivet",
+                "ambiguous": "Kun en kort-kilde tilladt"
+            },
+            "calibration_source": {
+                "missing": "Mangler indstilling: calibration_source",
+                "ambiguous": "Kun en kalibrerings-kilde tilladt",
+                "none_provided": "Ingen kalibrerings kilde angivet",
+                "calibration_points": {
+                    "invalid_number": "Nøjagtigt 3 eller 4 kalibreringspunkter påkrævet",
+                    "missing_map": "Alle kalibreringspunkter skal indeholde kort koordinater",
+                    "missing_vacuum": "Alle kalibreringspunkter skal indeholde støvsuger koordinater",
+                    "missing_coordinate": "Kort og støvsugers kalibreringspunkter skal indeholde både x og y koordinater"
+                }
+            },
+            "icons": {
+                "invalid": "Fejl i konfiguration: icons",
+                "icon": {
+                    "missing": "Alle punkter i icons listen skal indeholde icon egenskaben"
+                }
+            },
+            "tiles": {
+                "invalid": "Fejl i konfiguration: tiles",
+                "entity": {
+                    "missing": "Alle punkter i tiles listen skal indehold entity egenskaben"
+                },
+                "label": {
+                    "missing": "Alle punkter i tiles listen skal indehold label egenskaben"
+                }
+            },
+            "map_modes": {
+                "invalid": "Fejl i konfiguration: map_modes",
+                "icon": {
+                    "missing": "Ikon mangler"
+                },
+                "name": {
+                    "missing": "Navn mangler"
+                },
+                "template": {
+                    "invalid": "Ugyldigt template: {0}"
+                },
+                "predefined_selections": {
+                    "not_applicable": "Mode {0} understøtter ikke predefinerede valg",
+                    "zones": {
+                        "missing": "Zone konfiguration mangler",
+                        "invalid_parameters_number": "En zone skal indeholde 4 parametre."
+                    },
+                    "points": {
+                        "position": {
+                            "missing": "Punkt konfiguration mangler",
+                            "invalid_parameters_number": "Et punkt skal indeholde 2 parametre"
+                        }
+                    },
+                    "rooms": {
+                        "id": {
+                            "missing": "Rummets id mangler",
+                            "invalid_format": "Ugyldigt rum id: {0}"
+                        },
+                        "outline": {
+                            "invalid_parameters_number": "Et punkt i rummets kant skal indeholde 2 parametre"
+                        }
+                    },
+                    "label": {
+                        "x": {
+                            "missing": "Label skal indeholde egenskaben x"
+                        },
+                        "y": {
+                            "missing": "Label skal indeholde egenskaben y"
+                        },
+                        "text": {
+                            "missing": "Label skal indeholde egenskaben text"
+                        }
+                    },
+                    "icon": {
+                        "x": {
+                            "missing": "Icon skal indeholde egenskaben x"
+                        },
+                        "y": {
+                            "missing": "Icon skal indeholde egenskaben y"
+                        },
+                        "name": {
+                            "missing": "Icon skal indeholde egenskaben name"
+                        }
+                    }
+                },
+                "service_call_schema": {
+                    "missing": "Service-kald indstillingerne mangler",
+                    "service": {
+                        "missing": "Service-kald indstillinger skal indeholde en service",
+                        "invalid": "Ugyldig service: {0}"
+                    }
+                }
+            }
+        },
+        "invalid_entities": "Ugyldige entiteter:",
+        "invalid_calibration": "Ugyldig kalibrering, du bedes gennemgå din konfiguration"
+    },
+    "tile": {
+        "status": {
+            "label": "Status",
+            "value": {
+                "Starting": "Starter",
+                "Charger disconnected": "Oplader koblet fra",
+                "Idle": "Ledig",
+                "Remote control active": "Fjernstyring aktivt",
+                "Cleaning": "Rengører",
+                "Returning home": "Vender hjem",
+                "Manual mode": "Manuel tilstand",
+                "Charging": "Oplader",
+                "Charging problem": "Opladnings-problem",
+                "Paused": "Sat på pause",
+                "Spot cleaning": "Spot rengøring",
+                "Error": "Fejl",
+                "Shutting down": "Slukker",
+                "Updating": "Opdaterer",
+                "Docking": "Docker",
+                "Going to target": "Går til mål",
+                "Zoned cleaning": "Zone rengøring",
+                "Segment cleaning": "Segment rengøring",
+                "Emptying the bin": "Tømmes",
+                "Charging complete": "Fuldt opladt",
+                "Device offline": "Enhed offline"
+            }
+        },
+        "battery_level": {
+            "label": "Batteri"
+        },
+        "fan_speed": {
+            "label": "Hastighed",
+            "value": {
+                "Silent": "Stille",
+                "Standard": "Standard",
+                "Medium": "Medium",
+                "Turbo": "Turbo",
+                "Auto": "Auto",
+                "Gentle": "Mild"
+            }
+        },
+        "sensor_dirty_left": {
+            "label": "Sensor vedl."
+        },
+        "filter_left": {
+            "label": "Filter vedl."
+        },
+        "main_brush_left": {
+            "label": "Hovedbørste vedl."
+        },
+        "side_brush_left": {
+            "label": "Sidebørste vedl."
+        },
+        "cleaning_count": {
+            "label": "Rengøringstæller"
+        },
+        "cleaned_area": {
+            "label": "Rengjort areal"
+        },
+        "cleaning_time": {
+            "label": "Rengørings tid"
+        }
+    },
+    "icon": {
+        "vacuum_start": "Start",
+        "vacuum_pause": "Pause",
+        "vacuum_stop": "Stop",
+        "vacuum_return_to_base": "Returner",
+        "vacuum_clean_spot": "Spotrengør",
+        "vacuum_locate": "Find",
+        "vacuum_set_fan_speed": "Skift hastighed"
+    },
+    "unit": {
+        "hour_shortcut": "t",
+        "meter_shortcut": "m",
+        "meter_squared_shortcut": "m²",
+        "minute_shortcut": "min"
+    },
+    "popups": {
+        "success": "Succes!",
+        "no_selection": "Intet valg angivet",
+        "failed": "Service-kald fejlede"
+    },
+    "editor": {
+        "description": {
+            "before_link": "Den visuelle editor understøtter kun kun en konfiguration med en kamera entitet lavet med ",
+            "link_text": "Xiaomi Cloud Map Extractor",
+            "after_link": ". For en mere advanceret konfiguration, brug YAML mode."
+        },
+        "label": {
+            "name": "Titel (valgfrit)",
+            "entity": "Støvsuger entitet (påkrævet)",
+            "camera": "Kamera entitet (påkrævet)",
+            "vacuum_platform": "Støvsuger platform (påkrævet)",
+            "map_locked": "Kort låst (valgfrit)",
+            "two_finger_pan": "To-finger panorering (valgfrit)"
+        }
+    }
+}

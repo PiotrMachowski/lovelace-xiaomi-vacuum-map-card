@@ -1,0 +1,199 @@
+{
+    "common": {
+        "version": "Έκδοση",
+        "invalid_configuration": "Μη αποδεκτές ρυθμίσεις {0}",
+        "description": "Μία κάρτα που σας επιτρέπει να ελέγξετε την σκούπα σας",
+        "old_configuration": "Ανιχνεύθυκαν παλιές ρυθμίσεις. Προσαρμόστε τις ρυθμίσεις σας στο πιο πρόσφατο μοντέλο ή δημιουργήστε μια νέα κάρτα από την αρχή.",
+        "old_configuration_migration_link": "Οδηγός μετατροπής παλιών ρυθμίσεων"
+    },
+    "map_mode": {
+        "invalid": "Μη αποδεκτό πρότυπο!",
+        "vacuum_goto": "Πήγαινε Εδώ",
+        "vacuum_goto_predefined": "Σημεία",
+        "vacuum_clean_segment": "Δωμάτια",
+        "vacuum_clean_point": "Σκούπισμα σε σημείο",
+        "vacuum_clean_point_predefined": "Σημεία",
+        "vacuum_clean_zone": "Σκούπισμα σε ζώνη",
+        "vacuum_clean_zone_predefined": "Λίστα ζωνών καθαρισμού",
+        "vacuum_follow_path": "Διαδρομή"
+    },
+    "validation": {
+        "preset": {
+            "entity": {
+                "missing": "Λείπει η ιδιότητα: entity"
+            },
+            "preset_name": {
+                "missing": "Λείπει η ιδιότητα: preset_name"
+            },
+            "platform": {
+                "invalid": "Μη αποδεκτή πλατφόρμα σκούπας: {0}"
+            },
+            "map_source": {
+                "missing": "Λείπει η ιδιότητα: map_source",
+                "none_provided": "Δεν ρυθμίστηκε ούτε κάμερα ούτε εικόνα",
+                "ambiguous": "Επιτρέπεται μόνο μία πηγή χάρτη"
+            },
+            "calibration_source": {
+                "missing": "Λείπει η ιδιότητα: calibration_source",
+                "ambiguous": "Επιτρέπεται μόνο μία πηγή βαθμονόμησης",
+                "none_provided": "Δεν ρυθμίστηκε πηγή βαθμονόμησης",
+                "calibration_points": {
+                    "invalid_number": "Απαιτούνται ακριβώς 3 ή 4 σημεία βαθμονόμησης",
+                    "missing_map": "Κάθε σημείο βαθμονόμησης πρέπει να περιέχει συντεταγμένες του χάρτη",
+                    "missing_vacuum": "Κάθε σημείο βαθμονόμησης πρέπει να περιέχει συντεταγμένες της σκούπας",
+                    "missing_coordinate": "Τα σημεία βαθμονόμησης του χάρτη και της σκούπας πρέπει να περιέχουν συντεταγμένες x και y"
+                }
+            },
+            "icons": {
+                "invalid": "Λάθος στις ρυθμίσεις: icons",
+                "icon": {
+                    "missing": "Κάθε εγγραφή icon πρέπει να περιέχει μια ιδιότητα icon"
+                }
+            },
+            "tiles": {
+                "invalid": "Λάθος στις ρυθμίσεις: tiles",
+                "entity": {
+                    "missing": "Κάθε εγγραφή tile πρέπει να περιέχει entity"
+                },
+                "label": {
+                    "missing": "Κάθε εγγραφή tile πρέπει να περιέχει label"
+                }
+            },
+            "map_modes": {
+                "invalid": "Λάθος στις ρυθμίσεις: map_modes",
+                "icon": {
+                    "missing": "Λείπει το εικονίδιο του τρόπου λειτουργίας χάρτη"
+                },
+                "name": {
+                    "missing": "Λείπει το όνομα του τρόπου λειτουργίας χάρτη"
+                },
+                "template": {
+                    "invalid": "Μη αποδεκτό πρότυπο: {0}"
+                },
+                "predefined_selections": {
+                    "not_applicable": "Η λειτουργία {0} δεν υποστηρίζει προκαθορισμένες επιλογές",
+                    "zones": {
+                        "missing": "Λείπει η ρύθμιση ζωνών καθαρισμού",
+                        "invalid_parameters_number": "Κάθε ζώνη καθαρισμού πρέπει να έχει 4 παραμέτρους"
+                    },
+                    "points": {
+                        "position": {
+                            "missing": "Λείπει η ρύθμιση σημείων",
+                            "invalid_parameters_number": "Each point must have 2 parameters"
+                        }
+                    },
+                    "rooms": {
+                        "id": {
+                            "missing": "Λείπει το αναγνωριστικό του δωματίου",
+                            "invalid_format": "Λάθος αναγνωριστικό δωματίου: {0}"
+                        },
+                        "outline": {
+                            "invalid_parameters_number": "Κάθε σημείο του περιγράμματος του δωματίου πρέπει να έχει 2 παραμέτρους"
+                        }
+                    },
+                    "label": {
+                        "x": {
+                            "missing": "Η ταμπέλα πρέπει να έχει ιδιότητα x"
+                        },
+                        "y": {
+                            "missing": "Η ταμπέλα πρέπει να έχει ιδιότητα y"
+                        },
+                        "text": {
+                            "missing": "Η ταμπέλα πρέπει να έχει ιδιότητα κειμένου"
+                        }
+                    },
+                    "icon": {
+                        "x": {
+                            "missing": "Το εικονίδιο πρέπει να έχει ιδιότητα x"
+                        },
+                        "y": {
+                            "missing": "Το εικονίδιο πρέπει να έχει ιδιότητα y"
+                        },
+                        "name": {
+                            "missing": "Το εικονίδιο πρέπει να έχει ιδιότητα ονόματος"
+                        }
+                    }
+                },
+                "service_call_schema": {
+                    "missing": "Λείπει το μοντέλο κλήσης υπηρεσίας",
+                    "service": {
+                        "missing": "Το μοντέλο κλήσης υπηρεσίας πρέπει να εμπεριέχει υπηρεσία",
+                        "invalid": "Μη έγκυρη υπηρεσία: {0}"
+                    }
+                }
+            }
+        },
+        "invalid_entities": "Λάθος οντότητες:",
+        "invalid_calibration": "Λάθος βαθμονόμηση, παρακαλώ ελέγξτε τις ρυθμίσεις σας"
+    },
+    "tile": {
+        "status": {
+            "label": "Κατάσταση"
+        },
+        "battery_level": {
+            "label": "Μπαταρία"
+        },
+        "fan_speed": {
+            "label": "Ταχύτητα Ανεμιστήρα"
+        },
+        "sensor_dirty_left": {
+            "label": "Συντήρηση αισθητήρων"
+        },
+        "filter_left": {
+            "label": "Συντήρηση φίλτρου"
+        },
+        "main_brush_left": {
+            "label": "Συντήρηση κύριας βούρτσας"
+        },
+        "side_brush_left": {
+            "label": "Συντήρηση πλαϊνής βούρτσας"
+        },
+        "cleaning_count": {
+            "label": "Αριθμός σκουπισμάτων"
+        },
+        "cleaned_area": {
+            "label": "Έκταση που καθαρίστηκε"
+        },
+        "cleaning_time": {
+            "label": "Χρόνος καθαρισμού"
+        },
+        "mop_left": {
+            "label": "Συντήρηση σφουγγαρίστρας"
+        }
+    },
+    "icon": {
+        "vacuum_start": "Έναρξη",
+        "vacuum_pause": "Παύση",
+        "vacuum_stop": "Διακοπή",
+        "vacuum_return_to_base": "Επιστροφή στη βάση",
+        "vacuum_clean_spot": "Καθαρισμός σημείου",
+        "vacuum_locate": "Εντοπισμός",
+        "vacuum_set_fan_speed": "Αλλαγή ταχύτητας ανεμιστήρα"
+    },
+    "unit": {
+        "hour_shortcut": "ω",
+        "meter_shortcut": "μ",
+        "meter_squared_shortcut": "τ.μ.",
+        "minute_shortcut": "λεπ"
+    },
+    "popups": {
+        "success": "Επιτυχία!",
+        "no_selection": "Δεν δόθηκε επιλογή",
+        "failed": "Αποτυχία κλήσης υπηρεσίας"
+    },
+    "editor": {
+        "description": {
+            "before_link": "Αυτό η οπτική διεπαφή επεξεργασίας υποστηρίζει μόνο βασικές ρυθμίσεις με μια οντότητα κάμερας που δημιουργήθηκε χρησιμοποιώντας ",
+            "link_text": "Xiaomi Cloud Map Extractor",
+            "after_link": ". Για πιο εξελιγμένες ρυθμίσεις χρησιμοποιήστε τη μέθοδο επεξεργασίας αρχείου YAML."
+        },
+        "label": {
+            "name": "Τίτλος (προεραιτικό)",
+            "entity": "Οντότητα σκούπας (απαραίτητο)",
+            "camera": "Οντότητα κάμερας (απαραίτητο)",
+            "vacuum_platform": "Πλατφόρμα σκούπας (απαραίτητο)",
+            "map_locked": "Κλείδωμα χάρτη (προεραιτικό)",
+            "two_finger_pan": "Μετακίνηση με δύο δάχτυλα (προεραιτικό)"
+        }
+    }
+}

@@ -1,0 +1,199 @@
+{
+    "common": {
+        "version": "גירסה",
+        "invalid_configuration": "תצורה לא חוקית {0}",
+        "description": "כרטיס המאפשר לך לשלוט בשואב שלך",
+        "old_configuration": "זוהתה תצורה ישנה. התאם את התצורה שלך לסכמה העדכנית ביותר או צור כרטיס חדש מההתחלה.",
+        "old_configuration_migration_link": "מדריך להגירה"
+    },
+    "map_mode": {
+        "invalid": "תבנית לא חוקית!",
+        "vacuum_goto": "נעץ וסע",
+        "vacuum_goto_predefined": "נקודות",
+        "vacuum_clean_segment": "חדרים",
+        "vacuum_clean_point": "נקה נקודה",
+        "vacuum_clean_point_predefined": "נקודות",
+        "vacuum_clean_zone": "ניקוי אזור",
+        "vacuum_clean_zone_predefined": "רשימת אזורים",
+        "vacuum_follow_path": "נתיב"
+    },
+    "validation": {
+        "preset": {
+            "entity": {
+                "missing": "נכס חסר: ישות"
+            },
+            "preset_name": {
+                "missing": "חסר מאפיין: preset_name"
+            },
+            "platform": {
+                "invalid": "פלטפורמת שואב לא חוקית: {0}"
+            },
+            "map_source": {
+                "missing": "נכס חסר: map_source",
+                "none_provided": "לא סופקה אף תמונה",
+                "ambiguous": "מותר רק מקור מפה אחד"
+            },
+            "calibration_source": {
+                "missing": "חסר מאפיין: calibration_source",
+                "ambiguous": "מותר רק מקור כיול אחד",
+                "none_provided": "לא סופק מקור כיול",
+                "calibration_points": {
+                    "invalid_number": "דרושות בדיוק 3 או 4 נקודות כיול",
+                    "missing_map": "כל נקודת כיול חייבת להכיל קואורדינטות מפה",
+                    "missing_vacuum": "כל נקודת כיול חייבת להכיל קואורדינטות שואב",
+                    "missing_coordinate": "נקודות כיול במפה ובשואב חייבות להכיל גם קואורדינטות x וגם y"
+                }
+            },
+            "icons": {
+                "invalid": "שגיאה בתצורה: סמלילים",
+                "icon": {
+                    "missing": "כל כניסה של רשימת הסמלילים חייבת להכיל מאפיין סמליל"
+                }
+            },
+            "tiles": {
+                "invalid": "שגיאה בתצורה: אריחים",
+                "entity": {
+                    "missing": "כל ערך של רשימת אריחים חייב להכיל ישות"
+                },
+                "label": {
+                    "missing": "כל כניסה של רשימת אריחים חייבת להכיל תווית"
+                }
+            },
+            "map_modes": {
+                "invalid": "שגיאה בתצורה: map_modes",
+                "icon": {
+                    "missing": "חסר סמליל של מצב מפה"
+                },
+                "name": {
+                    "missing": "חסר שם של מצב מפה"
+                },
+                "template": {
+                    "invalid": "תבנית לא חוקית: {0}"
+                },
+                "predefined_selections": {
+                    "not_applicable": "מצב {0} אינו תומך בבחירות מוגדרות מראש",
+                    "zones": {
+                        "missing": "תצורת אזורים חסרים",
+                        "invalid_parameters_number": "כל אזור חייב לכלול 4 פרמטרים"
+                    },
+                    "points": {
+                        "position": {
+                            "missing": "תצורת נקודות חסרות",
+                            "invalid_parameters_number": "לכל נקודה חייבת להיות 2 פרמטרים"
+                        }
+                    },
+                    "rooms": {
+                        "id": {
+                            "missing": "מזהה חדר חסר",
+                            "invalid_format": "מזהה חדר לא חוקי: {0}"
+                        },
+                        "outline": {
+                            "invalid_parameters_number": "כל נקודה של מתאר החדר חייבת להיות בעלת 2 פרמטרים"
+                        }
+                    },
+                    "label": {
+                        "x": {
+                            "missing": "חייב להיות מאפיין x לתבנית"
+                        },
+                        "y": {
+                            "missing": "חייב להיות מאפיין y לתבנית"
+                        },
+                        "text": {
+                            "missing": "חייב להיות מאפיין שם לתבנית"
+                        }
+                    },
+                    "icon": {
+                        "x": {
+                            "missing": "חייב להיות מאפיין x לסמליל"
+                        },
+                        "y": {
+                            "missing": "חייב להיות מאפיין y לסמליל"
+                        },
+                        "name": {
+                            "missing": "חייב להיות מאפיין שם לסמליל"
+                        }
+                    }
+                },
+                "service_call_schema": {
+                    "missing": "סכימת קריאת שירות חסרה",
+                    "service": {
+                        "missing": "סכימת קריאת השירות חייבת להכיל שירות",
+                        "invalid": "שירות לא חוקי: {0}"
+                    }
+                }
+            }
+        },
+        "invalid_entities": "ישויות לא חוקיות:",
+        "invalid_calibration": "כיול לא חוקי, אנא בדוק את התצורה שלך"
+    },
+    "tile": {
+        "status": {
+            "label": "סטטוס"
+        },
+        "battery_level": {
+            "label": "סוללה"
+        },
+        "fan_speed": {
+            "label": "מהירות מאוורר"
+        },
+        "sensor_dirty_left": {
+            "label": "נותר לחיישנים"
+        },
+        "filter_left": {
+            "label": "נותר למסנן"
+        },
+        "main_brush_left": {
+            "label": "נותר למברשת ראשית"
+        },
+        "side_brush_left": {
+            "label": "נותר למברשת צד"
+        },
+        "cleaning_count": {
+            "label": "כמות נקיונות"
+        },
+        "cleaned_area": {
+            "label": "שטח שנוקה"
+        },
+        "cleaning_time": {
+            "label": "זמן ניקיון"
+        },
+        "mop_left": {
+            "label": "נותר למטלית"
+        }
+    },
+    "icon": {
+        "vacuum_start": "התחל",
+        "vacuum_pause": "השהה",
+        "vacuum_stop": "עצור",
+        "vacuum_return_to_base": "חוזר לתחנת עגינה",
+        "vacuum_clean_spot": "ניקוי נקודה",
+        "vacuum_locate": "איתור",
+        "vacuum_set_fan_speed": "שנה מהירות מאוורר"
+    },
+    "unit": {
+        "hour_shortcut": "ש",
+        "meter_shortcut": "מ",
+        "meter_squared_shortcut": "m²",
+        "minute_shortcut": "דק"
+    },
+    "popups": {
+        "success": "הצליח!",
+        "no_selection": "לא סופקה בחירה",
+        "failed": "התקשרות לשירות נכשלה"
+    },
+    "editor": {
+        "description": {
+            "before_link": "עורך חזותי זה תומך רק בתצורה בסיסית עם ישות מצלמה שנוצרה באמצעות ",
+            "link_text": "Xiaomi Cloud Map Extractor",
+            "after_link": ". להגדרה מתקדמת יותר השתמש במצב YAML."
+        },
+        "label": {
+            "name": "כותרת (אופציונלי)",
+            "entity": "יישות שואב (נדרש)",
+            "camera": "יישות מצלמה (נדרש)",
+            "vacuum_platform": "פלטפורמת שואב (נדרש)",
+            "map_locked": "נעילת מפה (אופציונלי)",
+            "two_finger_pan": "צביטת שתי אצבעות (אופציונלי)"
+        }
+    }
+}

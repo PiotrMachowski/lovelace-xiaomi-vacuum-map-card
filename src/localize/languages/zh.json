@@ -1,0 +1,230 @@
+{
+    "common": {
+        "version": "版本",
+        "invalid_configuration": "配置无效 {0}",
+        "description": "一个可以控制扫地机的卡片",
+        "old_configuration": "检测到旧版本的配置。请按照新版本说明修改配置或者重新创建新卡片",
+        "old_configuration_migration_link": "迁移向导"
+    },
+    "map_mode": {
+        "invalid": "模板无效！",
+        "vacuum_goto": "指哪到哪",
+        "vacuum_goto_predefined": "目标点",
+        "vacuum_clean_segment": "选区清扫",
+        "vacuum_clean_point": "局部清扫",
+        "vacuum_clean_point_predefined": "自定义局部清扫",
+        "vacuum_clean_zone": "划区清扫",
+        "vacuum_clean_zone_predefined": "自定义区域清扫",
+        "vacuum_follow_path": "路径规划"
+    },
+    "validation": {
+        "preset": {
+            "entity": {
+                "missing": "缺少属性：entity"
+            },
+            "preset_name": {
+                "missing": "缺少属性：preset_name"
+            },
+            "platform": {
+                "invalid": "扫地机平台无效：{0}"
+            },
+            "map_source": {
+                "missing": "缺少属性：map_source",
+                "none_provided": "未提供摄像头或者图像",
+                "ambiguous": "只允许一张地图"
+            },
+            "calibration_source": {
+                "missing": "缺少属性：calibration_source",
+                "ambiguous": "只允许一个校准源",
+                "none_provided": "未提供校准源",
+                "calibration_points": {
+                    "invalid_number": "需要3或4个校准点",
+                    "missing_map": "每个校准点必须包含地图坐标",
+                    "missing_vacuum": "每个校准点必须包含扫地机坐标",
+                    "missing_coordinate": "地图校准点和扫地机校准点必须同时包含x坐标和y坐标"
+                }
+            },
+            "icons": {
+                "invalid": "配置错误：icons",
+                "icon": {
+                    "missing": "图标列表中每一条记录必须包含icon属性"
+                }
+            },
+            "tiles": {
+                "invalid": "配置错误：tiles",
+                "entity": {
+                    "missing": "板块列表中每一条记录必须包含实体"
+                },
+                "label": {
+                    "missing": "板块列表中每一条记录必须包含标签"
+                }
+            },
+            "map_modes": {
+                "invalid": "配置错误：map_modes",
+                "icon": {
+                    "missing": "缺少该地图模式的图标"
+                },
+                "name": {
+                    "missing": "缺少该地图模式的名称"
+                },
+                "template": {
+                    "invalid": "模板无效：{0}"
+                },
+                "predefined_selections": {
+                    "not_applicable": "模式 {0} 不支持选择预置",
+                    "zones": {
+                        "missing": "缺少区域配置",
+                        "invalid_parameters_number": "每个区域必须包含4个参数"
+                    },
+                    "points": {
+                        "position": {
+                            "missing": "缺少坐标点配置",
+                            "invalid_parameters_number": "每个坐标点必须包含2个参数"
+                        }
+                    },
+                    "rooms": {
+                        "id": {
+                            "missing": "缺少房间id",
+                            "invalid_format": "房间id无效：{0}"
+                        },
+                        "outline": {
+                            "invalid_parameters_number": "每个房间边框必须包含2个参数"
+                        }
+                    },
+                    "label": {
+                        "x": {
+                            "missing": "标签必须包含x值"
+                        },
+                        "y": {
+                            "missing": "标签必须包含y值"
+                        },
+                        "text": {
+                            "missing": "标签必须包含文本值"
+                        }
+                    },
+                    "icon": {
+                        "x": {
+                            "missing": "图标必须包含x值"
+                        },
+                        "y": {
+                            "missing": "标题必须包含y值"
+                        },
+                        "name": {
+                            "missing": "标题必须包含名称"
+                        }
+                    }
+                },
+                "service_call_schema": {
+                    "missing": "缺少服务调用架构",
+                    "service": {
+                        "missing": "服务调用架构必须包含服务",
+                        "invalid": "服务无效：{0}"
+                    }
+                }
+            }
+        },
+        "invalid_entities": "实体无效：",
+        "invalid_calibration": "校准无效，请检查配置"
+    },
+    "tile": {
+        "status": {
+            "label": "状态",
+            "value": {
+                "Starting": "开始清扫",
+                "Charger disconnected": "与充电座断开",
+                "Idle": "空闲",
+                "Remote control active": "开始遥控模式",
+                "Cleaning": "清扫中",
+                "Returning home": "正在回充",
+                "Manual mode": "手动模式",
+                "Charging": "正在充电",
+                "Charging problem": "充电错误",
+                "Paused": "暂停",
+                "Spot cleaning": "局部清扫",
+                "Error": "错误",
+                "Shutting down": "正在关机",
+                "Updating": "正在更新",
+                "Docking": "停靠",
+                "Going to target": "正在前往目标点",
+                "Zoned cleaning": "划区清扫",
+                "Segment cleaning": "选区清扫",
+                "Emptying the bin": "清理尘盒",
+                "Charging complete": "充电完成",
+                "Device offline": "设备离线"
+            }
+        },
+        "battery_level": {
+            "label": "剩余电量"
+        },
+        "fan_speed": {
+            "label": "吸力",
+            "value": {
+                "Silent": "安静",
+                "Standard": "标准",
+                "Medium": "强力",
+                "Turbo": "MAX",
+                "Auto": "自动",
+                "Gentle": "轻柔"
+            }
+        },
+        "sensor_dirty_left": {
+            "label": "传感器维护剩余"
+        },
+        "filter_left": {
+            "label": "滤网剩余"
+        },
+        "main_brush_left": {
+            "label": "主刷剩余"
+        },
+        "side_brush_left": {
+            "label": "边刷剩余"
+        },
+        "cleaning_count": {
+            "label": "总清扫次数"
+        },
+        "cleaned_area": {
+            "label": "总清扫面积"
+        },
+        "cleaning_time": {
+            "label": "总清扫时间"
+        },
+        "mop_left": {
+            "label": "拖布剩余"
+        }
+    },
+    "icon": {
+        "vacuum_start": "开始",
+        "vacuum_pause": "暂停",
+        "vacuum_stop": "结束",
+        "vacuum_return_to_base": "回充",
+        "vacuum_clean_spot": "局部清扫",
+        "vacuum_locate": "定位",
+        "vacuum_set_fan_speed": "更改吸力"
+    },
+    "unit": {
+        "hour_shortcut": "小时",
+        "meter_shortcut": "米",
+        "meter_squared_shortcut": "平米",
+        "minute_shortcut": "分钟"
+    },
+    "popups": {
+        "success": "指令发送成功！",
+        "no_selection": "未提供选择",
+        "failed": "调用服务失败"
+    },
+    "editor": {
+        "description": {
+            "before_link": "该可视化编辑器仅支持一些基本配置，且必须使用以下集成创建的摄像机实体：",
+            "link_text": "Xiaomi Cloud Map Extractor",
+            "after_link": "。想要使用高级设置，请使用YAML模式"
+        },
+        "label": {
+            "name": "标题（可选）",
+            "entity": "扫地机实体（必填）",
+            "camera": "摄像机实体（必填）",
+            "vacuum_platform": "扫地机平台（必填）",
+            "map_locked": "地图锁定（可选）",
+            "two_finger_pan": "双指缩放（可选）"
+        }
+    }
+}
