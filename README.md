@@ -340,6 +340,8 @@ List of supported templates depends on selected `vacuum_platform`:
   - `vacuum_goto_predefined`: Going to point selected on the map from `predefined_selections`
   - `vacuum_clean_segment`: Room cleaning based on identifier
   - `vacuum_follow_path`: Following path selected by clicking on the map (using [script](/docs/follow_path.yaml))
+- `Neato`
+  - `vacuum_clean_segment`: Room cleaning based on identifier
 
 > See [hints](#hints) to check how to easily retrieve zone/point coordinates.
 
