@@ -61,6 +61,11 @@ export function getWatchedEntitiesForPreset(config: CardPresetConfig, language: 
     if (config.calibration_source.entity) {
         watchedEntities.add(config.calibration_source.entity);
     }
+    (config.conditions ?? [])
+        .map(c => c?.entity)
+        .forEach(e => {
+            if (e) watchedEntities.add(e);
+        });
     (config.icons ?? [])
         .filter(i => i.conditions)
         .flatMap(i => i.conditions)

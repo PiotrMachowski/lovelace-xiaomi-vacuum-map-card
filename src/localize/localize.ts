@@ -1,3 +1,4 @@
+import * as cs from "./languages/cs.json";
 import * as da from "./languages/da.json";
 import * as de from "./languages/de.json";
 import * as el from "./languages/el.json";
@@ -6,6 +7,7 @@ import * as es from "./languages/es.json";
 import * as fr from "./languages/fr.json";
 import * as he from "./languages/he.json";
 import * as hu from "./languages/hu.json";
+import * as is from "./languages/is.json";
 import * as it from "./languages/it.json";
 import * as nl from "./languages/nl.json";
 import * as pl from "./languages/pl.json";
@@ -19,6 +21,7 @@ import { Language, TranslatableString, XiaomiVacuumMapCardConfig } from "../type
 import { HomeAssistant } from "custom-card-helpers";
 
 const languages: Record<string, unknown> = {
+    cs: cs,
     da: da,
     de: de,
     el: el,
@@ -27,6 +30,7 @@ const languages: Record<string, unknown> = {
     fr: fr,
     he: he,
     hu: hu,
+    is: is,
     it: it,
     nl: nl,
     pl: pl,
@@ -38,7 +42,7 @@ const languages: Record<string, unknown> = {
     "zh-Hant": zhHant,
 };
 
-function localizeString(string: string, search = "", replace = "", lang: Language = ""): string {
+function localizeString(string: string, search = "", replace = "", lang: Language = "", fallback = string): string {
     const defaultLang = "en";
     if (!lang) {
         try {
@@ -48,7 +52,7 @@ function localizeString(string: string, search = "", replace = "", lang: Languag
         }
     }
 
-    let translated: string;
+    let translated: string | undefined;
 
     try {
         translated = evaluateForLanguage(string, lang ?? defaultLang);
@@ -58,22 +62,26 @@ function localizeString(string: string, search = "", replace = "", lang: Languag
 
     if (translated === undefined) translated = evaluateForLanguage(string, defaultLang);
 
-    translated = translated ?? string;
+    translated = translated ?? fallback;
     if (search !== "" && replace !== "") {
         translated = translated.replace(search, replace);
     }
     return translated;
 }
 
-function evaluateForLanguage(string: string, lang: string): string {
-    return string.split(".").reduce((o, i) => (o as Record<string, unknown>)[i], languages[lang]) as string;
+function evaluateForLanguage(string: string, lang: string): string | undefined {
+    try {
+        return string.split(".").reduce((o, i) => (o as Record<string, unknown>)[i], languages[lang]) as string;
+    } catch (_) {
+        return undefined;
+    }
 }
 
-export function localize(ts: TranslatableString, lang?: Language): string {
+export function localize(ts: TranslatableString, lang?: Language, fallback?: string): string {
     if (typeof ts === "string") {
-        return localizeString(ts as string, "", "", lang);
+        return localizeString(ts as string, "", "", lang, fallback);
     } else {
-        return localizeString(...ts, lang);
+        return localizeString(...ts, lang, fallback);
     }
 }
 
@@ -81,6 +89,7 @@ export function localizeWithHass(
     ts: TranslatableString,
     hass?: HomeAssistant,
     config?: XiaomiVacuumMapCardConfig,
+    fallback?: string,
 ): string {
-    return localize(ts, config?.language ?? hass?.locale?.language);
+    return localize(ts, config?.language ?? hass?.locale?.language, fallback);
 }

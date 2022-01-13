@@ -34,7 +34,7 @@
             "calibration_source": {
                 "missing": "Hiányzó tulajdonság: calibration_source",
                 "ambiguous": "Csak egy kalibrációs forrás engedélyezett",
-                "none_provided": "incs megadva kalibrációs forrás",
+                "none_provided": "Nincs megadva kalibrációs forrás",
                 "calibration_points": {
                     "invalid_number": "Pontosan 3 vagy 4 kalibrációs pont szükséges",
                     "missing_map": "Minden kalibrációs pontnak tartalmaznia kell a térkép koordinátáit",
@@ -82,8 +82,8 @@
                     },
                     "rooms": {
                         "id": {
-                            "missing": "Hiányzó room id",
-                            "invalid_format": "Érvénytelen room id: {0}"
+                            "missing": "Hiányzó szoba id",
+                            "invalid_format": "Érvénytelen szoba id: {0}"
                         },
                         "outline": {
                             "invalid_parameters_number": "A helyiség körvonalának minden pontján 2 paraméterrel kell rendelkeznie"
@@ -124,17 +124,37 @@
         "invalid_entities": "Érvénytelen entitások:",
         "invalid_calibration": "Érvénytelen kalibráció, ellenőrizze a konfigurációt"
     },
-    "label": {
-        "status": "Státusz",
-        "battery_level": "Akkumulátor",
-        "fan_speed": "Ventilátor sebesség",
-        "sensor_dirty_left": "Szenzorok",
-        "filter_left": "Szűrő",
-        "main_brush_left": "Fő kefe",
-        "side_brush_left": "Oldalkefe",
-        "cleaning_count": "Takarítás számláló",
-        "cleaned_area": "Tisztított terület",
-        "cleaning_time": "Takarítási idő"
+    "tile": {
+        "status": {
+            "label": "Státusz"
+        },
+        "battery_level": {
+            "label": "Akkumulátor"
+        },
+        "fan_speed": {
+            "label": "Ventilátor üzemmód"
+        },
+        "sensor_dirty_left": {
+            "label": "Szenzorok"
+        },
+        "filter_left": {
+            "label": "Szűrő"
+        },
+        "main_brush_left": {
+            "label": "Fő kefe"
+        },
+        "side_brush_left": {
+            "label": "Oldalkefe"
+        },
+        "cleaning_count": {
+            "label": "Takarítás számláló"
+        },
+        "cleaned_area": {
+            "label": "Tisztított terület"
+        },
+        "cleaning_time": {
+            "label": "Takarítási idő"
+        }
     },
     "icon": {
         "vacuum_start": "Indítás",
@@ -142,8 +162,8 @@
         "vacuum_stop": "Álljon meg",
         "vacuum_return_to_base": "Vissza a bázisra",
         "vacuum_clean_spot": "Clean spot",
-        "vacuum_locate": "Helymeghatározás",
-        "vacuum_set_fan_speed": "Ventilátor sebesség módosítása"
+        "vacuum_locate": "Robot megkeresése",
+        "vacuum_set_fan_speed": "Ventilátor üzemmódjának módosítása"
     },
     "unit": {
         "hour_shortcut": "h",

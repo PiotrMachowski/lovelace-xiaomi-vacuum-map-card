@@ -124,17 +124,68 @@
         "invalid_entities": "Ugyldige entiteter:",
         "invalid_calibration": "Ugyldig kalibrering, du bedes gennemgå din konfiguration"
     },
-    "label": {
-        "status": "Status",
-        "battery_level": "Batteri",
-        "fan_speed": "Hastighed",
-        "sensor_dirty_left": "Sensor vedl.",
-        "filter_left": "Filter vedl.",
-        "main_brush_left": "Hovedbørste vedl.",
-        "side_brush_left": "Sidebørste vedl.",
-        "cleaning_count": "Rengøringstæller",
-        "cleaned_area": "Rengjort areal",
-        "cleaning_time": "Rengørings tid"
+    "tile": {
+        "status": {
+            "label": "Status",
+            "value": {
+                "Starting": "Starter",
+                "Charger disconnected": "Oplader koblet fra",
+                "Idle": "Ledig",
+                "Remote control active": "Fjernstyring aktivt",
+                "Cleaning": "Rengører",
+                "Returning home": "Vender hjem",
+                "Manual mode": "Manuel tilstand",
+                "Charging": "Oplader",
+                "Charging problem": "Opladnings-problem",
+                "Paused": "Sat på pause",
+                "Spot cleaning": "Spot rengøring",
+                "Error": "Fejl",
+                "Shutting down": "Slukker",
+                "Updating": "Opdaterer",
+                "Docking": "Docker",
+                "Going to target": "Går til mål",
+                "Zoned cleaning": "Zone rengøring",
+                "Segment cleaning": "Segment rengøring",
+                "Emptying the bin": "Tømmes",
+                "Charging complete": "Fuldt opladt",
+                "Device offline": "Enhed offline"
+            }
+        },
+        "battery_level": {
+            "label": "Batteri"
+        },
+        "fan_speed": {
+            "label": "Hastighed",
+            "value": {
+                "Silent": "Stille",
+                "Standard": "Standard",
+                "Medium": "Medium",
+                "Turbo": "Turbo",
+                "Auto": "Auto",
+                "Gentle": "Mild"
+            }
+        },
+        "sensor_dirty_left": {
+            "label": "Sensor vedl."
+        },
+        "filter_left": {
+            "label": "Filter vedl."
+        },
+        "main_brush_left": {
+            "label": "Hovedbørste vedl."
+        },
+        "side_brush_left": {
+            "label": "Sidebørste vedl."
+        },
+        "cleaning_count": {
+            "label": "Rengøringstæller"
+        },
+        "cleaned_area": {
+            "label": "Rengjort areal"
+        },
+        "cleaning_time": {
+            "label": "Rengørings tid"
+        }
     },
     "icon": {
         "vacuum_start": "Start",

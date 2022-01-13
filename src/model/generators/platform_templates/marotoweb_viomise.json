@@ -70,25 +70,25 @@
         "from_attributes": [
             {
                 "attribute": "filter_left",
-                "label": "label.filter_left",
+                "label": "tile.filter_left.label",
                 "icon": "mdi:air-filter",
                 "unit": "unit.hour_shortcut"
             },
             {
                 "attribute": "main_brush_left",
-                "label": "label.main_brush_left",
+                "label": "tile.main_brush_left.label",
                 "icon": "mdi:brush",
                 "unit": "unit.hour_shortcut"
             },
             {
                 "attribute": "side_brush_left",
-                "label": "label.side_brush_left",
+                "label": "tile.side_brush_left.label",
                 "icon": "mdi:brush",
                 "unit": "unit.hour_shortcut"
             },
             {
                 "attribute": "mop_left",
-                "label": "label.mop_left",
+                "label": "tile.mop_left.label",
                 "icon": "mdi:format-color-fill",
                 "unit": "unit.hour_shortcut"
             }

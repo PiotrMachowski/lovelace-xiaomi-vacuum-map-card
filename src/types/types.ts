@@ -35,7 +35,7 @@ export interface XiaomiVacuumMapCardConfig extends LovelaceCardConfig, CardPrese
     readonly debug?: boolean;
 }
 
-export interface CardPresetConfig {
+export interface CardPresetConfig extends ConditionalObjectConfig {
     readonly preset_name?: string;
     readonly entity: string;
     readonly vacuum_platform?: string;
@@ -48,6 +48,9 @@ export interface CardPresetConfig {
     readonly tiles?: TileConfig[];
     readonly append_tiles?: boolean;
     readonly map_modes?: MapModeConfig[];
+    readonly activate?: ServiceCallSchemaConfig;
+    readonly activate_on_switch?: boolean;
+    readonly clean_selection_on_start?: boolean;
 }
 
 export interface MapSourceConfig {
@@ -121,6 +124,7 @@ export interface TileConfig extends ActionableObjectConfig, ConditionalObjectCon
     readonly unit?: string;
     readonly multiplier?: number;
     readonly precision?: number;
+    readonly translations?: Record<string, string>;
 }
 
 export interface ActionableObjectConfig {

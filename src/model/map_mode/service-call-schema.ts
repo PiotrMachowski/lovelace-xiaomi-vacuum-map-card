@@ -68,7 +68,7 @@ export class ServiceCallSchema {
                 case TemplatableValue.SELECTION_SIZE:
                     return selection.length;
                 case TemplatableValue.SELECTION_UNWRAPPED:
-                    return JSON.stringify(selection).replaceAll("[", "").replaceAll("]", "");
+                    return JSON.stringify(selection).replaceAll("[", "").replaceAll("]", "").replaceAll('"', "");
                 case TemplatableValue.REPEATS:
                     return repeats;
                 case TemplatableValue.POINT_X:

@@ -11,6 +11,8 @@
         "vacuum_goto": "Cible",
         "vacuum_goto_predefined": "Points",
         "vacuum_clean_segment": "Pièces",
+        "vacuum_clean_point": "Nettoyage ciblé",
+        "vacuum_clean_point_predefined": "Points",
         "vacuum_clean_zone": "Nettoyage de zone",
         "vacuum_clean_zone_predefined": "Liste des zones",
         "vacuum_follow_path": "Chemin"
@@ -113,10 +115,10 @@
                     }
                 },
                 "service_call_schema": {
-                    "missing": "Missing service call schema",
+                    "missing": "Schema d'appel du service manquant",
                     "service": {
-                        "missing": "Service call schema must contain service",
-                        "invalid": "Invalid service: {0}"
+                        "missing": "Le schema doit contenir un service",
+                        "invalid": "Service incorrect : {0}"
                     }
                 }
             }
@@ -124,26 +126,80 @@
         "invalid_entities": "Entités incorrectes :",
         "invalid_calibration": "Calibration incorrecte, vérifiez votre configuration"
     },
-    "label": {
-        "status": "Statut",
-        "battery_level": "Batterie",
-        "fan_speed": "Puissance",
-        "sensor_dirty_left": "Capteurs",
-        "filter_left": "Filtre",
-        "main_brush_left": "Brosse princ.",
-        "side_brush_left": "Brosse lat.",
-        "cleaning_count": "Nbr de nettoyages",
-        "cleaned_area": "Surface nettoyée",
-        "cleaning_time": "Temps de nettoyage"
+    "tile": {
+        "status": {
+            "label": "Statut",
+            "value": {
+                "Starting": "Démarrage...",
+                "Charger disconnected": "Chargeur déconnecté",
+                "Idle": "Inactif",
+                "Remote control active": "Télécommande active",
+                "Cleaning": "Nettoyage",
+                "Returning home": "Retour à la station",
+                "Manual mode": "Mode manuel",
+                "Charging": "En charge",
+                "Charging problem": "Problème de chargement",
+                "Paused": "En pause",
+                "Spot cleaning": "Nettoyage ciblé",
+                "Error": "Erreur",
+                "Shutting down": "Arrêt en cours...",
+                "Updating": "Mise à jour",
+                "Docking": "Retour à la station",
+                "Going to target": "En route vers la cible",
+                "Zoned cleaning": "Nettoyage de zone",
+                "Segment cleaning": "Nettoyage de pièce",
+                "Emptying the bin": "Vidage du réservoir",
+                "Charging complete": "Chargement terminé",
+                "Device offline": "Hors ligne"
+            }
+        },
+        "battery_level": {
+            "label": "Batterie"
+        },
+        "fan_speed": {
+            "label": "Puissance",
+            "value": {
+                "Silent": "Silencieux",
+                "Standard": "Standard",
+                "Medium": "Moyen",
+                "Turbo": "Turbo",
+                "Auto": "Auto",
+                "Gentle": "Calme"
+            }
+        },
+        "sensor_dirty_left": {
+            "label": "Sensors left"
+        },
+        "filter_left": {
+            "label": "Filtre"
+        },
+        "main_brush_left": {
+            "label": "Brosse principale"
+        },
+        "side_brush_left": {
+            "label": "Brosse latérale"
+        },
+        "cleaning_count": {
+            "label": "Nombre de nettoyages"
+        },
+        "cleaned_area": {
+            "label": "Surface nettoyée"
+        },
+        "cleaning_time": {
+            "label": "Durée de nettoyage"
+        },
+        "mop_left": {
+            "label": "Serpillère"
+        }
     },
     "icon": {
         "vacuum_start": "Démarrage",
         "vacuum_pause": "Pause",
         "vacuum_stop": "Stop",
-        "vacuum_return_to_base": "Retour à la base",
+        "vacuum_return_to_base": "Retour à la station",
         "vacuum_clean_spot": "Nettoyage ciblé",
         "vacuum_locate": "Localiser",
-        "vacuum_set_fan_speed": "Changer la puissance d'aspiration"
+        "vacuum_set_fan_speed": "Changer la puissance"
     },
     "unit": {
         "hour_shortcut": "h",
@@ -153,22 +209,22 @@
     },
     "popups": {
         "success": "Réussi !",
-        "no_selection": "Aucune sélection fournie",
-        "failed": "L'appel du service a échoué"
+        "no_selection": "Sélection non fournie",
+        "failed": "L'appel au service a échoué"
     },
     "editor": {
         "description": {
-            "before_link": "L'éditeur visuel permet seulement une configuration de base avec une entité caméra créée avec ",
+            "before_link": "Cet éditeur visuel ne permet qu'une configuration de base avec une entité caméra créée avec ",
             "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": ". Pour une configuration plus avancée, utilisez le mode YAML."
+            "after_link": ". Pour un paramétrage plus avancé, utilisez le mode YAML."
         },
         "label": {
             "name": "Titre (optionnel)",
-            "entity": "Entité du robot (obligatoire)",
+            "entity": "Entité de l'aspirateur (obligatoire)",
             "camera": "Entité de la caméra (obligatoire)",
-            "vacuum_platform": "Platforme (obligatoire)",
-            "map_locked": "Verrouiller la carte (optionnel)",
-            "two_finger_pan": "Défilement à deux doigts (optionnel)"
+            "vacuum_platform": "Plateforme (obligatoire)",
+            "map_locked": "Carte verrouillée (optionnel)",
+            "two_finger_pan": "Déplacement à deux doigts (optionnel)"
         }
     }
 }

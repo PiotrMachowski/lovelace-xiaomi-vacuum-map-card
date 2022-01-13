@@ -126,18 +126,40 @@
         "invalid_entities": "ישויות לא חוקיות:",
         "invalid_calibration": "כיול לא חוקי, אנא בדוק את התצורה שלך"
     },
-    "label": {
-        "status": "סטטוס",
-        "battery_level": "סוללה",
-        "fan_speed": "מהירות מאוורר",
-        "sensor_dirty_left": "נותר לחיישנים",
-        "filter_left": "נותר למסנן",
-        "main_brush_left": "נותר למברשת ראשית",
-        "side_brush_left": "נותר למברשת צד",
-        "cleaning_count": "כמות נקיונות",
-        "cleaned_area": "שטח שנוקה",
-        "cleaning_time": "זמן ניקיון",
-        "mop_left": "נותר למטלית"
+    "tile": {
+        "status": {
+            "label": "סטטוס"
+        },
+        "battery_level": {
+            "label": "סוללה"
+        },
+        "fan_speed": {
+            "label": "מהירות מאוורר"
+        },
+        "sensor_dirty_left": {
+            "label": "נותר לחיישנים"
+        },
+        "filter_left": {
+            "label": "נותר למסנן"
+        },
+        "main_brush_left": {
+            "label": "נותר למברשת ראשית"
+        },
+        "side_brush_left": {
+            "label": "נותר למברשת צד"
+        },
+        "cleaning_count": {
+            "label": "כמות נקיונות"
+        },
+        "cleaned_area": {
+            "label": "שטח שנוקה"
+        },
+        "cleaning_time": {
+            "label": "זמן ניקיון"
+        },
+        "mop_left": {
+            "label": "נותר למטלית"
+        }
     },
     "icon": {
         "vacuum_start": "התחל",

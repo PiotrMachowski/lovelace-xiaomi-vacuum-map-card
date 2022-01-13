@@ -126,18 +126,71 @@
         "invalid_entities": "Invalid entities:",
         "invalid_calibration": "Invalid calibration, please check your configuration"
     },
-    "label": {
-        "status": "Status",
-        "battery_level": "Battery",
-        "fan_speed": "Fan speed",
-        "sensor_dirty_left": "Sensors left",
-        "filter_left": "Filter left",
-        "main_brush_left": "Main brush left",
-        "side_brush_left": "Side brush left",
-        "cleaning_count": "Cleaning count",
-        "cleaned_area": "Cleaned area",
-        "cleaning_time": "Cleaning time",
-        "mop_left": "Mop left"
+    "tile": {
+        "status": {
+            "label": "Status",
+            "value": {
+                "Starting": "Starting",
+                "Charger disconnected": "Charger disconnected",
+                "Idle": "Idle",
+                "Remote control active": "Remote control active",
+                "Cleaning": "Cleaning",
+                "Returning home": "Returning home",
+                "Manual mode": "Manual mode",
+                "Charging": "Charging",
+                "Charging problem": "Charging problem",
+                "Paused": "Paused",
+                "Spot cleaning": "Spot cleaning",
+                "Error": "Error",
+                "Shutting down": "Shutting down",
+                "Updating": "Updating",
+                "Docking": "Docking",
+                "Going to target": "Going to target",
+                "Zoned cleaning": "Zoned cleaning",
+                "Segment cleaning": "Segment cleaning",
+                "Emptying the bin": "Emptying the bin",
+                "Charging complete": "Charging complete",
+                "Device offline": "Device offline"
+            }
+        },
+        "battery_level": {
+            "label": "Battery"
+        },
+        "fan_speed": {
+            "label": "Fan speed",
+            "value": {
+                "Silent": "Silent",
+                "Standard": "Standard",
+                "Medium": "Medium",
+                "Turbo": "Turbo",
+                "Auto": "Auto",
+                "Gentle": "Gentle"
+            }
+        },
+        "sensor_dirty_left": {
+            "label": "Sensors left"
+        },
+        "filter_left": {
+            "label": "Filter left"
+        },
+        "main_brush_left": {
+            "label": "Main brush left"
+        },
+        "side_brush_left": {
+            "label": "Side brush left"
+        },
+        "cleaning_count": {
+            "label": "Cleaning count"
+        },
+        "cleaned_area": {
+            "label": "Cleaned area"
+        },
+        "cleaning_time": {
+            "label": "Cleaning time"
+        },
+        "mop_left": {
+            "label": "Mop left"
+        }
     },
     "icon": {
         "vacuum_start": "Start",

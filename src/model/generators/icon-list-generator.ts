@@ -1,3 +1,4 @@
+import { HassEntity } from "home-assistant-js-websocket/dist/types";
 import { HomeAssistant } from "custom-card-helpers";
 
 import { IconActionConfig, Language } from "../../types/types";
@@ -16,153 +17,160 @@ export class IconListGenerator {
     public static generate(hass: HomeAssistant, vacuumEntity: string, language: Language): IconActionConfig[] {
         if (!hass) return [];
         const state = hass.states[vacuumEntity];
+        const state_available = state && state.attributes;
         const icons: IconActionConfig[] = [];
-        icons.push({
-            icon: "mdi:play",
-            conditions: [
-                {
-                    entity: vacuumEntity,
-                    value_not: "cleaning",
+        if (this.isFeatureSupported(state, 8192))
+            icons.push({
+                icon: "mdi:play",
+                conditions: [
+                    {
+                        entity: vacuumEntity,
+                        value_not: "cleaning",
+                    },
+                    {
+                        entity: vacuumEntity,
+                        value_not: "error",
+                    },
+                    {
+                        entity: vacuumEntity,
+                        value_not: "returning",
+                    },
+                ],
+                tooltip: localize("icon.vacuum_start", language),
+                tap_action: {
+                    action: "call-service",
+                    service: "vacuum.start",
+                    service_data: {
+                        entity_id: vacuumEntity,
+                    },
                 },
-                {
-                    entity: vacuumEntity,
-                    value_not: "error",
+            });
+        if (this.isFeatureSupported(state, 4))
+            icons.push({
+                icon: "mdi:pause",
+                conditions: [
+                    {
+                        entity: vacuumEntity,
+                        value_not: "docked",
+                    },
+                    {
+                        entity: vacuumEntity,
+                        value_not: "idle",
+                    },
+                    {
+                        entity: vacuumEntity,
+                        value_not: "error",
+                    },
+                    {
+                        entity: vacuumEntity,
+                        value_not: "paused",
+                    },
+                ],
+                tooltip: localize("icon.vacuum_pause", language),
+                tap_action: {
+                    action: "call-service",
+                    service: "vacuum.pause",
+                    service_data: {
+                        entity_id: vacuumEntity,
+                    },
                 },
-                {
-                    entity: vacuumEntity,
-                    value_not: "returning",
+            });
+        if (this.isFeatureSupported(state, 8))
+            icons.push({
+                icon: "mdi:stop",
+                conditions: [
+                    {
+                        entity: vacuumEntity,
+                        value_not: "docked",
+                    },
+                    {
+                        entity: vacuumEntity,
+                        value_not: "idle",
+                    },
+                    {
+                        entity: vacuumEntity,
+                        value_not: "error",
+                    },
+                    {
+                        entity: vacuumEntity,
+                        value_not: "paused",
+                    },
+                ],
+                tooltip: localize("icon.vacuum_stop", language),
+                tap_action: {
+                    action: "call-service",
+                    service: "vacuum.stop",
+                    service_data: {
+                        entity_id: vacuumEntity,
+                    },
                 },
-            ],
-            tooltip: localize("icon.vacuum_start", language),
-            tap_action: {
-                action: "call-service",
-                service: "vacuum.start",
-                service_data: {
-                    entity_id: vacuumEntity,
+            });
+        if (this.isFeatureSupported(state, 16))
+            icons.push({
+                icon: "mdi:home-map-marker",
+                conditions: [
+                    {
+                        entity: vacuumEntity,
+                        value_not: "docked",
+                    },
+                    {
+                        entity: vacuumEntity,
+                        value_not: "returning",
+                    },
+                ],
+                tooltip: localize("icon.vacuum_return_to_base", language),
+                tap_action: {
+                    action: "call-service",
+                    service: "vacuum.return_to_base",
+                    service_data: {
+                        entity_id: vacuumEntity,
+                    },
                 },
-            },
-        } as unknown as IconActionConfig);
-        icons.push({
-            icon: "mdi:pause",
-            conditions: [
-                {
-                    entity: vacuumEntity,
-                    value_not: "docked",
+            });
+        if (this.isFeatureSupported(state, 1024))
+            icons.push({
+                icon: "mdi:target-variant",
+                conditions: [
+                    {
+                        entity: vacuumEntity,
+                        value_not: "docked",
+                    },
+                    {
+                        entity: vacuumEntity,
+                        value_not: "error",
+                    },
+                    {
+                        entity: vacuumEntity,
+                        value_not: "cleaning",
+                    },
+                    {
+                        entity: vacuumEntity,
+                        value_not: "returning",
+                    },
+                ],
+                tooltip: localize("icon.vacuum_clean_spot", language),
+                tap_action: {
+                    action: "call-service",
+                    service: "vacuum.clean_spot",
+                    service_data: {
+                        entity_id: vacuumEntity,
+                    },
                 },
-                {
-                    entity: vacuumEntity,
-                    value_not: "idle",
+            });
+        if (this.isFeatureSupported(state, 512))
+            icons.push({
+                icon: "mdi:map-marker",
+                tooltip: localize("icon.vacuum_locate", language),
+                tap_action: {
+                    action: "call-service",
+                    service: "vacuum.locate",
+                    service_data: {
+                        entity_id: vacuumEntity,
+                    },
                 },
-                {
-                    entity: vacuumEntity,
-                    value_not: "error",
-                },
-                {
-                    entity: vacuumEntity,
-                    value_not: "paused",
-                },
-            ],
-            tooltip: localize("icon.vacuum_pause", language),
-            tap_action: {
-                action: "call-service",
-                service: "vacuum.pause",
-                service_data: {
-                    entity_id: vacuumEntity,
-                },
-            },
-        } as unknown as IconActionConfig);
-        icons.push({
-            icon: "mdi:stop",
-            conditions: [
-                {
-                    entity: vacuumEntity,
-                    value_not: "docked",
-                },
-                {
-                    entity: vacuumEntity,
-                    value_not: "idle",
-                },
-                {
-                    entity: vacuumEntity,
-                    value_not: "error",
-                },
-                {
-                    entity: vacuumEntity,
-                    value_not: "paused",
-                },
-            ],
-            tooltip: localize("icon.vacuum_stop", language),
-            tap_action: {
-                action: "call-service",
-                service: "vacuum.stop",
-                service_data: {
-                    entity_id: vacuumEntity,
-                },
-            },
-        } as unknown as IconActionConfig);
-        icons.push({
-            icon: "mdi:home-map-marker",
-            conditions: [
-                {
-                    entity: vacuumEntity,
-                    value_not: "docked",
-                },
-                {
-                    entity: vacuumEntity,
-                    value_not: "returning",
-                },
-            ],
-            tooltip: localize("icon.vacuum_return_to_base", language),
-            tap_action: {
-                action: "call-service",
-                service: "vacuum.return_to_base",
-                service_data: {
-                    entity_id: vacuumEntity,
-                },
-            },
-        } as unknown as IconActionConfig);
-        icons.push({
-            icon: "mdi:target-variant",
-            conditions: [
-                {
-                    entity: vacuumEntity,
-                    value_not: "docked",
-                },
-                {
-                    entity: vacuumEntity,
-                    value_not: "error",
-                },
-                {
-                    entity: vacuumEntity,
-                    value_not: "cleaning",
-                },
-                {
-                    entity: vacuumEntity,
-                    value_not: "returning",
-                },
-            ],
-            tooltip: localize("icon.vacuum_clean_spot", language),
-            tap_action: {
-                action: "call-service",
-                service: "vacuum.clean_spot",
-                service_data: {
-                    entity_id: vacuumEntity,
-                },
-            },
-        } as unknown as IconActionConfig);
-        icons.push({
-            icon: "mdi:map-marker",
-            tooltip: localize("icon.vacuum_locate", language),
-            tap_action: {
-                action: "call-service",
-                service: "vacuum.locate",
-                service_data: {
-                    entity_id: vacuumEntity,
-                },
-            },
-        } as unknown as IconActionConfig);
+            });
 
-        const fanSpeeds = state && state.attributes ? state.attributes["fan_speed_list"] ?? [] : [];
+        const fanSpeeds = state_available ? state.attributes["fan_speed_list"] ?? [] : [];
         for (let i = 0; i < fanSpeeds.length; i++) {
             const fanSpeed = fanSpeeds[i];
             const nextFanSpeed = fanSpeeds[(i + 1) % fanSpeeds.length];
@@ -184,7 +192,7 @@ export class IconListGenerator {
                         fan_speed: nextFanSpeed,
                     },
                 },
-            } as unknown as IconActionConfig);
+            });
         }
         if (fanSpeeds.length != 0) {
             icons.push({
@@ -202,5 +210,9 @@ export class IconListGenerator {
             });
         }
         return icons;
+    }
+
+    private static isFeatureSupported(state: HassEntity, features: number) {
+        return state && state.attributes && ((state.attributes["supported_features"] ?? 0) & features) === features;
     }
 }

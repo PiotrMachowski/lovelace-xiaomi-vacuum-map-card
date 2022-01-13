@@ -17,6 +17,10 @@ export class TileRenderer {
                 value = value.toFixed(config.precision);
             }
         }
+        const translations = config.translations ?? {};
+        if (value in translations) {
+            value = translations[value];
+        }
         return html`
             <div
                 class="tile-wrapper clickable ripple"
