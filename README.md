@@ -25,7 +25,7 @@
 [paypal_me]: https://paypal.me/PiMachowski
 
 
-# Lovelace Xiaomi Vacuum Map card
+# Lovelace Vacuum Map card
 
 This card provides a user-friendly way to fully control Xiaomi (Roborock/Viomi/Dreame/Roidmi) and Neato (+ possibly
 other) vacuums in [Home Assistant](https://www.home-assistant.io/).
