@@ -11,6 +11,8 @@
         "vacuum_goto": "Marcar e ir",
         "vacuum_goto_predefined": "Puntos",
         "vacuum_clean_segment": "Habitaciones",
+        "vacuum_clean_point": "Punto limpio",
+        "vacuum_clean_point_predefined": "Puntos",
         "vacuum_clean_zone": "Limpiar zona",
         "vacuum_clean_zone_predefined": "Lista de zonas",
         "vacuum_follow_path": "Ruta"
@@ -124,17 +126,71 @@
         "invalid_entities": "Entidades inválidas:",
         "invalid_calibration": "Calibración inválida, verifique la configuración."
     },
-    "label": {
-        "status": "Estado",
-        "battery_level": "Batería",
-        "fan_speed": "Velocidad del ventilador",
-        "sensor_dirty_left": "Sensor izquierdo",
-        "filter_left": "Filtro derecho",
-        "main_brush_left": "Cepillo principal izquierdo",
-        "side_brush_left": "Cepillo lateral izquierdo",
-        "cleaning_count": "Contador de limpieza",
-        "cleaned_area": "Área limpia",
-        "cleaning_time": "Tiempo de limpieza"
+    "tile": {
+        "status": {
+            "label": "Estado",
+            "value": {
+                "Starting": "Comenzando",
+                "Charger disconnected": "Cargador desconectado",
+                "Idle": "Inactivo",
+                "Remote control active": "Control remoto activo",
+                "Cleaning": "Limpiando",
+                "Returning home": "Volviendo a la base",
+                "Manual mode": "Modo manual",
+                "Charging": "Cargando",
+                "Charging problem": "Error de carga",
+                "Paused": "Pausado",
+                "Spot cleaning": "Limpieza de manchas",
+                "Error": "Error",
+                "Shutting down": "Apagando",
+                "Updating": "Actualizando",
+                "Docking": "Docking",
+                "Going to target": "Ir al objetivo",
+                "Zoned cleaning": "Limpieza por zonas",
+                "Segment cleaning": "Limpieza por segmentos",
+                "Emptying the bin": "Vaciando el depósito de mugre",
+                "Charging complete": "Carga completa",
+                "Device offline": "Dispositivo desconectado"
+            }
+        },
+        "battery_level": {
+            "label": "Batería"
+        },
+        "fan_speed": {
+            "label": "Velocidad del ventilador",
+            "value": {
+                "Silent": "Silencioso",
+                "Standard": "Normal",
+                "Medium": "Medio",
+                "Turbo": "Turbo",
+                "Auto": "Automático",
+                "Gentle": "Suave"
+            }
+        },
+        "sensor_dirty_left": {
+            "label": "Sensor izquierdo"
+        },
+        "filter_left": {
+            "label": "Filtro derecho"
+        },
+        "main_brush_left": {
+            "label": "Cepillo principal izquierdo"
+        },
+        "side_brush_left": {
+            "label": "Cepillo lateral izquierdo"
+        },
+        "cleaning_count": {
+            "label": "Contador de limpieza"
+        },
+        "cleaned_area": {
+            "label": "Área limpia"
+        },
+        "cleaning_time": {
+            "label": "Tiempo de limpieza"
+        },
+        "mop_left": {
+            "label": "Mopa izquierda"
+        }
     },
     "icon": {
         "vacuum_start": "Comenzar",
