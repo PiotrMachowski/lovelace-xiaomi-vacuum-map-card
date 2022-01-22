@@ -25,7 +25,7 @@
 [paypal_me]: https://paypal.me/PiMachowski
 
 
-# Lovelace Xiaomi Vacuum Map card
+# Lovelace Vacuum Map card
 
 This card provides a user-friendly way to fully control Xiaomi (Roborock/Viomi/Dreame/Roidmi) and Neato (+ possibly
 other) vacuums in [Home Assistant](https://www.home-assistant.io/).
@@ -316,32 +316,32 @@ List of supported templates depends on selected `vacuum_platform`:
 
 - `default`:
   - `vacuum_clean_zone`: Cleaning free-drawn rectangular zones on the map
-  - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections`
+  - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
   - `vacuum_goto`: Going to point selected by clicking in an arbitrary place on the map
-  - `vacuum_goto_predefined`: Going to point selected on the map from `predefined_selections`
-  - `vacuum_clean_segment`: Room cleaning based on identifier
+  - `vacuum_goto_predefined`: Going to point selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
+  - `vacuum_clean_segment`: Room cleaning based on identifier - room number ([getting outline](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318), [config generator](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/317))
   - `vacuum_follow_path`: Following path selected by clicking on the map (using [script](/docs/follow_path.yaml))
 - `KrzysztofHajdamowicz/miio2`
   - `vacuum_clean_zone`: Cleaning free-drawn rectangular zones on the map
-  - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections`
+  - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
   - `vacuum_goto`: Going to point selected by clicking in an arbitrary place on the map
-  - `vacuum_goto_predefined`: Going to point selected on the map from `predefined_selections`
-  - `vacuum_clean_segment`: Room cleaning based on identifier
+  - `vacuum_goto_predefined`: Going to point selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
+  - `vacuum_clean_segment`: Room cleaning based on identifier - room number ([getting outline](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318), [config generator](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/317))
   - `vacuum_follow_path`: Following path selected by clicking on the map (using [script](/docs/follow_path.yaml))
 - `marotoweb/viomise`
   - `vacuum_clean_zone`: Cleaning free-drawn rectangular zones on the map
-  - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections`
+  - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
   - `vacuum_clean_point`: Cleaning around point selected by clicking in an arbitrary place on the map
-  - `vacuum_clean_point_predefined`: Cleaning around point selected on the map from `predefined_selections`
+  - `vacuum_clean_point_predefined`: Cleaning around point selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
 - `send_command`
   - `vacuum_clean_zone`: Cleaning free-drawn rectangular zones on the map
-  - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections`
+  - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
   - `vacuum_goto`: Going to point selected by clicking in an arbitrary place on the map
-  - `vacuum_goto_predefined`: Going to point selected on the map from `predefined_selections`
-  - `vacuum_clean_segment`: Room cleaning based on identifier
+  - `vacuum_goto_predefined`: Going to point selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
+  - `vacuum_clean_segment`: Room cleaning based on identifier - room number ([getting outline](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318), [config generator](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/317))
   - `vacuum_follow_path`: Following path selected by clicking on the map (using [script](/docs/follow_path.yaml))
 - `Neato`
-  - `vacuum_clean_segment`: Room cleaning based on identifier
+  - `vacuum_clean_segment`: Room cleaning based on identifier ([getting outline](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
 
 > See [hints](#hints) to check how to easily retrieve zone/point coordinates.
 
@@ -472,53 +472,6 @@ Format of data depends on selected `selection_type`:
 | `offset_x` | number | no | - | Offset that should be applied to label in X direction (in pixels) |
 | `offset_y` | number | no | - | Offset that should be applied to label in Y direction (in pixels) |
 
-## Hints
-
-- **Getting room/point coordinates**
-
-  To get coordinates switch to a specific mode, create a selection and hold "Play" button.
-  A popup with full service call details will be shown.
-  This feature replaces `debug` option from previous versions of the card.
-  Config will also be written in [browser's console](https://webmasters.stackexchange.com/questions/8525/how-do-i-open-the-javascript-console-in-different-browsers) to make it easier to copy.
-
-- **Creating outline**
-
-  To create an outline follow these steps:
-    - Add `- template: vacuum_follow_path` to `map_modes` section
-    - Select "Path" from modes dropdown
-    - Mark a selected outline on a map
-    - Hold "Play" button
-    - Your outline will be in `path` section of service data
-
-- **Advanced styling**
-
-  You can add any of [these variables](/docs/css_variables.md) to your theme to override default card styling.
-
-  It is also possible to style this card using [card-mod](https://github.com/thomasloven/lovelace-card-mod).
-
-  Example - changing room selection colors
-  ```yaml
-  ...
-  style: |
-    .room-1-wrapper {
-      --map-card-internal-room-outline-line-color: red;
-      --map-card-internal-room-outline-fill-color: rgba(255, 0, 0, 0.5)
-    }
-    .room-2-wrapper {
-      --map-card-internal-room-outline-line-color: blue;
-      --map-card-internal-room-outline-fill-color: rgba(0, 0, 255, 0.5)
-    }
-    .room-<room_id>-wrapper {
-      --map-card-internal-room-outline-line-color: green;
-      --map-card-internal-room-outline-fill-color: rgba(0, 255, 0, 0.5)
-    }
-  ```
-
-- **Adding icons/tiles to the default configuration**
-
-  Generated icons/tiles will be overwritten when `icons`/`tiles` config is provided.
-  To extract default generated configuration double-tap play icon: config will be available as a JSON in browser's console.
-  You can convert it to YAML using [json2yaml.com](https://www.json2yaml.com/).
 
 ## FAQ
 
