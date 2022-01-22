@@ -73,22 +73,19 @@ export class PredefinedPoint extends MapObject {
             .predefined-point-icon-wrapper {
                 x: var(--x-icon);
                 y: var(--y-icon);
-                height: var(--map-card-internal-predefined-point-icon-size);
-                width: var(--map-card-internal-predefined-point-icon-size);
-                border-radius: calc(var(--map-card-internal-predefined-point-icon-size) / 2);
+                height: var(--map-card-internal-predefined-point-icon-wrapper-size);
+                width: var(--map-card-internal-predefined-point-icon-wrapper-size);
+                border-radius: var(--map-card-internal-small-radius);
                 transform-box: fill-box;
-                transform: scale(calc(1 / var(--map-scale)))
-                    translate(
-                        calc(var(--map-card-internal-predefined-point-icon-size) / -2),
-                        calc(var(--map-card-internal-predefined-point-icon-size) / -2)
-                    );
+                overflow: hidden;
+                transform: translate(
+                        calc(var(--map-card-internal-predefined-point-icon-wrapper-size) / -2),
+                        calc(var(--map-card-internal-predefined-point-icon-wrapper-size) / -2)
+                    )
+                    scale(calc(1 / var(--map-scale)));
                 background: var(--map-card-internal-predefined-point-icon-background-color);
                 color: var(--map-card-internal-predefined-point-icon-color);
-                padding: var(--map-card-internal-predefined-point-icon-padding);
-                --mdc-icon-size: calc(
-                    var(--map-card-internal-predefined-point-icon-size) -
-                        var(--map-card-internal-predefined-point-icon-padding) * 2
-                );
+                --mdc-icon-size: var(--map-card-internal-predefined-point-icon-size);
                 transition: color var(--map-card-internal-transitions-duration) ease,
                     background var(--map-card-internal-transitions-duration) ease;
             }
@@ -97,17 +94,13 @@ export class PredefinedPoint extends MapObject {
                 text-anchor: middle;
                 dominant-baseline: middle;
                 pointer-events: none;
-                transform: translate(
-                    calc(var(--offset-x) / var(--map-scale)),
-                    calc(var(--offset-y) / var(--map-scale))
-                );
                 font-size: calc(var(--map-card-internal-predefined-point-label-font-size) / var(--map-scale));
                 fill: var(--map-card-internal-predefined-point-label-color);
                 transition: color var(--map-card-internal-transitions-duration) ease,
                     background var(--map-card-internal-transitions-duration) ease;
             }
 
-            .predefined-point-wrapper.selected > .predefined-point-icon-wrapper {
+            .predefined-point-wrapper.selected > * > .predefined-point-icon-wrapper {
                 background: var(--map-card-internal-predefined-point-icon-background-color-selected);
                 color: var(--map-card-internal-predefined-point-icon-color-selected);
             }

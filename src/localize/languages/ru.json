@@ -1,0 +1,230 @@
+{
+    "common": {
+        "version": "Версия",
+        "invalid_configuration": "Неверная конфигурация {0}",
+        "description": "Карточка, позволяющая управлять вашим пылесосом",
+        "old_configuration": "Обнаружена устаревшая конфигурация. Приведите ваш конфиг в соответствие с новой версией, или создайте новую карточку с нуля.",
+        "old_configuration_migration_link": "Руководство по переходу с предыдущих версий."
+    },
+    "map_mode": {
+        "invalid": "Неверный шаблон!",
+        "vacuum_goto": "Точка назначения",
+        "vacuum_goto_predefined": "Предустановленные точки",
+        "vacuum_clean_segment": "Комнаты",
+        "vacuum_clean_point": "Уборка точки",
+        "vacuum_clean_point_predefined": "Список точек",
+        "vacuum_clean_zone": "Уборка зоны",
+        "vacuum_clean_zone_predefined": "Список зон",
+        "vacuum_follow_path": "Путь"
+    },
+    "validation": {
+        "preset": {
+            "entity": {
+                "missing": "Не указано свойство: entity"
+            },
+            "preset_name": {
+                "missing": "Не указано свойство: preset_name"
+            },
+            "platform": {
+                "invalid": "Неверная платформа: {0}"
+            },
+            "map_source": {
+                "missing": "Не указано свойство: map_source",
+                "none_provided": "Не предоставлена ни камера ни изображение",
+                "ambiguous": "Допустим только один источник для карты"
+            },
+            "calibration_source": {
+                "missing": "Не указано свойство: calibration_source",
+                "ambiguous": "Допустим только один источник для калибровки",
+                "none_provided": "Не предоставлен источник калибровки",
+                "calibration_points": {
+                    "invalid_number": "Для калибровки требуется 3 или 4 точки",
+                    "missing_map": "Каждая точка калибровки должна содержать координаты карты",
+                    "missing_vacuum": "Каждая точка калибровки должна содержать координаты пылесоса",
+                    "missing_coordinate": "Калибровочные точки карты и пылесоса должны содержать как x так и y координаты"
+                }
+            },
+            "icons": {
+                "invalid": "Ошибка в конфигурации: icons",
+                "icon": {
+                    "missing": "Каждое вхождение в списке иконок должен содержать icon property"
+                }
+            },
+            "tiles": {
+                "invalid": "Ошибка в конфигурации: tiles",
+                "entity": {
+                    "missing": "Каждое вхождение в списке плиток должно содержать entity"
+                },
+                "label": {
+                    "missing": "Каждое вхождение в списке плиток должно содержать label"
+                }
+            },
+            "map_modes": {
+                "invalid": "Ошибка в конфигурации: map_modes",
+                "icon": {
+                    "missing": "Не указана иконка для влажной уборки"
+                },
+                "name": {
+                    "missing": "Не указано имя для влажной уборки"
+                },
+                "template": {
+                    "invalid": "Неверный шаблон: {0}"
+                },
+                "predefined_selections": {
+                    "not_applicable": "Режим {0} не поддерживает предустановленые элементы",
+                    "zones": {
+                        "missing": "Не указана конфигурация зоны",
+                        "invalid_parameters_number": "Каждая зона должна содержать 4 параметра"
+                    },
+                    "points": {
+                        "position": {
+                            "missing": "Не указана конфигурация для точек",
+                            "invalid_parameters_number": "Каждая точка должна содержать 2 параметра"
+                        }
+                    },
+                    "rooms": {
+                        "id": {
+                            "missing": "Не указан id комнаты",
+                            "invalid_format": "Некорректный id комнаты: {0}"
+                        },
+                        "outline": {
+                            "invalid_parameters_number": "Каждая точка контура комнаты должна содержать 2 параметра"
+                        }
+                    },
+                    "label": {
+                        "x": {
+                            "missing": "Ярлык должен содержать свойство x"
+                        },
+                        "y": {
+                            "missing": "Ярлык должен содержать свойство y"
+                        },
+                        "text": {
+                            "missing": "Ярлык должен содержать свойство text"
+                        }
+                    },
+                    "icon": {
+                        "x": {
+                            "missing": "Иконка должна содержать свойство x"
+                        },
+                        "y": {
+                            "missing": "Иконка должна содержать свойство y"
+                        },
+                        "name": {
+                            "missing": "Иконка должна содержать свойство name"
+                        }
+                    }
+                },
+                "service_call_schema": {
+                    "missing": "Отсутствует схема вызова службы",
+                    "service": {
+                        "missing": "Схема вызова службы должна содержать service",
+                        "invalid": "Некорректная служба: {0}"
+                    }
+                }
+            }
+        },
+        "invalid_entities": "Некорректные сущности:",
+        "invalid_calibration": "Некорректная калибровка, проверьте вашу конфигурацию"
+    },
+    "tile": {
+        "status": {
+            "label": "Статус",
+            "value": {
+                "Starting": "Начало уборки",
+                "Charger disconnected": "Зарядное устройство отключено",
+                "Idle": "Ожидание",
+                "Remote control active": "Включено управление через пульт",
+                "Cleaning": "Уборка",
+                "Returning home": "Возвращение на базу",
+                "Manual mode": "Ручной режим",
+                "Charging": "Зарядка",
+                "Charging problem": "Проблема с зарядкой",
+                "Paused": "Пауза",
+                "Spot cleaning": "Уборка точки",
+                "Error": "Ошибка",
+                "Shutting down": "Выключение",
+                "Updating": "Обновление",
+                "Docking": "Остановка у базы",
+                "Going to target": "Направление до точки",
+                "Zoned cleaning": "Уборка зоны",
+                "Segment cleaning": "Уборка",
+                "Emptying the bin": "Очистка бака",
+                "Charging complete": "Зарядка завершена",
+                "Device offline": "Устройство не в сети"
+            }
+        },
+        "battery_level": {
+            "label": "Уровень заряда"
+        },
+        "fan_speed": {
+            "label": "Мощность всасывания",
+            "value": {
+                "Silent": "Тихий",
+                "Standard": "Стандарт",
+                "Medium": "Средний",
+                "Turbo": "Турбо",
+                "Auto": "Авто",
+                "Gentle": "Слабый"
+            }
+        },
+        "sensor_dirty_left": {
+            "label": "Уровень загрязнения датчиков"
+        },
+        "filter_left": {
+            "label": "Ресурс фильтра"
+        },
+        "main_brush_left": {
+            "label": "Ресурс основной щётки"
+        },
+        "side_brush_left": {
+            "label": "Ресурс боковой щётки"
+        },
+        "cleaning_count": {
+            "label": "Число уборок"
+        },
+        "cleaned_area": {
+            "label": "Площадь уборки"
+        },
+        "cleaning_time": {
+            "label": "Время уборки"
+        },
+        "mop_left": {
+            "label": "Ресурс тряпки"
+        }
+    },
+    "icon": {
+        "vacuum_start": "Старт",
+        "vacuum_pause": "Пауза",
+        "vacuum_stop": "Стоп",
+        "vacuum_return_to_base": "Вернуть к базе",
+        "vacuum_clean_spot": "Убрать точку",
+        "vacuum_locate": "Обнаружить",
+        "vacuum_set_fan_speed": "Изменить мощность всасывания"
+    },
+    "unit": {
+        "hour_shortcut": "ч",
+        "meter_shortcut": "м",
+        "meter_squared_shortcut": "м²",
+        "minute_shortcut": "мин"
+    },
+    "popups": {
+        "success": "Успех!",
+        "no_selection": "Ничего не выбрано",
+        "failed": "Не удалось вызвать службу"
+    },
+    "editor": {
+        "description": {
+            "before_link": "Данный редактор поддерживает только базовую конфигурацию с камерой, созданной посредством",
+            "link_text": "Xiaomi Cloud Map Extractor",
+            "after_link": ". Для более тонкой настройки, используйте YAML-мод."
+        },
+        "label": {
+            "name": "Заголовок (опционально)",
+            "entity": "Сущность пылесоса (обязательно)",
+            "camera": "Сущность камеры (обязательно)",
+            "vacuum_platform": "Платформа пылесоса (обязательно)",
+            "map_locked": "Блокировка карты (опционально)",
+            "two_finger_pan": "Перемещение жестом двумя пальцами (опционально)"
+        }
+    }
+}

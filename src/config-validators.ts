@@ -7,6 +7,7 @@ import {
     IconActionConfig,
     IconConfig,
     LabelConfig,
+    Language,
     MapModeConfig,
     MapSourceConfig,
     PredefinedPointConfig,
@@ -18,7 +19,7 @@ import {
     TranslatableString,
     XiaomiVacuumMapCardConfig,
 } from "./types/types";
-import { localizeTranslatable } from "./localize/localize";
+import { localize } from "./localize/localize";
 import { MapMode } from "./model/map_mode/map-mode";
 import { SelectionType } from "./model/map_mode/selection-type";
 import { PlatformGenerator } from "./model/generators/platform-generator";
@@ -41,7 +42,9 @@ function validateCalibrationPoint(calibrationPoint: CalibrationPoint): Translata
     if (!calibrationPoint?.vacuum) {
         errors.push("validation.preset.calibration_source.calibration_points.missing_vacuum");
     }
-    if ([calibrationPoint?.map, calibrationPoint?.vacuum].filter(p => !p.x || !p.y).length > 0) {
+    if (
+        [calibrationPoint?.map, calibrationPoint?.vacuum].filter(p => p.x === undefined || p.y === undefined).length > 0
+    ) {
         errors.push("validation.preset.calibration_source.calibration_points.missing_coordinate");
     }
     return errors;
@@ -86,10 +89,10 @@ function validateSensorConfig(config: TileConfig): TranslatableString[] {
 }
 
 function validateIcon(config: IconConfig): TranslatableString[] {
-    if (!config.x) {
+    if (config.x === undefined) {
         return ["validation.preset.map_modes.predefined_selections.icon.x.missing"];
     }
-    if (!config.y) {
+    if (config.y === undefined) {
         return ["validation.preset.map_modes.predefined_selections.icon.y.missing"];
     }
     if (!config.name) {
@@ -99,10 +102,10 @@ function validateIcon(config: IconConfig): TranslatableString[] {
 }
 
 function validateLabel(config: LabelConfig): TranslatableString[] {
-    if (!config.x) {
+    if (config.x === undefined) {
         return ["validation.preset.map_modes.predefined_selections.label.x.missing"];
     }
-    if (!config.y) {
+    if (config.y === undefined) {
         return ["validation.preset.map_modes.predefined_selections.label.y.missing"];
     }
     if (!config.text) {
@@ -150,10 +153,10 @@ function validatePredefinedPointConfig(ps: PredefinedSelectionConfig): Translata
 function validateRoomConfig(ps: PredefinedSelectionConfig): TranslatableString[] {
     const config = ps as RoomConfig;
     const errors: TranslatableString[] = [];
-    if (!config.id) {
+    if (config.id === undefined) {
         errors.push("validation.preset.map_modes.predefined_selections.rooms.id.missing");
     }
-    if (!config.id.toString().match(/^[a-z0-9]+$/i)) {
+    if (!config.id.toString().match(/^[A-Za-z0-9 _]+$/i)) {
         errors.push([
             "validation.preset.map_modes.predefined_selections.rooms.id.invalid_format",
             "{0}",
@@ -182,7 +185,11 @@ function validateServiceCallSchemaConfig(config: ServiceCallSchemaConfig): Trans
     return [];
 }
 
-function validateMapModeConfig(vacuumPlatform: string, config: MapModeConfig): TranslatableString[] {
+function validateMapModeConfig(
+    vacuumPlatform: string,
+    config: MapModeConfig,
+    language: Language,
+): TranslatableString[] {
     if (!config) {
         return ["validation.preset.map_modes.invalid"];
     }
@@ -199,7 +206,7 @@ function validateMapModeConfig(vacuumPlatform: string, config: MapModeConfig): T
     if (!config.template && !config.service_call_schema) {
         errors.push("validation.preset.map_modes.service_call_schema.missing");
     }
-    const parsed = new MapMode(vacuumPlatform, config);
+    const parsed = new MapMode(vacuumPlatform, config, language);
     switch (parsed.selectionType) {
         case SelectionType.PREDEFINED_RECTANGLE:
             parsed.predefinedSelections
@@ -228,7 +235,7 @@ function validateMapModeConfig(vacuumPlatform: string, config: MapModeConfig): T
     return errors;
 }
 
-function validatePreset(config: CardPresetConfig, nameRequired: boolean): TranslatableString[] {
+function validatePreset(config: CardPresetConfig, nameRequired: boolean, language: Language): TranslatableString[] {
     const errors: TranslatableString[] = [];
     const mandatoryFields = new Map<string, string>([
         ["entity", "validation.preset.entity.missing"],
@@ -248,7 +255,9 @@ function validatePreset(config: CardPresetConfig, nameRequired: boolean): Transl
     const vacuumPlatform = config.vacuum_platform ?? "default";
     (config.icons ?? []).flatMap(i => validateIconConfig(i)).forEach(e => errors.push(e));
     (config.tiles ?? []).flatMap(i => validateSensorConfig(i)).forEach(e => errors.push(e));
-    (config.map_modes ?? []).flatMap(i => validateMapModeConfig(vacuumPlatform, i)).forEach(e => errors.push(e));
+    (config.map_modes ?? [])
+        .flatMap(i => validateMapModeConfig(vacuumPlatform, i, language))
+        .forEach(e => errors.push(e));
     if (!config.preset_name && nameRequired) errors.push("validation.preset.preset_name.missing");
     return errors;
 }
@@ -256,9 +265,11 @@ function validatePreset(config: CardPresetConfig, nameRequired: boolean): Transl
 export function validateConfig(config: XiaomiVacuumMapCardConfig): string[] {
     const errors: TranslatableString[] = [];
     const multiplePresets = (config.additional_presets?.length ?? 0) > 0;
-    validatePreset(config, multiplePresets).forEach(e => errors.push(e));
-    config.additional_presets?.flatMap(preset => validatePreset(preset, multiplePresets)).forEach(e => errors.push(e));
-    return errors.map(e => localizeTranslatable(e));
+    validatePreset(config, multiplePresets, config.language).forEach(e => errors.push(e));
+    config.additional_presets
+        ?.flatMap(preset => validatePreset(preset, multiplePresets, config.language))
+        .forEach(e => errors.push(e));
+    return errors.map(e => localize(e, config.language));
 }
 
 export function isOldConfig(config: XiaomiVacuumMapCardConfig): boolean {

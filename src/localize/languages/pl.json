@@ -11,6 +11,8 @@
         "vacuum_goto": "Idź do punktu",
         "vacuum_goto_predefined": "Zapisane punkty",
         "vacuum_clean_segment": "Pokoje",
+        "vacuum_clean_point": "Sprzątanie punktowe",
+        "vacuum_clean_point_predefined": "Zapisane punkty",
         "vacuum_clean_zone": "Sprzątanie strefowe",
         "vacuum_clean_zone_predefined": "Zapisane strefy",
         "vacuum_follow_path": "Ścieżka"
@@ -124,17 +126,71 @@
         "invalid_entities": "Nieprawidłowe encje:",
         "invalid_calibration": "Nieprawidłowa kalibracja, sprawdź konfigurację"
     },
-    "label": {
-        "status": "Status",
-        "battery_level": "Bateria",
-        "fan_speed": "Moc",
-        "sensor_dirty_left": "Sensory",
-        "filter_left": "Filtr",
-        "main_brush_left": "Główna szczotka",
-        "side_brush_left": "Boczna szczotka",
-        "cleaning_count": "Licznik sprzątań",
-        "cleaned_area": "Powierzchnia",
-        "cleaning_time": "Czas sprzątania"
+    "tile": {
+        "status": {
+            "label": "Status",
+            "value": {
+                "Starting": "Uruchamianie",
+                "Charger disconnected": "Ładowarka odłączona",
+                "Idle": "Nieaktywny",
+                "Remote control active": "Zdalne sterowanie",
+                "Cleaning": "Sprzątanie",
+                "Returning home": "Powrót do stacji",
+                "Manual mode": "Tryb manualny",
+                "Charging": "Ładowanie",
+                "Charging problem": "Problem z ładowaniem",
+                "Paused": "Wstrzymany",
+                "Spot cleaning": "Sprzątanie punktowe",
+                "Error": "Błąd",
+                "Shutting down": "Wyłączanie",
+                "Updating": "Aktualizowanie",
+                "Docking": "Dokowanie",
+                "Going to target": "W drodze do celu",
+                "Zoned cleaning": "Sprzątanie strefowe",
+                "Segment cleaning": "Sprzątanie pokoju",
+                "Emptying the bin": "Opróżnianie pojemnika",
+                "Charging complete": "Ładowanie zakończone",
+                "Device offline": "Offline"
+            }
+        },
+        "battery_level": {
+            "label": "Bateria"
+        },
+        "fan_speed": {
+            "label": "Wentylator",
+            "value": {
+                "Silent": "Cichy",
+                "Standard": "Normalny",
+                "Medium": "Średni",
+                "Turbo": "Turbo",
+                "Auto": "Automatyczny",
+                "Gentle": "Delikatny"
+            }
+        },
+        "sensor_dirty_left": {
+            "label": "Sensory"
+        },
+        "filter_left": {
+            "label": "Filtr"
+        },
+        "main_brush_left": {
+            "label": "Główna szczotka"
+        },
+        "side_brush_left": {
+            "label": "Boczna szczotka"
+        },
+        "cleaning_count": {
+            "label": "Licznik sprzątań"
+        },
+        "cleaned_area": {
+            "label": "Powierzchnia"
+        },
+        "cleaning_time": {
+            "label": "Czas sprzątania"
+        },
+        "mop_left": {
+            "label": "Mop"
+        }
     },
     "icon": {
         "vacuum_start": "Uruchom",

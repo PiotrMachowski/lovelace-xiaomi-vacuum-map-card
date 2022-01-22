@@ -55,6 +55,22 @@ body:
       label: What vacuum model do you have problems with?
       placeholder: roborock.vacuum.s5e
   - type: input
+    id: vacuum-integration
+    validations:
+      required: true
+    attributes:
+      label: Which integration do you use to control your vacuum (link)?
+      description: Provide a link to (custom) integration that you use to control your vacuum. 
+      placeholder: https://www.home-assistant.io/integrations/xiaomi_miio/
+      value: https://www.home-assistant.io/integrations/xiaomi_miio/
+  - type: input
+    id: browser
+    validations:
+      required: true
+    attributes:
+      label: What browser (browsers/apps) does have this problem?
+      placeholder: Chrome/Safari/iOS app
+  - type: input
     id: ha-version
     validations:
       required: true
@@ -84,6 +100,8 @@ body:
       value: |
         # Details
   - type: textarea
+    validations:
+      required: true
     attributes:
       label: Card's configuration
       description: |

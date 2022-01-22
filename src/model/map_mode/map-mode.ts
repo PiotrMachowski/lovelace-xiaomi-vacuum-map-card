@@ -1,7 +1,7 @@
 import { SelectionType } from "./selection-type";
 import { RepeatsType } from "./repeats-type";
 import { ServiceCallSchema } from "./service-call-schema";
-import { MapModeConfig, PredefinedSelectionConfig, ServiceCallSchemaConfig } from "../../types/types";
+import { Language, MapModeConfig, PredefinedSelectionConfig, ServiceCallSchemaConfig } from "../../types/types";
 import { localize } from "../../localize/localize";
 import { ServiceCall } from "./service-call";
 import { PlatformGenerator } from "../generators/platform-generator";
@@ -24,29 +24,29 @@ export class MapMode {
     public serviceCallSchema: ServiceCallSchema;
     public predefinedSelections: PredefinedSelectionConfig[];
 
-    constructor(vacuumPlatform: string, public readonly config: MapModeConfig) {
-        this.name = config.name ?? localize("map_mode.invalid");
+    constructor(vacuumPlatform: string, public readonly config: MapModeConfig, language: Language) {
+        this.name = config.name ?? localize("map_mode.invalid", language);
         this.icon = config.icon ?? "mdi:help";
         this.selectionType = config.selection_type
             ? SelectionType[config.selection_type]
             : SelectionType.PREDEFINED_POINT;
-        this.maxSelections = config.max_selections ?? 1;
+        this.maxSelections = config.max_selections ?? 999;
         this.coordinatesRounding = config.coordinates_rounding ?? true;
         this.runImmediately = config.run_immediately ?? false;
         this.repeatsType = config.repeats_type ? RepeatsType[config.repeats_type] : RepeatsType.NONE;
         this.maxRepeats = config.max_repeats ?? 1;
         this.serviceCallSchema = new ServiceCallSchema(config.service_call_schema ?? ({} as ServiceCallSchemaConfig));
         this.predefinedSelections = config.predefined_selections ?? [];
-        this._applyTemplateIfPossible(vacuumPlatform, config);
+        this._applyTemplateIfPossible(vacuumPlatform, config, language);
         if (!MapMode.PREDEFINED_SELECTION_TYPES.includes(this.selectionType)) {
             this.runImmediately = false;
         }
     }
 
-    private _applyTemplateIfPossible(vacuumPlatform: string, config: MapModeConfig): void {
+    private _applyTemplateIfPossible(vacuumPlatform: string, config: MapModeConfig, language: Language): void {
         if (!config.template || !PlatformGenerator.isValidModeTemplate(vacuumPlatform, config.template)) return;
         const templateValue = PlatformGenerator.getModeTemplate(vacuumPlatform, config.template);
-        if (!config.name && templateValue.name) this.name = localize(templateValue.name);
+        if (!config.name && templateValue.name) this.name = localize(templateValue.name, language);
         if (!config.icon && templateValue.icon) this.icon = templateValue.icon;
         if (!config.selection_type && templateValue.selection_type)
             this.selectionType = SelectionType[templateValue.selection_type];

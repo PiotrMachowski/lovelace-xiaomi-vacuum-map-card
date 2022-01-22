@@ -4,6 +4,7 @@ import { Room } from "./room";
 import { PredefinedPoint } from "./predefined-point";
 import { ManualRectangle } from "./manual-rectangle";
 import { CoordinatesConverter } from "./coordinates-converter";
+import { TranslatableString } from "../../types/types";
 
 export class Context {
     constructor(
@@ -18,8 +19,9 @@ export class Context {
         public readonly selectedPredefinedPoint: () => PredefinedPoint[],
         public readonly roundingEnabled: () => boolean,
         public readonly maxSelections: () => number,
-        public readonly cssEvaluator: (string) => string,
+        public readonly cssEvaluator: (_: string) => string,
         public readonly runImmediately: () => boolean,
+        public readonly localize: (_: TranslatableString) => string,
     ) {}
 
     public roundMap([x, y]: PointArrayNotation): PointArrayNotation {

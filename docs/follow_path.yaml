@@ -10,11 +10,22 @@ vacuum_follow_path:
     - repeat:
         count: "{{ path | length }}"
         sequence:
-          - service: vacuum.send_command
-            data:
-              entity_id: "{{ entity_id }}"
-              command: app_goto_target
-              params: "{{ path[repeat.index-1] }}"
+          - choose:
+              - conditions: "{{ mode == 'individual' }}"
+                sequence:
+                  - service: "{{ service }}"
+                    data:
+                      entity_id: "{{ entity_id }}"
+                      x_coord: "{{ path[repeat.index-1][0] }}"
+                      y_coord: "{{ path[repeat.index-1][1] }}"
+          - choose:
+              - conditions: "{{ mode == 'send_command' }}"
+                sequence:
+                  - service: "{{ service }}"
+                    data:
+                      entity_id: "{{ entity_id }}"
+                      command: app_goto_target
+                      params: "{{ path[repeat.index-1] }}"
           - wait_template: "{{ is_state(entity_id, 'cleaning') }}"
             timeout: 00:00:30
             continue_on_timeout: false
