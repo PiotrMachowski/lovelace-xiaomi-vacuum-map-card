@@ -128,13 +128,44 @@
     },
     "tile": {
         "status": {
-            "label": "Κατάσταση"
+            "label": "Κατάσταση",
+            "value": {
+                "Starting": "Γίνεται εκκίνηση",
+                "Charger disconnected": "Αποσυνδέθηκε από τη φόρτιση",
+                "Idle": "Σε αδράνεια",
+                "Remote control active": "Χειροκίνητος έλεγχος ενεργός",
+                "Cleaning": "Γίνεται καθαρισμός",
+                "Returning home": "Επιστροφή στη βάση",
+                "Manual mode": "Χειροκίνητη λειτουργία",
+                "Charging": "Σε φόρτιση",
+                "Charging problem": "Πρόβλημα φόρτισης",
+                "Paused": "Σε παύση",
+                "Spot cleaning": "Καθαρισμός σημείου",
+                "Error": "Σφάλμα",
+                "Shutting down": "Γίνεται τερματισμός",
+                "Updating": "Γίνεται αναβάθμιση",
+                "Docking": "Σύνδεση στη βάση",
+                "Going to target": "Πορεία προς προορισμό",
+                "Zoned cleaning": "Καθαρισμός ζώνης",
+                "Segment cleaning": "Καθαρισμός τμήματος",
+                "Emptying the bin": "Άδειασμα κάδου",
+                "Charging complete": "Φόρτιση πλήρης",
+                "Device offline": "Συσκευή εκτός δικτύου"
+            }
         },
         "battery_level": {
             "label": "Μπαταρία"
         },
         "fan_speed": {
-            "label": "Ταχύτητα Ανεμιστήρα"
+            "label": "Ταχύτητα ανεμιστήρα",
+            "value": {
+                "Silent": "Αθόρυβο",
+                "Standard": "Τυπικό",
+                "Medium": "Μέτριο",
+                "Turbo": "Τούρμπο",
+                "Auto": "Αυτόματο",
+                "Gentle": "Ήπιο"
+            }
         },
         "sensor_dirty_left": {
             "label": "Συντήρηση αισθητήρων"
