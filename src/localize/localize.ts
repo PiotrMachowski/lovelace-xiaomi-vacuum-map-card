@@ -13,6 +13,7 @@ import * as nl from "./languages/nl.json";
 import * as pl from "./languages/pl.json";
 import * as ptBr from "./languages/pt-BR.json";
 import * as ru from "./languages/ru.json";
+import * as sk from "./languages/sk.json";
 import * as sv from "./languages/sv.json";
 import * as uk from "./languages/uk.json";
 import * as zh from "./languages/zh.json";
@@ -36,6 +37,7 @@ const languages: Record<string, unknown> = {
     pl: pl,
     "pt-BR": ptBr,
     ru: ru,
+    sk: sk,
     sv: sv,
     uk: uk,
     zh: zh,
