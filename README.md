@@ -300,6 +300,7 @@ Following vacuum platforms are supported at this moment:
 | `max_selections` | integer | no | 1 | Maximal number of selections |
 | `repeats_type` | string | no | `NONE` | Type of repeats inclusion, one of [supported ones](#supported-repeats-types) |
 | `max_repeats` | integer | no | 1 | Maximal value of repeats |
+| `variables` | object | no | - | Variables that should be passed to `service_call_schema` |
 | `predefined_selections` | list | no<sup>3</sup> | - |   |
 
 > You can override any value from built-in template by providing it in your configuration
@@ -399,7 +400,7 @@ Following selection types are supported at this moment:
 | `service` | string | yes | - | Service that should be called in a given mode |
 | `service_data` | object | no | - | Data that should be passed to service call |
 
-It is possible to use several placeholders in `service_data` section. They will be replaced by:
+It is possible to use several built-in placeholders in `service_data` section. They will be replaced by:
  - `[[entity_id]]`: `entity_id` defined in preset's config
  - `[[selection]]`: selection made on the map (zone, point or path)
  - `[[selection_size]]`: number of selections made on the map
@@ -407,6 +408,16 @@ It is possible to use several placeholders in `service_data` section. They will 
  - `[[repeats]]`:  selected number of repeats
  - `[[point_x]]`: x coordinate of selected point (for `MANUAL_POINT` and `PREDEFINED_POINT` selection types)
  - `[[point_y]]`: y coordinate of selected point (for `MANUAL_POINT` and `PREDEFINED_POINT` selection types)
+
+It is possible to use any value from `variables` section (wrapped with double rectangular brackets):
+```yaml
+variables:
+  test_variable: 123
+service_call_schema:
+  service: fake.service
+  service_data:
+    var: "[[test_variable]]"
+```
 
 It is possible to use following modifiers in `service_data` section:
 - `|[[jsonize]]`: if value ends with this modifier it will be decoded as a JSON

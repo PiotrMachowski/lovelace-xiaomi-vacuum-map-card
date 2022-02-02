@@ -311,7 +311,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     private _executePresetsActivation() {
         if (this.currentPreset.activate) {
             const schema = new ServiceCallSchema(this.currentPreset.activate);
-            const serviceCall = schema.apply(this.currentPreset.entity, [], 0);
+            const serviceCall = schema.apply(this.currentPreset.entity, [], 0, {});
             this.hass
                 .callService(serviceCall.domain, serviceCall.service, serviceCall.serviceData)
                 .then(() => forwardHaptic("success"));

@@ -130,27 +130,27 @@
         "status": {
             "label": "Status",
             "value": {
-              "Starting": "Starte",
-              "Charger disconnected": "Ladegerät getrennt",
-              "Idle": "Inaktiv",
-              "Remote control active": "Fernsteuerung aktiv",
-              "Cleaning": "Säubern",
-              "Returning home": "Kehre zur Ladestation zurück",
-              "Manual mode": "Manueller Modus",
-              "Charging": "Lade",
-              "Charging problem": "Lade-Problem",
-              "Paused": "Pause",
-              "Spot cleaning": "Spot-Reinigung",
-              "Error": "Fehler",
-              "Shutting down": "Herunterfahren",
-              "Updating": "Aktualisiere",
-              "Docking": "Andocken",
-              "Going to target": "Fahre zum Ziel",
-              "Zoned cleaning": "Zonen-Reinigung",
-              "Segment cleaning": "Segment-Reinigung",
-              "Emptying the bin": "Leere den Staubbehälter",
-              "Charging complete": "Ladung vollständig",
-              "Device offline": "Gerät offline"
+                "Starting": "Starte",
+                "Charger disconnected": "Ladegerät getrennt",
+                "Idle": "Inaktiv",
+                "Remote control active": "Fernsteuerung aktiv",
+                "Cleaning": "Säubern",
+                "Returning home": "Kehre zur Ladestation zurück",
+                "Manual mode": "Manueller Modus",
+                "Charging": "Lade",
+                "Charging problem": "Lade-Problem",
+                "Paused": "Pause",
+                "Spot cleaning": "Spot-Reinigung",
+                "Error": "Fehler",
+                "Shutting down": "Herunterfahren",
+                "Updating": "Aktualisiere",
+                "Docking": "Andocken",
+                "Going to target": "Fahre zum Ziel",
+                "Zoned cleaning": "Zonen-Reinigung",
+                "Segment cleaning": "Segment-Reinigung",
+                "Emptying the bin": "Leere den Staubbehälter",
+                "Charging complete": "Ladung vollständig",
+                "Device offline": "Gerät offline"
             }
         },
         "battery_level": {
@@ -159,12 +159,12 @@
         "fan_speed": {
             "label": "Lüftergeschwindigkeit",
             "value": {
-              "Silent": "Leise",
-              "Standard": "Standard",
-              "Medium": "Medium",
-              "Turbo": "Turbo",
-              "Auto": "Auto",
-              "Gentle": "Sanft"
+                "Silent": "Leise",
+                "Standard": "Standard",
+                "Medium": "Medium",
+                "Turbo": "Turbo",
+                "Auto": "Auto",
+                "Gentle": "Sanft"
             }
         },
         "sensor_dirty_left": {
