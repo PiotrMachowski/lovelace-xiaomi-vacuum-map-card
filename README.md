@@ -409,7 +409,7 @@ It is possible to use several placeholders in `service_data` section. They will 
  - `[[point_y]]`: y coordinate of selected point (for `MANUAL_POINT` and `PREDEFINED_POINT` selection types)
 
 It is possible to use following modifiers in `service_data` section:
-- `|[[jsonize]]`: if value ends with this modifier it will be decoded as a JSON
+- `|[[jsonify]]`: if value ends with this modifier it will be decoded as a JSON and attached to service call in unwrapped form
 
 
 #### Supported repeats types
