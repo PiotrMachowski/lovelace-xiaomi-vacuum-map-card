@@ -540,6 +540,9 @@ export class XiaomiVacuumMapCard extends LitElement {
     private _createMapControls(): TemplateResult[] {
         const controls: TemplateResult[] = [];
         const currentMode = this._getCurrentMode();
+        if (!currentMode) {
+            return [];
+        }
         if (currentMode.selectionType === SelectionType.MANUAL_RECTANGLE) {
             controls.push(html`
                 <paper-button class="map-actions-item clickable ripple" @click="${(): void => this._addRectangle()}">
@@ -636,7 +639,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         this.selectableRooms = [];
         this.selectablePredefinedPoints = [];
 
-        switch (newMode.selectionType) {
+        switch (newMode?.selectionType) {
             case SelectionType.PREDEFINED_RECTANGLE:
                 const zonesFromEntities = PredefinedMultiRectangle.getFromEntities(newMode, this.hass, () =>
                     this._getContext(),
@@ -776,8 +779,8 @@ export class XiaomiVacuumMapCard extends LitElement {
         this._delay(100).then(() => this._calculateBasicScale());
     }
 
-    private _drawSelection(): SVGTemplateResult {
-        switch (this._getCurrentMode().selectionType) {
+    private _drawSelection(): SVGTemplateResult | null {
+        switch (this._getCurrentMode()?.selectionType) {
             case SelectionType.MANUAL_RECTANGLE:
                 return svg`${this.selectedManualRectangles.map(r => r.render())}`;
             case SelectionType.PREDEFINED_RECTANGLE:
@@ -790,6 +793,8 @@ export class XiaomiVacuumMapCard extends LitElement {
                 return svg`${this.selectedManualPoint?.render()}`;
             case SelectionType.PREDEFINED_POINT:
                 return svg`${this.selectablePredefinedPoints.map(p => p.render())}`;
+            default:
+                return null;
         }
     }
 

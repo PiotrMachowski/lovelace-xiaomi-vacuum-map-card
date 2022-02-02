@@ -235,6 +235,7 @@ Following vacuum platforms are supported at this moment:
 - `default`: [Built-in Xiaomi Miio integration](https://www.home-assistant.io/integrations/xiaomi_miio/#xiaomi-mi-robot-vacuum)
 - `KrzysztofHajdamowicz/miio2`: [Custom miio2 integration by KrzysztofHajdamowicz](https://github.com/KrzysztofHajdamowicz/home-assistant-vacuum-styj02ym)
 - `marotoweb/viomise`: [Custom Viomi SE integration by marotoweb](https://github.com/marotoweb/home-assistant-vacuum-viomise)
+- `rand256/ValetudoRE`: [Valetudo RE via MQTT by rand256](https://github.com/rand256/valetudo)
 - `send_command`: Uses `vacuum.send_command` service with commands: `app_zoned_clean`, `app_goto_target`, `app_segment_clean`
 - `Neato`:  [Built-in Neato integration](https://www.home-assistant.io/integrations/neato)
 
@@ -334,6 +335,9 @@ List of supported templates depends on selected `vacuum_platform`:
   - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
   - `vacuum_clean_point`: Cleaning around point selected by clicking in an arbitrary place on the map
   - `vacuum_clean_point_predefined`: Cleaning around point selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
+- `rand256/ValetudoRE`
+  - `vacuum_clean_segment`: Room cleaning based on identifier - room number or name
+  - `vacuum_goto_predefined`: Going to point selected on the map from `predefined_selections`
 - `send_command`
   - `vacuum_clean_zone`: Cleaning free-drawn rectangular zones on the map
   - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
