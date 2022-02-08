@@ -1307,7 +1307,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                     var(--map-card-internal-primary-color)
                 );
                 --map-card-internal-room-label-color: var(
-                    --map-card-room-color,
+                    --map-card-room-label-color,
                     var(--map-card-internal-secondary-text-color)
                 );
                 --map-card-internal-room-label-color-selected: var(
