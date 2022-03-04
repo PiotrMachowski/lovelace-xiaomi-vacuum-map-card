@@ -424,7 +424,7 @@ service_call_schema:
 ```
 
 It is possible to use following modifiers in `service_data` section:
-- `|[[jsonize]]`: if value ends with this modifier it will be decoded as a JSON
+- `|[[jsonify]]`: if value ends with this modifier it will be decoded as a JSON and attached to service call in unwrapped form
 
 
 #### Supported repeats types
