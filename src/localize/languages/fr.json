@@ -168,7 +168,7 @@
             }
         },
         "sensor_dirty_left": {
-            "label": "Sensors left"
+            "label": "Capteurs"
         },
         "filter_left": {
             "label": "Filtre"
