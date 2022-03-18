@@ -1,0 +1,233 @@
+// 20220318195846
+// https://raw.githubusercontent.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/master/src/localize/languages/tr.json
+
+{
+  "common": {
+    "version": "Sürüm",
+    "invalid_configuration": "Geçersiz yapılandırma {0}",
+    "description": "Vakumunuzu kontrol etmenizi sağlayan bir kart",
+    "old_configuration": "Eski yapılandırma algılandı. Yapılandırmanızı en son şemaya göre ayarlayın veya sıfırdan yeni bir kart oluşturun.",
+    "old_configuration_migration_link": "Taşıma kılavuzu"
+  },
+  "map_mode": {
+    "invalid": "Geçersiz şablon!",
+    "vacuum_goto": "Sabitle ve Git",
+    "vacuum_goto_predefined": "Noktalar",
+    "vacuum_clean_segment": "Odalar",
+    "vacuum_clean_point": "Temiz alan",
+    "vacuum_clean_point_predefined": "Noktalar",
+    "vacuum_clean_zone": "Bölge temizliği",
+    "vacuum_clean_zone_predefined": "Bölge listesi",
+    "vacuum_follow_path": "Yol"
+  },
+  "validation": {
+    "preset": {
+      "entity": {
+        "missing": "Eksik özellik: varlık"
+      },
+      "preset_name": {
+        "missing": "Eksik özellik: ön_ayar_adı(preset_name)"
+      },
+      "platform": {
+        "invalid": "Geçersiz vakum platformu: {0}"
+      },
+      "map_source": {
+        "missing": "Eksik özellik: harita kaynağı (map_source)",
+        "none_provided": "Kamera yok, görüntü de sağlanmadı",
+        "ambiguous": "Yalnızca bir harita kaynağına izin verilir"
+      },
+      "calibration_source": {
+        "missing": "Eksik özellik: kalibrasyon_kaynak (calibration_source)",
+        "ambiguous": "Yalnızca bir kalibrasyon kaynağına izin verilir",
+        "none_provided": "Kalibrasyon kaynağı sağlanmadı",
+        "calibration_points": {
+          "invalid_number": "Tam olarak 3 veya 4 kalibrasyon noktası gerekli",
+          "missing_map": "Her kalibrasyon noktası harita koordinatlarını içermelidir",
+          "missing_vacuum": "Her kalibrasyon noktası vakum koordinatlarını içermelidir",
+          "missing_coordinate": "Harita ve vakum kalibrasyon noktaları hem x hem de y koordinatını içermelidir"
+        }
+      },
+      "icons": {
+        "invalid": "Yapılandırmada hata: simgeler",
+        "icon": {
+          "missing": "Simgeler listesinin her girişi, simge özelliği içermelidir"
+        }
+      },
+      "tiles": {
+        "invalid": "Yapılandırmada hata: döşemeler",
+        "entity": {
+          "missing": "Kutucuk listesinin her girişi varlık içermelidir"
+        },
+        "label": {
+          "missing": "Fayans listesinin her girişi etiket içermelidir"
+        }
+      },
+      "map_modes": {
+        "invalid": "Yapılandırmada hata: map_modes",
+        "icon": {
+          "missing": "Harita modunun eksik simgesi"
+        },
+        "name": {
+          "missing": "Harita modunun adı eksik"
+        },
+        "template": {
+          "invalid": "Geçersiz şablon: {0}"
+        },
+        "predefined_selections": {
+          "not_applicable": "Mod {0} önceden tanımlanmış seçimleri desteklemiyor",
+          "zones": {
+            "missing": "Eksik bölge yapılandırması",
+            "invalid_parameters_number": "Her bölgenin 4 parametresi olmalıdır"
+          },
+          "points": {
+            "position": {
+              "missing": "Eksik nokta yapılandırması",
+              "invalid_parameters_number": "Her noktanın 2 parametresi olmalıdır"
+            }
+          },
+          "rooms": {
+            "id": {
+              "missing": "Eksik oda kimliği",
+              "invalid_format": "Geçersiz oda kimliği: {0}"
+            },
+            "outline": {
+              "invalid_parameters_number": "Oda anahattının her noktası 2 parametreye sahip olmalıdır"
+            }
+          },
+          "label": {
+            "x": {
+              "missing": "Etiketin x özelliği olmalıdır"
+            },
+            "y": {
+              "missing": "Etiketin y özelliği olmalıdır"
+            },
+            "text": {
+              "missing": "Etiketin metin özelliği olmalıdır"
+            }
+          },
+          "icon": {
+            "x": {
+              "missing": "Simgenin x özelliği olmalıdır"
+            },
+            "y": {
+              "missing": "Simgenin y özelliği olmalıdır"
+            },
+            "name": {
+              "missing": "Simge isim özelliğine sahip olmalıdır"
+            }
+          }
+        },
+        "service_call_schema": {
+          "missing": "Eksik servis çağrısı şeması",
+          "service": {
+            "missing": "Servis çağrısı şeması servis içermelidir",
+            "invalid": "Geçersiz hizmet: {0}"
+          }
+        }
+      }
+    },
+    "invalid_entities": "Geçersiz varlıklar:",
+    "invalid_calibration": "Geçersiz kalibrasyon, lütfen yapılandırmanızı kontrol edin"
+  },
+  "tile": {
+    "status": {
+      "label": "Durum",
+      "value": {
+        "Starting": "Başlangıç",
+        "Charger disconnected": "Şarj cihazının bağlantısı kesildi",
+        "Idle": "Idle",
+        "Remote control active": "Uzaktan kumanda aktif",
+        "Cleaning": "Temizleme",
+        "Returning home": "Eve dönüş",
+        "Manual mode": "Manual mod",
+        "Charging": "Şarj oluyor",
+        "Charging problem": "Şarj sorunu",
+        "Paused": "Duraklatıldı",
+        "Spot cleaning": "Nokta temizleme",
+        "Error": "Hata",
+        "Shutting down": "Kapatılıyor",
+        "Updating": "Güncelleniyor",
+        "Docking": "Yerleştirme",
+        "Going to target": "Hedefe gidiyor",
+        "Zoned cleaning": "Bölgeli temizlik",
+        "Segment cleaning": "Segment temizliği",
+        "Emptying the bin": "Çöp haznesini boşalt",
+        "Charging complete": "Şarj tamamlandı",
+        "Device offline": "Cihaz çevrimdışı"
+      }
+    },
+    "battery_level": {
+      "label": "Pil"
+    },
+    "fan_speed": {
+      "label": "Süpürme Modu",
+      "value": {
+        "Silent": "Sessiz",
+        "Standard": "Standart",
+        "Medium": "Orta",
+        "Turbo": "Güçlü",
+        "Auto": "Otomatik",
+        "Gentle": "Uysal"
+      }
+    },
+    "sensor_dirty_left": {
+      "label": "Sensör kirli"
+    },
+    "filter_left": {
+      "label": "Filtre"
+    },
+    "main_brush_left": {
+      "label": "Ana Fırça"
+    },
+    "side_brush_left": {
+      "label": "Yan Fırça"
+    },
+    "cleaning_count": {
+      "label": "Temizleme sayısı"
+    },
+    "cleaned_area": {
+      "label": "Temizlenmiş alan"
+    },
+    "cleaning_time": {
+      "label": "Temizlik zamanı"
+    },
+    "mop_left": {
+      "label": "Paspaslama"
+    }
+  },
+  "icon": {
+    "vacuum_start": "Başlat",
+    "vacuum_pause": "Duraklat",
+    "vacuum_stop": "Durdur",
+    "vacuum_return_to_base": "Üniteye geri dön",
+    "vacuum_clean_spot": "Temiz nokta",
+    "vacuum_locate": "Bul",
+    "vacuum_set_fan_speed": "Fan hızını değiştir"
+  },
+  "unit": {
+    "hour_shortcut": "S",
+    "meter_shortcut": "D",
+    "meter_squared_shortcut": "m²",
+    "minute_shortcut": "Sn"
+  },
+  "popups": {
+    "success": "Başarı!",
+    "no_selection": "Seçim sağlanmadı",
+    "failed": "Servis aranamadı"
+  },
+  "editor": {
+    "description": {
+      "before_link": "Bu görsel düzenleyici, kullanılarak oluşturulan bir kamera varlığı ile yalnızca temel bir yapılandırmayı destekler.",
+      "link_text": "Xiaomi Bulut Haritası Çıkarıcı",
+      "after_link": ". Daha gelişmiş kurulum için YAML modunu kullanın."
+    },
+    "label": {
+      "name": "Başlık (isteğe bağlı)",
+      "entity": "Vakum varlığı (gerekli)",
+      "camera": "Kamera varlığı (gerekli)",
+      "vacuum_platform": "Vakum platformu (gerekli)",
+      "map_locked": "Harita kilitli (isteğe bağlı)",
+      "two_finger_pan": "İki parmaklı tava (isteğe bağlı)"
+    }
+  }
+}
