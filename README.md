@@ -627,6 +627,7 @@ Currently, this card contains translations for following languages:
 * `uk` - Ukrainian (Українська)
 * `zh` - Chinese (中文)
 * `zh-Hant` - Traditional Chinese (正體中文)
+* `tr` - Turkish (Türkçe)
 
 [Adding a new language](CONTRIBUTING.md#adding-new-translations)
 
