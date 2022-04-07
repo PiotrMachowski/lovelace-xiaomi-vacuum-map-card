@@ -335,6 +335,7 @@ List of supported templates depends on selected `vacuum_platform`:
   - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
   - `vacuum_clean_point`: Cleaning around point selected by clicking in an arbitrary place on the map
   - `vacuum_clean_point_predefined`: Cleaning around point selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
+  - `vacuum_clean_segment`: Room cleaning based on identifier - room number ([getting outline](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318), [config generator](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/317))
 - `rand256/ValetudoRE`
   - `vacuum_clean_segment`: Room cleaning based on identifier - room number or name
   - `vacuum_goto_predefined`: Going to point selected on the map from `predefined_selections`
