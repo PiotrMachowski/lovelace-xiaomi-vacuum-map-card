@@ -231,14 +231,18 @@ map: # coordinates of a point in a map coordinate system (can be read using e.g.
 
 ### Supported vacuum platforms
 
-Following vacuum platforms are supported at this moment:
+Following vacuum platforms are supported out of the box at this moment:
 - `default`: [Built-in Xiaomi Miio integration](https://www.home-assistant.io/integrations/xiaomi_miio/#xiaomi-mi-robot-vacuum)
 - `KrzysztofHajdamowicz/miio2`: [Custom miio2 integration by KrzysztofHajdamowicz](https://github.com/KrzysztofHajdamowicz/home-assistant-vacuum-styj02ym)
 - `marotoweb/viomise`: [Custom Viomi SE integration by marotoweb](https://github.com/marotoweb/home-assistant-vacuum-viomise)
 - `send_command`: Uses `vacuum.send_command` service with commands: `app_zoned_clean`, `app_goto_target`, `app_segment_clean`
 - `Neato`:  [Built-in Neato integration](https://www.home-assistant.io/integrations/neato)
 
-[Create a new platform request](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/new/choose)
+It's possible to configure following platforms manually:
+
+- Xiaomi Miot: [description](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/251)
+
+[Create a request for a new built-in platform](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/new?assignees=PiotrMachowski&labels=new+platform&template=new_platform_request.yml)
 
 [Adding a new platform](CONTRIBUTING.md#adding-new-platform)
 
