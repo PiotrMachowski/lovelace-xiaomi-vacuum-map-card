@@ -238,7 +238,8 @@ Following vacuum platforms are supported at this moment:
 - `send_command`: Uses `vacuum.send_command` service with commands: `app_zoned_clean`, `app_goto_target`, `app_segment_clean`
 - `Neato`:  [Built-in Neato integration](https://www.home-assistant.io/integrations/neato)
 
-[Create a new platform request](/issues/new/choose)
+[Create a new platform request](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/new/choose)
+
 [Adding a new platform](CONTRIBUTING.md#adding-new-platform)
 
 ### Icon list entry options
