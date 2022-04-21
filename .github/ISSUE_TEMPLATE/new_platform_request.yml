@@ -1,0 +1,48 @@
+name: Request support for a new vacuum platform
+description: Request support for a new vacuum platform
+labels: new platform
+assignees: 'PiotrMachowski'
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Using this form you can create a request for a new supported platform.
+  - type: input
+    validations:
+      required: true
+    attributes:
+      label: Repository
+      description: >-
+        Link to a repository that contains the integration
+  - type: checkboxes
+    attributes:
+      label: Supported features
+      description: >-
+        A list of features supported by the integration
+      options:
+        - label: Zone cleaning (using 4 coordinates)
+        - label: Room cleaning (using room id/number)
+        - label: Going to point (using 2 coordinates)
+        - label: Cleaning a point (using 2 coordinates)
+        - label: Others
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: Vacuum entity/entities
+      description: |
+        Please provide example state and attributes of vacuum entity/entities (from dev-tools).
+      render: yaml
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: Service calls
+      description: |
+        Please provide examples for all service calls that are supported by the integration.
+      render: yaml
+  - type: textarea
+    validations:
+      required: false
+    attributes:
+      label: Other info
