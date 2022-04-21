@@ -11,7 +11,7 @@ body:
     validations:
       required: true
     attributes:
-      label: Repository
+      label: Integration repository
       description: >-
         Link to a repository that contains the integration
       placeholder: https://www.home-assistant.io/integrations/xiaomi_miio/
