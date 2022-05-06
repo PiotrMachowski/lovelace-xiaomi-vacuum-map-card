@@ -1,7 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// import "@polymer/paper-item/paper-item";
-// import "@polymer/paper-listbox/paper-listbox";
-// import "@polymer/paper-dropdown-menu/paper-dropdown-menu";
 import { css, CSSResultGroup, html, LitElement, PropertyValues, svg, SVGTemplateResult, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators";
 import {
@@ -1471,7 +1468,7 @@ export class XiaomiVacuumMapCard extends LitElement {
 
             .map-actions-item {
                 width: 50px;
-                height: 50px;
+                height: 36px;
                 display: flex;
                 justify-content: center;
                 align-items: center;

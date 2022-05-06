@@ -27,7 +27,7 @@ export class IconRenderer {
             .vacuum-actions-item {
                 float: left;
                 width: 50px;
-                height: 50px;
+                height: 36px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
