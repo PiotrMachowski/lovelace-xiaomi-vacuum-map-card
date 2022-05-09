@@ -1,13 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { css, CSSResultGroup, html, LitElement, PropertyValues, svg, SVGTemplateResult, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators";
-import {
-    ActionHandlerEvent,
-    forwardHaptic,
-    HomeAssistant,
-    LovelaceCard,
-    LovelaceCardEditor,
-} from "custom-card-helpers";
+import { ActionHandlerEvent, forwardHaptic, LovelaceCard, LovelaceCardEditor } from "custom-card-helpers";
 
 import "./editor";
 import type { PredefinedPointConfig, RoomConfig, TileConfig, XiaomiVacuumMapCardConfig } from "./types/types";
@@ -53,6 +47,7 @@ import { CoordinatesConverter } from "./model/map_objects/coordinates-converter"
 import { MapObject } from "./model/map_objects/map-object";
 import { MousePosition } from "./model/map_objects/mouse-position";
 import { ServiceCallSchema } from "./model/map_mode/service-call-schema";
+import { HomeAssistantFixed } from "./types/fixes";
 
 const line1 = "   XIAOMI-VACUUM-MAP-CARD";
 const line2 = `   ${localize("common.version")} ${CARD_VERSION}`;
@@ -80,7 +75,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         return document.createElement(EDITOR_CUSTOM_ELEMENT_NAME);
     }
 
-    public static getStubConfig(hass: HomeAssistant): XiaomiVacuumMapCardConfig | undefined {
+    public static getStubConfig(hass: HomeAssistantFixed): XiaomiVacuumMapCardConfig | undefined {
         const entities = Object.keys(hass.states);
         const cameras = entities
             .filter(e => e.substr(0, e.indexOf(".")) === "camera")
@@ -102,7 +97,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         };
     }
 
-    @property({ attribute: false }) public _hass!: HomeAssistant;
+    @property({ attribute: false }) public _hass!: HomeAssistantFixed;
     @state() private oldConfig = false;
     @state() private config!: XiaomiVacuumMapCardConfig;
     @state() private presetIndex!: number;
@@ -133,7 +128,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     private shouldHandleMouseUp!: boolean;
     private lastHassUpdate!: Date;
 
-    public set hass(hass: HomeAssistant) {
+    public set hass(hass: HomeAssistantFixed) {
         const firstHass = !this._hass && hass;
         this._hass = hass;
         this.lastHassUpdate = new Date();
@@ -142,7 +137,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         }
     }
 
-    public get hass(): HomeAssistant {
+    public get hass(): HomeAssistantFixed {
         return this._hass;
     }
 
@@ -310,7 +305,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             const schema = new ServiceCallSchema(this.currentPreset.activate);
             const serviceCall = schema.apply(this.currentPreset.entity, [], 0, {});
             this.hass
-                .callService(serviceCall.domain, serviceCall.service, serviceCall.serviceData)
+                .callService(serviceCall.domain, serviceCall.service, serviceCall.serviceData, serviceCall.target)
                 .then(() => forwardHaptic("success"));
         }
     }
@@ -332,7 +327,8 @@ export class XiaomiVacuumMapCard extends LitElement {
                 this.lastHassUpdate &&
                 this.lastHassUpdate.getTime() + DISCONNECTION_TIME >= new Date().getTime()
             ) {
-                return `${this.hass.states[config.map_source.camera].attributes.entity_picture}&v=${+new Date()}`;
+                const url = this.hass.hassUrl(this.hass.states[config.map_source.camera].attributes.entity_picture);
+                return `${url}&v=${+new Date()}`;
             }
             return DISCONNECTED_IMAGE;
         }
@@ -732,7 +728,8 @@ export class XiaomiVacuumMapCard extends LitElement {
                 window.alert(message);
                 forwardHaptic("success");
             } else {
-                this.hass.callService(serviceCall.domain, serviceCall.service, serviceCall.serviceData).then(
+                this.hass.callService(serviceCall.domain, serviceCall.service, serviceCall.serviceData,
+                    serviceCall.target).then(
                     () => {
                         this._showToast("popups.success", "mdi:check", true);
                         forwardHaptic("success");

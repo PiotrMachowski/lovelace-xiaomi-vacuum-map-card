@@ -15,7 +15,7 @@
     "author": "Piotr Machowski <piotr.machowski.dev@gmail.com>",
     "license": "MIT",
     "dependencies": {
-        "custom-card-helpers": "^1.7.2",
+        "custom-card-helpers": "^1.9.0",
         "home-assistant-js-websocket": "^5.11.1",
         "lit": "^2.0.0",
         "pointer-tracker": "^2.4.0",
