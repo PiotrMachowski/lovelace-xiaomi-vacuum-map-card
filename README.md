@@ -641,6 +641,7 @@ Currently, this card contains translations for following languages:
 * `ru` - Russian (Русский)
 * `sk` - Slovak (Slovenčina)
 * `sv` - Swedish (Svenska)
+* `tr` - Turkish (Türkçe)
 * `uk` - Ukrainian (Українська)
 * `zh` - Chinese (中文)
 * `zh-Hant` - Traditional Chinese (正體中文)
