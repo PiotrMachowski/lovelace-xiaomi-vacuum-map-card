@@ -1,16 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// import "@polymer/paper-item/paper-item";
-// import "@polymer/paper-listbox/paper-listbox";
-// import "@polymer/paper-dropdown-menu/paper-dropdown-menu";
 import { css, CSSResultGroup, html, LitElement, PropertyValues, svg, SVGTemplateResult, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators";
-import {
-    ActionHandlerEvent,
-    forwardHaptic,
-    HomeAssistant,
-    LovelaceCard,
-    LovelaceCardEditor,
-} from "custom-card-helpers";
+import { ActionHandlerEvent, forwardHaptic, LovelaceCard, LovelaceCardEditor } from "custom-card-helpers";
 
 import "./editor";
 import type { PredefinedPointConfig, RoomConfig, TileConfig, XiaomiVacuumMapCardConfig } from "./types/types";
@@ -56,6 +47,7 @@ import { CoordinatesConverter } from "./model/map_objects/coordinates-converter"
 import { MapObject } from "./model/map_objects/map-object";
 import { MousePosition } from "./model/map_objects/mouse-position";
 import { ServiceCallSchema } from "./model/map_mode/service-call-schema";
+import { HomeAssistantFixed } from "./types/fixes";
 
 const line1 = "   XIAOMI-VACUUM-MAP-CARD";
 const line2 = `   ${localize("common.version")} ${CARD_VERSION}`;
@@ -83,7 +75,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         return document.createElement(EDITOR_CUSTOM_ELEMENT_NAME);
     }
 
-    public static getStubConfig(hass: HomeAssistant): XiaomiVacuumMapCardConfig | undefined {
+    public static getStubConfig(hass: HomeAssistantFixed): XiaomiVacuumMapCardConfig | undefined {
         const entities = Object.keys(hass.states);
         const cameras = entities
             .filter(e => e.substr(0, e.indexOf(".")) === "camera")
@@ -105,7 +97,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         };
     }
 
-    @property({ attribute: false }) public _hass!: HomeAssistant;
+    @property({ attribute: false }) public _hass!: HomeAssistantFixed;
     @state() private oldConfig = false;
     @state() private config!: XiaomiVacuumMapCardConfig;
     @state() private presetIndex!: number;
@@ -136,7 +128,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     private shouldHandleMouseUp!: boolean;
     private lastHassUpdate!: Date;
 
-    public set hass(hass: HomeAssistant) {
+    public set hass(hass: HomeAssistantFixed) {
         const firstHass = !this._hass && hass;
         this._hass = hass;
         this.lastHassUpdate = new Date();
@@ -145,7 +137,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         }
     }
 
-    public get hass(): HomeAssistant {
+    public get hass(): HomeAssistantFixed {
         return this._hass;
     }
 
@@ -311,9 +303,9 @@ export class XiaomiVacuumMapCard extends LitElement {
     private _executePresetsActivation() {
         if (this.currentPreset.activate) {
             const schema = new ServiceCallSchema(this.currentPreset.activate);
-            const serviceCall = schema.apply(this.currentPreset.entity, [], 0);
+            const serviceCall = schema.apply(this.currentPreset.entity, [], 0, {});
             this.hass
-                .callService(serviceCall.domain, serviceCall.service, serviceCall.serviceData)
+                .callService(serviceCall.domain, serviceCall.service, serviceCall.serviceData, serviceCall.target)
                 .then(() => forwardHaptic("success"));
         }
     }
@@ -335,7 +327,8 @@ export class XiaomiVacuumMapCard extends LitElement {
                 this.lastHassUpdate &&
                 this.lastHassUpdate.getTime() + DISCONNECTION_TIME >= new Date().getTime()
             ) {
-                return `${this.hass.states[config.map_source.camera].attributes.entity_picture}&v=${+new Date()}`;
+                const url = this.hass.hassUrl(this.hass.states[config.map_source.camera].attributes.entity_picture);
+                return `${url}&v=${+new Date()}`;
             }
             return DISCONNECTED_IMAGE;
         }
@@ -540,6 +533,9 @@ export class XiaomiVacuumMapCard extends LitElement {
     private _createMapControls(): TemplateResult[] {
         const controls: TemplateResult[] = [];
         const currentMode = this._getCurrentMode();
+        if (!currentMode) {
+            return [];
+        }
         if (currentMode.selectionType === SelectionType.MANUAL_RECTANGLE) {
             controls.push(html`
                 <paper-button class="map-actions-item clickable ripple" @click="${(): void => this._addRectangle()}">
@@ -636,7 +632,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         this.selectableRooms = [];
         this.selectablePredefinedPoints = [];
 
-        switch (newMode.selectionType) {
+        switch (newMode?.selectionType) {
             case SelectionType.PREDEFINED_RECTANGLE:
                 const zonesFromEntities = PredefinedMultiRectangle.getFromEntities(newMode, this.hass, () =>
                     this._getContext(),
@@ -732,7 +728,8 @@ export class XiaomiVacuumMapCard extends LitElement {
                 window.alert(message);
                 forwardHaptic("success");
             } else {
-                this.hass.callService(serviceCall.domain, serviceCall.service, serviceCall.serviceData).then(
+                this.hass.callService(serviceCall.domain, serviceCall.service, serviceCall.serviceData,
+                    serviceCall.target).then(
                     () => {
                         this._showToast("popups.success", "mdi:check", true);
                         forwardHaptic("success");
@@ -776,8 +773,8 @@ export class XiaomiVacuumMapCard extends LitElement {
         this._delay(100).then(() => this._calculateBasicScale());
     }
 
-    private _drawSelection(): SVGTemplateResult {
-        switch (this._getCurrentMode().selectionType) {
+    private _drawSelection(): SVGTemplateResult | null {
+        switch (this._getCurrentMode()?.selectionType) {
             case SelectionType.MANUAL_RECTANGLE:
                 return svg`${this.selectedManualRectangles.map(r => r.render())}`;
             case SelectionType.PREDEFINED_RECTANGLE:
@@ -790,6 +787,8 @@ export class XiaomiVacuumMapCard extends LitElement {
                 return svg`${this.selectedManualPoint?.render()}`;
             case SelectionType.PREDEFINED_POINT:
                 return svg`${this.selectablePredefinedPoints.map(p => p.render())}`;
+            default:
+                return null;
         }
     }
 
@@ -1302,7 +1301,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                     var(--map-card-internal-primary-color)
                 );
                 --map-card-internal-room-label-color: var(
-                    --map-card-room-color,
+                    --map-card-room-label-color,
                     var(--map-card-internal-secondary-text-color)
                 );
                 --map-card-internal-room-label-color-selected: var(
@@ -1461,6 +1460,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                 color: var(--map-card-internal-secondary-text-color);
                 margin-inline-start: auto;
                 display: inline-flex;
+                height: min-content;
             }
 
             .map-actions-item.main {

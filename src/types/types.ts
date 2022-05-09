@@ -20,6 +20,8 @@ export type PointWithRepeatsType = [number, number, number];
 export type PredefinedSelectionConfig = PredefinedZoneConfig | PredefinedPointConfig | RoomConfig;
 export type TranslatableString = string | [string, string, string];
 export type Language = string | undefined;
+export type ReplacedKey = string | Record<string, unknown> | number | unknown[];
+export type KeyReplacer = (key: string) => ReplacedKey;
 export type EntityRegistryEntry = {
     entity_id: string;
     original_icon: string;
@@ -79,6 +81,7 @@ export interface MapModeConfig {
     readonly max_repeats?: number;
     readonly service_call_schema?: ServiceCallSchemaConfig;
     readonly predefined_selections?: PredefinedSelectionConfig[];
+    readonly variables?: Record<string, ReplacedKey>;
 }
 
 export interface PlatformTemplate {

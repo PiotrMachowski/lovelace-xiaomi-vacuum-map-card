@@ -128,13 +128,44 @@
     },
     "tile": {
         "status": {
-            "label": "狀態"
+            "label": "狀態",
+            "value": {
+                "Starting": "開始清掃",
+                "Charger disconnected": "與充電座斷開",
+                "Idle": "閒置",
+                "Remote control active": "開始遙控模式",
+                "Cleaning": "清掃中",
+                "Returning home": "回充中",
+                "Manual mode": "手動模式",
+                "Charging": "充電中",
+                "Charging problem": "充電錯誤",
+                "Paused": "暫停",
+                "Spot cleaning": "局部清掃",
+                "Error": "錯誤",
+                "Shutting down": "關機中",
+                "Updating": "更新中",
+                "Docking": "Docking",
+                "Going to target": "正在行進至目標點",
+                "Zoned cleaning": "劃區清掃",
+                "Segment cleaning": "選區清掃",
+                "Emptying the bin": "清理集塵盒",
+                "Charging complete": "充電完成",
+                "Device offline": "裝置離線"
+            }
         },
         "battery_level": {
             "label": "剩餘電量"
         },
         "fan_speed": {
-            "label": "吸力"
+            "label": "吸力",
+            "value": {
+                "Silent": "安靜",
+                "Standard": "標準",
+                "Medium": "強力",
+                "Turbo": "MAX",
+                "Auto": "自動",
+                "Gentle": "拖地"
+            }
         },
         "sensor_dirty_left": {
             "label": "感應器剩餘"

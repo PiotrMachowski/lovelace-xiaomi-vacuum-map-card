@@ -126,13 +126,44 @@
     },
     "tile": {
         "status": {
-            "label": "Stato"
+            "label": "Stato",
+            "value": {
+                "Starting": "Avvio",
+                "Charger disconnected": "Caricabatterie scollegato",
+                "Idle": "Riposo",
+                "Remote control active": "Controllo remoto attivo",
+                "Cleaning": "Pulizia",
+                "Returning home": "Ritorno alla base",
+                "Manual mode": "Modalità Manuale",
+                "Charging": "Caricamento",
+                "Charging problem": "Problema di ricarica",
+                "Paused": "Pausa",
+                "Spot cleaning": "Pulizia a punti",
+                "Error": "Errore",
+                "Shutting down": "Spegnimento",
+                "Updating": "Aggiornamento in corso",
+                "Docking": "In base",
+                "Going to target": "Andando al punto",
+                "Zoned cleaning": "Pulizia a zone",
+                "Segment cleaning": "Pulizia segmenti",
+                "Emptying the bin": "Svuotare il contenitore",
+                "Charging complete": "Carica Completata",
+                "Device offline": "Device offline"
+            }
         },
         "battery_level": {
             "label": "Batteria"
         },
         "fan_speed": {
-            "label": "Velocità Ventola"
+            "label": "Velocità Ventola",
+            "value": {
+                "Silent": "Silenzioso",
+                "Standard": "Standard",
+                "Medium": "Media",
+                "Turbo": "Turbo",
+                "Auto": "Auto",
+                "Gentle": "Delicato"
+            }
         },
         "sensor_dirty_left": {
             "label": "Sensori"
@@ -154,6 +185,9 @@
         },
         "cleaning_time": {
             "label": "Tempo di pulizia"
+        },
+        "mop_left": {
+            "label": "Panno"
         }
     },
     "icon": {

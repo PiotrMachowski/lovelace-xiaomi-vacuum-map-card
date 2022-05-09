@@ -6,27 +6,17 @@ export class ModesMenuRenderer {
     public static render(modes: MapMode[], getMode: number, setMode: (number) => void): TemplateResult {
         const getCurrentMode = (): MapMode => modes[getMode];
         return html`
-            <paper-menu-button
-                class="modes-dropdown-menu"
-                vertical-align="bottom"
-                horizontal-align="left"
-                no-animations="true"
-                close-on-activate="true">
-                <div class="modes-dropdown-menu-button" slot="dropdown-trigger" alt="bottom align">
+            <ha-button-menu class="modes-dropdown-menu">
+                <div class="modes-dropdown-menu-button" slot="trigger" alt="bottom align">
                     <paper-button class="modes-dropdown-menu-button-button">
                         <ha-icon icon="${getCurrentMode().icon}" class="dropdown-icon"></ha-icon>
                     </paper-button>
                     <div class="modes-dropdown-menu-button-text">${getCurrentMode().name}</div>
                 </div>
-                <paper-listbox
-                    class="modes-dropdown-menu-listbox"
-                    slot="dropdown-content"
-                    selected="${getMode}"
-                    @iron-select="${(e: CustomEvent): void => {
-                        setMode(parseInt(e.detail.item.attributes["mode-id"].value));
-                    }}">
-                    ${modes.map(
-                        (mode, index) => html` <div mode-id="${index}">
+                ${modes.map(
+                    (mode, index) => html`<mwc-list-item
+                        ?activated=${getMode === index}
+                        @click=${(): void => setMode(index)}>
                             <div class="modes-dropdown-menu-entry clickable ${getMode === index ? "selected" : ""}">
                                 <div
                                     class="modes-dropdown-menu-entry-button-wrapper ${index === 0
@@ -41,18 +31,21 @@ export class ModesMenuRenderer {
                                 </div>
                                 <div class="modes-dropdown-menu-entry-text">${mode.name}</div>
                             </div>
-                        </div>`,
-                    )}
-                </paper-listbox>
-            </paper-menu-button>
+                    </mwc-list-item>`,
+                )}
+            </ha-button-menu>
         `;
     }
 
     public static get styles(): CSSResultGroup {
         return css`
             .modes-dropdown-menu {
-                border-radius: var(--map-card-internal-big-radius);
-                padding: 0;
+                --mdc-menu-item-height: 50px;
+                --mdc-theme-primary: transparent;
+                --mdc-list-vertical-padding: 0px;
+                --mdc-list-side-padding: 0px;
+                --mdc-shape-medium: var(--map-card-internal-big-radius);
+                --mdc-ripple-color: transparent;
             }
 
             .modes-dropdown-menu-button {

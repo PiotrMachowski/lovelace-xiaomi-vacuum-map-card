@@ -63,6 +63,22 @@
                         "entity_id": "[[entity_id]]"
                     }
                 }
+            },
+            "vacuum_clean_segment": {
+                "name": "map_mode.vacuum_clean_segment",
+                "icon": "mdi:floor-plan",
+                "selection_type": "ROOM",
+                "max_selections": 1,
+                "repeats_type": "EXTERNAL",
+                "max_repeats": 3,
+                "service_call_schema": {
+                    "service": "vacuum.send_command",
+                    "service_data": {
+                        "entity_id": "[[entity_id]]",
+                        "command": "set_mode_withroom",
+                        "params": "[ 0, [[repeats]], 1, [[selection_unwrapped]] ]|[[jsonify]]"
+                    }
+                }
             }
         }
     },

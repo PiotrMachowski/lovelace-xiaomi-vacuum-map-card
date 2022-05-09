@@ -1,10 +1,7 @@
-import { ServiceCallSchemaConfig } from "../../types/types";
+import { KeyReplacer, ReplacedKey, ServiceCallSchemaConfig } from "../../types/types";
 import { TemplatableValue } from "./templatable-value";
 import { ServiceCall } from "./service-call";
 import { Modifier } from "./modifier";
-
-type ReplacedKey = string | Record<string, unknown> | number | unknown[];
-type KeyReplacer = (key: string) => ReplacedKey;
 
 export class ServiceCallSchema {
     private readonly service: string;
@@ -17,9 +14,14 @@ export class ServiceCallSchema {
         this.target = config.target;
     }
 
-    public apply(entityId: string, selection: unknown[], repeats: number): ServiceCall {
+    public apply(
+        entityId: string,
+        selection: unknown[],
+        repeats: number,
+        variables: Record<string, ReplacedKey>,
+    ): ServiceCall {
         const keyReplacer = (key: string): ReplacedKey =>
-            ServiceCallSchema.getReplacedValue(key, entityId, selection, repeats);
+            ServiceCallSchema.getReplacedValue(key, entityId, selection, repeats, variables);
         let serviceData: ReplacedKey | undefined = undefined;
         let target: ReplacedKey | undefined = undefined;
         if (this.serviceData) {
@@ -58,6 +60,7 @@ export class ServiceCallSchema {
         entityId: string,
         selection: unknown[],
         repeats: number,
+        variables: Record<string, ReplacedKey>,
     ): ReplacedKey {
         const fullValueReplacer = (v: string): ReplacedKey | null => {
             switch (v) {
@@ -76,15 +79,22 @@ export class ServiceCallSchema {
                 case TemplatableValue.POINT_Y:
                     return this.isPoint(selection) ? (selection[1] as number) : value;
                 default:
+                    if (v in variables) {
+                        return variables[v];
+                    }
                     return null;
             }
         };
-        return fullValueReplacer(value) ?? ServiceCallSchema.replaceInStr(value, fullValueReplacer);
+        return fullValueReplacer(value) ?? ServiceCallSchema.replaceInStr(value, variables, fullValueReplacer);
     }
 
-    private static replaceInStr(value: string, kr: (string) => ReplacedKey | null): ReplacedKey {
+    private static replaceInStr(
+        value: string,
+        variables: Record<string, ReplacedKey>,
+        kr: (string) => ReplacedKey | null,
+    ): ReplacedKey {
         let output = value;
-        Object.values(TemplatableValue).forEach(tv => {
+        [...Object.values(TemplatableValue), ...Object.keys(variables)].forEach(tv => {
             let replaced = kr(tv);
             if (typeof replaced == "object") {
                 replaced = JSON.stringify(replaced);

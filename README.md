@@ -235,6 +235,7 @@ Following vacuum platforms are supported out of the box at this moment:
 - `default`: [Built-in Xiaomi Miio integration](https://www.home-assistant.io/integrations/xiaomi_miio/#xiaomi-mi-robot-vacuum)
 - `KrzysztofHajdamowicz/miio2`: [Custom miio2 integration by KrzysztofHajdamowicz](https://github.com/KrzysztofHajdamowicz/home-assistant-vacuum-styj02ym)
 - `marotoweb/viomise`: [Custom Viomi SE integration by marotoweb](https://github.com/marotoweb/home-assistant-vacuum-viomise)
+- `rand256/ValetudoRE`: [Valetudo RE via MQTT by rand256](https://github.com/rand256/valetudo)
 - `send_command`: Uses `vacuum.send_command` service with commands: `app_zoned_clean`, `app_goto_target`, `app_segment_clean`
 - `Neato`:  [Built-in Neato integration](https://www.home-assistant.io/integrations/neato)
 
@@ -306,6 +307,7 @@ It's possible to configure following platforms manually:
 | `max_selections` | integer | no | 1 | Maximal number of selections |
 | `repeats_type` | string | no | `NONE` | Type of repeats inclusion, one of [supported ones](#supported-repeats-types) |
 | `max_repeats` | integer | no | 1 | Maximal value of repeats |
+| `variables` | object | no | - | Variables that should be passed to `service_call_schema` |
 | `predefined_selections` | list | no<sup>3</sup> | - |   |
 
 > You can override any value from built-in template by providing it in your configuration
@@ -339,6 +341,10 @@ List of supported templates depends on selected `vacuum_platform`:
   - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
   - `vacuum_clean_point`: Cleaning around point selected by clicking in an arbitrary place on the map
   - `vacuum_clean_point_predefined`: Cleaning around point selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
+  - `vacuum_clean_segment`: Room cleaning based on identifier - room number ([getting outline](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318), [config generator](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/317))
+- `rand256/ValetudoRE`
+  - `vacuum_clean_segment`: Room cleaning based on identifier - room number or name
+  - `vacuum_goto_predefined`: Going to point selected on the map from `predefined_selections`
 - `send_command`
   - `vacuum_clean_zone`: Cleaning free-drawn rectangular zones on the map
   - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
@@ -404,8 +410,9 @@ Following selection types are supported at this moment:
 | --- | --- | --- | --- | --- |
 | `service` | string | yes | - | Service that should be called in a given mode |
 | `service_data` | object | no | - | Data that should be passed to service call |
+| `target` | object | no | - | Target that should be passed to service call |
 
-It is possible to use several placeholders in `service_data` section. They will be replaced by:
+It is possible to use several built-in placeholders in `service_data` section. They will be replaced by:
  - `[[entity_id]]`: `entity_id` defined in preset's config
  - `[[selection]]`: selection made on the map (zone, point or path)
  - `[[selection_size]]`: number of selections made on the map
@@ -413,6 +420,16 @@ It is possible to use several placeholders in `service_data` section. They will 
  - `[[repeats]]`:  selected number of repeats
  - `[[point_x]]`: x coordinate of selected point (for `MANUAL_POINT` and `PREDEFINED_POINT` selection types)
  - `[[point_y]]`: y coordinate of selected point (for `MANUAL_POINT` and `PREDEFINED_POINT` selection types)
+
+It is possible to use any value from `variables` section (wrapped with double rectangular brackets):
+```yaml
+variables:
+  test_variable: 123
+service_call_schema:
+  service: fake.service
+  service_data:
+    var: "[[test_variable]]"
+```
 
 It is possible to use following modifiers in `service_data` section:
 - `|[[jsonify]]`: if value ends with this modifier it will be decoded as a JSON and attached to service call in unwrapped form
@@ -629,7 +646,9 @@ Currently, this card contains translations for following languages:
 * `pl` - Polish (Polski)
 * `pt-BR` - Brazilian Portuguese (Português Brasileiro)
 * `ru` - Russian (Русский)
+* `sk` - Slovak (Slovenčina)
 * `sv` - Swedish (Svenska)
+* `tr` - Turkish (Türkçe)
 * `uk` - Ukrainian (Українська)
 * `zh` - Chinese (中文)
 * `zh-Hant` - Traditional Chinese (正體中文)
