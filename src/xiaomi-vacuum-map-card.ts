@@ -670,7 +670,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     private _getSelection(mode: MapMode): unknown[] {
         const repeats = mode.repeatsType === RepeatsType.INTERNAL ? this.repeats : null;
         let selection: unknown[] = [];
-        let repeatOneByOne: boolean = false;
+        let repeatOneByOne = false;
         switch (mode.selectionType) {
             case SelectionType.MANUAL_RECTANGLE:
                 selection = this.selectedManualRectangles.map(r => r.toVacuum(repeats));
