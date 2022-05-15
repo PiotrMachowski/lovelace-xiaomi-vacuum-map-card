@@ -441,7 +441,7 @@ Following repeats types are supported at this moment:
  - `NONE`: No repeats
  - `INTERNAL`: Repeats number included in coordinates array (`[25500, 25000, 26500, 26500, 2]`)
  - `EXTERNAL`: Repeats number used as a separate attribute in `service_call_schema`
- - `REPEAT`: Repeats selection (repeats: `2`, selection: `[5,6]` => `[5,6,5,6]`)
+ - `REPEAT`: Repeats selection (repeats: `2`, selection: `[5,6]` => `[5,6,5,6]`), Rooms and Rectangle zones are repeating one by one: (repeats: `2`, selection: `[5,6]` => `[5,5,6,6]`)
 
 #### Predefined selection options
 

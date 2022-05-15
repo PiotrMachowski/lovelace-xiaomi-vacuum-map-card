@@ -670,18 +670,22 @@ export class XiaomiVacuumMapCard extends LitElement {
     private _getSelection(mode: MapMode): unknown[] {
         const repeats = mode.repeatsType === RepeatsType.INTERNAL ? this.repeats : null;
         let selection: unknown[] = [];
+        let repeatOneByOne: boolean = false;
         switch (mode.selectionType) {
             case SelectionType.MANUAL_RECTANGLE:
                 selection = this.selectedManualRectangles.map(r => r.toVacuum(repeats));
+                repeatOneByOne = true;
                 break;
             case SelectionType.PREDEFINED_RECTANGLE:
                 selection = this.selectedPredefinedRectangles
                     .map(r => r.toVacuum(repeats))
                     .reduce((a, v) => a.concat(v), [] as unknown[]);
+                repeatOneByOne = true;
                 break;
             case SelectionType.ROOM:
                 const selectedRooms = this.selectedRooms.map(r => r.toVacuum());
                 selection = [...selectedRooms, ...(repeats && selectedRooms.length > 0 ? [repeats] : [])];
+                repeatOneByOne = true;
                 break;
             case SelectionType.MANUAL_PATH:
                 selection = this.selectedManualPath.toVacuum(repeats);
@@ -696,9 +700,14 @@ export class XiaomiVacuumMapCard extends LitElement {
                 break;
         }
         if (mode.repeatsType === RepeatsType.REPEAT) {
-            selection = Array(this.repeats)
-                .fill(0)
-                .flatMap(() => selection);
+            if (repeatOneByOne) {
+                selection = selection.flatMap((i) => Array(this.repeats).fill(i));
+            }
+            else {
+                selection = Array(this.repeats)
+                    .fill(0)
+                    .flatMap(() => selection);
+            }
         }
         return selection;
     }
