@@ -1,6 +1,8 @@
 name: Request support for a new vacuum platform
 description: Request support for a new vacuum platform
-labels: new platform
+labels:
+  - new platform
+  - enhancement
 assignees: 'PiotrMachowski'
 body:
   - type: markdown
