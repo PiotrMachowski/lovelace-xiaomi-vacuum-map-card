@@ -466,7 +466,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                         </div>
                         <div class="map-zoom-icons" style="visibility: ${this.mapLocked ? "hidden" : "visible"}">
                             <ha-icon
-                                icon="mdi:restore"
+                                icon="mdi:image-filter-center-focus"
                                 class="icon-on-map clickable ripple"
                                 @click="${this._restoreMap}"></ha-icon>
                             <div class="map-zoom-icons-main">
