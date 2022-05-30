@@ -241,7 +241,7 @@ Following vacuum platforms are supported out of the box at this moment:
 
 It's possible to configure following platforms manually:
 
-- Xiaomi Miot: [description](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/251)
+- Xiaomi Miot: [discussion](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/251), [vacuum configs](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/406)
 
 [Create a request for a new built-in platform](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/new?assignees=PiotrMachowski&labels=new+platform&template=new_platform_request.yml)
 
