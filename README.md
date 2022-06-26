@@ -249,7 +249,7 @@ It's possible to configure following platforms manually:
 
 ### Icon list entry options
 
-![icons image](/docs/icons.png)
+![icons image](/docs/media/icons.png)
 
 | Key | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
@@ -262,7 +262,7 @@ It's possible to configure following platforms manually:
 
 ### Tile list entry options
 
-![tiles image](/docs/tiles.png)
+![tiles image](/docs/media/tiles.png)
 
 | Key | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
@@ -293,7 +293,7 @@ It's possible to configure following platforms manually:
 
 ### Map modes options
 
-![map modes image](/docs/map_modes.png)
+![map modes image](/docs/media/map_modes.png)
 
 | Key | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
