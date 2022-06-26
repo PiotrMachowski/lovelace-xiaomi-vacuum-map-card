@@ -129,17 +129,25 @@ export class TilesGenerator {
         tiles: TileConfig[],
         language: Language,
     ): Promise<TileConfig[]> {
-        const entityRegistryEntries = (await getAllEntitiesFromTheSameDevice(hass, vacuumEntityId)).filter(
-            e => e.disabled_by === null,
-        );
-        const vacuumUniqueId = entityRegistryEntries.filter(e => e.entity_id === vacuumEntityId)[0].unique_id;
-        PlatformGenerator.getTilesFromSensorsTemplates(platform)
-            .map(t => ({
-                tile: t,
-                entity: entityRegistryEntries.filter(e => e.unique_id === `${t.unique_id_prefix}${vacuumUniqueId}`),
-            }))
-            .flatMap(v => v.entity.map(e => this.mapToTile(e, v.tile.label, v.tile.unit, v.tile.multiplier, language)))
-            .forEach(t => tiles.push(t));
+        let entityRegistryEntries;
+        try {
+            entityRegistryEntries = (await getAllEntitiesFromTheSameDevice(hass, vacuumEntityId)).filter(
+                e => e.disabled_by === null,
+            );
+        } catch {
+            entityRegistryEntries = [];
+        }
+        const vacuumEntity = entityRegistryEntries.filter(e => e.entity_id === vacuumEntityId);
+        if (vacuumEntity.length > 0) {
+            const vacuumUniqueId = vacuumEntity[0].unique_id;
+            PlatformGenerator.getTilesFromSensorsTemplates(platform)
+                .map(t => ({
+                    tile: t,
+                    entity: entityRegistryEntries.filter(e => e.unique_id === `${t.unique_id_prefix}${vacuumUniqueId}`),
+                }))
+                .flatMap(v => v.entity.map(e => this.mapToTile(e, v.tile.label, v.tile.unit, v.tile.multiplier, language)))
+                .forEach(t => tiles.push(t));
+        }
         return new Promise<TileConfig[]>(resolve => resolve(tiles));
     }
 
