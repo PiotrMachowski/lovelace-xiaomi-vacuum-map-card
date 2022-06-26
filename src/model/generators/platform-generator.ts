@@ -3,6 +3,7 @@ import * as krzysztofHajdamowiczMiio2Template from "./platform_templates/Krzyszt
 import * as marotowebViomiseTemplate from "./platform_templates/marotoweb_viomise.json";
 import * as rand256ValetudoRe from "./platform_templates/rand256_valetudo_re.json";
 import * as sendCommandTemplate from "./platform_templates/send-command.json";
+import * as allOneHassXiaomiMiotTemplate from "./platform_templates/all-one_hass-xiaomi-miot.json";
 import * as neatoTemplate from "./platform_templates/neato.json";
 import * as setupOthersTemplate from "./platform_templates/setup_others.json";
 import * as setupXiaomiTemplate from "./platform_templates/setup_xiaomi.json";
@@ -16,6 +17,7 @@ export class PlatformGenerator {
     public static MAROTOWEB_VIOMISE_PLATFORM = "marotoweb/viomise";
     public static RAND256_VALETUDO_RE_PLATFORM = "rand256/ValetudoRE";
     public static SEND_COMMAND_PLATFORM = "send_command";
+    public static ALLONE_XIAOMIMIOT_PLATFORM = "all-one/hass-xiaomi-miot";
     public static NEATO_PLATFORM = "Neato";
     public static SETUP_PLATFORM_XIAOMI = "Setup Xiaomi";
     public static SETUP_PLATFORM_OTHERS = "Setup Others";
@@ -26,6 +28,7 @@ export class PlatformGenerator {
         [PlatformGenerator.MAROTOWEB_VIOMISE_PLATFORM, marotowebViomiseTemplate],
         [PlatformGenerator.RAND256_VALETUDO_RE_PLATFORM, rand256ValetudoRe],
         [PlatformGenerator.SEND_COMMAND_PLATFORM, sendCommandTemplate],
+        [PlatformGenerator.ALLONE_XIAOMIMIOT_PLATFORM, allOneHassXiaomiMiotTemplate],
         [PlatformGenerator.NEATO_PLATFORM, neatoTemplate],
         [PlatformGenerator.SETUP_PLATFORM_XIAOMI, setupXiaomiTemplate],
         [PlatformGenerator.SETUP_PLATFORM_OTHERS, setupOthersTemplate],
