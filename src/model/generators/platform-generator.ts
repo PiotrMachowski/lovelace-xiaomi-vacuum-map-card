@@ -22,6 +22,9 @@ export class PlatformGenerator {
     public static SETUP_PLATFORM_XIAOMI = "Setup Xiaomi";
     public static SETUP_PLATFORM_OTHERS = "Setup Others";
 
+    private static DOCUMENTATION_URL_FORMAT
+        = "https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/tree/master/docs/templates/{0}.md";
+
     private static TEMPLATES = new Map<string, PlatformTemplate>([
         [PlatformGenerator.DEFAULT_PLATFORM, defaultTemplate],
         [PlatformGenerator.KRZYSZTOFHAJDAMOWICZ_MIIO2_PLATFORM, krzysztofHajdamowiczMiio2Template],
@@ -34,8 +37,27 @@ export class PlatformGenerator {
         [PlatformGenerator.SETUP_PLATFORM_OTHERS, setupOthersTemplate],
     ]);
 
+    private static TEMPLATE_DOCUMENTATIONS_URLS = new Map<string, string>([
+        [PlatformGenerator.DEFAULT_PLATFORM, "default"],
+        [PlatformGenerator.KRZYSZTOFHAJDAMOWICZ_MIIO2_PLATFORM, "krzysztofHajdamowiczMiio2"],
+        [PlatformGenerator.MAROTOWEB_VIOMISE_PLATFORM, "marotowebViomise"],
+        [PlatformGenerator.RAND256_VALETUDO_RE_PLATFORM, "rand256Va"],
+        [PlatformGenerator.SEND_COMMAND_PLATFORM, "sendCommand"],
+        [PlatformGenerator.ALLONE_XIAOMIMIOT_PLATFORM, "allOneHassXiaomiMiot"],
+        [PlatformGenerator.NEATO_PLATFORM, "neato"],
+        [PlatformGenerator.SETUP_PLATFORM_XIAOMI, "setupXiaomi"],
+        [PlatformGenerator.SETUP_PLATFORM_OTHERS, "setupOthers"],
+    ]);
+
     public static getPlatforms(): string[] {
         return Array.from(PlatformGenerator.TEMPLATES.keys());
+    }
+
+    public static getPlatformsDocumentationUrl(platform: string): string {
+        const file = PlatformGenerator.TEMPLATE_DOCUMENTATIONS_URLS.get(platform)
+            ?? PlatformGenerator.TEMPLATE_DOCUMENTATIONS_URLS.get(this.DEFAULT_PLATFORM)
+            ?? "";
+        return PlatformGenerator.DOCUMENTATION_URL_FORMAT.replace("{0}", file);
     }
 
     public static isValidModeTemplate(platform: string, template?: string): boolean {

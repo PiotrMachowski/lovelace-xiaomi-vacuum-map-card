@@ -224,7 +224,11 @@
             "camera": "Camera entity (required)",
             "vacuum_platform": "Vacuum platform (required)",
             "map_locked": "Map locked (optional)",
-            "two_finger_pan": "Two finger pan (optional)"
+            "two_finger_pan": "Two finger pan (optional)",
+            "platforms_documentation": "Chosen platform's documentation",
+            "selection": "Selection:",
+            "copy": "Copy",
+            "copied": "Copied!"
         }
     }
 }

@@ -114,6 +114,12 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCar
                             return html` <mwc-list-item .value="${platform}">${platform}</mwc-list-item> `;
                         })}
                     </ha-select>
+                    <p>
+                        <a href="${PlatformGenerator.getPlatformsDocumentationUrl(this._vacuum_platform)}"
+                           target="_blank">
+                            ${this._localize("editor.label.platforms_documentation")}
+                        </a>
+                    </p>
                 </div>
                 <div class="values">
                     <ha-select
@@ -146,9 +152,11 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCar
                     </ha-formfield>
                 </div>
                 <div class="values separated selection-controls-wrapper">
-                    <p>Selection:</p>
+                    <p>${this._localize("editor.label.selection")}</p>
                     <code class="selection-text">${this._lastSelection ?? "[]"}</code>
-                    <mwc-button @click="${() => this._copySelection()}">COPY</mwc-button>
+                    <mwc-button @click="${() => this._copySelection()}">
+                        ${this._localize("editor.label.copy")}
+                    </mwc-button>
                 </div>
                 ${ToastRenderer.render("editor")}
             </div>
@@ -182,7 +190,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCar
 
     private _copySelection(){
         copyMessage(this._lastSelection ?? []);
-        this._showToast("COPIED", "mdi:content-copy", true);
+        this._showToast("editor.label.copied", "mdi:content-copy", true);
     }
 
     private _showToast(text: string, icon: string, successful: boolean, additionalText = ""): void {

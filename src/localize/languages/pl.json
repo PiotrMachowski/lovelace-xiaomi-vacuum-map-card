@@ -224,7 +224,11 @@
             "camera": "Kamera z mapą (wymagana)",
             "vacuum_platform": "Platforma integracji odkurzacza (wymagana)",
             "map_locked": "Blokada mapy (opcjonalna)",
-            "two_finger_pan": "Przesuwanie mapy dwoma palcami (opcjonalne)"
+            "two_finger_pan": "Przesuwanie mapy dwoma palcami (opcjonalne)",
+            "platforms_documentation": "Dokumentacja wybranej platformy",
+            "selection": "Zaznaczenie:",
+            "copy": "Kopiuj",
+            "copied": "Skopiowano!"
         }
     }
 }
