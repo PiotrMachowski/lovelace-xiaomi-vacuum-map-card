@@ -6,7 +6,7 @@ export class ModesMenuRenderer {
     public static render(modes: MapMode[], getMode: number, setMode: (number) => void): TemplateResult {
         const getCurrentMode = (): MapMode => modes[getMode];
         return html`
-            <ha-button-menu class="modes-dropdown-menu">
+            <ha-button-menu class="modes-dropdown-menu" fixed="true" @closed="${(e: Event) => e.stopPropagation()}">
                 <div class="modes-dropdown-menu-button" slot="trigger" alt="bottom align">
                     <paper-button class="modes-dropdown-menu-button-button">
                         <ha-icon icon="${getCurrentMode().icon}" class="dropdown-icon"></ha-icon>
