@@ -1,7 +1,7 @@
 import * as defaultTemplate from "./platform_templates/default.json";
 import * as krzysztofHajdamowiczMiio2Template from "./platform_templates/KrzysztofHajdamowicz_miio2.json";
 import * as marotowebViomiseTemplate from "./platform_templates/marotoweb_viomise.json";
-import * as rand256ValetudoRe from "./platform_templates/rand256_valetudo_re.json";
+import * as rand256ValetudoReTemplate from "./platform_templates/rand256_valetudo_re.json";
 import * as sendCommandTemplate from "./platform_templates/send-command.json";
 import * as allOneHassXiaomiMiotTemplate from "./platform_templates/all-one_hass-xiaomi-miot.json";
 import * as neatoTemplate from "./platform_templates/neato.json";
@@ -29,7 +29,7 @@ export class PlatformGenerator {
         [PlatformGenerator.DEFAULT_PLATFORM, defaultTemplate],
         [PlatformGenerator.KRZYSZTOFHAJDAMOWICZ_MIIO2_PLATFORM, krzysztofHajdamowiczMiio2Template],
         [PlatformGenerator.MAROTOWEB_VIOMISE_PLATFORM, marotowebViomiseTemplate],
-        [PlatformGenerator.RAND256_VALETUDO_RE_PLATFORM, rand256ValetudoRe],
+        [PlatformGenerator.RAND256_VALETUDO_RE_PLATFORM, rand256ValetudoReTemplate],
         [PlatformGenerator.SEND_COMMAND_PLATFORM, sendCommandTemplate],
         [PlatformGenerator.ALLONE_XIAOMIMIOT_PLATFORM, allOneHassXiaomiMiotTemplate],
         [PlatformGenerator.NEATO_PLATFORM, neatoTemplate],
@@ -41,7 +41,7 @@ export class PlatformGenerator {
         [PlatformGenerator.DEFAULT_PLATFORM, "default"],
         [PlatformGenerator.KRZYSZTOFHAJDAMOWICZ_MIIO2_PLATFORM, "krzysztofHajdamowiczMiio2"],
         [PlatformGenerator.MAROTOWEB_VIOMISE_PLATFORM, "marotowebViomise"],
-        [PlatformGenerator.RAND256_VALETUDO_RE_PLATFORM, "rand256Va"],
+        [PlatformGenerator.RAND256_VALETUDO_RE_PLATFORM, "rand256ValetudoRe"],
         [PlatformGenerator.SEND_COMMAND_PLATFORM, "sendCommand"],
         [PlatformGenerator.ALLONE_XIAOMIMIOT_PLATFORM, "allOneHassXiaomiMiot"],
         [PlatformGenerator.NEATO_PLATFORM, "neato"],
