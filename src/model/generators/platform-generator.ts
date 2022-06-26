@@ -4,6 +4,8 @@ import * as marotowebViomiseTemplate from "./platform_templates/marotoweb_viomis
 import * as rand256ValetudoRe from "./platform_templates/rand256_valetudo_re.json";
 import * as sendCommandTemplate from "./platform_templates/send-command.json";
 import * as neatoTemplate from "./platform_templates/neato.json";
+import * as setupOthersTemplate from "./platform_templates/setup_others.json";
+import * as setupXiaomiTemplate from "./platform_templates/setup_xiaomi.json";
 import { MapModeConfig, PlatformTemplate, TileFromAttributeTemplate, TileFromSensorTemplate } from "../../types/types";
 import { HomeAssistant } from "custom-card-helpers";
 import { compare } from "compare-versions";
@@ -15,6 +17,8 @@ export class PlatformGenerator {
     public static RAND256_VALETUDO_RE_PLATFORM = "rand256/ValetudoRE";
     public static SEND_COMMAND_PLATFORM = "send_command";
     public static NEATO_PLATFORM = "Neato";
+    public static SETUP_PLATFORM_XIAOMI = "Setup Xiaomi";
+    public static SETUP_PLATFORM_OTHERS = "Setup Others";
 
     private static TEMPLATES = new Map<string, PlatformTemplate>([
         [PlatformGenerator.DEFAULT_PLATFORM, defaultTemplate],
@@ -23,6 +27,8 @@ export class PlatformGenerator {
         [PlatformGenerator.RAND256_VALETUDO_RE_PLATFORM, rand256ValetudoRe],
         [PlatformGenerator.SEND_COMMAND_PLATFORM, sendCommandTemplate],
         [PlatformGenerator.NEATO_PLATFORM, neatoTemplate],
+        [PlatformGenerator.SETUP_PLATFORM_XIAOMI, setupXiaomiTemplate],
+        [PlatformGenerator.SETUP_PLATFORM_OTHERS, setupOthersTemplate],
     ]);
 
     public static getPlatforms(): string[] {
