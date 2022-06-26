@@ -47,9 +47,11 @@ export class Room extends MapObject {
         } else {
             deleteFromArray(this._context.selectedRooms(), this);
         }
+        this._context.selectionChanged();
         if (this._context.runImmediately()) {
             this._selected = false;
             deleteFromArray(this._context.selectedRooms(), this);
+            this._context.selectionChanged();
             return;
         }
         forwardHaptic("selection");

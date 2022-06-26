@@ -24,6 +24,7 @@ import { ManualPath } from "./model/map_objects/manual-path";
 import {
     areConditionsMet,
     conditional,
+    delay,
     getMousePosition,
     getWatchedEntities,
     hasConfigOrAnyEntityChanged,
@@ -298,6 +299,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (user && this.currentPreset.activate_on_switch) {
             this._executePresetsActivation();
         }
+        this._selectionChanged();
     }
 
     private _executePresetsActivation() {
@@ -454,6 +456,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                         @change="${this._calculateScale}"
                         two-finger-pan="${preset.two_finger_pan}"
                         locked="${this.mapLocked}"
+                        no-default-pan="${this.mapLocked || preset.two_finger_pan}"
                         style="touch-action: none;">
                         ${mapZoomerContent}
                     </pinch-zoom>
@@ -525,7 +528,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                         `,
                     )}
                 </div>
-                ${ToastRenderer.render()}
+                ${ToastRenderer.render("map-card")}
             </ha-card>
         `;
     }
@@ -550,6 +553,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                     @click="${(): void => {
                         this.selectedManualPath.removeLast();
                         forwardHaptic("selection");
+                        this._selectionChanged();
                         this.requestUpdate();
                     }}">
                     <ha-icon icon="mdi:undo-variant"></ha-icon>
@@ -559,6 +563,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                     @click="${(): void => {
                         this.selectedManualPath.clear();
                         forwardHaptic("selection");
+                        this._selectionChanged();
                         this.requestUpdate();
                     }}">
                     <ha-icon icon="mdi:delete-empty"></ha-icon>
@@ -571,6 +576,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                     class="map-actions-item clickable ripple"
                     @click="${(): void => {
                         this.repeats = (this.repeats % currentMode.maxRepeats) + 1;
+                        this._selectionChanged();
                         forwardHaptic("selection");
                     }}">
                     <div>×${this.repeats}</div>
@@ -603,6 +609,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             () => this.realScale,
             event => this._getMousePosition(event),
             () => this.requestUpdate(),
+            () => this._selectionChanged(),
             () => this.coordinatesConverter,
             () => this.selectedManualRectangles,
             () => this.selectedPredefinedRectangles,
@@ -661,6 +668,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         }
         if (this.selectedMode != newModeIndex && manual) forwardHaptic("selection");
         this.selectedMode = newModeIndex;
+        this._selectionChanged();
     }
 
     private _getCurrentMode(): MapMode {
@@ -668,6 +676,9 @@ export class XiaomiVacuumMapCard extends LitElement {
     }
 
     private _getSelection(mode: MapMode): unknown[] {
+        if (!mode) {
+            return [];
+        }
         const repeats = mode.repeatsType === RepeatsType.INTERNAL ? this.repeats : null;
         let selection: unknown[] = [];
         switch (mode.selectionType) {
@@ -711,7 +722,16 @@ export class XiaomiVacuumMapCard extends LitElement {
         return false;
     }
 
+    private _selectionChanged(): void {
+        const currentMode = this._getCurrentMode();
+        const selection = this._getSelection(currentMode);
+        const event = new Event("map-card-selection-changed");
+        (event as any).selection = selection ?? "[]";
+        window.dispatchEvent(event)
+    }
+
     private _run(debug: boolean): void {
+        debug = debug || this.parentElement?.tagName?.toLowerCase() === "hui-card-preview";
         const currentPreset = this._getCurrentPreset();
         const currentMode = this._getCurrentMode();
         const selection = this._getSelection(currentMode);
@@ -744,6 +764,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (currentPreset.clean_selection_on_start ?? true) {
             this._setCurrentMode(this.selectedMode);
         }
+        this._selectionChanged();
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -755,7 +776,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         super.connectedCallback();
         this.connected = true;
         this._updateElements();
-        this._delay(100).then(() => this.requestUpdate());
+        delay(100).then(() => this.requestUpdate());
     }
 
     disconnectedCallback(): void {
@@ -770,7 +791,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (s) {
             s.style.borderRadius = this._getCssProperty("--map-card-internal-big-radius");
         }
-        this._delay(100).then(() => this._calculateBasicScale());
+        delay(100).then(() => this._calculateBasicScale());
     }
 
     private _drawSelection(): SVGTemplateResult | null {
@@ -795,7 +816,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     private _toggleLock(): void {
         this.mapLocked = !this.mapLocked;
         forwardHaptic("selection");
-        this._delay(500).then(() => this.requestUpdate());
+        delay(500).then(() => this.requestUpdate());
     }
 
     private _addRectangle(): void {
@@ -817,6 +838,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         const width = actualWidth / 3 / this.mapScale;
         const height = actualHeight / 3 / this.mapScale;
         this.selectedManualRectangles.push(new ManualRectangle(x, y, width, height, name, this._getContext()));
+        this._selectionChanged()
         forwardHaptic("selection");
         this.requestUpdate();
     }
@@ -844,10 +866,12 @@ export class XiaomiVacuumMapCard extends LitElement {
                 case SelectionType.MANUAL_PATH:
                     forwardHaptic("selection");
                     this.selectedManualPath.addPoint(x, y);
+                    this._selectionChanged()
                     break;
                 case SelectionType.MANUAL_POINT:
                     forwardHaptic("selection");
                     this.selectedManualPoint = new ManualPoint(x, y, this._getContext());
+                    this._selectionChanged()
                     break;
                 default:
                     return;
@@ -895,7 +919,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         this._getPinchZoom().setTransform({ scale: 1, x: 0, y: 0, allowChangeEvent: true });
         this.mapScale = 1;
         forwardHaptic("selection");
-        this._delay(300).then(() => (zoomerContent.style.transitionDuration = "0s"));
+        delay(300).then(() => (zoomerContent.style.transitionDuration = "0s"));
     }
 
     private _getCssProperty(property: string): string {
@@ -924,7 +948,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             relativeTo: "container",
             allowChangeEvent: true,
         });
-        this._delay(300).then(() => (zoomerContent.style.transitionDuration = "0s"));
+        delay(300).then(() => (zoomerContent.style.transitionDuration = "0s"));
     }
 
     private _calculateBasicScale(): void {
@@ -1010,23 +1034,8 @@ export class XiaomiVacuumMapCard extends LitElement {
         return localizeWithHass(ts, this.hass, this.config);
     }
 
-    private async _delay(ms: number): Promise<void> {
-        await new Promise<void>(resolve => setTimeout(() => resolve(), ms));
-    }
-
     private _showToast(text: string, icon: string, successful: boolean, additionalText = ""): void {
-        const toast = this.shadowRoot?.getElementById("toast");
-        const toastText = this.shadowRoot?.getElementById("toast-text");
-        const toastIcon = this.shadowRoot?.getElementById("toast-icon");
-        if (toast && toastText && toastIcon) {
-            toast.className = "show";
-            toastText.innerText = this._localize(text) + (additionalText ? `\n${additionalText}` : "");
-            toastIcon.children[0].setAttribute("icon", icon);
-            toastIcon.style.color = successful
-                ? "var(--map-card-internal-toast-successful-icon-color)"
-                : "var(--map-card-internal-toast-unsuccessful-icon-color)";
-            this._delay(2000).then(() => (toast.className = toast.className.replace("show", "")));
-        }
+        ToastRenderer.showToast(this.shadowRoot, (v)=>this._localize(v), "map-card", text, icon, successful, additionalText);
     }
 
     static get styles(): CSSResultGroup {

@@ -217,7 +217,7 @@ export class ManualRectangle extends MapObject {
                 this._context.selectedManualRectangles()[i]._id = (i + 1).toString();
             }
             forwardHaptic("selection");
-            this._context.update();
+            this.update();
         }
     }
 

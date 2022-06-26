@@ -12,6 +12,7 @@ export class Context {
         public readonly realScale: () => number,
         public readonly mousePositionCalculator: (_: MouseEvent | TouchEvent) => MousePosition,
         public readonly update: () => void,
+        public readonly selectionChanged: () => void,
         public readonly coordinatesConverter: () => CoordinatesConverter | undefined,
         public readonly selectedManualRectangles: () => ManualRectangle[],
         public readonly selectedPredefinedRectangles: () => PredefinedMultiRectangle[],

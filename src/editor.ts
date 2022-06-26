@@ -7,13 +7,21 @@ import { TranslatableString, XiaomiVacuumMapCardConfig } from "./types/types";
 import { localizeWithHass } from "./localize/localize";
 import { PlatformGenerator } from "./model/generators/platform-generator";
 import { EDITOR_CUSTOM_ELEMENT_NAME } from "./const";
+import { copyMessage } from "./utils";
+import { ToastRenderer } from "./renderers/toast-renderer";
 
 @customElement(EDITOR_CUSTOM_ELEMENT_NAME)
 export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCardEditor {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: XiaomiVacuumMapCardConfig;
     @state() private _helpers?: any;
+    @state() private _lastSelection?: any;
     private _initialized = false;
+
+    constructor() {
+        super();
+        this._handleNewSelection = this._handleNewSelection.bind(this);
+    }
 
     public setConfig(config: XiaomiVacuumMapCardConfig): void {
         this._config = config;
@@ -137,6 +145,12 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCar
                             @change=${this._valueChanged}></ha-switch>
                     </ha-formfield>
                 </div>
+                <div class="values separated selection-controls-wrapper">
+                    <p>Selection:</p>
+                    <code class="selection-text">${this._lastSelection ?? "[]"}</code>
+                    <mwc-button @click="${() => this._copySelection()}">COPY</mwc-button>
+                </div>
+                ${ToastRenderer.render("editor")}
             </div>
         `;
     }
@@ -150,6 +164,29 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCar
 
     private async loadCardHelpers(): Promise<void> {
         this._helpers = await (window as any).loadCardHelpers();
+    }
+
+    connectedCallback(): void {
+        super.connectedCallback()
+        window.addEventListener('map-card-selection-changed', this._handleNewSelection.bind(this));
+    }
+
+    disconnectedCallback(): void {
+        super.disconnectedCallback()
+        window.removeEventListener('map-card-selection-changed', this._handleNewSelection);
+    }
+
+    private _handleNewSelection(e: Event): void {
+        this._lastSelection = JSON.stringify((e as any).selection).replaceAll(",", ", ");
+    }
+
+    private _copySelection(){
+        copyMessage(this._lastSelection ?? []);
+        this._showToast("COPIED", "mdi:content-copy", true);
+    }
+
+    private _showToast(text: string, icon: string, successful: boolean, additionalText = ""): void {
+        ToastRenderer.showToast(this.shadowRoot, (v)=>this._localize(v), "editor", text, icon, successful, additionalText);
     }
 
     private _entityChanged(ev): void {
@@ -200,6 +237,20 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCar
 
     static get styles(): CSSResultGroup {
         return css`
+            .card-config {
+              position: relative;
+              --map-card-internal-toast-successful-icon-color: var(
+                      --map-card-toast-successful-icon-color,
+                      rgb(0, 255, 0)
+              );
+              --map-card-internal-toast-unsuccessful-icon-color: var(
+                      --map-card-toast-unsuccessful-icon-color,
+                      rgb(255, 0, 0)
+              );
+              --map-card-internal-small-radius: var(--map-card-small-radius, 18px);
+              --map-card-internal-primary-color: var(--map-card-primary-color, var(--slider-color));
+            }
+          
             .values {
                 padding-left: 16px;
                 margin: 8px;
@@ -209,6 +260,25 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCar
             .switch-wrapper {
                 padding: 8px;
             }
+          
+            .selection-controls-wrapper {
+              display: flex;
+              align-content: stretch;
+              justify-content: space-between;
+              align-items: center;
+            }
+          
+            .selection-text {
+              flex-grow: 1;
+              padding: 10px;
+            }
+          
+            .separated {
+              border-top: solid 1px;
+              border-top-color: var(--primary-text-color);
+            }
+          
+            ${ToastRenderer.styles}
         `;
     }
 }

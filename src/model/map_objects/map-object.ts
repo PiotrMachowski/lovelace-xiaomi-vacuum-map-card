@@ -39,6 +39,7 @@ export abstract class MapObject {
 
     protected update(): void {
         this._context.update();
+        this._context.selectionChanged();
     }
 
     protected localize(string: TranslatableString): string {
