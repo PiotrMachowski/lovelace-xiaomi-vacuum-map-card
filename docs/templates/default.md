@@ -13,7 +13,9 @@ Uses IDs to clean specific rooms. Requires `predefined_selections` to be provide
 
 [Getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318)
 
-Example configuration:
+<details>
+<summary>Example configuration</summary>
+
 ```yaml
 map_modes:
   - template: vacuum_clean_segment
@@ -42,15 +44,21 @@ map_modes:
           y: 26496
 ```
 
+</details>
+
 ### Zone cleaning (`vacuum_clean_zone`)
 
 Uses 4 coordinates to clean rectangular zones.
 
-Example configuration:
+<details>
+<summary>Example configuration</summary>
+
 ```yaml
 map_modes:
   - template: vacuum_clean_zone
 ```
+
+</details>
 
 ### Predefined zone cleaning (`vacuum_clean_zone_predefined`)
 
@@ -58,7 +66,9 @@ Uses 4 coordinates to clean rectangular zones that have been defined in the conf
 
 [Getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318)
 
-Example configuration:
+<details>
+<summary>Example configuration</summary>
+
 ```yaml
 map_modes:
   - template: vacuum_clean_zone_predefined
@@ -85,15 +95,21 @@ map_modes:
           y: 28403
 ```
 
+</details>
+
 ### Going to a specified point (`vacuum_goto`)
 
 Uses a pair of coordinates for vacuum to get to a user-specified point.
 
-Example configuration:
+<details>
+<summary>Example configuration</summary>
+
 ```yaml
 map_modes:
   - template: vacuum_goto
 ```
+
+</details>
 
 ### Going to a predefined point (`vacuum_goto_predefined`)
 
@@ -101,7 +117,9 @@ Uses a pair of coordinates for vacuum to go to a point that has been defined in 
 
 [Getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318)
 
-Example configuration:
+<details>
+<summary>Example configuration</summary>
+
 ```yaml
 map_modes:
   - template: vacuum_goto_predefined
@@ -128,12 +146,18 @@ map_modes:
           y: 26284
 ```
 
+</details>
+
 ### Following a specified path (`vacuum_follow_path`)
 
 Uses a list of points to make a vacuum follow a user-defined path. Requires [`follow_path`](/docs/follow_path.yaml) script to be installed.
 
-Example configuration:
+<details>
+<summary>Example configuration</summary>
+
 ```yaml
 map_modes:
   - template: vacuum_follow_path
 ```
+
+</details>
