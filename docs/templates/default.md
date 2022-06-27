@@ -46,6 +46,12 @@ This platform can be used to control vacuums connected to Home Assistant using b
   ```
   
   </details>
+  <details>
+  <summary>Example video</summary>
+
+    https://user-images.githubusercontent.com/6118709/141666925-34b01cde-82ff-447b-aecc-e9ced402b1ed.mp4
+
+  </details>
 
 * ### Zone cleaning (`vacuum_clean_zone`)
 
@@ -59,6 +65,12 @@ This platform can be used to control vacuums connected to Home Assistant using b
     - template: vacuum_clean_zone
   ```
   
+  </details>
+  <details>
+  <summary>Example video</summary>
+
+    https://user-images.githubusercontent.com/6118709/141666913-d95f082d-f5bf-4ab5-a478-ba44effe6f34.mp4
+
   </details>
 
 * ### Predefined zone cleaning (`vacuum_clean_zone_predefined`)
@@ -97,6 +109,12 @@ This platform can be used to control vacuums connected to Home Assistant using b
   ```
   
   </details>
+  <details>
+  <summary>Example video</summary>
+
+    https://user-images.githubusercontent.com/6118709/141666920-492a000c-9a78-4c20-b4f5-9343928140c7.mp4
+
+  </details>
 
 * ### Going to a specified point (`vacuum_goto`)
 
@@ -110,6 +128,12 @@ This platform can be used to control vacuums connected to Home Assistant using b
     - template: vacuum_goto
   ```
   
+  </details>
+  <details>
+  <summary>Example video</summary>
+
+    https://user-images.githubusercontent.com/6118709/141666921-2f3d66da-6ffc-492a-8439-625da97651bd.mp4
+
   </details>
 
 * ### Going to a predefined point (`vacuum_goto_predefined`)
@@ -148,6 +172,12 @@ This platform can be used to control vacuums connected to Home Assistant using b
   ```
   
   </details>
+  <details>
+  <summary>Example video</summary>
+
+    https://user-images.githubusercontent.com/6118709/141666923-965679e9-25fb-44cd-be08-fc63e5c85ce0.mp4
+
+  </details>
 
 * ### Following a specified path (`vacuum_follow_path`)
 
@@ -161,4 +191,10 @@ This platform can be used to control vacuums connected to Home Assistant using b
     - template: vacuum_follow_path
   ```
   
+  </details>
+  <details>
+  <summary>Example video</summary>
+
+    https://user-images.githubusercontent.com/6118709/141666931-48d1717f-96d0-461d-84f4-788c071f3a78.mp4
+
   </details>
