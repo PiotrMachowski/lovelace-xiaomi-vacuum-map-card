@@ -232,12 +232,12 @@ map: # coordinates of a point in a map coordinate system (can be read using e.g.
 ### Supported vacuum platforms
 
 Following vacuum platforms are supported out of the box at this moment:
-- `default`: [Built-in Xiaomi Miio integration](https://www.home-assistant.io/integrations/xiaomi_miio/#xiaomi-mi-robot-vacuum)
-- `KrzysztofHajdamowicz/miio2`: [Custom miio2 integration by KrzysztofHajdamowicz](https://github.com/KrzysztofHajdamowicz/home-assistant-vacuum-styj02ym)
-- `marotoweb/viomise`: [Custom Viomi SE integration by marotoweb](https://github.com/marotoweb/home-assistant-vacuum-viomise)
-- `rand256/ValetudoRE`: [Valetudo RE via MQTT by rand256](https://github.com/rand256/valetudo)
-- `send_command`: Uses `vacuum.send_command` service with commands: `app_zoned_clean`, `app_goto_target`, `app_segment_clean`
-- `Neato`:  [Built-in Neato integration](https://www.home-assistant.io/integrations/neato)
+- [`default`](/docs/templates/default.md)
+- [`KrzysztofHajdamowicz/miio2`](/docs/templates/krzysztofHajdamowiczMiio2.md)
+- [`marotoweb/viomise`](/docs/templates/marotowebViomise.md)
+- [`rand256/ValetudoRE`](/docs/templates/rand256ValetudoRe.md)
+- [`send_command`](/docs/templates/sendCommand.md)
+- [`Neato`](/docs/templates/neato.md)
 
 It's possible to configure following platforms manually:
 
@@ -320,42 +320,7 @@ It's possible to configure following platforms manually:
 
 #### Supported templates
 
-List of supported templates depends on selected `vacuum_platform`:
-
-- `default`:
-  - `vacuum_clean_zone`: Cleaning free-drawn rectangular zones on the map
-  - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
-  - `vacuum_goto`: Going to point selected by clicking in an arbitrary place on the map
-  - `vacuum_goto_predefined`: Going to point selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
-  - `vacuum_clean_segment`: Room cleaning based on identifier - room number ([getting outline](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318), [config generator](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/317))
-  - `vacuum_follow_path`: Following path selected by clicking on the map (using [script](/docs/follow_path.yaml))
-- `KrzysztofHajdamowicz/miio2`
-  - `vacuum_clean_zone`: Cleaning free-drawn rectangular zones on the map
-  - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
-  - `vacuum_goto`: Going to point selected by clicking in an arbitrary place on the map
-  - `vacuum_goto_predefined`: Going to point selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
-  - `vacuum_clean_segment`: Room cleaning based on identifier - room number ([getting outline](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318), [config generator](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/317))
-  - `vacuum_follow_path`: Following path selected by clicking on the map (using [script](/docs/follow_path.yaml))
-- `marotoweb/viomise`
-  - `vacuum_clean_zone`: Cleaning free-drawn rectangular zones on the map
-  - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
-  - `vacuum_clean_point`: Cleaning around point selected by clicking in an arbitrary place on the map
-  - `vacuum_clean_point_predefined`: Cleaning around point selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
-  - `vacuum_clean_segment`: Room cleaning based on identifier - room number ([getting outline](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318), [config generator](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/317))
-- `rand256/ValetudoRE`
-  - `vacuum_clean_segment`: Room cleaning based on identifier - room number or name
-  - `vacuum_goto_predefined`: Going to point selected on the map from `predefined_selections`
-- `send_command`
-  - `vacuum_clean_zone`: Cleaning free-drawn rectangular zones on the map
-  - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
-  - `vacuum_goto`: Going to point selected by clicking in an arbitrary place on the map
-  - `vacuum_goto_predefined`: Going to point selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
-  - `vacuum_clean_segment`: Room cleaning based on identifier - room number ([getting outline](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318), [config generator](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/317))
-  - `vacuum_follow_path`: Following path selected by clicking on the map (using [script](/docs/follow_path.yaml))
-- `Neato`
-  - `vacuum_clean_segment`: Room cleaning based on identifier ([getting outline](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
-
-> See [hints](#hints) to check how to easily retrieve zone/point coordinates.
+List of supported templates depends on selected [`vacuum_platform`](#supported-vacuum-platforms)
 
 
 #### Supported selection types
