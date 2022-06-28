@@ -117,7 +117,10 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCar
                     <p>
                         <a href="${PlatformGenerator.getPlatformsDocumentationUrl(this._vacuum_platform)}"
                            target="_blank">
-                            ${this._localize("editor.label.platforms_documentation")}
+                            ${this._localize([
+                                "editor.label.platforms_documentation", 
+                                "{0}",
+                                this._config?.vacuum_platform ?? PlatformGenerator.DEFAULT_PLATFORM])}
                         </a>
                     </p>
                 </div>

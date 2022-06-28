@@ -55,7 +55,7 @@ export class PlatformGenerator {
 
     public static getPlatformsDocumentationUrl(platform: string): string {
         const file = PlatformGenerator.TEMPLATE_DOCUMENTATIONS_URLS.get(platform)
-            ?? PlatformGenerator.TEMPLATE_DOCUMENTATIONS_URLS.get(this.DEFAULT_PLATFORM)
+            ?? PlatformGenerator.TEMPLATE_DOCUMENTATIONS_URLS.get(PlatformGenerator.DEFAULT_PLATFORM)
             ?? "";
         return PlatformGenerator.DOCUMENTATION_URL_FORMAT.replace("{0}", file);
     }
