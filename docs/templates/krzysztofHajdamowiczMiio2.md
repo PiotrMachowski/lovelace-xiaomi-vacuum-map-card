@@ -210,3 +210,7 @@ This platform can be used to control vacuums connected to Home Assistant using M
   https://user-images.githubusercontent.com/6118709/141666931-48d1717f-96d0-461d-84f4-788c071f3a78.mp4
 
   </details>
+
+## Additional related links
+
+ * [Adding mopping settings](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/341#discussioncomment-2078847)
