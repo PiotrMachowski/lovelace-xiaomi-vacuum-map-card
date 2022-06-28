@@ -14,6 +14,8 @@ This platform can be used to control vacuums connected to Home Assistant using b
 
   [Getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318)
 
+  Used service: `xiaomi_miio.vacuum_clean_segment`
+
   <details>
   <summary>Example configuration</summary>
 
@@ -57,6 +59,8 @@ This platform can be used to control vacuums connected to Home Assistant using b
 
   Uses 4 coordinates to clean rectangular zones.
 
+  Used service: `xiaomi_miio.vacuum_clean_zone`
+
   <details>
   <summary>Example configuration</summary>
   
@@ -78,7 +82,9 @@ This platform can be used to control vacuums connected to Home Assistant using b
   Uses 4 coordinates to clean rectangular zones that have been defined in the configuration. Requires `predefined_selections` to be provided.
   
   [Getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318)
-  
+
+  Used service: `xiaomi_miio.vacuum_clean_zone`
+
   <details>
   <summary>Example configuration</summary>
   
@@ -119,7 +125,9 @@ This platform can be used to control vacuums connected to Home Assistant using b
 * ### Going to a specified point (`vacuum_goto`)
 
   Uses a pair of coordinates for vacuum to get to a user-specified point.
-  
+
+  Used service: `xiaomi_miio.vacuum_goto`
+
   <details>
   <summary>Example configuration</summary>
   
@@ -141,7 +149,9 @@ This platform can be used to control vacuums connected to Home Assistant using b
   Uses a pair of coordinates for vacuum to go to a point that has been defined in the configuration. Requires `predefined_selections` to be provided.
   
   [Getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318)
-  
+
+  Used service: `xiaomi_miio.vacuum_goto`
+
   <details>
   <summary>Example configuration</summary>
   
@@ -182,7 +192,9 @@ This platform can be used to control vacuums connected to Home Assistant using b
 * ### Following a specified path (`vacuum_follow_path`)
 
   Uses a list of points to make a vacuum follow a user-defined path. Requires [`follow_path`](/docs/follow_path.yaml) script to be installed.
-  
+
+  Used service: `script.vacuum_follow_path`
+
   <details>
   <summary>Example configuration</summary>
   
