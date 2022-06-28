@@ -11,7 +11,7 @@ export class TileRenderer {
         let value: number | string = config.attribute
             ? card.hass.states[config.entity].attributes[config.attribute]
             : card.hass.states[config.entity].state;
-        if (typeof value === "number" || !isNaN(+value)) {
+        if (value !== null && typeof value === "number" || !isNaN(+value)) {
             value = parseFloat(value.toString()) * (config.multiplier ?? 1);
             if (config.precision != undefined) {
                 value = value.toFixed(config.precision);
