@@ -130,27 +130,27 @@
         "status": {
             "label": "Status",
             "value": {
-                "Starting": "Starten",
-                "Charger disconnected": "Lader niet aangesloten",
-                "Idle": "Inactief",
-                "Remote control active": "Afstandsbediening actief",
-                "Cleaning": "Schoonmaken",
-                "Returning home": "Terugkeren naar basisstation",
-                "Manual mode": "Handmatige modus",
-                "Charging": "Laden",
-                "Charging problem": "Laadprobleem",
-                "Paused": "Gepauzeerd",
-                "Spot cleaning": "Spot schoonmaken",
-                "Error": "Fout",
-                "Shutting down": "Afsluiten",
-                "Updating": "Updaten",
-                "Docking": "Docking",
-                "Going to target": "Onderweg naar doel",
-                "Zoned cleaning": "Zone schoonmaken",
-                "Segment cleaning": "Kamers schoonmaken",
-                "Emptying the bin": "Opvangbak leegmaken",
-                "Charging complete": "Opladen voltooid",
-                "Device offline": "Apparaat offline"
+                "starting": "Starten",
+                "charger disconnected": "Lader niet aangesloten",
+                "idle": "Inactief",
+                "remote control active": "Afstandsbediening actief",
+                "cleaning": "Schoonmaken",
+                "returning home": "Terugkeren naar basisstation",
+                "manual mode": "Handmatige modus",
+                "charging": "Laden",
+                "charging problem": "Laadprobleem",
+                "paused": "Gepauzeerd",
+                "spot cleaning": "Spot schoonmaken",
+                "error": "Fout",
+                "shutting down": "Afsluiten",
+                "updating": "Updaten",
+                "docking": "Docking",
+                "going to target": "Onderweg naar doel",
+                "zoned cleaning": "Zone schoonmaken",
+                "segment cleaning": "Kamers schoonmaken",
+                "emptying the bin": "Opvangbak leegmaken",
+                "charging complete": "Opladen voltooid",
+                "device offline": "Apparaat offline"
             }
         },
         "battery_level": {
@@ -159,12 +159,12 @@
         "fan_speed": {
             "label": "Fan snelheid",
             "value": {
-                "Silent": "Stil",
-                "Standard": "Standaard",
-                "Medium": "Medium",
-                "Turbo": "Turbo",
-                "Auto": "Automatisch",
-                "Gentle": "Zacht"
+                "silent": "Stil",
+                "standard": "Standaard",
+                "medium": "Medium",
+                "turbo": "Turbo",
+                "auto": "Automatisch",
+                "gentle": "Zacht"
             }
         },
         "sensor_dirty_left": {

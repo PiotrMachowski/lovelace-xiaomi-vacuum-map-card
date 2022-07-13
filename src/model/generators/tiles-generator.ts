@@ -1,7 +1,13 @@
 import { HomeAssistant } from "custom-card-helpers";
 import { HassEntity } from "home-assistant-js-websocket";
 
-import { EntityRegistryEntry, Language, TileConfig } from "../../types/types";
+import {
+    EntityRegistryEntry,
+    Language,
+    TileConfig,
+    TileFromAttributeTemplate,
+    TileFromSensorTemplate,
+} from "../../types/types";
 import { localize } from "../../localize/localize";
 import { getAllEntitiesFromTheSameDevice } from "../../utils";
 import { PlatformGenerator } from "./platform-generator";
@@ -42,27 +48,27 @@ export class TilesGenerator {
                 icon: "mdi:robot-vacuum",
                 translations: this.generateTranslationKeys(
                     [
-                        "Starting",
-                        "Charger disconnected",
-                        "Idle",
-                        "Remote control active",
-                        "Cleaning",
-                        "Returning home",
-                        "Manual mode",
-                        "Charging",
-                        "Charging problem",
-                        "Paused",
-                        "Spot cleaning",
-                        "Error",
-                        "Shutting down",
-                        "Updating",
-                        "Docking",
-                        "Going to target",
-                        "Zoned cleaning",
-                        "Segment cleaning",
-                        "Emptying the bin",
-                        "Charging complete",
-                        "Device offline",
+                        "starting",
+                        "charger disconnected",
+                        "idle",
+                        "remote control active",
+                        "cleaning",
+                        "returning home",
+                        "manual mode",
+                        "charging",
+                        "charging problem",
+                        "paused",
+                        "spot cleaning",
+                        "error",
+                        "shutting down",
+                        "updating",
+                        "docking",
+                        "going to target",
+                        "zoned cleaning",
+                        "segment cleaning",
+                        "emptying the bin",
+                        "charging complete",
+                        "device offline",
                     ],
                     "status",
                     language,
@@ -91,7 +97,7 @@ export class TilesGenerator {
                 attribute: "fan_speed",
                 icon: "mdi:fan",
                 translations: this.generateTranslationKeys(
-                    ["Silent", "Standard", "Medium", "Turbo", "Auto", "Gentle"],
+                    ["silent", "standard", "medium", "turbo", "auto", "gentle"],
                     "fan_speed",
                     language,
                 ),
@@ -108,17 +114,7 @@ export class TilesGenerator {
     ): TileConfig[] {
         PlatformGenerator.getTilesFromAttributesTemplates(platform)
             .filter(t => t.attribute in state.attributes)
-            .forEach(t =>
-                tiles.push({
-                    entity: vacuumEntity,
-                    label: localize(t.label, language),
-                    attribute: t.attribute,
-                    icon: t.icon,
-                    unit: t.unit ? localize(t.unit, language) : undefined,
-                    precision: t.precision,
-                    multiplier: t.multiplier,
-                }),
-            );
+            .forEach(t => tiles.push(this.mapAttributeToTile(vacuumEntity, t, language)));
         return tiles;
     }
 
@@ -137,47 +133,90 @@ export class TilesGenerator {
         } catch {
             entityRegistryEntries = [];
         }
-        const vacuumEntity = entityRegistryEntries.filter(e => e.entity_id === vacuumEntityId);
-        if (vacuumEntity.length > 0) {
-            const vacuumUniqueId = vacuumEntity[0].unique_id;
+        if (entityRegistryEntries.length > 0) {
             PlatformGenerator.getTilesFromSensorsTemplates(platform)
                 .map(t => ({
                     tile: t,
-                    entity: entityRegistryEntries.filter(e => e.unique_id === `${t.unique_id_prefix}${vacuumUniqueId}`),
+                    entity: entityRegistryEntries.filter(e => e.unique_id.match(t.unique_id_regex))
                 }))
-                .flatMap(v => v.entity.map(e => this.mapToTile(e, v.tile.label, v.tile.unit, v.tile.multiplier, language)))
+                .flatMap(v => v.entity.map(e => this.mapEntryToTile(e, v.tile, language)))
                 .forEach(t => tiles.push(t));
         }
         return new Promise<TileConfig[]>(resolve => resolve(tiles));
     }
 
+    private static mapEntryToTile(
+        entry: EntityRegistryEntry,
+        tile_template: TileFromSensorTemplate,
+        language: Language,
+    ): TileConfig {
+        return this.mapToTile(entry.entity_id,
+            undefined,
+            tile_template.label,
+            entry.icon ?? entry.original_icon,
+            tile_template.unit,
+            tile_template.multiplier,
+            tile_template.precision,
+            tile_template.translation_keys,
+            tile_template.tile_id,
+            language,
+        );
+    }
+
+    private static mapAttributeToTile(
+        entity_id: string,
+        tile_template: TileFromAttributeTemplate,
+        language: Language,
+    ): TileConfig {
+        return this.mapToTile(entity_id,
+            tile_template.attribute,
+            tile_template.label,
+            tile_template.icon,
+            tile_template.unit,
+            tile_template.multiplier,
+            tile_template.precision,
+            tile_template.translation_keys,
+            tile_template.tile_id,
+            language,
+        );
+    }
+
     private static mapToTile(
-        e: EntityRegistryEntry,
+        entity_id: string,
+        attribute: string | undefined,
         label: string,
+        icon: string,
         unit: string | undefined,
         multiplier: number | undefined,
+        precision: number | undefined,
+        translation_keys: Array<string> | undefined,
+        tile_id: string | undefined,
         language: Language,
     ): TileConfig {
         return {
-            entity: e.entity_id,
+            entity: entity_id,
             label: localize(label, language),
-            icon: e.icon ?? e.original_icon,
-            multiplier: multiplier ? multiplier : undefined,
-            precision: multiplier ? 1 : undefined,
+            attribute: attribute,
+            icon: icon,
             unit: unit ? localize(unit, language) : undefined,
+            precision: precision ? precision : 0,
+            multiplier: multiplier ? multiplier : undefined,
+            translations: this.generateTranslationKeys(translation_keys ?? [], tile_id, language),
         };
     }
 
     private static generateTranslationKeys(
         keys: Array<string>,
-        tile: string,
+        tile: string | undefined,
         language: Language,
     ): Record<string, string> {
         const output = {};
-        keys.forEach(k => {
-            const translation = localize(`tile.${tile}.value.${k}`, language, "");
-            if (translation) output[k] = translation;
-        });
+        if (tile) {
+            keys.forEach(k => {
+                const translation = localize(`tile.${tile}.value.${k}`, language, "");
+                if (translation) output[k] = translation;
+            });
+        }
         return output;
     }
 }

@@ -11,6 +11,8 @@ import {
 import { localize } from "../../localize/localize";
 import { ServiceCall } from "./service-call";
 import { PlatformGenerator } from "../generators/platform-generator";
+import { HomeAssistant } from "custom-card-helpers";
+import { evaluateTemplate } from "../../utils";
 
 export class MapMode {
     private static readonly PREDEFINED_SELECTION_TYPES = [
@@ -51,6 +53,18 @@ export class MapMode {
         }
     }
 
+    public async getServiceCall(hass: HomeAssistant, entityId: string, selection: unknown[], repeats: number): Promise<ServiceCall> {
+        let serviceCall = this._applyData(entityId, selection, repeats);
+        if (this.serviceCallSchema.evaluateDataAsTemplate) {
+            try {
+                serviceCall = JSON.parse(await evaluateTemplate(hass, JSON.stringify(serviceCall.serviceData)));
+            } catch {
+                console.error("Failed to evaluate template", serviceCall);
+            }
+        }
+        return serviceCall;
+    }
+
     private _applyTemplateIfPossible(vacuumPlatform: string, config: MapModeConfig, language: Language): void {
         if (!config.template || !PlatformGenerator.isValidModeTemplate(vacuumPlatform, config.template)) return;
         const templateValue = PlatformGenerator.getModeTemplate(vacuumPlatform, config.template);
@@ -70,7 +84,7 @@ export class MapMode {
             this.serviceCallSchema = new ServiceCallSchema(templateValue.service_call_schema);
     }
 
-    public getServiceCall(entityId: string, selection: unknown[], repeats: number): ServiceCall {
+    private _applyData(entityId: string, selection: unknown[], repeats: number): ServiceCall {
         return this.serviceCallSchema.apply(entityId, selection, repeats, this.variables);
     }
 }

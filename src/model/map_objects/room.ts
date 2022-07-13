@@ -24,7 +24,7 @@ export class Room extends MapObject {
             room-${`${this._config.id}`.replace(" ", "_")}-wrapper">
                 <polygon class="room-outline clickable"
                          points="${poly.map(p => p.join(", ")).join(" ")}"
-                         @click="${(): void => this._click()}">
+                         @click="${async (): Promise<void> => this._click()}">
                 </polygon>
                 ${this.renderIcon(this._config.icon, () => this._click(), "room-icon-wrapper")}
                 ${this.renderLabel(this._config.label, "room-label")}
@@ -36,7 +36,7 @@ export class Room extends MapObject {
         return this._config.id;
     }
 
-    private _click(): void {
+    private async _click(): Promise<void> {
         if (!this._selected && this._context.selectedRooms().length >= this._context.maxSelections()) {
             forwardHaptic("failure");
             return;
@@ -48,7 +48,7 @@ export class Room extends MapObject {
             deleteFromArray(this._context.selectedRooms(), this);
         }
         this._context.selectionChanged();
-        if (this._context.runImmediately()) {
+        if (await this._context.runImmediately()) {
             this._selected = false;
             deleteFromArray(this._context.selectedRooms(), this);
             this._context.selectionChanged();

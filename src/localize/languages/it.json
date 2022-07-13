@@ -128,27 +128,27 @@
         "status": {
             "label": "Stato",
             "value": {
-                "Starting": "Avvio",
-                "Charger disconnected": "Caricabatterie scollegato",
-                "Idle": "Riposo",
-                "Remote control active": "Controllo remoto attivo",
-                "Cleaning": "Pulizia",
-                "Returning home": "Ritorno alla base",
-                "Manual mode": "Modalità Manuale",
-                "Charging": "Caricamento",
-                "Charging problem": "Problema di ricarica",
-                "Paused": "Pausa",
-                "Spot cleaning": "Pulizia a punti",
-                "Error": "Errore",
-                "Shutting down": "Spegnimento",
-                "Updating": "Aggiornamento in corso",
-                "Docking": "In base",
-                "Going to target": "Andando al punto",
-                "Zoned cleaning": "Pulizia a zone",
-                "Segment cleaning": "Pulizia segmenti",
-                "Emptying the bin": "Svuotare il contenitore",
-                "Charging complete": "Carica Completata",
-                "Device offline": "Device offline"
+                "starting": "Avvio",
+                "charger disconnected": "Caricabatterie scollegato",
+                "idle": "Riposo",
+                "remote control active": "Controllo remoto attivo",
+                "cleaning": "Pulizia",
+                "returning home": "Ritorno alla base",
+                "manual mode": "Modalità Manuale",
+                "charging": "Caricamento",
+                "charging problem": "Problema di ricarica",
+                "paused": "Pausa",
+                "spot cleaning": "Pulizia a punti",
+                "error": "Errore",
+                "shutting down": "Spegnimento",
+                "updating": "Aggiornamento in corso",
+                "docking": "In base",
+                "going to target": "Andando al punto",
+                "zoned cleaning": "Pulizia a zone",
+                "segment cleaning": "Pulizia segmenti",
+                "emptying the bin": "Svuotare il contenitore",
+                "charging complete": "Carica Completata",
+                "device offline": "Device offline"
             }
         },
         "battery_level": {
@@ -157,12 +157,12 @@
         "fan_speed": {
             "label": "Velocità Ventola",
             "value": {
-                "Silent": "Silenzioso",
-                "Standard": "Standard",
-                "Medium": "Media",
-                "Turbo": "Turbo",
-                "Auto": "Auto",
-                "Gentle": "Delicato"
+                "silent": "Silenzioso",
+                "standard": "Standard",
+                "medium": "Media",
+                "turbo": "Turbo",
+                "auto": "Auto",
+                "gentle": "Delicato"
             }
         },
         "sensor_dirty_left": {

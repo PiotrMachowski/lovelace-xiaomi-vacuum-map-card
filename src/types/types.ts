@@ -103,14 +103,18 @@ export interface TileFromAttributeTemplate {
     readonly unit?: string;
     readonly multiplier?: number;
     readonly precision?: number;
+    readonly translation_keys?: Array<string>;
+    readonly tile_id?: string;
 }
 
 export interface TileFromSensorTemplate {
-    readonly unique_id_prefix: string;
+    readonly unique_id_regex: string;
     readonly label: string;
     readonly unit?: string;
     readonly multiplier?: number;
     readonly precision?: number;
+    readonly translation_keys?: Array<string>;
+    readonly tile_id?: string;
 }
 
 export interface IconActionConfig extends ActionableObjectConfig, ConditionalObjectConfig {
@@ -194,6 +198,7 @@ export interface ServiceCallSchemaConfig {
     readonly service: string;
     readonly service_data?: Record<string, unknown>;
     readonly target?: Record<string, unknown>;
+    readonly evaluate_data_as_template?: boolean;
 }
 
 export interface MapCroppingConfig {

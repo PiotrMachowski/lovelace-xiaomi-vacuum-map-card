@@ -161,17 +161,17 @@ export async function getAllEntitiesFromTheSameDevice(
     hass: HomeAssistant,
     entity: string,
 ): Promise<EntityRegistryEntry[]> {
-    const vacuumConfigEntryId = (
-        await hass.callWS<Map<string, unknown>>({
-            type: "entity/source",
-            entity_id: [entity],
+    const vacuumDeviceId = (
+        await hass.callWS<EntityRegistryEntry>({
+            type: "config/entity_registry/get",
+            entity_id: entity,
         })
-    )[entity]["config_entry"];
+    )["device_id"];
     const vacuumSensors = (
-        await hass.callWS<{ config_entry_id: string; entity_id: string }[]>({
+        await hass.callWS<{ device_id: string; entity_id: string }[]>({
             type: "config/entity_registry/list",
         })
-    ).filter(e => e.config_entry_id === vacuumConfigEntryId);
+    ).filter(e => e.device_id === vacuumDeviceId);
     return Promise.all(
         vacuumSensors.map(vs =>
             hass.callWS<EntityRegistryEntry>({
@@ -198,4 +198,14 @@ export function copyMessage(val: string): void {
     selBox.select();
     document.execCommand('copy');
     document.body.removeChild(selBox);
+}
+
+export async function evaluateTemplate(hass: HomeAssistant, template: string): Promise<string> {
+    return new Promise(((resolve) => {
+        hass.connection.subscribeMessage(
+            (msg: { result: string }) => resolve(msg.result), {
+                type: "render_template",
+                template: template,
+            });
+    }));
 }

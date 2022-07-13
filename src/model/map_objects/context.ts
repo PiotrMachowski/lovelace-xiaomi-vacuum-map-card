@@ -21,7 +21,7 @@ export class Context {
         public readonly roundingEnabled: () => boolean,
         public readonly maxSelections: () => number,
         public readonly cssEvaluator: (_: string) => string,
-        public readonly runImmediately: () => boolean,
+        public readonly runImmediately: () => Promise<boolean>,
         public readonly localize: (_: TranslatableString) => string,
     ) {}
 

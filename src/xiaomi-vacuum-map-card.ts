@@ -714,9 +714,9 @@ export class XiaomiVacuumMapCard extends LitElement {
         return selection;
     }
 
-    private _runImmediately(): boolean {
+    private async _runImmediately(): Promise<boolean> {
         if (this._getCurrentMode().runImmediately) {
-            this._run(false);
+            await this._run(false);
             return true;
         }
         return false;
@@ -730,7 +730,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         window.dispatchEvent(event)
     }
 
-    private _run(debug: boolean): void {
+    private async _run(debug: boolean): Promise<void> {
         debug = debug || this.parentElement?.tagName?.toLowerCase() === "hui-card-preview";
         const currentPreset = this._getCurrentPreset();
         const currentMode = this._getCurrentMode();
@@ -740,7 +740,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             forwardHaptic("failure");
         } else {
             const repeats = this.repeats;
-            const serviceCall = currentMode.getServiceCall(currentPreset.entity, selection, repeats);
+            const serviceCall = await currentMode.getServiceCall(this.hass, currentPreset.entity, selection, repeats);
             const message = JSON.stringify(serviceCall, null, 2);
             if (debug || (this.config.debug ?? false)) {
                 this._showToast("popups.success", "mdi:check", true);
@@ -883,14 +883,14 @@ export class XiaomiVacuumMapCard extends LitElement {
     }
 
     private _handleRunAction(): (ev: ActionHandlerEvent) => void {
-        return (ev: ActionHandlerEvent): void => {
+        return async (ev: ActionHandlerEvent): Promise<void> => {
             if (this.hass && ev.detail.action) {
                 switch (ev.detail.action) {
                     case "tap":
-                        this._run(false);
+                        await this._run(false);
                         break;
                     case "hold":
-                        this._run(true);
+                        await this._run(true);
                         break;
                     case "double_tap":
                         console.log(

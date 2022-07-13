@@ -35,7 +35,7 @@ export class PredefinedPoint extends MapObject {
         `;
     }
 
-    private _click(): void {
+    private async _click(): Promise<void> {
         this._selected = !this._selected;
         forwardHaptic("selection");
         if (this._selected) {
@@ -47,7 +47,7 @@ export class PredefinedPoint extends MapObject {
         } else {
             deleteFromArray(this._context.selectedPredefinedPoint(), this);
         }
-        if (this._context.runImmediately()) {
+        if (await this._context.runImmediately()) {
             this._selected = false;
             deleteFromArray(this._context.selectedPredefinedPoint(), this);
             return;

@@ -4,6 +4,7 @@ import { ServiceCall } from "./service-call";
 import { Modifier } from "./modifier";
 
 export class ServiceCallSchema {
+    public readonly evaluateDataAsTemplate: boolean;
     private readonly service: string;
     private readonly serviceData?: Record<string, unknown>;
     private readonly target?: Record<string, unknown>;
@@ -12,6 +13,7 @@ export class ServiceCallSchema {
         this.service = config.service;
         this.serviceData = config.service_data;
         this.target = config.target;
+        this.evaluateDataAsTemplate = config.evaluate_data_as_template ?? false;
     }
 
     public apply(

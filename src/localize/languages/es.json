@@ -130,27 +130,27 @@
         "status": {
             "label": "Estado",
             "value": {
-                "Starting": "Iniciando",
-                "Charger disconnected": "Cargador desconectado",
-                "Idle": "Inactivo",
-                "Remote control active": "Control remoto activo",
-                "Cleaning": "Limpiando",
-                "Returning home": "Volviendo a la base",
-                "Manual mode": "Modo manual",
-                "Charging": "Cargando",
-                "Charging problem": "Error de carga",
-                "Paused": "Pausado",
-                "Spot cleaning": "Limpieza por puntos",
-                "Error": "Error",
-                "Shutting down": "Apagando",
-                "Updating": "Actualizando",
-                "Docking": "Acoplamiento",
-                "Going to target": "Ir al objetivo",
-                "Zoned cleaning": "Limpieza por zonas",
-                "Segment cleaning": "Limpieza por segmentos",
-                "Emptying the bin": "Vaciando el depósito",
-                "Charging complete": "Carga completa",
-                "Device offline": "Dispositivo desconectado"
+                "starting": "Iniciando",
+                "charger disconnected": "Cargador desconectado",
+                "idle": "Inactivo",
+                "remote control active": "Control remoto activo",
+                "cleaning": "Limpiando",
+                "returning home": "Volviendo a la base",
+                "manual mode": "Modo manual",
+                "charging": "Cargando",
+                "charging problem": "Error de carga",
+                "paused": "Pausado",
+                "spot cleaning": "Limpieza por puntos",
+                "error": "Error",
+                "shutting down": "Apagando",
+                "updating": "Actualizando",
+                "docking": "Acoplamiento",
+                "going to target": "Ir al objetivo",
+                "zoned cleaning": "Limpieza por zonas",
+                "segment cleaning": "Limpieza por segmentos",
+                "emptying the bin": "Vaciando el depósito",
+                "charging complete": "Carga completa",
+                "device offline": "Dispositivo desconectado"
             }
         },
         "battery_level": {
@@ -159,12 +159,12 @@
         "fan_speed": {
             "label": "Velocidad del ventilador",
             "value": {
-                "Silent": "Silencioso",
-                "Standard": "Normal",
-                "Medium": "Medio",
-                "Turbo": "Turbo",
-                "Auto": "Automático",
-                "Gentle": "Suave"
+                "silent": "Silencioso",
+                "standard": "Normal",
+                "medium": "Medio",
+                "turbo": "Turbo",
+                "auto": "Automático",
+                "gentle": "Suave"
             }
         },
         "sensor_dirty_left": {

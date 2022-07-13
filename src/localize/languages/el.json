@@ -130,27 +130,27 @@
         "status": {
             "label": "Κατάσταση",
             "value": {
-                "Starting": "Γίνεται εκκίνηση",
-                "Charger disconnected": "Αποσυνδέθηκε από τη φόρτιση",
-                "Idle": "Σε αδράνεια",
-                "Remote control active": "Χειροκίνητος έλεγχος ενεργός",
-                "Cleaning": "Γίνεται καθαρισμός",
-                "Returning home": "Επιστροφή στη βάση",
-                "Manual mode": "Χειροκίνητη λειτουργία",
-                "Charging": "Σε φόρτιση",
-                "Charging problem": "Πρόβλημα φόρτισης",
-                "Paused": "Σε παύση",
-                "Spot cleaning": "Καθαρισμός σημείου",
-                "Error": "Σφάλμα",
-                "Shutting down": "Γίνεται τερματισμός",
-                "Updating": "Γίνεται αναβάθμιση",
-                "Docking": "Σύνδεση στη βάση",
-                "Going to target": "Πορεία προς προορισμό",
-                "Zoned cleaning": "Καθαρισμός ζώνης",
-                "Segment cleaning": "Καθαρισμός τμήματος",
-                "Emptying the bin": "Άδειασμα κάδου",
-                "Charging complete": "Φόρτιση πλήρης",
-                "Device offline": "Συσκευή εκτός δικτύου"
+                "starting": "Γίνεται εκκίνηση",
+                "charger disconnected": "Αποσυνδέθηκε από τη φόρτιση",
+                "idle": "Σε αδράνεια",
+                "remote control active": "Χειροκίνητος έλεγχος ενεργός",
+                "cleaning": "Γίνεται καθαρισμός",
+                "returning home": "Επιστροφή στη βάση",
+                "manual mode": "Χειροκίνητη λειτουργία",
+                "charging": "Σε φόρτιση",
+                "charging problem": "Πρόβλημα φόρτισης",
+                "paused": "Σε παύση",
+                "spot cleaning": "Καθαρισμός σημείου",
+                "error": "Σφάλμα",
+                "shutting down": "Γίνεται τερματισμός",
+                "updating": "Γίνεται αναβάθμιση",
+                "docking": "Σύνδεση στη βάση",
+                "going to target": "Πορεία προς προορισμό",
+                "zoned cleaning": "Καθαρισμός ζώνης",
+                "segment cleaning": "Καθαρισμός τμήματος",
+                "emptying the bin": "Άδειασμα κάδου",
+                "charging complete": "Φόρτιση πλήρης",
+                "device offline": "Συσκευή εκτός δικτύου"
             }
         },
         "battery_level": {
@@ -159,12 +159,12 @@
         "fan_speed": {
             "label": "Ταχύτητα ανεμιστήρα",
             "value": {
-                "Silent": "Αθόρυβο",
-                "Standard": "Τυπικό",
-                "Medium": "Μέτριο",
-                "Turbo": "Τούρμπο",
-                "Auto": "Αυτόματο",
-                "Gentle": "Ήπιο"
+                "silent": "Αθόρυβο",
+                "standard": "Τυπικό",
+                "medium": "Μέτριο",
+                "turbo": "Τούρμπο",
+                "auto": "Αυτόματο",
+                "gentle": "Ήπιο"
             }
         },
         "sensor_dirty_left": {

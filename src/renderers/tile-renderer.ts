@@ -11,15 +11,15 @@ export class TileRenderer {
         let value: number | string = config.attribute
             ? card.hass.states[config.entity].attributes[config.attribute]
             : card.hass.states[config.entity].state;
-        if (value !== null && typeof value === "number" || !isNaN(+value)) {
+        if (value !== null && (typeof value === "number" || !isNaN(+value))) {
             value = parseFloat(value.toString()) * (config.multiplier ?? 1);
             if (config.precision != undefined) {
                 value = value.toFixed(config.precision);
             }
         }
         const translations = config.translations ?? {};
-        if (value in translations) {
-            value = translations[value];
+        if (`${value}`.toLowerCase() in translations) {
+            value = translations[`${value}`.toLowerCase()];
         }
         return html`
             <div

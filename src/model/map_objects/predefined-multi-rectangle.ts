@@ -31,7 +31,7 @@ export class PredefinedMultiRectangle extends MapObject {
                     r => svg`
                     <polygon class="predefined-rectangle clickable"
                              points="${r.map(p => p.join(", ")).join(" ")}"
-                             @click="${(): void => this._click()}">
+                             @click="${async (): Promise<void> => this._click()}">
                     </polygon>
                 `,
                 )}
@@ -41,7 +41,7 @@ export class PredefinedMultiRectangle extends MapObject {
         `;
     }
 
-    private _click(): void {
+    private async _click(): Promise<void> {
         if (
             !this._selected &&
             this._context
@@ -60,7 +60,7 @@ export class PredefinedMultiRectangle extends MapObject {
         } else {
             deleteFromArray(this._context.selectedPredefinedRectangles(), this);
         }
-        if (this._context.runImmediately()) {
+        if (await this._context.runImmediately()) {
             this._selected = false;
             deleteFromArray(this._context.selectedPredefinedRectangles(), this);
             return;
