@@ -376,6 +376,7 @@ Following selection types are supported at this moment:
 | `service` | string | yes | - | Service that should be called in a given mode |
 | `service_data` | object | no | - | Data that should be passed to service call |
 | `target` | object | no | - | Target that should be passed to service call |
+| `evaluate_data_as_template` | boolean | no | `false` | Enables support for jinja templates in service calls |  
 
 It is possible to use several built-in placeholders in `service_data` section. They will be replaced by:
  - `[[entity_id]]`: `entity_id` defined in preset's config

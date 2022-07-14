@@ -23,7 +23,7 @@ export class PlatformGenerator {
     public static SETUP_PLATFORM_OTHERS = "Setup Others";
 
     private static DOCUMENTATION_URL_FORMAT =
-        "https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/tree/dev/docs/templates/{0}.md";
+        "https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/tree/master/docs/templates/{0}.md";
 
     private static TEMPLATES = new Map<string, PlatformTemplate>([
         [PlatformGenerator.DEFAULT_PLATFORM, defaultTemplate],
