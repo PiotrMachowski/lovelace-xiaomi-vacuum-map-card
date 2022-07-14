@@ -228,7 +228,9 @@
             "platforms_documentation": "Dokumentacja wybranej platformy ({0})",
             "selection": "Zaznaczenie:",
             "copy": "Kopiuj",
-            "copied": "Skopiowano!"
+            "copied": "Skopiowano!",
+            "set_static_config": "Wygeneruj statyczną konfigurację",
+            "config_set": "Ustawiono konfigurację!\nOtwórz edytor YAML w celu dostosowania."
         }
     }
 }

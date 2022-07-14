@@ -9,7 +9,7 @@ export class ServiceCallSchema {
     private readonly serviceData?: Record<string, unknown>;
     private readonly target?: Record<string, unknown>;
 
-    constructor(config: ServiceCallSchemaConfig) {
+    constructor(public readonly config: ServiceCallSchemaConfig) {
         this.service = config.service;
         this.serviceData = config.service_data;
         this.target = config.target;

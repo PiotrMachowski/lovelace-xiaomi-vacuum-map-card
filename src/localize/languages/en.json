@@ -228,7 +228,9 @@
             "platforms_documentation": "Chosen platform's documentation ({0})",
             "selection": "Selection:",
             "copy": "Copy",
-            "copied": "Copied!"
+            "copied": "Copied!",
+            "set_static_config": "Generate static config",
+            "config_set": "Config set!\nOpen config editor to adjust it."
         }
     }
 }

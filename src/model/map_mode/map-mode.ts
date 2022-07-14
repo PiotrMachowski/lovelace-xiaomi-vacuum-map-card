@@ -87,4 +87,20 @@ export class MapMode {
     private _applyData(entityId: string, selection: unknown[], repeats: number): ServiceCall {
         return this.serviceCallSchema.apply(entityId, selection, repeats, this.variables);
     }
+
+    public toMapModeConfig(): MapModeConfig {
+        return {
+            name: this.name,
+            icon: this.icon,
+            run_immediately: this.runImmediately,
+            coordinates_rounding: this.coordinatesRounding,
+            selection_type: SelectionType[this.selectionType],
+            max_selections: this.maxSelections,
+            repeats_type: RepeatsType[this.repeatsType],
+            max_repeats: this.maxRepeats,
+            service_call_schema: this.serviceCallSchema.config,
+            predefined_selections: this.predefinedSelections,
+            variables: this.variables
+        }
+    }
 }
