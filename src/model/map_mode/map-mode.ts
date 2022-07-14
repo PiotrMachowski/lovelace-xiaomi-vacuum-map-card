@@ -53,7 +53,12 @@ export class MapMode {
         }
     }
 
-    public async getServiceCall(hass: HomeAssistant, entityId: string, selection: unknown[], repeats: number): Promise<ServiceCall> {
+    public async getServiceCall(
+        hass: HomeAssistant,
+        entityId: string,
+        selection: unknown[],
+        repeats: number,
+    ): Promise<ServiceCall> {
         let serviceCall = this._applyData(entityId, selection, repeats);
         if (this.serviceCallSchema.evaluateDataAsTemplate) {
             try {
@@ -100,7 +105,7 @@ export class MapMode {
             max_repeats: this.maxRepeats,
             service_call_schema: this.serviceCallSchema.config,
             predefined_selections: this.predefinedSelections,
-            variables: this.variables
-        }
+            variables: this.variables,
+        };
     }
 }

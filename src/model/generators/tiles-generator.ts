@@ -137,7 +137,7 @@ export class TilesGenerator {
             PlatformGenerator.getTilesFromSensorsTemplates(platform)
                 .map(t => ({
                     tile: t,
-                    entity: entityRegistryEntries.filter(e => e.unique_id.match(t.unique_id_regex))
+                    entity: entityRegistryEntries.filter(e => e.unique_id.match(t.unique_id_regex)),
                 }))
                 .flatMap(v => v.entity.map(e => this.mapEntryToTile(e, v.tile, language)))
                 .forEach(t => tiles.push(t));
@@ -150,7 +150,8 @@ export class TilesGenerator {
         tile_template: TileFromSensorTemplate,
         language: Language,
     ): TileConfig {
-        return this.mapToTile(entry.entity_id,
+        return this.mapToTile(
+            entry.entity_id,
             undefined,
             tile_template.label,
             entry.icon ?? entry.original_icon,
@@ -168,7 +169,8 @@ export class TilesGenerator {
         tile_template: TileFromAttributeTemplate,
         language: Language,
     ): TileConfig {
-        return this.mapToTile(entity_id,
+        return this.mapToTile(
+            entity_id,
             tile_template.attribute,
             tile_template.label,
             tile_template.icon,

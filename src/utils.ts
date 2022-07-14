@@ -187,25 +187,24 @@ export async function delay(ms: number): Promise<void> {
 }
 
 export function copyMessage(val: string): void {
-    const selBox = document.createElement('textarea');
-    selBox.style.position = 'fixed';
-    selBox.style.left = '0';
-    selBox.style.top = '0';
-    selBox.style.opacity = '0';
+    const selBox = document.createElement("textarea");
+    selBox.style.position = "fixed";
+    selBox.style.left = "0";
+    selBox.style.top = "0";
+    selBox.style.opacity = "0";
     selBox.value = val;
     document.body.appendChild(selBox);
     selBox.focus();
     selBox.select();
-    document.execCommand('copy');
+    document.execCommand("copy");
     document.body.removeChild(selBox);
 }
 
 export async function evaluateTemplate(hass: HomeAssistant, template: string): Promise<string> {
-    return new Promise(((resolve) => {
-        hass.connection.subscribeMessage(
-            (msg: { result: string }) => resolve(msg.result), {
-                type: "render_template",
-                template: template,
-            });
-    }));
+    return new Promise(resolve => {
+        hass.connection.subscribeMessage((msg: { result: string }) => resolve(msg.result), {
+            type: "render_template",
+            template: template,
+        });
+    });
 }

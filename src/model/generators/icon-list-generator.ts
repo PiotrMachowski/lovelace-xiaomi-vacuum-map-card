@@ -6,15 +6,15 @@ import { localize } from "../../localize/localize";
 
 export class IconListGenerator {
     private static _ICON_MAPPING = {
-        "Silent": "mdi:fan-remove",
-        "Basic": "mdi:fan-speed-1",
-        "Standard": "mdi:fan-speed-1",
-        "Strong": "mdi:fan-speed-2",
-        "Medium": "mdi:fan-speed-2",
+        Silent: "mdi:fan-remove",
+        Basic: "mdi:fan-speed-1",
+        Standard: "mdi:fan-speed-1",
+        Strong: "mdi:fan-speed-2",
+        Medium: "mdi:fan-speed-2",
         "Full Speed": "mdi:fan-speed-3",
-        "Turbo": "mdi:fan-speed-3",
-        "Auto": "mdi:fan-auto",
-        "Gentle": "mdi:waves",
+        Turbo: "mdi:fan-speed-3",
+        Auto: "mdi:fan-auto",
+        Gentle: "mdi:waves",
     };
 
     public static generate(hass: HomeAssistant, vacuumEntity: string, language: Language): IconActionConfig[] {

@@ -13,13 +13,15 @@ export class ToastRenderer {
         `;
     }
 
-    public static showToast(shadowRoot: ShadowRoot | null,
-                            localize: (TranslatableString) => string,
-                            idPrefix: string,
-                            text: string,
-                            icon: string,
-                            successful: boolean,
-                            additionalText = ""): void {
+    public static showToast(
+        shadowRoot: ShadowRoot | null,
+        localize: (TranslatableString) => string,
+        idPrefix: string,
+        text: string,
+        icon: string,
+        successful: boolean,
+        additionalText = "",
+    ): void {
         const toast = shadowRoot?.getElementById(`${idPrefix}-toast`);
         const toastText = shadowRoot?.getElementById(`${idPrefix}-toast-text`);
         const toastIcon = shadowRoot?.getElementById(`${idPrefix}-toast-icon`);

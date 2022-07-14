@@ -22,8 +22,8 @@ export class PlatformGenerator {
     public static SETUP_PLATFORM_XIAOMI = "Setup Xiaomi";
     public static SETUP_PLATFORM_OTHERS = "Setup Others";
 
-    private static DOCUMENTATION_URL_FORMAT
-        = "https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/tree/master/docs/templates/{0}.md";
+    private static DOCUMENTATION_URL_FORMAT =
+        "https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/tree/dev/docs/templates/{0}.md";
 
     private static TEMPLATES = new Map<string, PlatformTemplate>([
         [PlatformGenerator.DEFAULT_PLATFORM, defaultTemplate],
@@ -54,9 +54,10 @@ export class PlatformGenerator {
     }
 
     public static getPlatformsDocumentationUrl(platform: string): string {
-        const file = PlatformGenerator.TEMPLATE_DOCUMENTATIONS_URLS.get(platform)
-            ?? PlatformGenerator.TEMPLATE_DOCUMENTATIONS_URLS.get(PlatformGenerator.DEFAULT_PLATFORM)
-            ?? "";
+        const file =
+            PlatformGenerator.TEMPLATE_DOCUMENTATIONS_URLS.get(platform) ??
+            PlatformGenerator.TEMPLATE_DOCUMENTATIONS_URLS.get(PlatformGenerator.DEFAULT_PLATFORM) ??
+            "";
         return PlatformGenerator.DOCUMENTATION_URL_FORMAT.replace("{0}", file);
     }
 
