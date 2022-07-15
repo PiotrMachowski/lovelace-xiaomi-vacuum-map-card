@@ -4,6 +4,7 @@ import * as marotowebViomiseTemplate from "./platform_templates/marotoweb_viomis
 import * as rand256ValetudoReTemplate from "./platform_templates/rand256_valetudo_re.json";
 import * as sendCommandTemplate from "./platform_templates/send-command.json";
 import * as alOneHassXiaomiMiotTemplate from "./platform_templates/al-one_hass-xiaomi-miot.json";
+import * as tykarolViomiVacuumV8Template from "./platform_templates/tykarol_viomi_vacuum_v8.json";
 import * as neatoTemplate from "./platform_templates/neato.json";
 import * as setupOthersTemplate from "./platform_templates/setup_others.json";
 import * as setupXiaomiTemplate from "./platform_templates/setup_xiaomi.json";
@@ -18,6 +19,7 @@ export class PlatformGenerator {
     public static RAND256_VALETUDO_RE_PLATFORM = "rand256/ValetudoRE";
     public static SEND_COMMAND_PLATFORM = "send_command";
     public static ALONE_XIAOMIMIOT_PLATFORM = "al-one/hass-xiaomi-miot";
+    public static TYKAROL_VIOMI_VACUUM_V8_PLATFORM = "tykarol/viomi-vacuum-v8";
     public static NEATO_PLATFORM = "Neato";
     public static SETUP_PLATFORM_XIAOMI = "Setup Xiaomi";
     public static SETUP_PLATFORM_OTHERS = "Setup Others";
@@ -32,6 +34,7 @@ export class PlatformGenerator {
         [PlatformGenerator.RAND256_VALETUDO_RE_PLATFORM, rand256ValetudoReTemplate],
         [PlatformGenerator.SEND_COMMAND_PLATFORM, sendCommandTemplate],
         [PlatformGenerator.ALONE_XIAOMIMIOT_PLATFORM, alOneHassXiaomiMiotTemplate],
+        [PlatformGenerator.TYKAROL_VIOMI_VACUUM_V8_PLATFORM, tykarolViomiVacuumV8Template],
         [PlatformGenerator.NEATO_PLATFORM, neatoTemplate],
         [PlatformGenerator.SETUP_PLATFORM_XIAOMI, setupXiaomiTemplate],
         [PlatformGenerator.SETUP_PLATFORM_OTHERS, setupOthersTemplate],
@@ -44,6 +47,7 @@ export class PlatformGenerator {
         [PlatformGenerator.RAND256_VALETUDO_RE_PLATFORM, "rand256ValetudoRe"],
         [PlatformGenerator.SEND_COMMAND_PLATFORM, "sendCommand"],
         [PlatformGenerator.ALONE_XIAOMIMIOT_PLATFORM, "alOneHassXiaomiMiot"],
+        [PlatformGenerator.TYKAROL_VIOMI_VACUUM_V8_PLATFORM, "tykarolViomiVacuumV8"],
         [PlatformGenerator.NEATO_PLATFORM, "neato"],
         [PlatformGenerator.SETUP_PLATFORM_XIAOMI, "setupXiaomi"],
         [PlatformGenerator.SETUP_PLATFORM_OTHERS, "setupOthers"],
