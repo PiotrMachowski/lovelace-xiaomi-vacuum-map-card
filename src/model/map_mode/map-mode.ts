@@ -62,9 +62,11 @@ export class MapMode {
         let serviceCall = this._applyData(entityId, selection, repeats);
         if (this.serviceCallSchema.evaluateDataAsTemplate) {
             try {
-                serviceCall = JSON.parse(await evaluateTemplate(hass, JSON.stringify(serviceCall.serviceData)));
+                const output = await evaluateTemplate(hass, JSON.stringify(serviceCall.serviceData));
+                const serviceData = typeof output === "string" ? JSON.parse(output) : output;
+                serviceCall = { ...serviceCall, serviceData: serviceData };
             } catch {
-                console.error("Failed to evaluate template", serviceCall);
+                console.error("Failed to evaluate template", serviceCall.serviceData);
             }
         }
         return serviceCall;

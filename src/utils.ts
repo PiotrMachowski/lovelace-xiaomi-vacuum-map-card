@@ -200,9 +200,12 @@ export function copyMessage(val: string): void {
     document.body.removeChild(selBox);
 }
 
-export async function evaluateTemplate(hass: HomeAssistant, template: string): Promise<string> {
+export async function evaluateTemplate(
+    hass: HomeAssistant,
+    template: string,
+): Promise<string | Record<string, unknown>> {
     return new Promise(resolve => {
-        hass.connection.subscribeMessage((msg: { result: string }) => resolve(msg.result), {
+        hass.connection.subscribeMessage((msg: { result: string | Record<string, unknown> }) => resolve(msg.result), {
             type: "render_template",
             template: template,
         });
