@@ -1,4 +1,4 @@
-import * as defaultTemplate from "./platform_templates/default.json";
+import * as xiaomiMiioTemplate from "./platform_templates/xiaomiMiio.json";
 import * as krzysztofHajdamowiczMiio2Template from "./platform_templates/KrzysztofHajdamowicz_miio2.json";
 import * as marotowebViomiseTemplate from "./platform_templates/marotoweb_viomise.json";
 import * as rand256ValetudoReTemplate from "./platform_templates/rand256_valetudo_re.json";
@@ -13,12 +13,12 @@ import { HomeAssistant } from "custom-card-helpers";
 import { compare } from "compare-versions";
 
 export class PlatformGenerator {
-    public static DEFAULT_PLATFORM = "default";
+    public static XIAOMI_MIIO_PLATFORM = "default";
     public static KRZYSZTOFHAJDAMOWICZ_MIIO2_PLATFORM = "KrzysztofHajdamowicz/miio2";
     public static MAROTOWEB_VIOMISE_PLATFORM = "marotoweb/viomise";
     public static RAND256_VALETUDO_RE_PLATFORM = "rand256/ValetudoRE";
     public static SEND_COMMAND_PLATFORM = "send_command";
-    public static ALONE_XIAOMIMIOT_PLATFORM = "al-one/hass-xiaomi-miot";
+    public static ALONE_XIAOMI_MIOT_PLATFORM = "al-one/hass-xiaomi-miot";
     public static TYKAROL_VIOMI_VACUUM_V8_PLATFORM = "tykarol/viomi-vacuum-v8";
     public static NEATO_PLATFORM = "Neato";
     public static SETUP_PLATFORM_XIAOMI = "Setup Xiaomi";
@@ -28,12 +28,12 @@ export class PlatformGenerator {
         "https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/tree/master/docs/templates/{0}.md";
 
     private static TEMPLATES = new Map<string, PlatformTemplate>([
-        [PlatformGenerator.DEFAULT_PLATFORM, defaultTemplate],
+        [PlatformGenerator.XIAOMI_MIIO_PLATFORM, xiaomiMiioTemplate],
         [PlatformGenerator.KRZYSZTOFHAJDAMOWICZ_MIIO2_PLATFORM, krzysztofHajdamowiczMiio2Template],
         [PlatformGenerator.MAROTOWEB_VIOMISE_PLATFORM, marotowebViomiseTemplate],
         [PlatformGenerator.RAND256_VALETUDO_RE_PLATFORM, rand256ValetudoReTemplate],
         [PlatformGenerator.SEND_COMMAND_PLATFORM, sendCommandTemplate],
-        [PlatformGenerator.ALONE_XIAOMIMIOT_PLATFORM, alOneHassXiaomiMiotTemplate],
+        [PlatformGenerator.ALONE_XIAOMI_MIOT_PLATFORM, alOneHassXiaomiMiotTemplate],
         [PlatformGenerator.TYKAROL_VIOMI_VACUUM_V8_PLATFORM, tykarolViomiVacuumV8Template],
         [PlatformGenerator.NEATO_PLATFORM, neatoTemplate],
         [PlatformGenerator.SETUP_PLATFORM_XIAOMI, setupXiaomiTemplate],
@@ -41,12 +41,12 @@ export class PlatformGenerator {
     ]);
 
     private static TEMPLATE_DOCUMENTATIONS_URLS = new Map<string, string>([
-        [PlatformGenerator.DEFAULT_PLATFORM, "default"],
+        [PlatformGenerator.XIAOMI_MIIO_PLATFORM, "xiaomiMiio"],
         [PlatformGenerator.KRZYSZTOFHAJDAMOWICZ_MIIO2_PLATFORM, "krzysztofHajdamowiczMiio2"],
         [PlatformGenerator.MAROTOWEB_VIOMISE_PLATFORM, "marotowebViomise"],
         [PlatformGenerator.RAND256_VALETUDO_RE_PLATFORM, "rand256ValetudoRe"],
         [PlatformGenerator.SEND_COMMAND_PLATFORM, "sendCommand"],
-        [PlatformGenerator.ALONE_XIAOMIMIOT_PLATFORM, "alOneHassXiaomiMiot"],
+        [PlatformGenerator.ALONE_XIAOMI_MIOT_PLATFORM, "alOneHassXiaomiMiot"],
         [PlatformGenerator.TYKAROL_VIOMI_VACUUM_V8_PLATFORM, "tykarolViomiVacuumV8"],
         [PlatformGenerator.NEATO_PLATFORM, "neato"],
         [PlatformGenerator.SETUP_PLATFORM_XIAOMI, "setupXiaomi"],
@@ -60,7 +60,7 @@ export class PlatformGenerator {
     public static getPlatformsDocumentationUrl(platform: string): string {
         const file =
             PlatformGenerator.TEMPLATE_DOCUMENTATIONS_URLS.get(platform) ??
-            PlatformGenerator.TEMPLATE_DOCUMENTATIONS_URLS.get(PlatformGenerator.DEFAULT_PLATFORM) ??
+            PlatformGenerator.TEMPLATE_DOCUMENTATIONS_URLS.get(PlatformGenerator.XIAOMI_MIIO_PLATFORM) ??
             "";
         return PlatformGenerator.DOCUMENTATION_URL_FORMAT.replace("{0}", file);
     }
@@ -99,7 +99,7 @@ export class PlatformGenerator {
     private static getPlatformTemplate(platform: string): PlatformTemplate {
         return (
             this.TEMPLATES.get(platform) ??
-            this.TEMPLATES.get(this.DEFAULT_PLATFORM) ??
+            this.TEMPLATES.get(this.XIAOMI_MIIO_PLATFORM) ??
             ({
                 templates: [],
                 defaultTemplates: {},

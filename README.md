@@ -232,7 +232,7 @@ map: # coordinates of a point in a map coordinate system (can be read using e.g.
 ### Supported vacuum platforms
 
 Following vacuum platforms are supported out of the box at this moment:
-- [`default`](/docs/templates/default.md)
+- [`default`](/docs/templates/xiaomiMiio.md)
 - [`KrzysztofHajdamowicz/miio2`](/docs/templates/krzysztofHajdamowiczMiio2.md)
 - [`marotoweb/viomise`](/docs/templates/marotowebViomise.md)
 - [`rand256/ValetudoRE`](/docs/templates/rand256ValetudoRe.md)
