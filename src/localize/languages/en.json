@@ -230,7 +230,8 @@
             "copy": "Copy",
             "copied": "Copied!",
             "set_static_config": "Generate static config",
-            "config_set": "Config set!\nOpen config editor to adjust it."
+            "config_set": "Config set!\nOpen config editor to adjust it.",
+            "generate_rooms_config": "Generate rooms config"
         }
     }
 }

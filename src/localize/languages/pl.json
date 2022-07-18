@@ -230,7 +230,8 @@
             "copy": "Kopiuj",
             "copied": "Skopiowano!",
             "set_static_config": "Wygeneruj statyczną konfigurację",
-            "config_set": "Ustawiono konfigurację!\nOtwórz edytor YAML w celu dostosowania."
+            "config_set": "Ustawiono konfigurację!\nOtwórz edytor YAML w celu dostosowania.",
+            "generate_rooms_config": "Wygeneruj konfigurację pokoi"
         }
     }
 }

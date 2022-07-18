@@ -11,6 +11,7 @@ import * as setupXiaomiTemplate from "./platform_templates/setup_xiaomi.json";
 import { MapModeConfig, PlatformTemplate, TileFromAttributeTemplate, TileFromSensorTemplate } from "../../types/types";
 import { HomeAssistant } from "custom-card-helpers";
 import { compare } from "compare-versions";
+import { SelectionType } from "../map_mode/selection-type";
 
 export class PlatformGenerator {
     public static XIAOMI_MIIO_PLATFORM = "default";
@@ -94,6 +95,17 @@ export class PlatformGenerator {
             return compare(hass.config.version.replace(/\.*[a-z].*/, ""), sensorsFrom, ">=");
         }
         return false;
+    }
+
+    public static getRoomsTemplate(platform: string): string | undefined {
+        const platformTemplate = this.getPlatformTemplate(platform);
+        for (const templateName in platformTemplate.map_modes.templates) {
+            const template = platformTemplate.map_modes.templates[templateName];
+            if (template.selection_type === SelectionType[SelectionType.ROOM]) {
+                return templateName;
+            }
+        }
+        return undefined;
     }
 
     private static getPlatformTemplate(platform: string): PlatformTemplate {

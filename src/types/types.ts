@@ -207,3 +207,16 @@ export interface MapCroppingConfig {
     readonly left?: number;
     readonly right?: number;
 }
+
+export interface MapExtractorRoom {
+    readonly x0: number;
+    readonly y0: number;
+    readonly x1: number;
+    readonly y1: number;
+    readonly name: string | undefined;
+}
+
+export interface RoomConfigEventData {
+    readonly modeIndex: number;
+    readonly rooms: Array<RoomConfig>;
+}
