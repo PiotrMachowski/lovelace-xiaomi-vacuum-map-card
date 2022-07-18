@@ -223,7 +223,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCar
     private _handleRoomConfig(e: Event): void {
         const roomsTemplate = PlatformGenerator.getRoomsTemplate(this._vacuum_platform);
         const roomConfig = (e as any).roomConfig as RoomConfigEventData;
-        if(!roomConfig){
+        if (!roomConfig) {
             this._showToast("editor.label.config_set", "mdi:close", false);
             return;
         }

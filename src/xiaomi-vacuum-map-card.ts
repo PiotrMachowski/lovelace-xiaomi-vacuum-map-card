@@ -772,23 +772,26 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _handleRoomsConfigGet(): void {
         const event = new Event(EVENT_ROOM_CONFIG);
-        (event as any).roomConfig = this._getRoomsConfig()
+        (event as any).roomConfig = this._getRoomsConfig();
         window.dispatchEvent(event);
     }
 
     private _getRoomsConfig(): RoomConfigEventData | undefined {
         const config = this._getCurrentPreset();
-        const rooms = this.hass.states[config.map_source?.camera ?? ""]?.attributes["rooms"] as Record<string, MapExtractorRoom>;
+        const rooms = this.hass.states[config.map_source?.camera ?? ""]?.attributes["rooms"] as Record<
+            string,
+            MapExtractorRoom
+        >;
         const roomsConfig = new Array<RoomConfig>();
         if (rooms) {
             const mode = this.modes.filter(m => m.selectionType === SelectionType.ROOM).reverse()[0];
             const modeIndex = mode ? this.modes.indexOf(mode) : -1;
             for (const room_id in rooms) {
-                if (!rooms.hasOwnProperty(room_id))
-                    continue;
+                if (!rooms.hasOwnProperty(room_id)) continue;
                 const room = rooms[room_id];
                 const keepFloat = room.x0.toString().includes(".");
-                const formatCoord = (v: number, divide = 1): number => keepFloat ? v / divide : Math.round(v / divide);
+                const formatCoord = (v: number, divide = 1): number =>
+                    keepFloat ? v / divide : Math.round(v / divide);
                 const roomConfig = {
                     id: room_id,
                     icon: {
@@ -807,11 +810,11 @@ export class XiaomiVacuumMapCard extends LitElement {
                         [room.x1, room.y0],
                         [room.x1, room.y1],
                         [room.x0, room.y1],
-                    ]
+                    ],
                 } as RoomConfig;
                 roomsConfig.push(roomConfig);
             }
-            return {modeIndex: modeIndex, rooms:roomsConfig};
+            return { modeIndex: modeIndex, rooms: roomsConfig };
         }
         return undefined;
     }
