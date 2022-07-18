@@ -19,6 +19,7 @@
             "vacuum_goto_predefined": {
                 "name": "map_mode.vacuum_goto_predefined",
                 "icon": "mdi:map-marker",
+                "max_selections": 1,
                 "selection_type": "ROOM",
                 "repeats_type": "NONE",
                 "service_call_schema": {
