@@ -852,8 +852,8 @@ export class XiaomiVacuumMapCard extends LitElement {
         } else {
             const repeats = this.repeats;
             const serviceCall = await currentMode.getServiceCall(this.hass, currentPreset.entity, selection, repeats);
-            const message = JSON.stringify(serviceCall, null, 2);
             if (debug || (this.config.debug ?? false)) {
+                const message = JSON.stringify(serviceCall, null, 2);
                 this._showToast("popups.success", "mdi:check", true);
                 console.log(message);
                 window.alert(message);
