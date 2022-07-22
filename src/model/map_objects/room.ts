@@ -5,7 +5,7 @@ import { forwardHaptic } from "custom-card-helpers";
 import { Context } from "./context";
 import { MapObject } from "./map-object";
 import { deleteFromArray } from "../../utils";
-import { RoomConfig } from "../../types/types";
+import { ReplacedKey, RoomConfig } from "../../types/types";
 
 export class Room extends MapObject {
     private _selected: boolean;
@@ -36,6 +36,10 @@ export class Room extends MapObject {
         return this._config.id;
     }
 
+    public get variables(): Record<string, ReplacedKey> {
+        return this._config.variables ?? super.variables;
+    }
+
     private async _click(): Promise<void> {
         if (!this._selected && this._context.selectedRooms().length >= this._context.maxSelections()) {
             forwardHaptic("failure");
@@ -58,7 +62,7 @@ export class Room extends MapObject {
         this.update();
     }
 
-    static get styles(): CSSResultGroup {
+    public static get styles(): CSSResultGroup {
         return css`
             .room-wrapper {
             }

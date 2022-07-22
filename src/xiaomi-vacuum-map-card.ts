@@ -16,6 +16,7 @@ import {
     CardPresetConfig,
     MapExtractorRoom,
     PredefinedZoneConfig,
+    ReplacedKey,
     TranslatableString,
 } from "./types/types";
 import { actionHandler } from "./action-handler-directive";
@@ -701,35 +702,42 @@ export class XiaomiVacuumMapCard extends LitElement {
         return this.modes[this.selectedMode];
     }
 
-    private _getSelection(mode: MapMode): unknown[] {
+    private _getSelection(mode: MapMode): { selection: unknown[]; variables: Record<string, ReplacedKey> } {
         if (!mode) {
-            return [];
+            return { selection: [], variables: {} };
         }
         const repeats = mode.repeatsType === RepeatsType.INTERNAL ? this.repeats : null;
         let selection: unknown[] = [];
+        let variables: Record<string, ReplacedKey> = {};
         switch (mode.selectionType) {
             case SelectionType.MANUAL_RECTANGLE:
                 selection = this.selectedManualRectangles.map(r => r.toVacuum(repeats));
+                variables = this.selectedManualRectangles[0]?.variables ?? {};
                 break;
             case SelectionType.PREDEFINED_RECTANGLE:
                 selection = this.selectedPredefinedRectangles
                     .map(r => r.toVacuum(repeats))
                     .reduce((a, v) => a.concat(v), [] as unknown[]);
+                variables = this.selectedManualRectangles[0]?.variables ?? {};
                 break;
             case SelectionType.ROOM:
                 const selectedRooms = this.selectedRooms.map(r => r.toVacuum());
                 selection = [...selectedRooms, ...(repeats && selectedRooms.length > 0 ? [repeats] : [])];
+                variables = this.selectedRooms[0]?.variables ?? {};
                 break;
             case SelectionType.MANUAL_PATH:
                 selection = this.selectedManualPath.toVacuum(repeats);
+                variables = this.selectedManualPath.variables ?? {};
                 break;
             case SelectionType.MANUAL_POINT:
                 selection = this.selectedManualPoint?.toVacuum(repeats) ?? [];
+                variables = this.selectedManualPoint?.variables ?? {};
                 break;
             case SelectionType.PREDEFINED_POINT:
                 selection = this.selectedPredefinedPoint
                     .map(p => p.toVacuum(repeats))
                     .reduce((a, v) => a.concat(v), [] as unknown[]);
+                variables = this.selectedPredefinedPoint[0]?.variables ?? {};
                 break;
         }
         if (mode.repeatsType === RepeatsType.REPEAT) {
@@ -737,7 +745,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                 .fill(0)
                 .flatMap(() => selection);
         }
-        return selection;
+        return { selection, variables };
     }
 
     private async _runImmediately(): Promise<boolean> {
@@ -750,7 +758,7 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _selectionChanged(): void {
         const currentMode = this._getCurrentMode();
-        const selection = this._getSelection(currentMode);
+        const { selection } = this._getSelection(currentMode);
 
         if (this._isInEditor()) {
             const event = new Event(EVENT_SELECTION_CHANGED);
@@ -782,7 +790,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     private async _handleServiceCallGet(): Promise<void> {
         const currentPreset = this._getCurrentPreset();
         const currentMode = this._getCurrentMode();
-        const selection = this._getSelection(currentMode);
+        const { selection, variables } = this._getSelection(currentMode);
         if ((selection as any[]).length == 0) {
             this._showToast("popups.no_selection", "mdi:close", false);
             forwardHaptic("failure");
@@ -792,6 +800,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                 currentPreset.entity,
                 selection,
                 this.repeats,
+                variables,
             );
             const event = new Event(EVENT_SERVICE_CALL);
             (event as any).serviceCall = JSON.stringify(serviceCall, null, 2);
@@ -845,13 +854,19 @@ export class XiaomiVacuumMapCard extends LitElement {
     private async _run(debug: boolean): Promise<void> {
         const currentPreset = this._getCurrentPreset();
         const currentMode = this._getCurrentMode();
-        const selection = this._getSelection(currentMode);
+        const { selection, variables } = this._getSelection(currentMode);
         if ((selection as any[]).length == 0) {
             this._showToast("popups.no_selection", "mdi:close", false);
             forwardHaptic("failure");
         } else {
             const repeats = this.repeats;
-            const serviceCall = await currentMode.getServiceCall(this.hass, currentPreset.entity, selection, repeats);
+            const serviceCall = await currentMode.getServiceCall(
+                this.hass,
+                currentPreset.entity,
+                selection,
+                repeats,
+                variables,
+            );
             if (debug || (this.config.debug ?? false)) {
                 const message = JSON.stringify(serviceCall, null, 2);
                 this._showToast("popups.success", "mdi:check", true);

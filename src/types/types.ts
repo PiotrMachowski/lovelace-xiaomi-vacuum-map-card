@@ -161,23 +161,23 @@ export interface Point {
     readonly y: number;
 }
 
-export interface PredefinedZoneConfig {
+export interface PredefinedSelectionCommonConfig {
+    readonly label?: LabelConfig;
+    readonly icon?: IconConfig;
+    readonly variables?: Record<string, ReplacedKey>;
+}
+
+export interface PredefinedZoneConfig extends PredefinedSelectionCommonConfig {
     readonly zones: ZoneType[] | string;
-    readonly label?: LabelConfig;
-    readonly icon?: IconConfig;
 }
 
-export interface PredefinedPointConfig {
+export interface PredefinedPointConfig extends PredefinedSelectionCommonConfig {
     readonly position: PointType | string;
-    readonly label?: LabelConfig;
-    readonly icon?: IconConfig;
 }
 
-export interface RoomConfig {
+export interface RoomConfig extends PredefinedSelectionCommonConfig {
     readonly id: number | string;
     readonly outline?: [number, number][];
-    readonly label?: LabelConfig;
-    readonly icon?: IconConfig;
 }
 
 export interface LabelConfig {

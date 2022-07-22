@@ -3,7 +3,7 @@ import { css, CSSResultGroup, svg, SVGTemplateResult } from "lit";
 
 import { Context } from "./context";
 import { MapPoint } from "./map-point";
-import { PointType, PointWithRepeatsType } from "../../types/types";
+import { PointType, PointWithRepeatsType, ReplacedKey } from "../../types/types";
 
 export class ManualPoint extends MapPoint {
     constructor(x: number, y: number, context: Context) {
@@ -34,7 +34,7 @@ export class ManualPoint extends MapPoint {
         return [x, y, repeats];
     }
 
-    static get styles(): CSSResultGroup {
+    public static get styles(): CSSResultGroup {
         return css`
             .manual-point-wrapper {
                 stroke: var(--map-card-internal-manual-point-line-color);

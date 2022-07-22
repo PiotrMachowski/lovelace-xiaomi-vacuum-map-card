@@ -5,7 +5,7 @@ import { forwardHaptic, HomeAssistant } from "custom-card-helpers";
 
 import { Context } from "./context";
 import { MapObject } from "./map-object";
-import { PredefinedZoneConfig, ZoneType, ZoneWithRepeatsType } from "../../types/types";
+import { PredefinedZoneConfig, ReplacedKey, ZoneType, ZoneWithRepeatsType } from "../../types/types";
 import { deleteFromArray } from "../../utils";
 import { MapMode } from "../map_mode/map-mode";
 
@@ -41,6 +41,10 @@ export class PredefinedMultiRectangle extends MapObject {
         `;
     }
 
+    public get variables(): Record<string, ReplacedKey> {
+        return this._config.variables ?? super.variables;
+    }
+
     private async _click(): Promise<void> {
         if (
             !this._selected &&
@@ -73,7 +77,7 @@ export class PredefinedMultiRectangle extends MapObject {
         return this._config.zones.length;
     }
 
-    toVacuum(repeats: number | null): ZoneType[] | ZoneWithRepeatsType[] {
+    public toVacuum(repeats: number | null): ZoneType[] | ZoneWithRepeatsType[] {
         if (typeof this._config.zones === "string") {
             return [];
         }

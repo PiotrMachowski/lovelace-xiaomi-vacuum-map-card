@@ -3,7 +3,7 @@ import { css, CSSResultGroup, svg, SVGTemplateResult } from "lit";
 import { forwardHaptic, HomeAssistant } from "custom-card-helpers";
 
 import { Context } from "./context";
-import { IconConfig, PointType, PointWithRepeatsType, PredefinedPointConfig } from "../../types/types";
+import { IconConfig, PointType, PointWithRepeatsType, PredefinedPointConfig, ReplacedKey } from "../../types/types";
 import { MapObject } from "./map-object";
 import { deleteFromArray } from "../../utils";
 import { MapMode } from "../map_mode/map-mode";
@@ -33,6 +33,10 @@ export class PredefinedPoint extends MapObject {
                 ${this.renderLabel(this._config.label, "predefined-point-label")}
             </g>
         `;
+    }
+
+    public get variables(): Record<string, ReplacedKey> {
+        return this._config.variables ?? super.variables;
     }
 
     private async _click(): Promise<void> {
@@ -65,7 +69,7 @@ export class PredefinedPoint extends MapObject {
         return [...this._config.position, repeats];
     }
 
-    static get styles(): CSSResultGroup {
+    public static get styles(): CSSResultGroup {
         return css`
             .predefined-point-wrapper {
             }

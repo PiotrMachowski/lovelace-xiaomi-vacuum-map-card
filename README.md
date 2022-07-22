@@ -419,6 +419,7 @@ Format of data depends on selected `selection_type`:
   | `zones` | list | yes | - | List of lists containing zone's coordinates in `[x,y,width,height]` format (e.g. `[[25500, 25000, 26500, 26500]]`) |
   | `icon` | object | no | - | [Icon definition](#icon-options) |
   | `label` | object | no | - | [Label definition](#label-options) |
+  | `variables` | object | no | - | Variables that should be passed to `service_call_schema` |
 
   > See [hints](#hints) to check how to easily retrieve zone coordinates.
 
@@ -429,6 +430,7 @@ Format of data depends on selected `selection_type`:
   | `position` | list | yes | - | Point's coordinates in `[x,y]` format (e.g. `[25500, 25000]`) |
   | `icon` | object | no | - | [Icon definition](#icon-options) |
   | `label` | object | no | - | [Label definition](#label-options) |
+  | `variables` | object | no | - | Variables that should be passed to `service_call_schema` |
 
   > See [hints](#hints) to check how to easily retrieve point coordinates.
 
@@ -440,6 +442,7 @@ Format of data depends on selected `selection_type`:
   | `outline` | list | no | - | List of points forming an outline of a room (e.g. `[[25500,25500],[26500,25500],[25500,26500]]` |
   | `icon` | object | no | - | [Icon definition](#icon-options) |
   | `label` | object | no | - | [Label definition](#label-options) |
+  | `variables` | object | no | - | Variables that should be passed to `service_call_schema` |
 
   > See [hints](#hints) to check how to easily create outline.
 

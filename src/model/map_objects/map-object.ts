@@ -3,7 +3,15 @@ import { css, CSSResultGroup, svg, SVGTemplateResult } from "lit";
 
 import { Context } from "./context";
 import { MousePosition } from "./mouse-position";
-import { IconConfig, LabelConfig, PointType, RectangleType, TranslatableString, ZoneType } from "../../types/types";
+import {
+    IconConfig,
+    LabelConfig,
+    PointType,
+    RectangleType,
+    ReplacedKey,
+    TranslatableString,
+    ZoneType,
+} from "../../types/types";
 import { conditional } from "../../utils";
 
 export abstract class MapObject {
@@ -11,6 +19,10 @@ export abstract class MapObject {
 
     protected constructor(context: Context) {
         this._context = context;
+    }
+
+    public get variables(): Record<string, ReplacedKey> {
+        return {};
     }
 
     protected scaled(value: number): number {
@@ -160,7 +172,7 @@ export abstract class MapObject {
 
     public abstract render(): SVGTemplateResult;
 
-    static get styles(): CSSResultGroup {
+    public static get styles(): CSSResultGroup {
         return css`
             .icon-foreign-object {
                 overflow: visible;

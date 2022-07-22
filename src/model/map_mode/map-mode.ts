@@ -58,8 +58,9 @@ export class MapMode {
         entityId: string,
         selection: unknown[],
         repeats: number,
+        selectionVariables: Record<string, ReplacedKey>,
     ): Promise<ServiceCall> {
-        let serviceCall = this._applyData(entityId, selection, repeats);
+        let serviceCall = this._applyData(entityId, selection, repeats, selectionVariables);
         if (this.serviceCallSchema.evaluateDataAsTemplate) {
             try {
                 const output = await evaluateTemplate(hass, JSON.stringify(serviceCall.serviceData));
@@ -97,8 +98,13 @@ export class MapMode {
             this.serviceCallSchema = new ServiceCallSchema(templateValue.service_call_schema);
     }
 
-    private _applyData(entityId: string, selection: unknown[], repeats: number): ServiceCall {
-        return this.serviceCallSchema.apply(entityId, selection, repeats, this.variables);
+    private _applyData(
+        entityId: string,
+        selection: unknown[],
+        repeats: number,
+        selectionVariables: Record<string, ReplacedKey>,
+    ): ServiceCall {
+        return this.serviceCallSchema.apply(entityId, selection, repeats, { ...this.variables, ...selectionVariables });
     }
 
     public toMapModeConfig(): MapModeConfig {
