@@ -75,7 +75,9 @@ export function getWatchedEntitiesForPreset(config: CardPresetConfig, language: 
         .forEach(e => {
             if (e) watchedEntities.add(e);
         });
-    (config.tiles ?? []).forEach(s => watchedEntities.add(s.entity));
+    (config.tiles ?? []).forEach(s => {
+        if (s.entity) watchedEntities.add(s.entity);
+    });
     (config.tiles ?? [])
         .filter(s => s.conditions)
         .flatMap(s => s.conditions)
@@ -103,10 +105,8 @@ export function isConditionMet(
     hass: HomeAssistant,
 ): boolean {
     let currentValue: ReplacedKey = "";
-    if (condition.internal_variable) {
-        if (condition.internal_variable in internalVariables) {
-            currentValue = internalVariables[condition.internal_variable];
-        }
+    if (condition.internal_variable && condition.internal_variable in internalVariables) {
+        currentValue = internalVariables[condition.internal_variable];
     } else if (condition.entity) {
         currentValue = condition.attribute
             ? hass.states[condition.entity].attributes[condition.attribute]

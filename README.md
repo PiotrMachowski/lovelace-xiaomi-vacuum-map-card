@@ -268,7 +268,8 @@ It's possible to configure following platforms manually:
 | Key | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
 | `label` | string | yes | - | Label of a tile |
-| `entity` | string | yes | - | Entity which should be shown on a tile |
+| `entity` | string | no | - | Entity which should be shown on a tile |
+| `internal_variable` | string | no | - | Internal variable which should be shown on a tile |
 | `icon` | string | no | - | An icon to be displayed ([mdi](https://materialdesignicons.com/)) |
 | `attribute` | string | no | - | Attribute that should be shown on a tile |
 | `multiplier` | number | no | - | Multiplier that should be used to calculate value shown on a tile |

@@ -558,7 +558,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                         (tiles?.length ?? 0) !== 0,
                         () => html`
                             <div class="tiles-wrapper">
-                                ${tiles?.map(sensor => TileRenderer.render(sensor, this))}
+                                ${tiles?.map(sensor => TileRenderer.render(sensor, this.internalVariables, this))}
                             </div>
                         `,
                     )}

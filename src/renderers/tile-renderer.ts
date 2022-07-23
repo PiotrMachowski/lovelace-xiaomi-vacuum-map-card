@@ -3,14 +3,23 @@ import { hasAction } from "custom-card-helpers";
 
 import { actionHandler } from "../action-handler-directive";
 import { conditional, handleActionWithConfig } from "../utils";
-import { TileConfig } from "../types/types";
+import { ReplacedKey, TileConfig, VariablesStorage } from "../types/types";
 import { XiaomiVacuumMapCard } from "../xiaomi-vacuum-map-card";
 
 export class TileRenderer {
-    public static render(config: TileConfig, card: XiaomiVacuumMapCard): TemplateResult {
-        let value: number | string = config.attribute
-            ? card.hass.states[config.entity].attributes[config.attribute]
-            : card.hass.states[config.entity].state;
+    public static render(
+        config: TileConfig,
+        internalVariables: VariablesStorage,
+        card: XiaomiVacuumMapCard,
+    ): TemplateResult {
+        let value: ReplacedKey = "";
+        if (config.entity) {
+            value = config.attribute
+                ? card.hass.states[config.entity].attributes[config.attribute]
+                : card.hass.states[config.entity].state;
+        } else if (config.internal_variable && config.internal_variable in internalVariables) {
+            value = internalVariables[config.internal_variable];
+        }
         if (value !== null && (typeof value === "number" || !isNaN(+value))) {
             value = parseFloat(value.toString()) * (config.multiplier ?? 1);
             if (config.precision != undefined) {
