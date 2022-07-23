@@ -412,8 +412,8 @@ export class XiaomiVacuumMapCard extends LitElement {
         }
         this._updateCalibration(preset);
 
-        const tiles = preset.tiles;
-        const icons = preset.icons;
+        const tiles = preset.tiles?.filter(tile => areConditionsMet(tile, this.internalVariables, this.hass));
+        const icons = preset.icons?.filter(icon => areConditionsMet(icon, this.internalVariables, this.hass));
         const modes = this.modes;
 
         const mapSrc = this._getMapSrc(preset);
@@ -549,9 +549,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                         () => html`
                             <div class="vacuum-controls">
                                 <div class="vacuum-actions-list">
-                                    ${icons
-                                        ?.filter(icon => areConditionsMet(icon, this.internalVariables, this.hass))
-                                        .map(icon => IconRenderer.render(icon, this))}
+                                    ${icons?.map(icon => IconRenderer.render(icon, this))}
                                 </div>
                             </div>
                         `,
@@ -560,9 +558,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                         (tiles?.length ?? 0) !== 0,
                         () => html`
                             <div class="tiles-wrapper">
-                                ${tiles
-                                    ?.filter(sensor => areConditionsMet(sensor, this.internalVariables, this.hass))
-                                    .map(sensor => TileRenderer.render(sensor, this))}
+                                ${tiles?.map(sensor => TileRenderer.render(sensor, this))}
                             </div>
                         `,
                     )}
