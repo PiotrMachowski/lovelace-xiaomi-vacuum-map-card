@@ -64,6 +64,7 @@ export class ServiceCallSchema {
         repeats: number,
         variables: Record<string, ReplacedKey>,
     ): ReplacedKey {
+        const vars = Object.fromEntries(Object.entries(variables ?? {}).map(([k, v]) => [`[[${k}]]`, v]));
         const fullValueReplacer = (v: string): ReplacedKey | null => {
             switch (v) {
                 case TemplatableValue.ENTITY_ID:
@@ -81,13 +82,13 @@ export class ServiceCallSchema {
                 case TemplatableValue.POINT_Y:
                     return this.isPoint(selection) ? (selection[1] as number) : value;
                 default:
-                    if (v in variables) {
-                        return variables[v];
+                    if (v in vars) {
+                        return vars[v];
                     }
                     return null;
             }
         };
-        return fullValueReplacer(value) ?? ServiceCallSchema.replaceInStr(value, variables, fullValueReplacer);
+        return fullValueReplacer(value) ?? ServiceCallSchema.replaceInStr(value, vars, fullValueReplacer);
     }
 
     private static replaceInStr(

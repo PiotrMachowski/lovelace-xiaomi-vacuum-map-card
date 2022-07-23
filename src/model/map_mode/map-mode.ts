@@ -46,7 +46,7 @@ export class MapMode {
         this.maxRepeats = config.max_repeats ?? 1;
         this.serviceCallSchema = new ServiceCallSchema(config.service_call_schema ?? ({} as ServiceCallSchemaConfig));
         this.predefinedSelections = config.predefined_selections ?? [];
-        this.variables = Object.fromEntries(Object.entries(config.variables ?? {}).map(([k, v]) => [`[[${k}]]`, v]));
+        this.variables = config.variables ?? {};
         this._applyTemplateIfPossible(vacuumPlatform, config, language);
         if (!MapMode.PREDEFINED_SELECTION_TYPES.includes(this.selectionType)) {
             this.runImmediately = false;
