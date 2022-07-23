@@ -6,6 +6,7 @@ import { ActionHandlerEvent, forwardHaptic, LovelaceCard, LovelaceCardEditor } f
 import "./editor";
 import type {
     PredefinedPointConfig,
+    ReplacedKey,
     RoomConfig,
     RoomConfigEventData,
     TileConfig,
@@ -826,23 +827,25 @@ export class XiaomiVacuumMapCard extends LitElement {
         }
     }
 
-    private async _handleLovelaceDomEvent(e: Event): Promise<void> {
+    private _handleLovelaceDomEvent(e: Event): void {
         const lovelaceEvent = e as LovelaceDomEvent;
         if (
             EVENT_LOVELACE_DOM_DETAIL in lovelaceEvent.detail &&
             "event_id" in lovelaceEvent.detail[EVENT_LOVELACE_DOM_DETAIL] &&
             lovelaceEvent.detail[EVENT_LOVELACE_DOM_DETAIL]["event_id"] === this.config.event_id
         ) {
-            console.log(`MAP CARD ${this.config.event_id} HANDLES EVENT: `, lovelaceEvent);
             const details = lovelaceEvent.detail[EVENT_LOVELACE_DOM_DETAIL];
             if (details["action"] === "set_global_variable") {
-                const newValues = { ...this.internalVariables };
-                newValues[details["variable"]] = details["value"];
-                this.internalVariables = newValues;
-                console.log(`SETTING VARIABLE ${details["variable"]} to ${details["value"]}`);
-                this.requestUpdate();
+                this._setInternalVariable(details["variable"], details["value"]);
             }
         }
+    }
+
+    private _setInternalVariable(variable: string, value: ReplacedKey) {
+        const newValues = { ...this.internalVariables };
+        newValues[variable] = value;
+        this.internalVariables = newValues;
+        this.requestUpdate();
     }
 
     private _getRoomsConfig(): RoomConfigEventData | undefined {
