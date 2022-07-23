@@ -1,4 +1,4 @@
-import { KeyReplacer, ReplacedKey, ServiceCallSchemaConfig } from "../../types/types";
+import { KeyReplacer, ReplacedKey, ServiceCallSchemaConfig, VariablesStorage } from "../../types/types";
 import { TemplatableValue } from "./templatable-value";
 import { ServiceCall } from "./service-call";
 import { Modifier } from "./modifier";
@@ -16,12 +16,7 @@ export class ServiceCallSchema {
         this.evaluateDataAsTemplate = config.evaluate_data_as_template ?? false;
     }
 
-    public apply(
-        entityId: string,
-        selection: unknown[],
-        repeats: number,
-        variables: Record<string, ReplacedKey>,
-    ): ServiceCall {
+    public apply(entityId: string, selection: unknown[], repeats: number, variables: VariablesStorage): ServiceCall {
         const keyReplacer = (key: string): ReplacedKey =>
             ServiceCallSchema.getReplacedValue(key, entityId, selection, repeats, variables);
         let serviceData: ReplacedKey | undefined = undefined;
@@ -62,7 +57,7 @@ export class ServiceCallSchema {
         entityId: string,
         selection: unknown[],
         repeats: number,
-        variables: Record<string, ReplacedKey>,
+        variables: VariablesStorage,
     ): ReplacedKey {
         const vars = Object.fromEntries(Object.entries(variables ?? {}).map(([k, v]) => [`[[${k}]]`, v]));
         const fullValueReplacer = (v: string): ReplacedKey | null => {
@@ -93,7 +88,7 @@ export class ServiceCallSchema {
 
     private static replaceInStr(
         value: string,
-        variables: Record<string, ReplacedKey>,
+        variables: VariablesStorage,
         kr: (string) => ReplacedKey | null,
     ): ReplacedKey {
         let output = value;

@@ -3,7 +3,13 @@ import { css, CSSResultGroup, svg, SVGTemplateResult } from "lit";
 import { forwardHaptic, HomeAssistant } from "custom-card-helpers";
 
 import { Context } from "./context";
-import { IconConfig, PointType, PointWithRepeatsType, PredefinedPointConfig, ReplacedKey } from "../../types/types";
+import {
+    IconConfig,
+    PointType,
+    PointWithRepeatsType,
+    PredefinedPointConfig,
+    VariablesStorage,
+} from "../../types/types";
 import { MapObject } from "./map-object";
 import { deleteFromArray } from "../../utils";
 import { MapMode } from "../map_mode/map-mode";
@@ -35,7 +41,7 @@ export class PredefinedPoint extends MapObject {
         `;
     }
 
-    public get variables(): Record<string, ReplacedKey> {
+    public get variables(): VariablesStorage {
         return this._config.variables ?? super.variables;
     }
 

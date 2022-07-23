@@ -183,6 +183,7 @@ You can use this configuration as an example: [demo config](/docs/demo_config.ya
 | `activate_on_switch` | boolean | no | `false` | Enables executing `activate` service call after switching map preset |
 | `conditions` | list | no | - | List of [conditions](#condition-options) that need to be (all of them) met for preset to be shown |
 | `clean_selection_on_start` | boolean | no | `true` | Allows to disable cleaning selection on cleanup start |
+| `internal_variables` | object | no | - | Allows to specify default values for internal variables |
 
 ### Map source options
 
@@ -284,8 +285,9 @@ It's possible to configure following platforms manually:
 
 | Key | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
-| `entity` | string | yes | - | Entity ID |
+| `entity` | string | no | - | Entity ID |
 | `attribute` | string | no | - | Attribute to use instead of entity state |
+| `internal_variable` | string | no | - | Name of internal variable to use instead of entity state |
 | `value` | string | no<sup>1</sup> | - | Entity state/attribute has to be equal to this value |
 | `value_not` | string | no<sup>1</sup> | - | Entity state/attribute has to be unequal to this value |
 
@@ -383,7 +385,7 @@ It is possible to use several built-in placeholders in `service_data` section. T
  - `[[selection]]`: selection made on the map (zone, point or path)
  - `[[selection_size]]`: number of selections made on the map
  - `[[selection_unwrapped]]`: the same as `[[selection]]`, but passed as string unwrapped from brackets
- - `[[repeats]]`:  selected number of repeats
+ - `[[repeats]]`: selected number of repeats
  - `[[point_x]]`: x coordinate of selected point (for `MANUAL_POINT` and `PREDEFINED_POINT` selection types)
  - `[[point_y]]`: y coordinate of selected point (for `MANUAL_POINT` and `PREDEFINED_POINT` selection types)
  - `[[variables]]`: a list of variables for all selections

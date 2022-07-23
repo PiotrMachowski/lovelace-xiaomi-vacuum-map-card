@@ -12,3 +12,5 @@ export const EVENT_ROOM_CONFIG_GET = "map-card-room-config-get";
 export const EVENT_ROOM_CONFIG = "map-card-room-config";
 export const EVENT_SERVICE_CALL_GET = "map-card-service-call-get";
 export const EVENT_SERVICE_CALL = "map-card-service-call";
+export const EVENT_LOVELACE_DOM = "ll-custom";
+export const EVENT_LOVELACE_DOM_DETAIL = "xiaomi_vacuum_map_card";

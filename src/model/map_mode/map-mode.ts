@@ -5,8 +5,8 @@ import {
     Language,
     MapModeConfig,
     PredefinedSelectionConfig,
-    ReplacedKey,
     ServiceCallSchemaConfig,
+    VariablesStorage,
 } from "../../types/types";
 import { localize } from "../../localize/localize";
 import { ServiceCall } from "./service-call";
@@ -31,7 +31,7 @@ export class MapMode {
     public maxRepeats: number;
     public serviceCallSchema: ServiceCallSchema;
     public predefinedSelections: PredefinedSelectionConfig[];
-    public variables: Record<string, ReplacedKey>;
+    public variables: VariablesStorage;
 
     constructor(vacuumPlatform: string, public readonly config: MapModeConfig, language: Language) {
         this.name = config.name ?? localize("map_mode.invalid", language);
@@ -58,7 +58,7 @@ export class MapMode {
         entityId: string,
         selection: unknown[],
         repeats: number,
-        selectionVariables: Record<string, ReplacedKey>,
+        selectionVariables: VariablesStorage,
     ): Promise<ServiceCall> {
         let serviceCall = this._applyData(entityId, selection, repeats, selectionVariables);
         if (this.serviceCallSchema.evaluateDataAsTemplate) {
@@ -102,7 +102,7 @@ export class MapMode {
         entityId: string,
         selection: unknown[],
         repeats: number,
-        selectionVariables: Record<string, ReplacedKey>,
+        selectionVariables: VariablesStorage,
     ): ServiceCall {
         return this.serviceCallSchema.apply(entityId, selection, repeats, { ...this.variables, ...selectionVariables });
     }

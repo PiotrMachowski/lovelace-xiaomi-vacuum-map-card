@@ -21,6 +21,7 @@ export type PredefinedSelectionConfig = PredefinedZoneConfig | PredefinedPointCo
 export type TranslatableString = string | [string, string, string];
 export type Language = string | undefined;
 export type ReplacedKey = string | Record<string, unknown> | number | unknown[];
+export type VariablesStorage = Record<string, ReplacedKey>;
 export type KeyReplacer = (key: string) => ReplacedKey;
 export type EntityRegistryEntry = {
     entity_id: string;
@@ -35,6 +36,7 @@ export interface XiaomiVacuumMapCardConfig extends LovelaceCardConfig, CardPrese
     readonly additional_presets?: CardPresetConfig[];
     readonly language?: Language;
     readonly debug?: boolean;
+    readonly event_id?: string;
 }
 
 export interface CardPresetConfig extends ConditionalObjectConfig {
@@ -53,6 +55,7 @@ export interface CardPresetConfig extends ConditionalObjectConfig {
     readonly activate?: ServiceCallSchemaConfig;
     readonly activate_on_switch?: boolean;
     readonly clean_selection_on_start?: boolean;
+    readonly internal_variables?: VariablesStorage;
 }
 
 export interface MapSourceConfig {
@@ -81,7 +84,7 @@ export interface MapModeConfig {
     readonly max_repeats?: number;
     readonly service_call_schema?: ServiceCallSchemaConfig;
     readonly predefined_selections?: PredefinedSelectionConfig[];
-    readonly variables?: Record<string, ReplacedKey>;
+    readonly variables?: VariablesStorage;
 }
 
 export interface PlatformTemplate {
@@ -145,7 +148,8 @@ export interface ConditionalObjectConfig {
 }
 
 export interface ConditionConfig {
-    readonly entity: string;
+    readonly entity?: string;
+    readonly internal_variable?: string;
     readonly attribute?: string;
     readonly value?: string;
     readonly value_not?: string;
@@ -164,7 +168,7 @@ export interface Point {
 export interface PredefinedSelectionCommonConfig {
     readonly label?: LabelConfig;
     readonly icon?: IconConfig;
-    readonly variables?: Record<string, ReplacedKey>;
+    readonly variables?: VariablesStorage;
 }
 
 export interface PredefinedZoneConfig extends PredefinedSelectionCommonConfig {

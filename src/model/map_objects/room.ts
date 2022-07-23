@@ -5,7 +5,7 @@ import { forwardHaptic } from "custom-card-helpers";
 import { Context } from "./context";
 import { MapObject } from "./map-object";
 import { deleteFromArray } from "../../utils";
-import { ReplacedKey, RoomConfig } from "../../types/types";
+import { RoomConfig, VariablesStorage } from "../../types/types";
 
 export class Room extends MapObject {
     private _selected: boolean;
@@ -36,7 +36,7 @@ export class Room extends MapObject {
         return this._config.id;
     }
 
-    public get variables(): Record<string, ReplacedKey> {
+    public get variables(): VariablesStorage {
         return this._config.variables ?? super.variables;
     }
 

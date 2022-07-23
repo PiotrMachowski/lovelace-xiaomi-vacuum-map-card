@@ -10,6 +10,8 @@ import {
     Language,
     PredefinedPointConfig,
     PredefinedZoneConfig,
+    ReplacedKey,
+    VariablesStorage,
     XiaomiVacuumMapCardConfig,
 } from "./types/types";
 import { MapMode } from "./model/map_mode/map-mode";
@@ -95,10 +97,21 @@ export function getWatchedEntities(config: XiaomiVacuumMapCardConfig): string[] 
     return [...watchedEntities];
 }
 
-export function isConditionMet(condition: ConditionConfig, hass: HomeAssistant): boolean {
-    const currentValue = condition.attribute
-        ? hass.states[condition.entity].attributes[condition.attribute]
-        : hass.states[condition.entity].state;
+export function isConditionMet(
+    condition: ConditionConfig,
+    internalVariables: VariablesStorage,
+    hass: HomeAssistant,
+): boolean {
+    let currentValue: ReplacedKey = "";
+    if (condition.internal_variable) {
+        if (condition.internal_variable in internalVariables) {
+            currentValue = internalVariables[condition.internal_variable];
+        }
+    } else if (condition.entity) {
+        currentValue = condition.attribute
+            ? hass.states[condition.entity].attributes[condition.attribute]
+            : hass.states[condition.entity].state;
+    }
     if (condition.value) {
         return currentValue == condition.value;
     }
@@ -108,8 +121,12 @@ export function isConditionMet(condition: ConditionConfig, hass: HomeAssistant):
     return false;
 }
 
-export function areConditionsMet(config: ConditionalObjectConfig, hass: HomeAssistant): boolean {
-    return (config.conditions ?? []).every(condition => isConditionMet(condition, hass));
+export function areConditionsMet(
+    config: ConditionalObjectConfig,
+    internalVariables: VariablesStorage,
+    hass: HomeAssistant,
+): boolean {
+    return (config.conditions ?? []).every(condition => isConditionMet(condition, internalVariables, hass));
 }
 
 export function hasConfigOrAnyEntityChanged(

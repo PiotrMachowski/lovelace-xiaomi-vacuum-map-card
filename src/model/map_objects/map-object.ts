@@ -8,8 +8,8 @@ import {
     LabelConfig,
     PointType,
     RectangleType,
-    ReplacedKey,
     TranslatableString,
+    VariablesStorage,
     ZoneType,
 } from "../../types/types";
 import { conditional } from "../../utils";
@@ -21,7 +21,7 @@ export abstract class MapObject {
         this._context = context;
     }
 
-    public get variables(): Record<string, ReplacedKey> {
+    public get variables(): VariablesStorage {
         return {};
     }
 
