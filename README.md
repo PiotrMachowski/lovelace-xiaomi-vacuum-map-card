@@ -386,6 +386,7 @@ It is possible to use several built-in placeholders in `service_data` section. T
  - `[[repeats]]`:  selected number of repeats
  - `[[point_x]]`: x coordinate of selected point (for `MANUAL_POINT` and `PREDEFINED_POINT` selection types)
  - `[[point_y]]`: y coordinate of selected point (for `MANUAL_POINT` and `PREDEFINED_POINT` selection types)
+ - `[[variables]]`: a list of variables for all selections
 
 It is possible to use any value from `variables` section (wrapped with double rectangular brackets):
 ```yaml

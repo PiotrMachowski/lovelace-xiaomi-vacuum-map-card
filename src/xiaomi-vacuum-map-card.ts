@@ -709,35 +709,42 @@ export class XiaomiVacuumMapCard extends LitElement {
         const repeats = mode.repeatsType === RepeatsType.INTERNAL ? this.repeats : null;
         let selection: unknown[] = [];
         let variables: Record<string, ReplacedKey> = {};
+        const variablesExtractor = (mos: Array<MapObject | undefined>): Record<string, ReplacedKey> => ({
+            ...(mos[0]?.variables ?? {}),
+            variables: mos.map(r => r?.variables ?? {}),
+        });
         switch (mode.selectionType) {
             case SelectionType.MANUAL_RECTANGLE:
                 selection = this.selectedManualRectangles.map(r => r.toVacuum(repeats));
-                variables = this.selectedManualRectangles[0]?.variables ?? {};
+                variables = variablesExtractor(this.selectedManualRectangles);
                 break;
             case SelectionType.PREDEFINED_RECTANGLE:
                 selection = this.selectedPredefinedRectangles
                     .map(r => r.toVacuum(repeats))
                     .reduce((a, v) => a.concat(v), [] as unknown[]);
-                variables = this.selectedManualRectangles[0]?.variables ?? {};
+                variables = this.selectedPredefinedRectangles[0]?.variables ?? {};
+                variables = variablesExtractor(this.selectedPredefinedRectangles);
                 break;
             case SelectionType.ROOM:
                 const selectedRooms = this.selectedRooms.map(r => r.toVacuum());
                 selection = [...selectedRooms, ...(repeats && selectedRooms.length > 0 ? [repeats] : [])];
                 variables = this.selectedRooms[0]?.variables ?? {};
+                variables = variablesExtractor(this.selectedRooms);
                 break;
             case SelectionType.MANUAL_PATH:
                 selection = this.selectedManualPath.toVacuum(repeats);
                 variables = this.selectedManualPath.variables ?? {};
+                variables = variablesExtractor([this.selectedManualPath]);
                 break;
             case SelectionType.MANUAL_POINT:
                 selection = this.selectedManualPoint?.toVacuum(repeats) ?? [];
-                variables = this.selectedManualPoint?.variables ?? {};
+                variables = variablesExtractor([this.selectedManualPoint]);
                 break;
             case SelectionType.PREDEFINED_POINT:
                 selection = this.selectedPredefinedPoint
                     .map(p => p.toVacuum(repeats))
                     .reduce((a, v) => a.concat(v), [] as unknown[]);
-                variables = this.selectedPredefinedPoint[0]?.variables ?? {};
+                variables = variablesExtractor(this.selectedPredefinedPoint);
                 break;
         }
         if (mode.repeatsType === RepeatsType.REPEAT) {
