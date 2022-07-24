@@ -72,6 +72,8 @@ import { MapObject } from "./model/map_objects/map-object";
 import { MousePosition } from "./model/map_objects/mouse-position";
 import { ServiceCallSchema } from "./model/map_mode/service-call-schema";
 import { HomeAssistantFixed, LovelaceDomEvent } from "./types/fixes";
+import "./polyfills/objectEntries";
+import "./polyfills/objectFromEntries";
 
 const line1 = "   XIAOMI-VACUUM-MAP-CARD";
 const line2 = `   ${localize("common.version")} ${CARD_VERSION}`;
