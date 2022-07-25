@@ -484,7 +484,7 @@ This card handles following actions:
     tap_action:
       action: fire-dom-event
       xiaomi_vacuum_map_card:
-        event_id: xiaomi_vacuum_map_card_id_1
+        action_handler_id: xiaomi_vacuum_map_card_id_1
         action: set_internal_variable
         variable: variable_1
         value: "some value"

@@ -10,9 +10,10 @@
                 "max_repeats": 3,
                 "service_call_schema": {
                     "service": "mqtt.publish",
+                    "evaluate_data_as_template": true,
                     "service_data": {
                         "topic": "[[topic]]/custom_command",
-                        "payload": "{ \"command\": \"segmented_cleanup\", \"segment_ids\": [[selection]], \"repeats\": [[repeats]], \"afterCleaning\": \"Base\" }"
+                        "payload": "{\"command\": \"zoned_cleanup\",\"zone_ids\": [{%for s in ('[[selection]]')|from_json %}{ \"id\": \"{{s}}\", \"repeats\": [[repeats]]}{%if not loop.last%},{%endif%}{%endfor%}],\"afterCleaning\": \"{{ 'Base' if 'afterCleaning' in '[[afterCleaning]]' else '[[afterCleaning]]'}}\"}"
                     }
                 }
             },
