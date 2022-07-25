@@ -4,7 +4,10 @@
 
 This platform can be used to control vacuums connected to Home Assistant using Xiaomi MIoT integration created by [@al-one](https://github.com/al-one).
 
-There is no single configuration that works for all vacuum models: every vacuum has to be configured individually. [Here](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/406) you can find a list of config for different vacuum models.
+There is no single configuration that works for all vacuum models: every vacuum has to be configured individually.
+[Here](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/406) you can find a list of config for different vacuum models
+([related discussion](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/251)).
+
 
 Used service: `xiaomi_miot.call_action`.
 

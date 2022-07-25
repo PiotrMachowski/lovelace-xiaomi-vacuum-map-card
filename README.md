@@ -58,7 +58,7 @@ https://user-images.githubusercontent.com/6118709/140251738-7fb06e81-34b0-4bf8-b
       - [Predefined selection options](#predefined-selection-options)
       - [Icon options](#icon-options)
       - [Label options](#label-options)
-  - [Hints](#hints)
+    - [Available actions](#available-actions)
   - [FAQ](#faq)
   - [Migrating from v1.x.x](#migrating-from-v1xx)
   - [Translations](#translations)
@@ -150,6 +150,13 @@ You can use this configuration as an example: [demo config](/docs/demo_config.ya
     <td>Overrides autodetected language (<a href="#translations">supported languages</a>)</td>
   </tr>
   <tr>
+    <td><code>action_handler_id</code></td>
+    <td>string</td>
+    <td>no</td>
+    <td>-</td>
+    <td>Enables (<a href="#translations">action handling</a>)</td>
+  </tr>
+  <tr>
     <td><code>additional_presets</code></td>
     <td>list</td>
     <td>no</td>
@@ -235,14 +242,12 @@ map: # coordinates of a point in a map coordinate system (can be read using e.g.
 Following vacuum platforms are supported out of the box at this moment:
 - [`default`](/docs/templates/xiaomiMiio.md)
 - [`KrzysztofHajdamowicz/miio2`](/docs/templates/krzysztofHajdamowiczMiio2.md)
-- [`marotoweb/viomise`](/docs/templates/marotowebViomise.md)
+- [`marotoweb/viomi SE`](/docs/templates/marotowebViomise.md)
 - [`rand256/ValetudoRE`](/docs/templates/rand256ValetudoRe.md)
+- [`tykarol/ViomiVacuumV8`](/docs/templates/tykarolViomiVacuumV8.md)
 - [`send_command`](/docs/templates/sendCommand.md)
+- [`al-one/Xiaomi MIoT`](/docs/templates/alOneHassXiaomiMiot.md) (additional manual configuration required)
 - [`Neato`](/docs/templates/neato.md)
-
-It's possible to configure following platforms manually:
-
-- Xiaomi Miot: [discussion](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/251), [vacuum configs](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/406)
 
 [Create a request for a new built-in platform](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/new?assignees=PiotrMachowski&labels=new+platform&template=new_platform_request.yml)
 
@@ -425,7 +430,7 @@ Format of data depends on selected `selection_type`:
   | `label` | object | no | - | [Label definition](#label-options) |
   | `variables` | object | no | - | Variables that should be passed to `service_call_schema` |
 
-  > See [hints](#hints) to check how to easily retrieve zone coordinates.
+  > See [this discussion](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318) to check how to easily retrieve zone coordinates.
 
 * `PREDEFINED_POINT`
 
@@ -436,7 +441,7 @@ Format of data depends on selected `selection_type`:
   | `label` | object | no | - | [Label definition](#label-options) |
   | `variables` | object | no | - | Variables that should be passed to `service_call_schema` |
 
-  > See [hints](#hints) to check how to easily retrieve point coordinates.
+  > See [this discussion](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318) to check how to easily retrieve point coordinates.
 
 * `ROOM`
 
@@ -448,7 +453,7 @@ Format of data depends on selected `selection_type`:
   | `label` | object | no | - | [Label definition](#label-options) |
   | `variables` | object | no | - | Variables that should be passed to `service_call_schema` |
 
-  > See [hints](#hints) to check how to easily create outline.
+  > See [this discussion](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318) to check how to easily create outline.
 
 #### Icon options
 
@@ -469,6 +474,23 @@ Format of data depends on selected `selection_type`:
 | `offset_y` | number | no | - | Offset that should be applied to label in Y direction (in pixels) |
 
 
+#### Available actions
+
+To enable handling actions you have to configure `action_handler_id` in [Main options](#main-options).
+This card handles following actions:
+
+- Set a value of internal variable
+  ```yaml
+    tap_action:
+      action: fire-dom-event
+      xiaomi_vacuum_map_card:
+        event_id: xiaomi_vacuum_map_card_id_1
+        action: set_internal_variable
+        variable: variable_1
+        value: "some value"
+  ```
+
+
 ## FAQ
 
 - **Make sure to check out [FAQ section in Discussions](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/categories/faq), it contains a lot of useful information**
@@ -479,7 +501,7 @@ Format of data depends on selected `selection_type`:
 
 - **How to create a map?**
 
-  The easiest way is to use [Xiaomi Cloud Map Extractor](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor), but you can use any image (e.g. a screenshot from Mi Home/FloleVac).
+  The easiest way is to use [Xiaomi Cloud Map Extractor](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor), but you can use any image (e.g., a screenshot from Mi Home/FloleVac).
 
 - **Can I use image that has a perspective distortion?**
 
