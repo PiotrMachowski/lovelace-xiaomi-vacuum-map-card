@@ -829,11 +829,11 @@ export class XiaomiVacuumMapCard extends LitElement {
         const lovelaceEvent = e as LovelaceDomEvent;
         if (
             EVENT_LOVELACE_DOM_DETAIL in lovelaceEvent.detail &&
-            "event_id" in lovelaceEvent.detail[EVENT_LOVELACE_DOM_DETAIL] &&
-            lovelaceEvent.detail[EVENT_LOVELACE_DOM_DETAIL]["event_id"] === this.config.event_id
+            "action_handler_id" in lovelaceEvent.detail[EVENT_LOVELACE_DOM_DETAIL] &&
+            lovelaceEvent.detail[EVENT_LOVELACE_DOM_DETAIL]["action_handler_id"] === this.config.action_handler_id
         ) {
             const details = lovelaceEvent.detail[EVENT_LOVELACE_DOM_DETAIL];
-            if (details["action"] === "set_global_variable") {
+            if (details["action"] === "set_internal_variable") {
                 this._setInternalVariable(details["variable"], details["value"]);
             }
         }
@@ -941,7 +941,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             window.addEventListener(EVENT_ROOM_CONFIG_GET, this._handleRoomsConfigGet);
             window.addEventListener(EVENT_SERVICE_CALL_GET, this._handleServiceCallGet);
         }
-        if (this.config.event_id) {
+        if (this.config.action_handler_id) {
             document.addEventListener(EVENT_LOVELACE_DOM, this._handleLovelaceDomEvent);
         }
         this.connected = true;
