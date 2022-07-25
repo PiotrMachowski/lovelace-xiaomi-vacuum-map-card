@@ -33,6 +33,15 @@ export class ManualRectangle extends MapObject {
         this._vacRectSnapshot = this._vacRect;
     }
 
+    private static _toPoints(rect: RectangleType): string {
+        const points = rect
+            .filter(p => !isNaN(p[0]) && !isNaN(p[1]))
+            .map(p => p.join(", "))
+            .join(" ");
+        if (points.length == 3) console.error(`Points: ${points}`);
+        return points;
+    }
+
     public render(): SVGTemplateResult {
         const vacuumZone = this._vacRect;
         const mapRect = this.vacuumToMapRect(vacuumZone)[0];
@@ -91,6 +100,21 @@ export class ManualRectangle extends MapObject {
         return this._selectedElement != null;
     }
 
+    public externalDrag(event: MouseEvent | TouchEvent): void {
+        this._drag(event);
+    }
+
+    public toVacuum(
+        repeats: number | null = null,
+    ): [number, number, number, number] | [number, number, number, number, number] {
+        const [x1, y1, x2, y2] = this._vacRect;
+        const ordered = [Math.min(x1, x2), Math.min(y1, y2), Math.max(x1, x2), Math.max(y1, y2)] as ZoneType;
+        if (repeats != null) {
+            return [...ordered, repeats];
+        }
+        return ordered;
+    }
+
     private _getDimensions(): string {
         const [x1, y1, x2, y2] = this.toVacuum();
         const width = Math.abs(x2 - x1);
@@ -132,10 +156,6 @@ export class ManualRectangle extends MapObject {
         const mousePosition = this.getMousePosition(event);
         this._startPointSnapshot = this.scaledMapToVacuum(mousePosition.x, mousePosition.y);
         this.update();
-    }
-
-    public externalDrag(event: MouseEvent | TouchEvent): void {
-        this._drag(event);
     }
 
     private _drag(event: MouseEvent | TouchEvent): void {
@@ -221,15 +241,6 @@ export class ManualRectangle extends MapObject {
         }
     }
 
-    private static _toPoints(rect: RectangleType): string {
-        const points = rect
-            .filter(p => !isNaN(p[0]) && !isNaN(p[1]))
-            .map(p => p.join(", "))
-            .join(" ");
-        if (points.length == 3) console.error(`Points: ${points}`);
-        return points;
-    }
-
     private _toVacuumFromDimensions(x, y, width, height): [number, number, number, number] {
         const imageX = this.realScaled(x);
         const imageY = this.realScaled(y);
@@ -240,17 +251,6 @@ export class ManualRectangle extends MapObject {
         const v1 = [vacuumStart[0], vacuumEnd[0]].sort();
         const v2 = [vacuumStart[1], vacuumEnd[1]].sort();
         return [v1[0], v2[0], v1[1], v2[1]];
-    }
-
-    public toVacuum(
-        repeats: number | null = null,
-    ): [number, number, number, number] | [number, number, number, number, number] {
-        const [x1, y1, x2, y2] = this._vacRect;
-        const ordered = [Math.min(x1, x2), Math.min(y1, y2), Math.max(x1, x2), Math.max(y1, y2)] as ZoneType;
-        if (repeats != null) {
-            return [...ordered, repeats];
-        }
-        return ordered;
     }
 
     public static get styles(): CSSResultGroup {

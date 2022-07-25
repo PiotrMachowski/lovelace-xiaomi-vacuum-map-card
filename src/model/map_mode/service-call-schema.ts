@@ -16,42 +16,6 @@ export class ServiceCallSchema {
         this.evaluateDataAsTemplate = config.evaluate_data_as_template ?? false;
     }
 
-    public apply(entityId: string, selection: unknown[], repeats: number, variables: VariablesStorage): ServiceCall {
-        const keyReplacer = (key: string): ReplacedKey =>
-            ServiceCallSchema.getReplacedValue(key, entityId, selection, repeats, variables);
-        let serviceData: ReplacedKey | undefined = undefined;
-        let target: ReplacedKey | undefined = undefined;
-        if (this.serviceData) {
-            serviceData = this.getFilledTemplate(this.serviceData, keyReplacer);
-        }
-        if (this.target) {
-            target = this.getFilledTemplate(this.target, keyReplacer);
-        }
-        const service = this.service.split(".");
-        return new ServiceCall(
-            service[0],
-            service[1],
-            serviceData as Record<string, unknown> | undefined,
-            target as Record<string, unknown> | undefined,
-        );
-    }
-
-    private getFilledTemplate(template: Record<string, unknown>, keyReplacer: KeyReplacer): ReplacedKey {
-        const target = JSON.parse(JSON.stringify(template));
-        this.replacer(target, keyReplacer);
-        return target;
-    }
-
-    private replacer(target: Record<string, unknown>, keyReplacer: KeyReplacer): void {
-        for (const [key, value] of Object.entries(target)) {
-            if (typeof value == "object") {
-                this.replacer(value as Record<string, unknown>, keyReplacer);
-            } else if (typeof value == "string") {
-                target[key] = keyReplacer(value as string);
-            }
-        }
-    }
-
     private static getReplacedValue(
         value: string,
         entityId: string,
@@ -107,5 +71,41 @@ export class ServiceCallSchema {
 
     private static isPoint(selection: unknown[]): boolean {
         return typeof selection[0] === "number" && selection.length == 2;
+    }
+
+    public apply(entityId: string, selection: unknown[], repeats: number, variables: VariablesStorage): ServiceCall {
+        const keyReplacer = (key: string): ReplacedKey =>
+            ServiceCallSchema.getReplacedValue(key, entityId, selection, repeats, variables);
+        let serviceData: ReplacedKey | undefined = undefined;
+        let target: ReplacedKey | undefined = undefined;
+        if (this.serviceData) {
+            serviceData = this.getFilledTemplate(this.serviceData, keyReplacer);
+        }
+        if (this.target) {
+            target = this.getFilledTemplate(this.target, keyReplacer);
+        }
+        const service = this.service.split(".");
+        return new ServiceCall(
+            service[0],
+            service[1],
+            serviceData as Record<string, unknown> | undefined,
+            target as Record<string, unknown> | undefined,
+        );
+    }
+
+    private getFilledTemplate(template: Record<string, unknown>, keyReplacer: KeyReplacer): ReplacedKey {
+        const target = JSON.parse(JSON.stringify(template));
+        this.replacer(target, keyReplacer);
+        return target;
+    }
+
+    private replacer(target: Record<string, unknown>, keyReplacer: KeyReplacer): void {
+        for (const [key, value] of Object.entries(target)) {
+            if (typeof value == "object") {
+                this.replacer(value as Record<string, unknown>, keyReplacer);
+            } else if (typeof value == "string") {
+                target[key] = keyReplacer(value as string);
+            }
+        }
     }
 }

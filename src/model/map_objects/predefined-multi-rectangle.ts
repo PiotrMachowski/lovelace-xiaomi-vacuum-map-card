@@ -19,6 +19,47 @@ export class PredefinedMultiRectangle extends MapObject {
         this._selected = false;
     }
 
+    public get variables(): VariablesStorage {
+        return this._config.variables ?? super.variables;
+    }
+
+    public static getFromEntities(
+        newMode: MapMode,
+        hass: HomeAssistant,
+        contextCreator: () => Context,
+    ): PredefinedMultiRectangle[] {
+        return newMode.predefinedSelections
+            .map(ps => ps as PredefinedZoneConfig)
+            .filter(pzc => typeof pzc.zones === "string")
+            .map(pzc => (pzc.zones as string).split(".attributes."))
+            .flatMap(z => {
+                const entity = hass.states[z[0]];
+                const value = z.length === 2 ? entity.attributes[z[1]] : entity.state;
+                let parsed;
+                try {
+                    parsed = JSON.parse(value) as ZoneType[];
+                } catch {
+                    parsed = value as ZoneType[];
+                }
+                return parsed;
+            })
+            .map(
+                z =>
+                    new PredefinedMultiRectangle(
+                        {
+                            zones: [z],
+                            label: undefined,
+                            icon: {
+                                x: (z[0] + z[2]) / 2,
+                                y: (z[1] + z[3]) / 2,
+                                name: "mdi:broom",
+                            },
+                        },
+                        contextCreator(),
+                    ),
+            );
+    }
+
     public render(): SVGTemplateResult {
         let zones: ZoneType[] = [];
         if (typeof this._config.zones !== "string") {
@@ -41,8 +82,16 @@ export class PredefinedMultiRectangle extends MapObject {
         `;
     }
 
-    public get variables(): VariablesStorage {
-        return this._config.variables ?? super.variables;
+    public size(): number {
+        return this._config.zones.length;
+    }
+
+    public toVacuum(repeats: number | null): ZoneType[] | ZoneWithRepeatsType[] {
+        if (typeof this._config.zones === "string") {
+            return [];
+        }
+        if (repeats === null) return this._config.zones;
+        return this._config.zones.map(z => [...z, repeats]);
     }
 
     private async _click(): Promise<void> {
@@ -71,18 +120,6 @@ export class PredefinedMultiRectangle extends MapObject {
         }
         forwardHaptic("selection");
         this.update();
-    }
-
-    public size(): number {
-        return this._config.zones.length;
-    }
-
-    public toVacuum(repeats: number | null): ZoneType[] | ZoneWithRepeatsType[] {
-        if (typeof this._config.zones === "string") {
-            return [];
-        }
-        if (repeats === null) return this._config.zones;
-        return this._config.zones.map(z => [...z, repeats]);
     }
 
     public static get styles(): CSSResultGroup {
@@ -153,42 +190,5 @@ export class PredefinedMultiRectangle extends MapObject {
                 fill: var(--map-card-internal-predefined-rectangle-label-color-selected);
             }
         `;
-    }
-
-    public static getFromEntities(
-        newMode: MapMode,
-        hass: HomeAssistant,
-        contextCreator: () => Context,
-    ): PredefinedMultiRectangle[] {
-        return newMode.predefinedSelections
-            .map(ps => ps as PredefinedZoneConfig)
-            .filter(pzc => typeof pzc.zones === "string")
-            .map(pzc => (pzc.zones as string).split(".attributes."))
-            .flatMap(z => {
-                const entity = hass.states[z[0]];
-                const value = z.length === 2 ? entity.attributes[z[1]] : entity.state;
-                let parsed;
-                try {
-                    parsed = JSON.parse(value) as ZoneType[];
-                } catch {
-                    parsed = value as ZoneType[];
-                }
-                return parsed;
-            })
-            .map(
-                z =>
-                    new PredefinedMultiRectangle(
-                        {
-                            zones: [z],
-                            label: undefined,
-                            icon: {
-                                x: (z[0] + z[2]) / 2,
-                                y: (z[1] + z[3]) / 2,
-                                name: "mdi:broom",
-                            },
-                        },
-                        contextCreator(),
-                    ),
-            );
     }
 }

@@ -17,6 +17,10 @@ export class Room extends MapObject {
         this._selected = false;
     }
 
+    public get variables(): VariablesStorage {
+        return this._config.variables ?? super.variables;
+    }
+
     public render(): SVGTemplateResult {
         const poly = (this._config?.outline ?? []).map(p => this.vacuumToScaledMap(p[0], p[1]));
         return svg`
@@ -34,10 +38,6 @@ export class Room extends MapObject {
 
     public toVacuum(): number | string {
         return this._config.id;
-    }
-
-    public get variables(): VariablesStorage {
-        return this._config.variables ?? super.variables;
     }
 
     private async _click(): Promise<void> {

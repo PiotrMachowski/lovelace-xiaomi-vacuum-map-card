@@ -79,6 +79,24 @@ export class MapMode {
         return serviceCall;
     }
 
+    public toMapModeConfig(): MapModeConfig {
+        return {
+            name: this.name,
+            icon: this.icon,
+            run_immediately: this.runImmediately,
+            coordinates_rounding: this.coordinatesRounding,
+            selection_type: SelectionType[this.selectionType],
+            max_selections: this.maxSelections,
+            repeats_type: RepeatsType[this.repeatsType],
+            max_repeats: this.maxRepeats,
+            service_call_schema: this.serviceCallSchema.config,
+            predefined_selections: this.predefinedSelections,
+            variables: Object.fromEntries(
+                Object.entries(this.variables ?? {}).map(([k, v]) => [k.substr(2, k.length - 4), v]),
+            ),
+        };
+    }
+
     private _applyTemplateIfPossible(vacuumPlatform: string, config: MapModeConfig, language: Language): void {
         if (!config.template || !PlatformGenerator.isValidModeTemplate(vacuumPlatform, config.template)) return;
         const templateValue = PlatformGenerator.getModeTemplate(vacuumPlatform, config.template);
@@ -105,23 +123,5 @@ export class MapMode {
         selectionVariables: VariablesStorage,
     ): ServiceCall {
         return this.serviceCallSchema.apply(entityId, selection, repeats, { ...this.variables, ...selectionVariables });
-    }
-
-    public toMapModeConfig(): MapModeConfig {
-        return {
-            name: this.name,
-            icon: this.icon,
-            run_immediately: this.runImmediately,
-            coordinates_rounding: this.coordinatesRounding,
-            selection_type: SelectionType[this.selectionType],
-            max_selections: this.maxSelections,
-            repeats_type: RepeatsType[this.repeatsType],
-            max_repeats: this.maxRepeats,
-            service_call_schema: this.serviceCallSchema.config,
-            predefined_selections: this.predefinedSelections,
-            variables: Object.fromEntries(
-                Object.entries(this.variables ?? {}).map(([k, v]) => [k.substr(2, k.length - 4), v]),
-            ),
-        };
     }
 }

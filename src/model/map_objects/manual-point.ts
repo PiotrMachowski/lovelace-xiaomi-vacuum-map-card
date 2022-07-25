@@ -3,7 +3,7 @@ import { css, CSSResultGroup, svg, SVGTemplateResult } from "lit";
 
 import { Context } from "./context";
 import { MapPoint } from "./map-point";
-import { PointType, PointWithRepeatsType, ReplacedKey } from "../../types/types";
+import { PointType, PointWithRepeatsType } from "../../types/types";
 
 export class ManualPoint extends MapPoint {
     constructor(x: number, y: number, context: Context) {

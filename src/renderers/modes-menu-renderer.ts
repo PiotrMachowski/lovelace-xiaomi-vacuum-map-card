@@ -14,9 +14,9 @@ export class ModesMenuRenderer {
                     <div class="modes-dropdown-menu-button-text">${getCurrentMode().name}</div>
                 </div>
                 ${modes.map(
-                    (mode, index) => html`<mwc-list-item
-                        ?activated=${getMode === index}
-                        @click=${(): void => setMode(index)}>
+                    (mode, index) => html` <mwc-list-item
+                        ?activated="${getMode === index}"
+                        @click="${(): void => setMode(index)}">
                         <div class="modes-dropdown-menu-entry clickable ${getMode === index ? "selected" : ""}">
                             <div
                                 class="modes-dropdown-menu-entry-button-wrapper ${index === 0

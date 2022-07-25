@@ -32,6 +32,47 @@ export class PredefinedPoint extends MapObject {
             } as IconConfig);
     }
 
+    public get variables(): VariablesStorage {
+        return this._config.variables ?? super.variables;
+    }
+
+    public static getFromEntities(
+        newMode: MapMode,
+        hass: HomeAssistant,
+        contextCreator: () => Context,
+    ): PredefinedPoint[] {
+        return newMode.predefinedSelections
+            .map(ps => ps as PredefinedPointConfig)
+            .filter(pzc => typeof pzc.position === "string")
+            .map(pzc => (pzc.position as string).split(".attributes."))
+            .flatMap(z => {
+                const entity = hass.states[z[0]];
+                const value = z.length === 2 ? entity.attributes[z[1]] : entity.state;
+                let parsed;
+                try {
+                    parsed = JSON.parse(value) as PointType[];
+                } catch {
+                    parsed = value as PointType[];
+                }
+                return parsed;
+            })
+            .map(
+                p =>
+                    new PredefinedPoint(
+                        {
+                            position: p,
+                            label: undefined,
+                            icon: {
+                                x: p[0],
+                                y: p[1],
+                                name: "mdi:map-marker",
+                            },
+                        },
+                        contextCreator(),
+                    ),
+            );
+    }
+
     public render(): SVGTemplateResult {
         return svg`
             <g class="predefined-point-wrapper ${this._selected ? "selected" : ""}">
@@ -41,8 +82,14 @@ export class PredefinedPoint extends MapObject {
         `;
     }
 
-    public get variables(): VariablesStorage {
-        return this._config.variables ?? super.variables;
+    public toVacuum(repeats: number | null = null): PointType | PointWithRepeatsType {
+        if (typeof this._config.position === "string") {
+            return [0, 0];
+        }
+        if (repeats === null) {
+            return this._config.position;
+        }
+        return [...this._config.position, repeats];
     }
 
     private async _click(): Promise<void> {
@@ -63,16 +110,6 @@ export class PredefinedPoint extends MapObject {
             return;
         }
         this.update();
-    }
-
-    public toVacuum(repeats: number | null = null): PointType | PointWithRepeatsType {
-        if (typeof this._config.position === "string") {
-            return [0, 0];
-        }
-        if (repeats === null) {
-            return this._config.position;
-        }
-        return [...this._config.position, repeats];
     }
 
     public static get styles(): CSSResultGroup {
@@ -119,42 +156,5 @@ export class PredefinedPoint extends MapObject {
                 fill: var(--map-card-internal-predefined-point-label-color-selected);
             }
         `;
-    }
-
-    public static getFromEntities(
-        newMode: MapMode,
-        hass: HomeAssistant,
-        contextCreator: () => Context,
-    ): PredefinedPoint[] {
-        return newMode.predefinedSelections
-            .map(ps => ps as PredefinedPointConfig)
-            .filter(pzc => typeof pzc.position === "string")
-            .map(pzc => (pzc.position as string).split(".attributes."))
-            .flatMap(z => {
-                const entity = hass.states[z[0]];
-                const value = z.length === 2 ? entity.attributes[z[1]] : entity.state;
-                let parsed;
-                try {
-                    parsed = JSON.parse(value) as PointType[];
-                } catch {
-                    parsed = value as PointType[];
-                }
-                return parsed;
-            })
-            .map(
-                p =>
-                    new PredefinedPoint(
-                        {
-                            position: p,
-                            label: undefined,
-                            icon: {
-                                x: p[0],
-                                y: p[1],
-                                name: "mdi:map-marker",
-                            },
-                        },
-                        contextCreator(),
-                    ),
-            );
     }
 }
