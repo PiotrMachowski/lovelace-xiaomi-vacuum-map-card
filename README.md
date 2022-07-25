@@ -154,7 +154,7 @@ You can use this configuration as an example: [demo config](/docs/demo_config.ya
     <td>string</td>
     <td>no</td>
     <td>-</td>
-    <td>Enables (<a href="#translations">action handling</a>)</td>
+    <td>Enables <a href="#action-handling">action handling</a></td>
   </tr>
   <tr>
     <td><code>additional_presets</code></td>
@@ -474,7 +474,7 @@ Format of data depends on selected `selection_type`:
 | `offset_y` | number | no | - | Offset that should be applied to label in Y direction (in pixels) |
 
 
-#### Available actions
+### Action handling
 
 To enable handling actions you have to configure `action_handler_id` in [Main options](#main-options).
 This card handles following actions:
