@@ -9,12 +9,13 @@
                 "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "vacuum.send_command",
+                    "evaluate_data_as_template": true,
                     "service_data": {
                         "entity_id": "[[entity_id]]",
                         "command": "start",
                         "params": {
                             "pmap_id": "[[pmap_id]]",
-                            "regions": "[{%- set s='[[selection]]'|from_json -%} {%- set v='[[variables]]'|from_json -%} {%- for i in range(s|length) -%} {\"region_id\": {{s[i]}}, \"type\": \"{{v[i]['type']}}\" }{%if not loop.last%},{%endif%} {%- endfor -%}]|[[jsonify_final]]"
+                            "regions": "[{%set s='[[selection]]'|from_json%}{%set v='[[variables]]'|from_json%}{%for i in range(s|length)%} {\"region_id\": \"{{s[i]}}\", \"type\": \"{{v[i]['type']}}\" }{%if not loop.last%},{%endif%} {%endfor%}]|[[jsonify_jinja]]"
                         }
                     }
                 }
@@ -27,19 +28,13 @@
                 "attribute": "bin_present",
                 "label": "tile.bin_present.label",
                 "icon": "mdi:delete-restore",
-                "translation_keys": [
-                    "true",
-                    "false"
-                ]
+                "translation_keys": ["true", "false"]
             },
             {
                 "attribute": "bin_full",
                 "label": "tile.bin_full.label",
                 "icon": "mdi:delete",
-                "translation_keys": [
-                    "true",
-                    "false"
-                ]
+                "translation_keys": ["true", "false"]
             }
         ]
     }
