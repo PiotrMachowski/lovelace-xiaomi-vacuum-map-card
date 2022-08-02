@@ -1,0 +1,99 @@
+{
+    "map_modes": {
+        "defaultTemplates": ["vacuum_clean_zone", "vacuum_goto"],
+        "templates": {
+            "vacuum_clean_segment": {
+                "name": "map_mode.vacuum_clean_segment",
+                "icon": "mdi:floor-plan",
+                "selection_type": "ROOM",
+                "repeats_type": "REPEAT",
+                "max_repeats": 3,
+                "service_call_schema": {
+                    "service": "viomi_vacuum_v8.clean_segment",
+                    "service_data": {
+                        "segments": "[[selection]]",
+                        "entity_id": "[[entity_id]]"
+                    }
+                }
+            },
+            "vacuum_clean_zone": {
+                "name": "map_mode.vacuum_clean_zone",
+                "icon": "mdi:select-drag",
+                "selection_type": "MANUAL_RECTANGLE",
+                "coordinates_rounding": false,
+                "max_selections": 5,
+                "repeats_type": "EXTERNAL",
+                "max_repeats": 3,
+                "service_call_schema": {
+                    "service": "viomi_vacuum_v8.clean_zone",
+                    "service_data": {
+                        "zone": "[[selection]]",
+                        "repeats": "[[repeats]]",
+                        "entity_id": "[[entity_id]]"
+                    }
+                }
+            },
+            "vacuum_clean_zone_predefined": {
+                "name": "map_mode.vacuum_clean_zone_predefined",
+                "icon": "mdi:floor-plan",
+                "selection_type": "PREDEFINED_RECTANGLE",
+                "max_selections": 5,
+                "coordinates_rounding": false,
+                "repeats_type": "EXTERNAL",
+                "max_repeats": 3,
+                "service_call_schema": {
+                    "service": "viomi_vacuum_v8.xiaomi_clean_zone",
+                    "service_data": {
+                        "zone": "[[selection]]",
+                        "repeats": "[[repeats]]",
+                        "entity_id": "[[entity_id]]"
+                    }
+                }
+            },
+            "vacuum_goto": {
+                "name": "map_mode.vacuum_goto",
+                "icon": "mdi:map-marker-plus",
+                "selection_type": "MANUAL_POINT",
+                "coordinates_rounding": false,
+                "repeats_type": "NONE",
+                "service_call_schema": {
+                    "service": "viomi_vacuum_v8.clean_point",
+                    "service_data": {
+                        "point": "[[selection]]",
+                        "entity_id": "[[entity_id]]"
+                    }
+                }
+            },
+            "vacuum_goto_predefined": {
+                "name": "map_mode.vacuum_goto_predefined",
+                "icon": "mdi:map-marker",
+                "selection_type": "PREDEFINED_POINT",
+                "coordinates_rounding": false,
+                "repeats_type": "NONE",
+                "service_call_schema": {
+                    "service": "viomi_vacuum_v8.xiaomi_clean_point",
+                    "service_data": {
+                        "point": "[[selection]]",
+                        "entity_id": "[[entity_id]]"
+                    }
+                }
+            }
+        }
+    },
+    "tiles": {
+        "from_attributes": [
+            {
+                "attribute": "cleaned_area",
+                "label": "tile.cleaned_area.label",
+                "icon": "mdi:texture-box",
+                "unit": "unit.meter_squared_shortcut"
+            },
+            {
+                "attribute": "cleaning_time",
+                "label": "tile.cleaning_time.label",
+                "icon": "mdi:timer-sand",
+                "unit": "unit.minute_shortcut"
+            }
+        ]
+    }
+}

@@ -4,6 +4,7 @@ import * as marotowebViomiseTemplate from "./platform_templates/marotoweb_viomis
 import * as rand256ValetudoRe from "./platform_templates/rand256_valetudo_re.json";
 import * as sendCommandTemplate from "./platform_templates/send-command.json";
 import * as neatoTemplate from "./platform_templates/neato.json";
+import * as tykarolHomeAssitantViomiVacuumV8 from "./platform_templates/tykarol_home_assistant_viomi_vacuum_v8.json";
 import { MapModeConfig, PlatformTemplate, TileFromAttributeTemplate, TileFromSensorTemplate } from "../../types/types";
 import { HomeAssistant } from "custom-card-helpers";
 import { compare } from "compare-versions";
@@ -11,6 +12,7 @@ import { compare } from "compare-versions";
 export class PlatformGenerator {
     public static DEFAULT_PLATFORM = "default";
     public static KRZYSZTOFHAJDAMOWICZ_MIIO2_PLATFORM = "KrzysztofHajdamowicz/miio2";
+    public static TYKAROL_HOME_ASSISTANT_VIOMI_VACUUM_V8 = "tykarol/viomi_vacuum_v8.json";
     public static MAROTOWEB_VIOMISE_PLATFORM = "marotoweb/viomise";
     public static RAND256_VALETUDO_RE_PLATFORM = "rand256/ValetudoRE";
     public static SEND_COMMAND_PLATFORM = "send_command";
@@ -23,6 +25,7 @@ export class PlatformGenerator {
         [PlatformGenerator.RAND256_VALETUDO_RE_PLATFORM, rand256ValetudoRe],
         [PlatformGenerator.SEND_COMMAND_PLATFORM, sendCommandTemplate],
         [PlatformGenerator.NEATO_PLATFORM, neatoTemplate],
+        [PlatformGenerator.TYKAROL_HOME_ASSISTANT_VIOMI_VACUUM_V8, tykarolHomeAssitantViomiVacuumV8],
     ]);
 
     public static getPlatforms(): string[] {
