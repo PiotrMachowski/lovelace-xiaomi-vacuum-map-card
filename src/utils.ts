@@ -7,6 +7,7 @@ import {
     ConditionalObjectConfig,
     ConditionConfig,
     EntityRegistryEntry,
+    KeyReplacer,
     Language,
     PredefinedPointConfig,
     PredefinedZoneConfig,
@@ -227,4 +228,14 @@ export async function evaluateTemplate(
             template: template,
         });
     });
+}
+
+export function replacer(target: Record<string, unknown>, keyReplacer: KeyReplacer): void {
+    for (const [key, value] of Object.entries(target)) {
+        if (typeof value == "object") {
+            replacer(value as Record<string, unknown>, keyReplacer);
+        } else if (typeof value == "string") {
+            target[key] = keyReplacer(value as string);
+        }
+    }
 }

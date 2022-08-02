@@ -408,6 +408,7 @@ service_call_schema:
 
 It is possible to use following modifiers in `service_data` section:
 - `|[[jsonify]]`: if value ends with this modifier it will be decoded as a JSON and attached to service call in unwrapped form
+- `|[[jsonify_jinja]]`: behaves in the same way as `|[[jsonify]]`, but is executed after jinja templating
 
 
 #### Supported repeats types

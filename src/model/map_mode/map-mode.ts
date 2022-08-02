@@ -2,6 +2,7 @@ import { SelectionType } from "./selection-type";
 import { RepeatsType } from "./repeats-type";
 import { ServiceCallSchema } from "./service-call-schema";
 import {
+    KeyReplacer,
     Language,
     MapModeConfig,
     PredefinedSelectionConfig,
@@ -12,7 +13,8 @@ import { localize } from "../../localize/localize";
 import { ServiceCall } from "./service-call";
 import { PlatformGenerator } from "../generators/platform-generator";
 import { HomeAssistant } from "custom-card-helpers";
-import { evaluateTemplate } from "../../utils";
+import { evaluateTemplate, replacer } from "../../utils";
+import { Modifier } from "./modifier";
 
 export class MapMode {
     private static readonly PREDEFINED_SELECTION_TYPES = [
@@ -66,6 +68,9 @@ export class MapMode {
                 const output = await evaluateTemplate(hass, JSON.stringify(serviceCall.serviceData));
                 try {
                     const serviceData = typeof output === "string" ? JSON.parse(output) : output;
+                    replacer(serviceData, v =>
+                        v.endsWith(Modifier.JSONIFY_JINJA) ? JSON.parse(v.replace(Modifier.JSONIFY_JINJA, "")) : v,
+                    );
                     serviceCall = { ...serviceCall, serviceData: serviceData };
                 } catch (e) {
                     console.error("Failed to parse template output", output);

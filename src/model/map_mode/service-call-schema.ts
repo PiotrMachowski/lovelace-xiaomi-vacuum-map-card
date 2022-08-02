@@ -2,6 +2,7 @@ import { KeyReplacer, ReplacedKey, ServiceCallSchemaConfig, VariablesStorage } f
 import { TemplatableValue } from "./templatable-value";
 import { ServiceCall } from "./service-call";
 import { Modifier } from "./modifier";
+import { replacer } from "../../utils";
 
 export class ServiceCallSchema {
     public readonly evaluateDataAsTemplate: boolean;
@@ -79,10 +80,10 @@ export class ServiceCallSchema {
         let serviceData: ReplacedKey | undefined = undefined;
         let target: ReplacedKey | undefined = undefined;
         if (this.serviceData) {
-            serviceData = this.getFilledTemplate(this.serviceData, keyReplacer);
+            serviceData = ServiceCallSchema.getFilledTemplate(this.serviceData, keyReplacer);
         }
         if (this.target) {
-            target = this.getFilledTemplate(this.target, keyReplacer);
+            target = ServiceCallSchema.getFilledTemplate(this.target, keyReplacer);
         }
         const service = this.service.split(".");
         return new ServiceCall(
@@ -93,19 +94,9 @@ export class ServiceCallSchema {
         );
     }
 
-    private getFilledTemplate(template: Record<string, unknown>, keyReplacer: KeyReplacer): ReplacedKey {
+    private static getFilledTemplate(template: Record<string, unknown>, keyReplacer: KeyReplacer): ReplacedKey {
         const target = JSON.parse(JSON.stringify(template));
-        this.replacer(target, keyReplacer);
+        replacer(target, keyReplacer);
         return target;
-    }
-
-    private replacer(target: Record<string, unknown>, keyReplacer: KeyReplacer): void {
-        for (const [key, value] of Object.entries(target)) {
-            if (typeof value == "object") {
-                this.replacer(value as Record<string, unknown>, keyReplacer);
-            } else if (typeof value == "string") {
-                target[key] = keyReplacer(value as string);
-            }
-        }
     }
 }

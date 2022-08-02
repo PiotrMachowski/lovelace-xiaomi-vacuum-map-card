@@ -190,6 +190,20 @@
         },
         "mop_left": {
             "label": "Mop"
+        },
+        "bin_full": {
+            "label": "Pojemnik pełny",
+            "value": {
+                "true": "Tak",
+                "false": "Nie"
+            }
+        },
+        "bin_present": {
+            "label": "Pojemnik włożony",
+            "value": {
+                "true": "Tak",
+                "false": "Nie"
+            }
         }
     },
     "icon": {

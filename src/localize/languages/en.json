@@ -190,6 +190,20 @@
         },
         "mop_left": {
             "label": "Mop left"
+        },
+        "bin_full": {
+            "label": "Bin full",
+            "value": {
+                "true": "Yes",
+                "false": "No"
+            }
+        },
+        "bin_present": {
+            "label": "Bin present",
+            "value": {
+                "true": "Yes",
+                "false": "No"
+            }
         }
     },
     "icon": {

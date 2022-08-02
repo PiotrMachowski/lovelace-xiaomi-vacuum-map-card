@@ -6,6 +6,7 @@ import * as sendCommandTemplate from "./platform_templates/send-command.json";
 import * as alOneHassXiaomiMiotTemplate from "./platform_templates/al-one_hass-xiaomi-miot.json";
 import * as tykarolViomiVacuumV8Template from "./platform_templates/tykarol_viomi_vacuum_v8.json";
 import * as neatoTemplate from "./platform_templates/neato.json";
+import * as roombaTemplate from "./platform_templates/roomba.json";
 import * as setupOthersTemplate from "./platform_templates/setup_others.json";
 import * as setupXiaomiTemplate from "./platform_templates/setup_xiaomi.json";
 import { MapModeConfig, PlatformTemplate, TileFromAttributeTemplate, TileFromSensorTemplate } from "../../types/types";
@@ -22,6 +23,7 @@ export class PlatformGenerator {
     public static ALONE_XIAOMI_MIOT_PLATFORM = "al-one/hass-xiaomi-miot";
     public static TYKAROL_VIOMI_VACUUM_V8_PLATFORM = "tykarol/viomi-vacuum-v8";
     public static NEATO_PLATFORM = "Neato";
+    public static ROOMBA_PLATFORM = "Roomba";
     public static SETUP_PLATFORM_XIAOMI = "Setup Xiaomi";
     public static SETUP_PLATFORM_OTHERS = "Setup Others";
 
@@ -37,6 +39,7 @@ export class PlatformGenerator {
         [PlatformGenerator.ALONE_XIAOMI_MIOT_PLATFORM, alOneHassXiaomiMiotTemplate],
         [PlatformGenerator.TYKAROL_VIOMI_VACUUM_V8_PLATFORM, tykarolViomiVacuumV8Template],
         [PlatformGenerator.NEATO_PLATFORM, neatoTemplate],
+        [PlatformGenerator.ROOMBA_PLATFORM, roombaTemplate],
         [PlatformGenerator.SETUP_PLATFORM_XIAOMI, setupXiaomiTemplate],
         [PlatformGenerator.SETUP_PLATFORM_OTHERS, setupOthersTemplate],
     ]);
@@ -50,6 +53,7 @@ export class PlatformGenerator {
         [PlatformGenerator.ALONE_XIAOMI_MIOT_PLATFORM, "alOneHassXiaomiMiot"],
         [PlatformGenerator.TYKAROL_VIOMI_VACUUM_V8_PLATFORM, "tykarolViomiVacuumV8"],
         [PlatformGenerator.NEATO_PLATFORM, "neato"],
+        [PlatformGenerator.ROOMBA_PLATFORM, "roomba"],
         [PlatformGenerator.SETUP_PLATFORM_XIAOMI, "setupXiaomi"],
         [PlatformGenerator.SETUP_PLATFORM_OTHERS, "setupOthers"],
     ]);
