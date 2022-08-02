@@ -59,8 +59,7 @@
                 "service_call_schema": {
                     "service": "viomi_vacuum_v8.clean_point",
                     "service_data": {
-                        "x_coord": "[[point_x]]",
-                        "y_coord": "[[point_y]]",
+                        "point": "[[selection]]",
                         "entity_id": "[[entity_id]]"
                     }
                 }
@@ -74,8 +73,7 @@
                 "service_call_schema": {
                     "service": "viomi_vacuum_v8.clean_point",
                     "service_data": {
-                        "x_coord": "[[point_x]]",
-                        "y_coord": "[[point_y]]",
+                        "point": "[[selection]]",
                         "entity_id": "[[entity_id]]"
                     }
                 }
