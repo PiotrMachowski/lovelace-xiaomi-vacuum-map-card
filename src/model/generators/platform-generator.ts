@@ -5,6 +5,7 @@ import * as rand256ValetudoReTemplate from "./platform_templates/rand256_valetud
 import * as sendCommandTemplate from "./platform_templates/send-command.json";
 import * as alOneHassXiaomiMiotTemplate from "./platform_templates/al-one_hass-xiaomi-miot.json";
 import * as tykarolViomiVacuumV8Template from "./platform_templates/tykarol_viomi_vacuum_v8.json";
+import * as hypferValetudoTemplate from "./platform_templates/hypfer_valetudo.json";
 import * as neatoTemplate from "./platform_templates/neato.json";
 import * as roombaTemplate from "./platform_templates/roomba.json";
 import * as setupOthersTemplate from "./platform_templates/setup_others.json";
@@ -22,6 +23,7 @@ export class PlatformGenerator {
     public static SEND_COMMAND_PLATFORM = "send_command";
     public static ALONE_XIAOMI_MIOT_PLATFORM = "al-one/hass-xiaomi-miot";
     public static TYKAROL_VIOMI_VACUUM_V8_PLATFORM = "tykarol/viomi-vacuum-v8";
+    public static HYPFER_VALETUDO_PLATFORM = "Hypfer/Valetudo";
     public static NEATO_PLATFORM = "Neato";
     public static ROOMBA_PLATFORM = "Roomba";
     public static SETUP_PLATFORM_XIAOMI = "Setup Xiaomi";
@@ -38,6 +40,7 @@ export class PlatformGenerator {
         [PlatformGenerator.SEND_COMMAND_PLATFORM, sendCommandTemplate],
         [PlatformGenerator.ALONE_XIAOMI_MIOT_PLATFORM, alOneHassXiaomiMiotTemplate],
         [PlatformGenerator.TYKAROL_VIOMI_VACUUM_V8_PLATFORM, tykarolViomiVacuumV8Template],
+        [PlatformGenerator.HYPFER_VALETUDO_PLATFORM, hypferValetudoTemplate],
         [PlatformGenerator.NEATO_PLATFORM, neatoTemplate],
         [PlatformGenerator.ROOMBA_PLATFORM, roombaTemplate],
         [PlatformGenerator.SETUP_PLATFORM_XIAOMI, setupXiaomiTemplate],
@@ -52,6 +55,7 @@ export class PlatformGenerator {
         [PlatformGenerator.SEND_COMMAND_PLATFORM, "sendCommand"],
         [PlatformGenerator.ALONE_XIAOMI_MIOT_PLATFORM, "alOneHassXiaomiMiot"],
         [PlatformGenerator.TYKAROL_VIOMI_VACUUM_V8_PLATFORM, "tykarolViomiVacuumV8"],
+        [PlatformGenerator.HYPFER_VALETUDO_PLATFORM, "hypferValetudo"],
         [PlatformGenerator.NEATO_PLATFORM, "neato"],
         [PlatformGenerator.ROOMBA_PLATFORM, "roomba"],
         [PlatformGenerator.SETUP_PLATFORM_XIAOMI, "setupXiaomi"],

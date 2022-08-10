@@ -23,6 +23,8 @@ export type Language = string | undefined;
 export type ReplacedKey = string | Record<string, unknown> | number | unknown[];
 export type VariablesStorage = Record<string, ReplacedKey>;
 export type KeyReplacer = (key: string) => ReplacedKey;
+export type LovelaceDomEvent = CustomEvent<Record<string, never>>;
+
 export type EntityRegistryEntry = {
     entity_id: string;
     original_icon: string;

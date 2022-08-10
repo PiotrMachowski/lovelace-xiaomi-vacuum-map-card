@@ -5,6 +5,7 @@ import { ActionHandlerEvent, forwardHaptic, LovelaceCard, LovelaceCardEditor } f
 
 import "./editor";
 import type {
+    LovelaceDomEvent,
     PredefinedPointConfig,
     ReplacedKey,
     RoomConfig,
@@ -71,7 +72,7 @@ import { CoordinatesConverter } from "./model/map_objects/coordinates-converter"
 import { MapObject } from "./model/map_objects/map-object";
 import { MousePosition } from "./model/map_objects/mouse-position";
 import { ServiceCallSchema } from "./model/map_mode/service-call-schema";
-import { HomeAssistantFixed, LovelaceDomEvent } from "./types/fixes";
+import { HomeAssistantFixed } from "./types/fixes";
 import "./polyfills/objectEntries";
 import "./polyfills/objectFromEntries";
 
