@@ -240,14 +240,16 @@ map: # coordinates of a point in a map coordinate system (can be read using e.g.
 ### Supported vacuum platforms
 
 Following vacuum platforms are supported out of the box at this moment:
-- [`default`](/docs/templates/xiaomiMiio.md)
+- [`default` (Xiaomi Miio)](/docs/templates/xiaomiMiio.md)
 - [`KrzysztofHajdamowicz/miio2`](/docs/templates/krzysztofHajdamowiczMiio2.md)
 - [`marotoweb/viomi SE`](/docs/templates/marotowebViomise.md)
-- [`rand256/ValetudoRE`](/docs/templates/rand256ValetudoRe.md)
 - [`tykarol/ViomiVacuumV8`](/docs/templates/tykarolViomiVacuumV8.md)
+- [`rand256/ValetudoRE`](/docs/templates/rand256ValetudoRe.md)
+- [`Hypfer/Valetudo`](/docs/templates/hypferValetudo.md)
 - [`send_command`](/docs/templates/sendCommand.md)
 - [`al-one/Xiaomi MIoT`](/docs/templates/alOneHassXiaomiMiot.md) (additional manual configuration required)
 - [`Neato`](/docs/templates/neato.md)
+- [`Roomba`](/docs/templates/roomba.md)
 
 [Create a request for a new built-in platform](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/new?assignees=PiotrMachowski&labels=new+platform&template=new_platform_request.yml)
 
