@@ -262,9 +262,9 @@ Following vacuum platforms are supported out of the box at this moment:
 | Key | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
 | `icon` | string | yes | - | An icon to be displayed ([mdi](https://materialdesignicons.com/)) |
-| `tap_action` | action | no | _more-info_ | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when an icon is tapped |
-| `hold_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when an icon is held and released |
-| `double_tap_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when an icon is double-tapped |
+| `tap_action` | action | no | _more-info_ | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when an icon is tapped. </br>**Warning:** use `service_data` instead of `data` |
+| `hold_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when an icon is held and released. </br>**Warning:** use `service_data` instead of `data` |
+| `double_tap_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when an icon is double-tapped. </br>**Warning:** use `service_data` instead of `data` |
 | `conditions` | list | no | - | List of [conditions](#condition-options) that need to be (all of them) met for an icon to be shown |
 | `tooltip` | string | false | - | Tooltip to be displayed on hoover |
 
@@ -282,9 +282,9 @@ Following vacuum platforms are supported out of the box at this moment:
 | `multiplier` | number | no | - | Multiplier that should be used to calculate value shown on a tile |
 | `precision` | number | no | - | Precision that should be used to present value on a tile |
 | `unit` | string | no | - | Unit to be used |
-| `tap_action` | action | no | _more-info_ | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is tapped |
-| `hold_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is held and released |
-| `double_tap_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is double-tapped |
+| `tap_action` | action | no | _more-info_ | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is tapped. </br>**Warning:** use `service_data` instead of `data` |
+| `hold_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is held and released. </br>**Warning:** use `service_data` instead of `data` |
+| `double_tap_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is double-tapped. </br>**Warning:** use `service_data` instead of `data` |
 | `conditions` | list | no | - | List of [conditions](#condition-options) that need to be (all of them) met for a tile to be shown |
 | `tooltip` | string | false | - | Tooltip to be displayed on hoover |
 | `translations` | map | false | - | Translations that should be applied to tile's value |
