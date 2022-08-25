@@ -10,7 +10,7 @@ This platform can be used to control vacuums using `vacuum.send_command` service
 
   [Configuration generator](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/317)
 
-  [Getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318)
+  [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
   Used command: `app_segment_clean`
 
@@ -79,7 +79,7 @@ This platform can be used to control vacuums using `vacuum.send_command` service
 
   Uses 4 coordinates to clean rectangular zones that have been defined in the configuration. Requires `predefined_selections` to be provided.
 
-  [Getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318)
+  [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
   Used command: `app_zoned_clean`
 
@@ -146,7 +146,7 @@ This platform can be used to control vacuums using `vacuum.send_command` service
 
   Uses a pair of coordinates for vacuum to go to a point that has been defined in the configuration. Requires `predefined_selections` to be provided.
 
-  [Getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318)
+  [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
   Used command: `app_goto_target`
 

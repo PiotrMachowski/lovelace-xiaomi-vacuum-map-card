@@ -28,7 +28,7 @@ calibration_source:
 
   It's possible to change action performed after cleaning (default - `Base`) by defining `afterCleaning` variable
 
-  [Getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318)
+  [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
   Used service: `mqtt.publish`
 
@@ -79,7 +79,7 @@ calibration_source:
 
   It's possible to change action performed after cleaning (default - `Base`) by defining `afterCleaning` variable
 
-  [Getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318)
+  [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
   Used service: `mqtt.publish`
 
@@ -128,7 +128,7 @@ calibration_source:
 
   Uses ID to go to a point that has been defined in the configuration. Requires `topic` variable and `predefined_selections` to be provided.
 
-  [Getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318)
+  [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
   Used service: `mqtt.publish`
 

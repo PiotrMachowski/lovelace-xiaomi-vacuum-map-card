@@ -18,7 +18,7 @@ calibration_source:
 
   Uses IDs to clean specific rooms. Requires `predefined_selections` to be provided.
 
-  [Getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318)
+  [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
   Used service: `vacuum.send_command`
 

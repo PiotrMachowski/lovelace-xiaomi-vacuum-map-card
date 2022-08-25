@@ -19,7 +19,7 @@ Used service: `xiaomi_miot.call_action`.
 
   [Configuration generator](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/317)
 
-  [Getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318)
+  [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
   <details>
   <summary>Example configuration</summary>
@@ -84,7 +84,7 @@ Used service: `xiaomi_miot.call_action`.
 
   Uses 4 coordinates to clean rectangular zones that have been defined in the configuration. Requires `predefined_selections` to be provided.
 
-  [Getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318)
+  [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
   <details>
   <summary>Example configuration</summary>

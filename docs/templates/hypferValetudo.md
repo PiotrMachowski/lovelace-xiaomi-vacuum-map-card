@@ -22,7 +22,7 @@ To retrieve map image you have to use [I can't believe it's not Valetudo](https:
 
   Uses IDs to clean specific rooms. Requires `topic` variable and `predefined_selections` to be provided.
 
-  [Getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318)
+  [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
   Used service: `mqtt.publish`
 

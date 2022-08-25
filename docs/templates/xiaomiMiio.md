@@ -12,7 +12,7 @@ This platform can be used to control vacuums connected to Home Assistant using b
 
   [Configuration generator](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/317)
 
-  [Getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318)
+  [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
   Used service: `xiaomi_miio.vacuum_clean_segment`
 
@@ -81,7 +81,7 @@ This platform can be used to control vacuums connected to Home Assistant using b
 
   Uses 4 coordinates to clean rectangular zones that have been defined in the configuration. Requires `predefined_selections` to be provided.
   
-  [Getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318)
+  [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
   Used service: `xiaomi_miio.vacuum_clean_zone`
 
@@ -148,7 +148,7 @@ This platform can be used to control vacuums connected to Home Assistant using b
 
   Uses a pair of coordinates for vacuum to go to a point that has been defined in the configuration. Requires `predefined_selections` to be provided.
   
-  [Getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318)
+  [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
   Used service: `xiaomi_miio.vacuum_goto`
 

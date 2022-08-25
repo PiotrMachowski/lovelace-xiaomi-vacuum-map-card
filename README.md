@@ -433,7 +433,7 @@ Format of data depends on selected `selection_type`:
   | `label` | object | no | - | [Label definition](#label-options) |
   | `variables` | object | no | - | Variables that should be passed to `service_call_schema` |
 
-  > See [this discussion](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318) to check how to easily retrieve zone coordinates.
+  > See [this page](/docs/templates/setup.md#getting-coordinates) to check how to easily retrieve zone coordinates.
 
 * `PREDEFINED_POINT`
 
@@ -444,7 +444,7 @@ Format of data depends on selected `selection_type`:
   | `label` | object | no | - | [Label definition](#label-options) |
   | `variables` | object | no | - | Variables that should be passed to `service_call_schema` |
 
-  > See [this discussion](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318) to check how to easily retrieve point coordinates.
+  > See [this page](/docs/templates/setup.md#getting-coordinates) to check how to easily retrieve point coordinates.
 
 * `ROOM`
 
@@ -456,7 +456,7 @@ Format of data depends on selected `selection_type`:
   | `label` | object | no | - | [Label definition](#label-options) |
   | `variables` | object | no | - | Variables that should be passed to `service_call_schema` |
 
-  > See [this discussion](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318) to check how to easily create outline.
+  > See [this page](/docs/templates/setup.md#getting-coordinates) to check how to easily create outline.
 
 #### Icon options
 
