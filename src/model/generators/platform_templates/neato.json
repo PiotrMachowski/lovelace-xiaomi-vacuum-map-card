@@ -20,6 +20,7 @@
     "tiles": {
         "from_attributes": [
             {
+                "tile_id": "cleaned_area",
                 "attribute": "clean_area",
                 "label": "tile.cleaned_area.label",
                 "icon": "mdi:texture-box",

@@ -42,10 +42,10 @@
     "tiles": {
         "from_attributes": [
             {
+                "tile_id": "status",
                 "attribute": "vacuum.status_desc",
                 "label": "tile.status.label",
                 "icon": "mdi:robot-vacuum",
-                "tile_id": "status",
                 "translation_keys": [
                     "starting",
                     "charger disconnected",

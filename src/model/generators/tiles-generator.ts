@@ -21,6 +21,7 @@ export class TilesGenerator {
         vacuumEntity: string,
         platform: string,
         language: Language,
+        tilesToIgnore: Array<string>,
     ): Promise<TileConfig[]> {
         if (!hass) return new Promise<TileConfig[]>(resolve => resolve([]));
         const useNewGenerator = PlatformGenerator.usesSensors(hass, platform);
@@ -31,20 +32,26 @@ export class TilesGenerator {
             return new Promise<TileConfig[]>(resolve => resolve(tiles));
         }
 
-        tiles.push(...this.getCommonTiles(state, vacuumEntity, language));
+        tiles.push(...this.getCommonTiles(state, vacuumEntity, language, tilesToIgnore));
         if (useNewGenerator) {
-            return this.addTilesFromSensors(hass, vacuumEntity, platform, tiles, language);
+            return this.addTilesFromSensors(hass, vacuumEntity, platform, tiles, language, tilesToIgnore);
         } else {
             return new Promise<TileConfig[]>(resolve =>
-                resolve(this.addTilesFromAttributes(state, vacuumEntity, platform, tiles, language)),
+                resolve(this.addTilesFromAttributes(state, vacuumEntity, platform, tiles, language, tilesToIgnore)),
             );
         }
     }
 
-    private static getCommonTiles(state: HassEntity, vacuumEntity: string, language: Language): TileConfig[] {
+    private static getCommonTiles(
+        state: HassEntity,
+        vacuumEntity: string,
+        language: Language,
+        tilesToIgnore: Array<string>,
+    ): TileConfig[] {
         const tiles: TileConfig[] = [];
-        if ("status" in state.attributes)
+        if ("status" in state.attributes && !tilesToIgnore.includes("status"))
             tiles.push({
+                tile_id: "status",
                 entity: vacuumEntity,
                 label: localize("tile.status.label", language),
                 attribute: "status",
@@ -77,7 +84,11 @@ export class TilesGenerator {
                     language,
                 ),
             });
-        if ("battery_level" in state.attributes && "battery_icon" in state.attributes)
+        if (
+            "battery_level" in state.attributes &&
+            "battery_icon" in state.attributes &&
+            !tilesToIgnore.includes("battery_level")
+        )
             tiles.push({
                 entity: vacuumEntity,
                 label: localize("tile.battery_level.label", language),
@@ -85,7 +96,11 @@ export class TilesGenerator {
                 icon: state.attributes["battery_icon"],
                 unit: "%",
             });
-        if ("battery_level" in state.attributes && !("battery_icon" in state.attributes))
+        if (
+            "battery_level" in state.attributes &&
+            !("battery_icon" in state.attributes) &&
+            !tilesToIgnore.includes("battery_level")
+        )
             tiles.push({
                 entity: vacuumEntity,
                 label: localize("tile.battery_level.label", language),
@@ -93,7 +108,7 @@ export class TilesGenerator {
                 icon: "mdi:battery",
                 unit: "%",
             });
-        if ("fan_speed" in state.attributes)
+        if ("fan_speed" in state.attributes && !tilesToIgnore.includes("fan_speed"))
             tiles.push({
                 entity: vacuumEntity,
                 label: localize("tile.fan_speed.label", language),
@@ -114,9 +129,11 @@ export class TilesGenerator {
         platform: string,
         tiles: TileConfig[],
         language: Language,
+        tilesToIgnore: Array<string>,
     ): TileConfig[] {
         PlatformGenerator.getTilesFromAttributesTemplates(platform)
             .filter(t => t.attribute in state.attributes)
+            .filter(t => !tilesToIgnore.includes(t.tile_id ?? ""))
             .forEach(t => tiles.push(this.mapAttributeToTile(vacuumEntity, t, language)));
         return tiles;
     }
@@ -127,6 +144,7 @@ export class TilesGenerator {
         platform: string,
         tiles: TileConfig[],
         language: Language,
+        tilesToIgnore: Array<string>,
     ): Promise<TileConfig[]> {
         let entityRegistryEntries;
         try {
@@ -138,6 +156,7 @@ export class TilesGenerator {
         }
         if (entityRegistryEntries.length > 0) {
             PlatformGenerator.getTilesFromSensorsTemplates(platform)
+                .filter(t => !tilesToIgnore.includes(t.tile_id ?? ""))
                 .map(t => ({
                     tile: t,
                     entity: entityRegistryEntries.filter(e => e.unique_id.match(t.unique_id_regex)),
@@ -209,13 +228,13 @@ export class TilesGenerator {
 
     private static generateTranslationKeys(
         keys: Array<string>,
-        tile: string | undefined,
+        tile_id: string | undefined,
         language: Language,
     ): Record<string, string> {
         const output = {};
-        if (tile) {
+        if (tile_id) {
             keys.forEach(k => {
-                const translation = localize(`tile.${tile}.value.${k}`, language, "");
+                const translation = localize(`tile.${tile_id}.value.${k}`, language, "");
                 if (translation) output[k] = translation;
             });
         }
@@ -223,7 +242,7 @@ export class TilesGenerator {
     }
 
     private static cleanup(tileConfig: TileTemplate): Record<string, unknown> {
-        const toRemove = ["unique_id_regex", "translation_keys", "tile_id"];
+        const toRemove = ["unique_id_regex", "translation_keys"];
         const e = tileConfig as unknown as Record<string, unknown>;
         for (const key in e) {
             if (e.hasOwnProperty(key) && toRemove.includes(key)) {

@@ -103,7 +103,6 @@ export interface PlatformTemplate {
 
 export interface TileTemplate extends TileConfig {
     readonly translation_keys?: Array<string>;
-    readonly tile_id?: string;
 }
 
 export interface TileFromAttributeTemplate extends TileTemplate {
@@ -113,7 +112,6 @@ export interface TileFromAttributeTemplate extends TileTemplate {
 
 export interface TileFromSensorTemplate extends TileTemplate {
     readonly unique_id_regex: string;
-    readonly icon?: string;
 }
 
 export interface IconActionConfig extends ActionableObjectConfig, ConditionalObjectConfig {
@@ -122,6 +120,7 @@ export interface IconActionConfig extends ActionableObjectConfig, ConditionalObj
 }
 
 export interface TileConfig extends ActionableObjectConfig, ConditionalObjectConfig {
+    readonly tile_id?: string;
     readonly label: string;
     readonly tooltip?: string;
     readonly icon?: string;

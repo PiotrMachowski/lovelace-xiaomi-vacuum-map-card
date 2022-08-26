@@ -102,6 +102,7 @@
     "tiles": {
         "from_attributes": [
             {
+                "tile_id": "sensor_dirty_left",
                 "attribute": "sensor_dirty_left",
                 "label": "tile.sensor_dirty_left.label",
                 "icon": "mdi:eye-outline",
@@ -118,6 +119,7 @@
                 }
             },
             {
+                "tile_id": "filter_left",
                 "attribute": "filter_left",
                 "label": "tile.filter_left.label",
                 "icon": "mdi:air-filter",
@@ -134,6 +136,7 @@
                 }
             },
             {
+                "tile_id": "main_brush_left",
                 "attribute": "main_brush_left",
                 "label": "tile.main_brush_left.label",
                 "icon": "mdi:brush",
@@ -150,6 +153,7 @@
                 }
             },
             {
+                "tile_id": "side_brush_left",
                 "attribute": "side_brush_left",
                 "label": "tile.side_brush_left.label",
                 "icon": "mdi:brush",
@@ -166,6 +170,7 @@
                 }
             },
             {
+                "tile_id": "cleaning_count",
                 "attribute": "cleaning_count",
                 "label": "tile.cleaning_count.label",
                 "icon": "mdi:counter"
@@ -173,6 +178,7 @@
         ],
         "from_sensors": [
             {
+                "tile_id": "sensor_dirty_left",
                 "unique_id_regex": "consumable_sensor_dirty_left_",
                 "label": "tile.sensor_dirty_left.label",
                 "unit": "unit.hour_shortcut",
@@ -189,6 +195,7 @@
                 }
             },
             {
+                "tile_id": "filter_left",
                 "unique_id_regex": "consumable_filter_left_",
                 "label": "tile.filter_left.label",
                 "unit": "unit.hour_shortcut",
@@ -205,6 +212,7 @@
                 }
             },
             {
+                "tile_id": "main_brush_left",
                 "unique_id_regex": "consumable_main_brush_left_",
                 "label": "tile.main_brush_left.label",
                 "unit": "unit.hour_shortcut",
@@ -221,6 +229,7 @@
                 }
             },
             {
+                "tile_id": "side_brush_left",
                 "unique_id_regex": "consumable_side_brush_left_",
                 "label": "tile.side_brush_left.label",
                 "unit": "unit.hour_shortcut",
@@ -237,6 +246,7 @@
                 }
             },
             {
+                "tile_id": "cleaning_count",
                 "unique_id_regex": "clean_history_count_",
                 "label": "tile.cleaning_count.label"
             }
