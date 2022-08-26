@@ -7,3 +7,9 @@ export enum TemplatableValue {
     POINT_X = "[[point_x]]",
     POINT_Y = "[[point_y]]",
 }
+
+export enum TemplatableTileValue {
+    ENTITY_ID = "[[entity_id]]",
+    VACUUM_ENTITY = "[[vacuum_entity]]",
+    ATTRIBUTE = "[[attribute]]",
+}

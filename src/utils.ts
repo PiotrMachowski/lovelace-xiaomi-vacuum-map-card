@@ -239,3 +239,9 @@ export function replacer(target: Record<string, unknown>, keyReplacer: KeyReplac
         }
     }
 }
+
+export function getFilledTemplate(template: Record<string, unknown>, keyReplacer: KeyReplacer): ReplacedKey {
+    const target = JSON.parse(JSON.stringify(template));
+    replacer(target, keyReplacer);
+    return target;
+}

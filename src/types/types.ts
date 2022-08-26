@@ -101,25 +101,19 @@ export interface PlatformTemplate {
     };
 }
 
-export interface TileFromAttributeTemplate {
-    readonly attribute: string;
-    readonly label: string;
-    readonly icon: string;
-    readonly unit?: string;
-    readonly multiplier?: number;
-    readonly precision?: number;
+export interface TileTemplate extends TileConfig {
     readonly translation_keys?: Array<string>;
     readonly tile_id?: string;
 }
 
-export interface TileFromSensorTemplate {
+export interface TileFromAttributeTemplate extends TileTemplate {
+    readonly attribute: string;
+    readonly icon: string;
+}
+
+export interface TileFromSensorTemplate extends TileTemplate {
     readonly unique_id_regex: string;
-    readonly label: string;
-    readonly unit?: string;
-    readonly multiplier?: number;
-    readonly precision?: number;
-    readonly translation_keys?: Array<string>;
-    readonly tile_id?: string;
+    readonly icon?: string;
 }
 
 export interface IconActionConfig extends ActionableObjectConfig, ConditionalObjectConfig {

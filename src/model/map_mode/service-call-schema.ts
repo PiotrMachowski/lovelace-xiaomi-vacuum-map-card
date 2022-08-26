@@ -1,8 +1,8 @@
-import { KeyReplacer, ReplacedKey, ServiceCallSchemaConfig, VariablesStorage } from "../../types/types";
+import { ReplacedKey, ServiceCallSchemaConfig, VariablesStorage } from "../../types/types";
 import { TemplatableValue } from "./templatable-value";
 import { ServiceCall } from "./service-call";
 import { Modifier } from "./modifier";
-import { replacer } from "../../utils";
+import { getFilledTemplate } from "../../utils";
 
 export class ServiceCallSchema {
     public readonly evaluateDataAsTemplate: boolean;
@@ -80,10 +80,10 @@ export class ServiceCallSchema {
         let serviceData: ReplacedKey | undefined = undefined;
         let target: ReplacedKey | undefined = undefined;
         if (this.serviceData) {
-            serviceData = ServiceCallSchema.getFilledTemplate(this.serviceData, keyReplacer);
+            serviceData = getFilledTemplate(this.serviceData, keyReplacer);
         }
         if (this.target) {
-            target = ServiceCallSchema.getFilledTemplate(this.target, keyReplacer);
+            target = getFilledTemplate(this.target, keyReplacer);
         }
         const service = this.service.split(".");
         return new ServiceCall(
@@ -92,11 +92,5 @@ export class ServiceCallSchema {
             serviceData as Record<string, unknown> | undefined,
             target as Record<string, unknown> | undefined,
         );
-    }
-
-    private static getFilledTemplate(template: Record<string, unknown>, keyReplacer: KeyReplacer): ReplacedKey {
-        const target = JSON.parse(JSON.stringify(template));
-        replacer(target, keyReplacer);
-        return target;
     }
 }

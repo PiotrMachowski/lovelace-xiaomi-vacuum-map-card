@@ -4,13 +4,16 @@ import { HassEntity } from "home-assistant-js-websocket";
 import {
     EntityRegistryEntry,
     Language,
+    ReplacedKey,
     TileConfig,
     TileFromAttributeTemplate,
     TileFromSensorTemplate,
+    TileTemplate,
 } from "../../types/types";
 import { localize } from "../../localize/localize";
-import { getAllEntitiesFromTheSameDevice } from "../../utils";
+import { getAllEntitiesFromTheSameDevice, getFilledTemplate } from "../../utils";
 import { PlatformGenerator } from "./platform-generator";
+import { TemplatableTileValue } from "../map_mode/templatable-value";
 
 export class TilesGenerator {
     public static generate(
@@ -139,27 +142,24 @@ export class TilesGenerator {
                     tile: t,
                     entity: entityRegistryEntries.filter(e => e.unique_id.match(t.unique_id_regex)),
                 }))
-                .flatMap(v => v.entity.map(e => this.mapEntryToTile(e, v.tile, language)))
+                .flatMap(v => v.entity.map(e => this.mapEntryToTile(vacuumEntityId, e, v.tile, language)))
                 .forEach(t => tiles.push(t));
         }
         return new Promise<TileConfig[]>(resolve => resolve(tiles));
     }
 
     private static mapEntryToTile(
+        vacuum_entity_id: string,
         entry: EntityRegistryEntry,
         tile_template: TileFromSensorTemplate,
         language: Language,
     ): TileConfig {
         return this.mapToTile(
+            tile_template,
+            vacuum_entity_id,
             entry.entity_id,
             undefined,
-            tile_template.label,
-            entry.icon ?? entry.original_icon,
-            tile_template.unit,
-            tile_template.multiplier,
-            tile_template.precision,
-            tile_template.translation_keys,
-            tile_template.tile_id,
+            tile_template.icon ?? entry.icon ?? entry.original_icon,
             language,
         );
     }
@@ -170,41 +170,41 @@ export class TilesGenerator {
         language: Language,
     ): TileConfig {
         return this.mapToTile(
+            tile_template,
+            entity_id,
             entity_id,
             tile_template.attribute,
-            tile_template.label,
             tile_template.icon,
-            tile_template.unit,
-            tile_template.multiplier,
-            tile_template.precision,
-            tile_template.translation_keys,
-            tile_template.tile_id,
             language,
         );
     }
 
     private static mapToTile(
+        tileTemplate: TileTemplate,
+        vacuum_entity_id: string,
         entity_id: string,
         attribute: string | undefined,
-        label: string,
         icon: string,
-        unit: string | undefined,
-        multiplier: number | undefined,
-        precision: number | undefined,
-        translation_keys: Array<string> | undefined,
-        tile_id: string | undefined,
         language: Language,
     ): TileConfig {
-        return {
+        const tileConfig: TileConfig = {
+            ...tileTemplate,
             entity: entity_id,
-            label: localize(label, language),
+            label: localize(tileTemplate.label, language),
             attribute: attribute,
             icon: icon,
-            unit: unit ? localize(unit, language) : undefined,
-            precision: precision ? precision : 0,
-            multiplier: multiplier ? multiplier : undefined,
-            translations: this.generateTranslationKeys(translation_keys ?? [], tile_id, language),
+            unit: tileTemplate.unit ? localize(tileTemplate.unit, language) : undefined,
+            precision: tileTemplate.precision ? tileTemplate.precision : 0,
+            multiplier: tileTemplate.multiplier ? tileTemplate.multiplier : undefined,
+            translations: this.generateTranslationKeys(
+                tileTemplate.translation_keys ?? [],
+                tileTemplate.tile_id,
+                language,
+            ),
         };
+        return getFilledTemplate(this.cleanup(tileConfig), v =>
+            TilesGenerator.getReplacedValue(v, vacuum_entity_id, entity_id, attribute),
+        ) as unknown as TileConfig;
     }
 
     private static generateTranslationKeys(
@@ -220,5 +220,34 @@ export class TilesGenerator {
             });
         }
         return output;
+    }
+
+    private static cleanup(tileConfig: TileTemplate): Record<string, unknown> {
+        const toRemove = ["unique_id_regex", "translation_keys", "tile_id"];
+        const e = tileConfig as unknown as Record<string, unknown>;
+        for (const key in e) {
+            if (e.hasOwnProperty(key) && toRemove.includes(key)) {
+                delete e[key];
+            }
+        }
+        return e;
+    }
+
+    private static getReplacedValue(
+        value: string,
+        vacuumEntity: string,
+        entityId?: string,
+        attribute = "",
+    ): ReplacedKey {
+        switch (value) {
+            case TemplatableTileValue.ENTITY_ID:
+                return entityId ?? vacuumEntity;
+            case TemplatableTileValue.VACUUM_ENTITY:
+                return vacuumEntity;
+            case TemplatableTileValue.ATTRIBUTE:
+                return attribute;
+            default:
+                return value;
+        }
     }
 }
