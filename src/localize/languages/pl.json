@@ -245,6 +245,7 @@
             "copied": "Skopiowano!",
             "set_static_config": "Wygeneruj statyczną konfigurację",
             "config_set": "Ustawiono konfigurację!\nOtwórz edytor YAML w celu dostosowania.",
+            "config_set_failed": "Błąd aktualizacji konfiguracji.",
             "generate_rooms_config": "Wygeneruj konfigurację pokoi",
             "copy_service_call": "Skopiuj wywołanie usługi"
         }

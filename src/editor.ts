@@ -110,6 +110,9 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCar
         const cameras = entityIds.filter(e => e.substr(0, e.indexOf(".")) === "camera");
         const vacuums = entityIds.filter(e => e.substr(0, e.indexOf(".")) === "vacuum");
         const platforms = PlatformGenerator.getPlatforms();
+        const roomsUnavailable =
+            this.hass.states[this._camera]?.attributes?.["rooms"] === undefined ||
+            PlatformGenerator.getRoomsTemplate(this._vacuum_platform) === undefined;
 
         return html`
             <div class="card-config">
@@ -207,7 +210,9 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCar
                     <mwc-button @click="${() => XiaomiVacuumMapCardEditor._setStaticConfig()}">
                         ${this._localize("editor.label.set_static_config")}
                     </mwc-button>
-                    <mwc-button @click="${() => XiaomiVacuumMapCardEditor._generateRoomsConfig()}">
+                    <mwc-button
+                        @click="${() => XiaomiVacuumMapCardEditor._generateRoomsConfig()}"
+                        .disabled=${roomsUnavailable}>
                         ${this._localize("editor.label.generate_rooms_config")}
                     </mwc-button>
                     <mwc-button @click="${() => XiaomiVacuumMapCardEditor._copyServiceCall()}">
@@ -244,7 +249,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCar
         const roomsTemplate = PlatformGenerator.getRoomsTemplate(this._vacuum_platform);
         const roomConfig = (e as any).roomConfig as RoomConfigEventData;
         if (!roomConfig) {
-            this._showToast("editor.label.config_set", "mdi:close", false);
+            this._showToast("editor.label.config_set_failed", "mdi:close", false);
             return;
         }
         const map_modes = this._config?.map_modes ?? [];

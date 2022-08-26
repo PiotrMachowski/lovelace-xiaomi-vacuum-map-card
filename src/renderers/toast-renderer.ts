@@ -21,6 +21,7 @@ export class ToastRenderer {
         icon: string,
         successful: boolean,
         additionalText = "",
+        timeout = 2000,
     ): void {
         const toast = shadowRoot?.getElementById(`${idPrefix}-toast`);
         const toastText = shadowRoot?.getElementById(`${idPrefix}-toast-text`);
@@ -32,7 +33,7 @@ export class ToastRenderer {
             toastIcon.style.color = successful
                 ? "var(--map-card-internal-toast-successful-icon-color)"
                 : "var(--map-card-internal-toast-unsuccessful-icon-color)";
-            delay(2000).then(() => (toast.className = toast.className.replace(" show", "")));
+            delay(timeout).then(() => (toast.className = toast.className.replace(" show", "")));
         }
     }
 
