@@ -20,13 +20,30 @@ calibration_source:
   entity: sensor.rockrobo_calibration
 ```
 
+## Requirements
+
+To use this card with a Valetudo RE vacuum you have to define `topic` internal variable in your preset:
+
+```yaml
+type: custom:xiaomi-vacuum-map-card
+map_source:
+  camera: camera.valetudo_re
+calibration_source:
+  camera: sensor.rockrobo_calibration
+debug: true
+entity: vacuum.valetudo_re
+vacuum_platform: rand256/ValetudoRE
+internal_variables:
+  topic: valetudo/rockrobo
+```
+
 ## Available templates
 
 * ### Room cleaning (`vacuum_clean_segment`)
 
-  Uses IDs to clean specific rooms. Requires `topic` variable and `predefined_selections` to be provided.
+  Uses IDs to clean specific rooms. Requires `predefined_selections` to be provided.
 
-  It's possible to change action performed after cleaning (default - `Base`) by defining `afterCleaning` variable
+  It's possible to change action performed after cleaning (default - `Base`) by defining `afterCleaning` variable.
 
   [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
@@ -73,11 +90,35 @@ calibration_source:
 
   </details>
 
+* ### Zone cleaning (`vacuum_clean_zone`)
+
+  Uses 4 coordinates to clean rectangular zones.
+
+  It's possible to change action performed after cleaning (default - `Base`) by defining `afterCleaning` variable.
+
+  Used service: `mqtt.publish`
+
+  <details>
+  <summary>Example configuration</summary>
+
+  ```yaml
+  map_modes:
+    - template: vacuum_clean_zone
+  ```
+
+  </details>
+  <details>
+  <summary>Example video</summary>
+
+  https://user-images.githubusercontent.com/6118709/141666913-d95f082d-f5bf-4ab5-a478-ba44effe6f34.mp4
+
+  </details>
+
 * ### Predefined zone cleaning (`vacuum_clean_zone_predefined`)
 
-  Uses IDs to clean specific zone defined in the configuration. Requires `topic` variable and `predefined_selections` to be provided.
+  Uses IDs to clean specific zone defined in the configuration. Requires `predefined_selections` to be provided.
 
-  It's possible to change action performed after cleaning (default - `Base`) by defining `afterCleaning` variable
+  It's possible to change action performed after cleaning (default - `Base`) by defining `afterCleaning` variable.
 
   [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
@@ -124,9 +165,31 @@ calibration_source:
 
   </details>
 
+* ### Going to a specified point (`vacuum_goto`)
+
+  Uses a pair of coordinates for vacuum to get to a user-specified point.
+
+  Used service: `xiaomi_miio.vacuum_goto`
+
+  <details>
+  <summary>Example configuration</summary>
+
+  ```yaml
+  map_modes:
+    - template: vacuum_goto
+  ```
+
+  </details>
+  <details>
+  <summary>Example video</summary>
+
+  https://user-images.githubusercontent.com/6118709/141666921-2f3d66da-6ffc-492a-8439-625da97651bd.mp4
+
+  </details>
+
 * ### Going to a predefined point (`vacuum_goto_predefined`)
 
-  Uses ID to go to a point that has been defined in the configuration. Requires `topic` variable and `predefined_selections` to be provided.
+  Uses ID to go to a point that has been defined in the configuration. Requires `predefined_selections` to be provided.
 
   [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
