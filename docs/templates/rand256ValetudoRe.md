@@ -89,6 +89,8 @@ internal_variables:
 
 * ### Zone cleaning (`vacuum_clean_zone`)
 
+  > Requires Valetudo RE 0.10.8 or newer
+
   Uses 4 coordinates to clean rectangular zones.
 
   It's possible to change action performed after cleaning (default - `Base`) by defining `afterCleaning` variable.
@@ -161,6 +163,8 @@ internal_variables:
   </details>
 
 * ### Going to a specified point (`vacuum_goto`)
+
+  > Requires Valetudo RE 0.10.8 or newer
 
   Uses a pair of coordinates for vacuum to get to a user-specified point.
 
