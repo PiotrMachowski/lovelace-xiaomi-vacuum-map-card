@@ -29,8 +29,7 @@ type: custom:xiaomi-vacuum-map-card
 map_source:
   camera: camera.valetudo_re
 calibration_source:
-  camera: sensor.rockrobo_calibration
-debug: true
+  entity: sensor.rockrobo_calibration
 entity: vacuum.valetudo_re
 vacuum_platform: rand256/ValetudoRE
 internal_variables:
@@ -55,8 +54,6 @@ internal_variables:
   ```yaml
   map_modes:
     - template: vacuum_clean_segment
-      variables:
-        topic: valetudo/rockrobo
       predefined_selections:
         - id: Bedroom
           outline: [[ 21458, 32131 ], [ 24235, 32152 ], [ 24194, 27409 ], [ 23181, 27409 ]]
@@ -130,8 +127,6 @@ internal_variables:
   ```yaml
   map_modes:
     - template: vacuum_clean_zone_predefined
-      variables:
-        topic: valetudo/rockrobo
       predefined_selections:
         - id: Bedroom
           outline: [[ 21458, 32131 ], [ 24235, 32152 ], [ 24194, 27409 ], [ 23181, 27409 ]]
@@ -201,8 +196,6 @@ internal_variables:
   ```yaml
   map_modes:
     - template: vacuum_goto_predefined
-      variables:
-        topic: valetudo/rockrobo
       predefined_selections:
         - id: Emptying
           label:

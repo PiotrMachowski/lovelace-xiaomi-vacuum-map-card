@@ -30,7 +30,7 @@
                     "evaluate_data_as_template": true,
                     "service_data": {
                         "topic": "[[topic]]/custom_command",
-                        "payload": "{\"command\": \"zoned_cleanup\",\"zone_coordinates\": [{%for s in ('[[selection]]')|from_json %}{ \"x1\": {{s[0]}}, \"y1\": {{s[1]}},\"x2\": {{s[2]}},\"y2\": {{s[3]}}, \"repeats\": [[repeats]]}{%if not loop.last%},{%endif%}{%endfor%}],\"afterCleaning\": \"{{ 'Base' if 'afterCleaning' in '[[afterCleaning]]' else '[[afterCleaning]]'}}\"}"
+                        "payload": "{\"command\": \"zoned_cleanup\",\"zone_coordinates\": [{%for s in ('[[selection]]')|from_json %}{ \"x1\": {{s[0]}}, \"y1\": {{s[1]}}, \"x2\": {{s[2]}}, \"y2\": {{s[3]}}, \"repeats\": [[repeats]]}{%if not loop.last%},{%endif%}{%endfor%}],\"afterCleaning\": \"{{ 'Base' if 'afterCleaning' in '[[afterCleaning]]' else '[[afterCleaning]]'}}\"}"
                     }
                 }
             },
@@ -59,7 +59,7 @@
                     "service": "mqtt.publish",
                     "service_data": {
                         "topic": "[[topic]]/custom_command",
-                        "payload": "{ \"command\": \"go_to\", \"spot_coordinates\": { \"x\": \"[[point_x]]\", \"y\": \"[[point_y]]\" } }"
+                        "payload": "{ \"command\": \"go_to\", \"spot_coordinates\": { \"x\": [[point_x]], \"y\": [[point_y]] } }"
                     }
                 }
             },
