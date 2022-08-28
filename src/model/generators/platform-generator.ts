@@ -36,7 +36,7 @@ export class PlatformGenerator {
         [PlatformGenerator.XIAOMI_MIIO_PLATFORM, xiaomiMiioTemplate as PlatformTemplate],
         [PlatformGenerator.KRZYSZTOFHAJDAMOWICZ_MIIO2_PLATFORM, krzysztofHajdamowiczMiio2Template],
         [PlatformGenerator.MAROTOWEB_VIOMISE_PLATFORM, marotowebViomiseTemplate],
-        [PlatformGenerator.RAND256_VALETUDO_RE_PLATFORM, rand256ValetudoReTemplate],
+        [PlatformGenerator.RAND256_VALETUDO_RE_PLATFORM, rand256ValetudoReTemplate as PlatformTemplate],
         [PlatformGenerator.SEND_COMMAND_PLATFORM, sendCommandTemplate],
         [PlatformGenerator.ALONE_XIAOMI_MIOT_PLATFORM, alOneHassXiaomiMiotTemplate],
         [PlatformGenerator.TYKAROL_VIOMI_VACUUM_V8_PLATFORM, tykarolViomiVacuumV8Template],

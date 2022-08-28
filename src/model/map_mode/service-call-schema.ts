@@ -1,7 +1,6 @@
 import { ReplacedKey, ServiceCallSchemaConfig, VariablesStorage } from "../../types/types";
 import { TemplatableValue } from "./templatable-value";
 import { ServiceCall } from "./service-call";
-import { Modifier } from "./modifier";
 import { getFilledTemplate } from "../../utils";
 
 export class ServiceCallSchema {
@@ -17,73 +16,15 @@ export class ServiceCallSchema {
         this.evaluateDataAsTemplate = config.evaluate_data_as_template ?? false;
     }
 
-    private static getReplacedValue(
-        value: string,
-        entityId: string,
-        selection: unknown[],
-        repeats: number,
-        variables: VariablesStorage,
-    ): ReplacedKey {
-        const vars = Object.fromEntries(Object.entries(variables ?? {}).map(([k, v]) => [`[[${k}]]`, v]));
-        const fullValueReplacer = (v: string): ReplacedKey | null => {
-            switch (v) {
-                case TemplatableValue.ENTITY_ID:
-                    return entityId;
-                case TemplatableValue.SELECTION:
-                    return selection;
-                case TemplatableValue.SELECTION_SIZE:
-                    return selection.length;
-                case TemplatableValue.SELECTION_UNWRAPPED:
-                    return JSON.stringify(selection).replaceAll("[", "").replaceAll("]", "").replaceAll('"', "");
-                case TemplatableValue.REPEATS:
-                    return repeats;
-                case TemplatableValue.POINT_X:
-                    return this.isPoint(selection) ? (selection[0] as number) : value;
-                case TemplatableValue.POINT_Y:
-                    return this.isPoint(selection) ? (selection[1] as number) : value;
-                default:
-                    if (v in vars) {
-                        return vars[v];
-                    }
-                    return null;
-            }
-        };
-        return fullValueReplacer(value) ?? ServiceCallSchema.replaceInStr(value, vars, fullValueReplacer);
-    }
-
-    private static replaceInStr(
-        value: string,
-        variables: VariablesStorage,
-        kr: (string) => ReplacedKey | null,
-    ): ReplacedKey {
-        let output = value;
-        [...Object.values(TemplatableValue), ...Object.keys(variables)].forEach(tv => {
-            let replaced = kr(tv);
-            if (typeof replaced == "object") {
-                replaced = JSON.stringify(replaced);
-            }
-            output = output.replaceAll(tv, `${replaced}`);
-        });
-        if (output.endsWith(Modifier.JSONIFY)) {
-            return JSON.parse(output.replace(Modifier.JSONIFY, ""));
-        }
-        return output;
-    }
-
-    private static isPoint(selection: unknown[]): boolean {
-        return typeof selection[0] === "number" && selection.length == 2;
-    }
-
     public apply(entityId: string, selection: unknown[], repeats: number, variables: VariablesStorage): ServiceCall {
-        const keyReplacer = (key: string): ReplacedKey =>
-            ServiceCallSchema.getReplacedValue(key, entityId, selection, repeats, variables);
+        const defaultVariables = ServiceCallSchema.getDefaultVariables(entityId, selection, repeats);
         let serviceData: ReplacedKey | undefined = undefined;
         let target: ReplacedKey | undefined = undefined;
         if (this.serviceData) {
-            serviceData = getFilledTemplate(this.serviceData, keyReplacer);
+            serviceData = getFilledTemplate(this.serviceData, defaultVariables, variables);
         }
         if (this.target) {
-            target = getFilledTemplate(this.target, keyReplacer);
+            target = getFilledTemplate(this.target, defaultVariables, variables);
         }
         const service = this.service.split(".");
         return new ServiceCall(
@@ -92,5 +33,24 @@ export class ServiceCallSchema {
             serviceData as Record<string, unknown> | undefined,
             target as Record<string, unknown> | undefined,
         );
+    }
+
+    private static getDefaultVariables(entityId: string, selection: unknown[], repeats: number): VariablesStorage {
+        const variables: VariablesStorage = {};
+        variables[TemplatableValue.ENTITY_ID] = entityId;
+        variables[TemplatableValue.SELECTION] = selection;
+        variables[TemplatableValue.SELECTION_SIZE] = selection.length;
+        variables[TemplatableValue.SELECTION_UNWRAPPED] = JSON.stringify(selection)
+            .replaceAll("[", "")
+            .replaceAll("]", "")
+            .replaceAll('"', "");
+        variables[TemplatableValue.REPEATS] = repeats;
+        variables[TemplatableValue.POINT_X] = this.isPoint(selection) ? (selection[0] as number) : "";
+        variables[TemplatableValue.POINT_Y] = this.isPoint(selection) ? (selection[1] as number) : "";
+        return variables;
+    }
+
+    private static isPoint(selection: unknown[]): boolean {
+        return typeof selection[0] === "number" && selection.length == 2;
     }
 }

@@ -19,6 +19,7 @@ import { MapMode } from "./model/map_mode/map-mode";
 import { SelectionType } from "./model/map_mode/selection-type";
 import { MousePosition } from "./model/map_objects/mouse-position";
 import { XiaomiVacuumMapCard } from "./xiaomi-vacuum-map-card";
+import { Modifier } from "./model/map_mode/modifier";
 
 export function stopEvent(event: MouseEvent | TouchEvent): void {
     event.preventDefault();
@@ -218,7 +219,7 @@ export function copyMessage(val: string): void {
     document.body.removeChild(selBox);
 }
 
-export async function evaluateTemplate(
+export async function evaluateJinjaTemplate(
     hass: HomeAssistant,
     template: string,
 ): Promise<string | Record<string, unknown>> {
@@ -230,18 +231,51 @@ export async function evaluateTemplate(
     });
 }
 
-export function replacer(target: Record<string, unknown>, keyReplacer: KeyReplacer): void {
+export function replaceInTarget(target: Record<string, unknown>, keyReplacer: KeyReplacer): void {
     for (const [key, value] of Object.entries(target)) {
         if (typeof value == "object") {
-            replacer(value as Record<string, unknown>, keyReplacer);
+            replaceInTarget(value as Record<string, unknown>, keyReplacer);
         } else if (typeof value == "string") {
             target[key] = keyReplacer(value as string);
         }
     }
 }
 
-export function getFilledTemplate(template: Record<string, unknown>, keyReplacer: KeyReplacer): ReplacedKey {
+export function getReplacedValue(value: string, variables: VariablesStorage): ReplacedKey {
+    const vars = Object.fromEntries(Object.entries(variables ?? {}).map(([k, v]) => [`[[${k}]]`, v]));
+    const fullValueReplacer = (v: string): ReplacedKey | null => (v in vars ? vars[v] : null);
+    return fullValueReplacer(value) ?? replaceInStr(value, vars, fullValueReplacer);
+}
+
+export function replaceInStr(
+    value: string,
+    variables: VariablesStorage,
+    kr: (string) => ReplacedKey | null,
+): ReplacedKey {
+    let output = value;
+    Object.keys(variables).forEach(tv => {
+        let replaced = kr(tv);
+        if (typeof replaced == "object") {
+            replaced = JSON.stringify(replaced);
+        }
+        output = output.replaceAll(tv, `${replaced}`);
+    });
+    if (output.endsWith(Modifier.JSONIFY)) {
+        return JSON.parse(output.replace(Modifier.JSONIFY, ""));
+    }
+    return output;
+}
+
+export function getFilledTemplate(
+    template: Record<string, unknown>,
+    ...variablesStorages: VariablesStorage[]
+): ReplacedKey {
     const target = JSON.parse(JSON.stringify(template));
-    replacer(target, keyReplacer);
+    let variables: VariablesStorage = {};
+    for (const variablesStorage of variablesStorages) {
+        variables = { ...variablesStorage, ...variables };
+    }
+    const keyReplacer = v => getReplacedValue(v, variables);
+    replaceInTarget(target, keyReplacer);
     return target;
 }

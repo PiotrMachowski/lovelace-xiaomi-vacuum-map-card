@@ -2,7 +2,6 @@ import { SelectionType } from "./selection-type";
 import { RepeatsType } from "./repeats-type";
 import { ServiceCallSchema } from "./service-call-schema";
 import {
-    KeyReplacer,
     Language,
     MapModeConfig,
     PredefinedSelectionConfig,
@@ -13,7 +12,7 @@ import { localize } from "../../localize/localize";
 import { ServiceCall } from "./service-call";
 import { PlatformGenerator } from "../generators/platform-generator";
 import { HomeAssistant } from "custom-card-helpers";
-import { evaluateTemplate, replacer } from "../../utils";
+import { evaluateJinjaTemplate, replaceInTarget } from "../../utils";
 import { Modifier } from "./modifier";
 
 export class MapMode {
@@ -65,10 +64,10 @@ export class MapMode {
         let serviceCall = this._applyData(entityId, selection, repeats, selectionVariables);
         if (this.serviceCallSchema.evaluateDataAsTemplate) {
             try {
-                const output = await evaluateTemplate(hass, JSON.stringify(serviceCall.serviceData));
+                const output = await evaluateJinjaTemplate(hass, JSON.stringify(serviceCall.serviceData));
                 try {
                     const serviceData = typeof output === "string" ? JSON.parse(output) : output;
-                    replacer(serviceData, v =>
+                    replaceInTarget(serviceData, v =>
                         v.endsWith(Modifier.JSONIFY_JINJA) ? JSON.parse(v.replace(Modifier.JSONIFY_JINJA, "")) : v,
                     );
                     serviceCall = { ...serviceCall, serviceData: serviceData };

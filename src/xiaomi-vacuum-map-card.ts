@@ -548,7 +548,14 @@ export class XiaomiVacuumMapCard extends LitElement {
         const tilesToIgnore = (config.tiles ?? []).filter(t => t.tile_id !== undefined).map(t => t.tile_id as string);
         const tilesGenerated: Promise<TileConfig[]> =
             (config.tiles?.length ?? -1) === -1
-                ? TilesGenerator.generate(this.hass, config.entity, vacuumPlatform, this.config.language, tilesToIgnore)
+                ? TilesGenerator.generate(
+                      this.hass,
+                      config.entity,
+                      vacuumPlatform,
+                      this.config.language,
+                      tilesToIgnore,
+                      this.internalVariables,
+                  )
                 : config.append_tiles
                 ? TilesGenerator.generate(
                       this.hass,
@@ -556,6 +563,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                       vacuumPlatform,
                       this.config.language,
                       tilesToIgnore,
+                      this.internalVariables,
                   ).then(tiles => [...tiles, ...(config.tiles ?? [])])
                 : new Promise(resolve => resolve(config.tiles ?? []));
         tilesGenerated
