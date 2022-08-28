@@ -4,6 +4,8 @@
 
 This platform can be used to control vacuums flashed with Valetudo RE created by [@rand256](https://github.com/rand256) connected to Home Assistant using [MQTT](https://www.home-assistant.io/integrations/mqtt/).
 
+To reset a value for a given consumable press and hold a matching tile.
+
 ## Calibration
 
 To retrieve calibration points from the vacuum use following config:

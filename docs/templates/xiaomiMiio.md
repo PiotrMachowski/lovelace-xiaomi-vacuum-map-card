@@ -4,6 +4,8 @@
 
 This platform can be used to control vacuums connected to Home Assistant using built-in Xiaomi Miio integration.
 
+To reset a value for a given consumable press and hold a matching tile.
+
 ## Available templates
 
 * ### Room cleaning (`vacuum_clean_segment`)
