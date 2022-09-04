@@ -43,7 +43,7 @@ To get coordinates of zone, point or outline you have to:
 4. Choose appropriate mode from dropdown according to desired shape
    * Zone -> "Zone cleanup"
    * Point -> "Pin & Go"
-   * Outline -> "Zone cleanup"
+   * Outline -> "Path"
 
    ![image](media/mode_picker.png)
 5. Mark a selection on a map
