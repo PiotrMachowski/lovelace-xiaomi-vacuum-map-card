@@ -29,7 +29,7 @@
                     "evaluate_data_as_template": true,
                     "service_data": {
                         "topic": "[[topic]]/ZoneCleaningCapability/start/set",
-                        "payload": "{\"zones\": [{%for s in ('[[selection]]')|from_json %}{ \"points\": {\"pA\": { \"x1\": {{s[0]}}, \"y1\": {{s[1]}} }, \"pB\": { \"x1\": {{s[2]}}, \"y1\": {{s[1]}} }, \"pC\": { \"x1\": {{s[2]}}, \"y1\": {{s[3]}} }, \"pD\": { \"x1\": {{s[0]}}, \"y1\": {{s[3]}} } }, \"iterations\": [[repeats]]}{%if not loop.last%},{%endif%}{%endfor%}]}"
+                        "payload": "{\"zones\": [{%for s in ('[[selection]]')|from_json %}{ \"points\": {\"pA\": { \"x\": {{s[0]}}, \"y\": {{s[1]}} }, \"pB\": { \"x\": {{s[2]}}, \"y\": {{s[1]}} }, \"pC\": { \"x\": {{s[2]}}, \"y\": {{s[3]}} }, \"pD\": { \"x\": {{s[0]}}, \"y\": {{s[3]}} } }, \"iterations\": [[repeats]]}{%if not loop.last%},{%endif%}{%endfor%}]}"
                     }
                 }
             },
@@ -44,7 +44,7 @@
                     "evaluate_data_as_template": true,
                     "service_data": {
                         "topic": "[[topic]]/ZoneCleaningCapability/start/set",
-                        "payload": "{\"zones\": [{%for s in ('[[selection]]')|from_json %}{ \"points\": {\"pA\": { \"x1\": {{s[0]}}, \"y1\": {{s[1]}} }, \"pB\": { \"x1\": {{s[2]}}, \"y1\": {{s[1]}} }, \"pC\": { \"x1\": {{s[2]}}, \"y1\": {{s[3]}} }, \"pD\": { \"x1\": {{s[0]}}, \"y1\": {{s[3]}} } }, \"iterations\": [[repeats]]}{%if not loop.last%},{%endif%}{%endfor%}]}"
+                        "payload": "{\"zones\": [{%for s in ('[[selection]]')|from_json %}{ \"points\": {\"pA\": { \"x\": {{s[0]}}, \"y\": {{s[1]}} }, \"pB\": { \"x\": {{s[2]}}, \"y\": {{s[1]}} }, \"pC\": { \"x\": {{s[2]}}, \"y\": {{s[3]}} }, \"pD\": { \"x\": {{s[0]}}, \"y\": {{s[3]}} } }, \"iterations\": [[repeats]]}{%if not loop.last%},{%endif%}{%endfor%}]}"
                     }
                 }
             },
@@ -58,7 +58,7 @@
                     "service": "mqtt.publish",
                     "service_data": {
                         "topic": "[[topic]]/GoToLocationCapability/go/set",
-                        "payload": "{ \"spot_coordinates\": { \"x\": [[point_x]], \"y\": [[point_y]] } }"
+                        "payload": "{ \"coordinates\": { \"x\": [[point_x]], \"y\": [[point_y]] } }"
                     }
                 }
             },
@@ -72,7 +72,7 @@
                     "service": "mqtt.publish",
                     "service_data": {
                         "topic": "[[topic]]/GoToLocationCapability/go/set",
-                        "payload": "{ \"spot_coordinates\": { \"x\": \"[[point_x]]\", \"y\": \"[[point_y]]\" } }"
+                        "payload": "{ \"coordinates\": { \"x\": \"[[point_x]]\", \"y\": \"[[point_y]]\" } }"
                     }
                 }
             }
