@@ -3,7 +3,15 @@ import { css, CSSResultGroup, svg, SVGTemplateResult } from "lit";
 
 import { Context } from "./context";
 import { MousePosition } from "./mouse-position";
-import { IconConfig, LabelConfig, PointType, RectangleType, TranslatableString, ZoneType } from "../../types/types";
+import {
+    IconConfig,
+    LabelConfig,
+    PointType,
+    RectangleType,
+    TranslatableString,
+    VariablesStorage,
+    ZoneType,
+} from "../../types/types";
 import { conditional } from "../../utils";
 
 export abstract class MapObject {
@@ -12,6 +20,35 @@ export abstract class MapObject {
     protected constructor(context: Context) {
         this._context = context;
     }
+
+    public get variables(): VariablesStorage {
+        return {};
+    }
+
+    protected static findTopLeft(rect: RectangleType): PointType {
+        const top = rect.sort((p1, p2) => p1[1] - p2[1])[0];
+        const topIndex = rect.indexOf(top);
+        const next = rect[(topIndex + 1) % 4];
+        const previous = rect[(topIndex + 3) % 4];
+        const atanNext = MapObject.calcAngle(top, next);
+        const atanPrevious = MapObject.calcAngle(top, previous);
+        const second = atanNext < atanPrevious ? next : previous;
+        return second[0] < top[0] ? second : top;
+    }
+
+    protected static calcAngle(p2: PointType, p1: PointType): number {
+        let atan = Math.atan2(p1[1] - p2[1], p1[0] - p2[0]);
+        if (atan > Math.PI / 2) {
+            atan = Math.PI - atan;
+        }
+        return atan;
+    }
+
+    private static _reverse([m1, m2, m3, m4]: RectangleType): RectangleType {
+        return [m1, m4, m3, m2];
+    }
+
+    public abstract render(): SVGTemplateResult;
 
     protected scaled(value: number): number {
         return value / this._context.scale();
@@ -39,6 +76,7 @@ export abstract class MapObject {
 
     protected update(): void {
         this._context.update();
+        this._context.selectionChanged();
     }
 
     protected localize(string: TranslatableString): string {
@@ -134,32 +172,7 @@ export abstract class MapObject {
         return sum < 0;
     }
 
-    protected static findTopLeft(rect: RectangleType): PointType {
-        const top = rect.sort((p1, p2) => p1[1] - p2[1])[0];
-        const topIndex = rect.indexOf(top);
-        const next = rect[(topIndex + 1) % 4];
-        const previous = rect[(topIndex + 3) % 4];
-        const atanNext = MapObject.calcAngle(top, next);
-        const atanPrevious = MapObject.calcAngle(top, previous);
-        const second = atanNext < atanPrevious ? next : previous;
-        return second[0] < top[0] ? second : top;
-    }
-
-    protected static calcAngle(p2: PointType, p1: PointType): number {
-        let atan = Math.atan2(p1[1] - p2[1], p1[0] - p2[0]);
-        if (atan > Math.PI / 2) {
-            atan = Math.PI - atan;
-        }
-        return atan;
-    }
-
-    private static _reverse([m1, m2, m3, m4]: RectangleType): RectangleType {
-        return [m1, m4, m3, m2];
-    }
-
-    public abstract render(): SVGTemplateResult;
-
-    static get styles(): CSSResultGroup {
+    public static get styles(): CSSResultGroup {
         return css`
             .icon-foreign-object {
                 overflow: visible;

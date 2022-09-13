@@ -51,7 +51,7 @@
             "tiles": {
                 "invalid": "Fejl i konfiguration: tiles",
                 "entity": {
-                    "missing": "Alle punkter i tiles listen skal indehold entity egenskaben"
+                    "missing_outdated_translation": "Alle punkter i tiles listen skal indehold entity egenskaben"
                 },
                 "label": {
                     "missing": "Alle punkter i tiles listen skal indehold label egenskaben"
@@ -128,27 +128,27 @@
         "status": {
             "label": "Status",
             "value": {
-                "Starting": "Starter",
-                "Charger disconnected": "Oplader koblet fra",
-                "Idle": "Ledig",
-                "Remote control active": "Fjernstyring aktivt",
-                "Cleaning": "Rengører",
-                "Returning home": "Vender hjem",
-                "Manual mode": "Manuel tilstand",
-                "Charging": "Oplader",
-                "Charging problem": "Opladnings-problem",
-                "Paused": "Sat på pause",
-                "Spot cleaning": "Spot rengøring",
-                "Error": "Fejl",
-                "Shutting down": "Slukker",
-                "Updating": "Opdaterer",
-                "Docking": "Docker",
-                "Going to target": "Går til mål",
-                "Zoned cleaning": "Zone rengøring",
-                "Segment cleaning": "Segment rengøring",
-                "Emptying the bin": "Tømmes",
-                "Charging complete": "Fuldt opladt",
-                "Device offline": "Enhed offline"
+                "starting": "Starter",
+                "charger disconnected": "Oplader koblet fra",
+                "idle": "Ledig",
+                "remote control active": "Fjernstyring aktivt",
+                "cleaning": "Rengører",
+                "returning home": "Vender hjem",
+                "manual mode": "Manuel tilstand",
+                "charging": "Oplader",
+                "charging problem": "Opladnings-problem",
+                "paused": "Sat på pause",
+                "spot cleaning": "Spot rengøring",
+                "error": "Fejl",
+                "shutting down": "Slukker",
+                "updating": "Opdaterer",
+                "docking": "Docker",
+                "going to target": "Går til mål",
+                "zoned cleaning": "Zone rengøring",
+                "segment cleaning": "Segment rengøring",
+                "emptying the bin": "Tømmes",
+                "charging complete": "Fuldt opladt",
+                "device offline": "Enhed offline"
             }
         },
         "battery_level": {
@@ -157,12 +157,12 @@
         "fan_speed": {
             "label": "Hastighed",
             "value": {
-                "Silent": "Stille",
-                "Standard": "Standard",
-                "Medium": "Medium",
-                "Turbo": "Turbo",
-                "Auto": "Auto",
-                "Gentle": "Mild"
+                "silent": "Stille",
+                "standard": "Standard",
+                "medium": "Medium",
+                "turbo": "Turbo",
+                "auto": "Auto",
+                "gentle": "Mild"
             }
         },
         "sensor_dirty_left": {

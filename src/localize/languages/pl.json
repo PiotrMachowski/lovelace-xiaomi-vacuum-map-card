@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Błąd w konfiguracji: tiles",
                 "entity": {
-                    "missing": "Każda pozycja na liście kafelków musi posiadać parametr \"entity\""
+                    "missing": "Każda pozycja na liście kafelków musi posiadać parametr \"entity\" albo \"internal_variable\""
                 },
                 "label": {
                     "missing": "Każda pozycja na liście kafelków musi posiadać parametr \"label\""
@@ -130,27 +130,27 @@
         "status": {
             "label": "Status",
             "value": {
-                "Starting": "Uruchamianie",
-                "Charger disconnected": "Ładowarka odłączona",
-                "Idle": "Nieaktywny",
-                "Remote control active": "Zdalne sterowanie",
-                "Cleaning": "Sprzątanie",
-                "Returning home": "Powrót do stacji",
-                "Manual mode": "Tryb manualny",
-                "Charging": "Ładowanie",
-                "Charging problem": "Problem z ładowaniem",
-                "Paused": "Wstrzymany",
-                "Spot cleaning": "Sprzątanie punktowe",
-                "Error": "Błąd",
-                "Shutting down": "Wyłączanie",
-                "Updating": "Aktualizowanie",
-                "Docking": "Dokowanie",
-                "Going to target": "W drodze do celu",
-                "Zoned cleaning": "Sprzątanie strefowe",
-                "Segment cleaning": "Sprzątanie pokoju",
-                "Emptying the bin": "Opróżnianie pojemnika",
-                "Charging complete": "Ładowanie zakończone",
-                "Device offline": "Offline"
+                "starting": "Uruchamianie",
+                "charger disconnected": "Ładowarka odłączona",
+                "idle": "Nieaktywny",
+                "remote control active": "Zdalne sterowanie",
+                "cleaning": "Sprzątanie",
+                "returning home": "Powrót do stacji",
+                "manual mode": "Tryb manualny",
+                "charging": "Ładowanie",
+                "charging problem": "Problem z ładowaniem",
+                "paused": "Wstrzymany",
+                "spot cleaning": "Sprzątanie punktowe",
+                "error": "Błąd",
+                "shutting down": "Wyłączanie",
+                "updating": "Aktualizowanie",
+                "docking": "Dokowanie",
+                "going to target": "W drodze do celu",
+                "zoned cleaning": "Sprzątanie strefowe",
+                "segment cleaning": "Sprzątanie pokoju",
+                "emptying the bin": "Opróżnianie pojemnika",
+                "charging complete": "Ładowanie zakończone",
+                "device offline": "Offline"
             }
         },
         "battery_level": {
@@ -159,12 +159,12 @@
         "fan_speed": {
             "label": "Wentylator",
             "value": {
-                "Silent": "Cichy",
-                "Standard": "Normalny",
-                "Medium": "Średni",
-                "Turbo": "Turbo",
-                "Auto": "Automatyczny",
-                "Gentle": "Delikatny"
+                "silent": "Cichy",
+                "standard": "Normalny",
+                "medium": "Średni",
+                "turbo": "Turbo",
+                "auto": "Automatyczny",
+                "gentle": "Delikatny"
             }
         },
         "sensor_dirty_left": {
@@ -190,6 +190,20 @@
         },
         "mop_left": {
             "label": "Mop"
+        },
+        "bin_full": {
+            "label": "Pojemnik pełny",
+            "value": {
+                "true": "Tak",
+                "false": "Nie"
+            }
+        },
+        "bin_present": {
+            "label": "Pojemnik włożony",
+            "value": {
+                "true": "Tak",
+                "false": "Nie"
+            }
         }
     },
     "icon": {
@@ -224,7 +238,16 @@
             "camera": "Kamera z mapą (wymagana)",
             "vacuum_platform": "Platforma integracji odkurzacza (wymagana)",
             "map_locked": "Blokada mapy (opcjonalna)",
-            "two_finger_pan": "Przesuwanie mapy dwoma palcami (opcjonalne)"
+            "two_finger_pan": "Przesuwanie mapy dwoma palcami (opcjonalne)",
+            "platforms_documentation": "Dokumentacja wybranej platformy ({0})",
+            "selection": "Zaznaczenie:",
+            "copy": "Kopiuj",
+            "copied": "Skopiowano!",
+            "set_static_config": "Wygeneruj statyczną konfigurację",
+            "config_set": "Ustawiono konfigurację!\nOtwórz edytor YAML w celu dostosowania.",
+            "config_set_failed": "Błąd aktualizacji konfiguracji.",
+            "generate_rooms_config": "Wygeneruj konfigurację pokoi",
+            "copy_service_call": "Skopiuj wywołanie usługi"
         }
     }
 }

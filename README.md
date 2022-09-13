@@ -2,7 +2,7 @@
 [![GitHub Latest Release][releases_shield]][latest_release]
 [![GitHub All Releases][downloads_total_shield]][releases]
 [![Community Forum][community_forum_shield]][community_forum]
-[![Buy me a coffee][buy_me_a_coffee_shield]][buy_me_a_coffee]
+[![Ko-Fi][ko_fi_shield]][ko_fi]
 [![PayPal.Me][paypal_me_shield]][paypal_me]
 
 
@@ -17,6 +17,9 @@
 
 [community_forum_shield]: https://img.shields.io/static/v1.svg?label=%20&message=Forum&style=popout&color=41bdf5&logo=HomeAssistant&logoColor=white
 [community_forum]: https://community.home-assistant.io/t/xiaomi-vacuum-interactive-map-card/123901
+
+[ko_fi_shield]: https://img.shields.io/static/v1.svg?label=%20&message=Ko-Fi&color=F16061&logo=ko-fi&logoColor=white
+[ko_fi]: https://ko-fi.com/piotrmachowski
 
 [buy_me_a_coffee_shield]: https://img.shields.io/static/v1.svg?label=%20&message=Buy%20me%20a%20coffee&color=6f4e37&logo=buy%20me%20a%20coffee&logoColor=white
 [buy_me_a_coffee]: https://www.buymeacoffee.com/PiotrMachowski
@@ -58,7 +61,7 @@ https://user-images.githubusercontent.com/6118709/140251738-7fb06e81-34b0-4bf8-b
       - [Predefined selection options](#predefined-selection-options)
       - [Icon options](#icon-options)
       - [Label options](#label-options)
-  - [Hints](#hints)
+    - [Available actions](#available-actions)
   - [FAQ](#faq)
   - [Migrating from v1.x.x](#migrating-from-v1xx)
   - [Translations](#translations)
@@ -150,6 +153,13 @@ You can use this configuration as an example: [demo config](/docs/demo_config.ya
     <td>Overrides autodetected language (<a href="#translations">supported languages</a>)</td>
   </tr>
   <tr>
+    <td><code>action_handler_id</code></td>
+    <td>string</td>
+    <td>no</td>
+    <td>-</td>
+    <td>Enables <a href="#action-handling">action handling</a></td>
+  </tr>
+  <tr>
     <td><code>additional_presets</code></td>
     <td>list</td>
     <td>no</td>
@@ -183,6 +193,7 @@ You can use this configuration as an example: [demo config](/docs/demo_config.ya
 | `activate_on_switch` | boolean | no | `false` | Enables executing `activate` service call after switching map preset |
 | `conditions` | list | no | - | List of [conditions](#condition-options) that need to be (all of them) met for preset to be shown |
 | `clean_selection_on_start` | boolean | no | `true` | Allows to disable cleaning selection on cleanup start |
+| `internal_variables` | object | no | - | Allows to specify default values for internal variables |
 
 ### Map source options
 
@@ -232,16 +243,16 @@ map: # coordinates of a point in a map coordinate system (can be read using e.g.
 ### Supported vacuum platforms
 
 Following vacuum platforms are supported out of the box at this moment:
-- `default`: [Built-in Xiaomi Miio integration](https://www.home-assistant.io/integrations/xiaomi_miio/#xiaomi-mi-robot-vacuum)
-- `KrzysztofHajdamowicz/miio2`: [Custom miio2 integration by KrzysztofHajdamowicz](https://github.com/KrzysztofHajdamowicz/home-assistant-vacuum-styj02ym)
-- `marotoweb/viomise`: [Custom Viomi SE integration by marotoweb](https://github.com/marotoweb/home-assistant-vacuum-viomise)
-- `rand256/ValetudoRE`: [Valetudo RE via MQTT by rand256](https://github.com/rand256/valetudo)
-- `send_command`: Uses `vacuum.send_command` service with commands: `app_zoned_clean`, `app_goto_target`, `app_segment_clean`
-- `Neato`:  [Built-in Neato integration](https://www.home-assistant.io/integrations/neato)
-
-It's possible to configure following platforms manually:
-
-- Xiaomi Miot: [discussion](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/251), [vacuum configs](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/406)
+- [`default` (Xiaomi Miio)](/docs/templates/xiaomiMiio.md)
+- [`KrzysztofHajdamowicz/miio2`](/docs/templates/krzysztofHajdamowiczMiio2.md)
+- [`marotoweb/viomi SE`](/docs/templates/marotowebViomise.md)
+- [`tykarol/ViomiVacuumV8`](/docs/templates/tykarolViomiVacuumV8.md)
+- [`rand256/ValetudoRE`](/docs/templates/rand256ValetudoRe.md)
+- [`Hypfer/Valetudo`](/docs/templates/hypferValetudo.md)
+- [`send_command`](/docs/templates/sendCommand.md)
+- [`al-one/Xiaomi MIoT`](/docs/templates/alOneHassXiaomiMiot.md) (additional manual configuration required)
+- [`Neato`](/docs/templates/neato.md)
+- [`Roomba`](/docs/templates/roomba.md)
 
 [Create a request for a new built-in platform](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/new?assignees=PiotrMachowski&labels=new+platform&template=new_platform_request.yml)
 
@@ -249,43 +260,46 @@ It's possible to configure following platforms manually:
 
 ### Icon list entry options
 
-![icons image](/docs/icons.png)
+![icons image](/docs/media/icons.png)
 
 | Key | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
 | `icon` | string | yes | - | An icon to be displayed ([mdi](https://materialdesignicons.com/)) |
-| `tap_action` | action | no | _more-info_ | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when an icon is tapped |
-| `hold_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when an icon is held and released |
-| `double_tap_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when an icon is double-tapped |
+| `tap_action` | action | no | _more-info_ | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when an icon is tapped. </br>**Warning:** use `service_data` instead of `data` |
+| `hold_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when an icon is held and released. </br>**Warning:** use `service_data` instead of `data` |
+| `double_tap_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when an icon is double-tapped. </br>**Warning:** use `service_data` instead of `data` |
 | `conditions` | list | no | - | List of [conditions](#condition-options) that need to be (all of them) met for an icon to be shown |
 | `tooltip` | string | false | - | Tooltip to be displayed on hoover |
 
 ### Tile list entry options
 
-![tiles image](/docs/tiles.png)
+![tiles image](/docs/media/tiles.png)
 
 | Key | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
 | `label` | string | yes | - | Label of a tile |
-| `entity` | string | yes | - | Entity which should be shown on a tile |
+| `entity` | string | no | - | Entity which should be shown on a tile |
+| `internal_variable` | string | no | - | Internal variable which should be shown on a tile |
 | `icon` | string | no | - | An icon to be displayed ([mdi](https://materialdesignicons.com/)) |
 | `attribute` | string | no | - | Attribute that should be shown on a tile |
 | `multiplier` | number | no | - | Multiplier that should be used to calculate value shown on a tile |
 | `precision` | number | no | - | Precision that should be used to present value on a tile |
 | `unit` | string | no | - | Unit to be used |
-| `tap_action` | action | no | _more-info_ | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is tapped |
-| `hold_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is held and released |
-| `double_tap_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is double-tapped |
+| `tap_action` | action | no | _more-info_ | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is tapped. </br>**Warning:** use `service_data` instead of `data` |
+| `hold_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is held and released. </br>**Warning:** use `service_data` instead of `data` |
+| `double_tap_action` | action | no | - | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is double-tapped. </br>**Warning:** use `service_data` instead of `data` |
 | `conditions` | list | no | - | List of [conditions](#condition-options) that need to be (all of them) met for a tile to be shown |
 | `tooltip` | string | false | - | Tooltip to be displayed on hoover |
 | `translations` | map | false | - | Translations that should be applied to tile's value |
+| `tile_id` | string | false | - | ID of an autogenerated tile that should be replaced with this one |
 
 ### Condition options
 
 | Key | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
-| `entity` | string | yes | - | Entity ID |
+| `entity` | string | no | - | Entity ID |
 | `attribute` | string | no | - | Attribute to use instead of entity state |
+| `internal_variable` | string | no | - | Name of internal variable to use instead of entity state |
 | `value` | string | no<sup>1</sup> | - | Entity state/attribute has to be equal to this value |
 | `value_not` | string | no<sup>1</sup> | - | Entity state/attribute has to be unequal to this value |
 
@@ -293,7 +307,7 @@ It's possible to configure following platforms manually:
 
 ### Map modes options
 
-![map modes image](/docs/map_modes.png)
+![map modes image](/docs/media/map_modes.png)
 
 | Key | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
@@ -320,42 +334,7 @@ It's possible to configure following platforms manually:
 
 #### Supported templates
 
-List of supported templates depends on selected `vacuum_platform`:
-
-- `default`:
-  - `vacuum_clean_zone`: Cleaning free-drawn rectangular zones on the map
-  - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
-  - `vacuum_goto`: Going to point selected by clicking in an arbitrary place on the map
-  - `vacuum_goto_predefined`: Going to point selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
-  - `vacuum_clean_segment`: Room cleaning based on identifier - room number ([getting outline](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318), [config generator](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/317))
-  - `vacuum_follow_path`: Following path selected by clicking on the map (using [script](/docs/follow_path.yaml))
-- `KrzysztofHajdamowicz/miio2`
-  - `vacuum_clean_zone`: Cleaning free-drawn rectangular zones on the map
-  - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
-  - `vacuum_goto`: Going to point selected by clicking in an arbitrary place on the map
-  - `vacuum_goto_predefined`: Going to point selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
-  - `vacuum_clean_segment`: Room cleaning based on identifier - room number ([getting outline](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318), [config generator](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/317))
-  - `vacuum_follow_path`: Following path selected by clicking on the map (using [script](/docs/follow_path.yaml))
-- `marotoweb/viomise`
-  - `vacuum_clean_zone`: Cleaning free-drawn rectangular zones on the map
-  - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
-  - `vacuum_clean_point`: Cleaning around point selected by clicking in an arbitrary place on the map
-  - `vacuum_clean_point_predefined`: Cleaning around point selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
-  - `vacuum_clean_segment`: Room cleaning based on identifier - room number ([getting outline](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318), [config generator](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/317))
-- `rand256/ValetudoRE`
-  - `vacuum_clean_segment`: Room cleaning based on identifier - room number or name
-  - `vacuum_goto_predefined`: Going to point selected on the map from `predefined_selections`
-- `send_command`
-  - `vacuum_clean_zone`: Cleaning free-drawn rectangular zones on the map
-  - `vacuum_clean_zone_predefined`: Cleaning rectangular zones that can be selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
-  - `vacuum_goto`: Going to point selected by clicking in an arbitrary place on the map
-  - `vacuum_goto_predefined`: Going to point selected on the map from `predefined_selections` ([getting coordinates](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
-  - `vacuum_clean_segment`: Room cleaning based on identifier - room number ([getting outline](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318), [config generator](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/317))
-  - `vacuum_follow_path`: Following path selected by clicking on the map (using [script](/docs/follow_path.yaml))
-- `Neato`
-  - `vacuum_clean_segment`: Room cleaning based on identifier ([getting outline](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/318))
-
-> See [hints](#hints) to check how to easily retrieve zone/point coordinates.
+List of supported templates depends on selected [`vacuum_platform`](#supported-vacuum-platforms)
 
 
 #### Supported selection types
@@ -411,15 +390,17 @@ Following selection types are supported at this moment:
 | `service` | string | yes | - | Service that should be called in a given mode |
 | `service_data` | object | no | - | Data that should be passed to service call |
 | `target` | object | no | - | Target that should be passed to service call |
+| `evaluate_data_as_template` | boolean | no | `false` | Enables support for jinja templates in service calls |  
 
 It is possible to use several built-in placeholders in `service_data` section. They will be replaced by:
  - `[[entity_id]]`: `entity_id` defined in preset's config
  - `[[selection]]`: selection made on the map (zone, point or path)
  - `[[selection_size]]`: number of selections made on the map
  - `[[selection_unwrapped]]`: the same as `[[selection]]`, but passed as string unwrapped from brackets
- - `[[repeats]]`:  selected number of repeats
+ - `[[repeats]]`: selected number of repeats
  - `[[point_x]]`: x coordinate of selected point (for `MANUAL_POINT` and `PREDEFINED_POINT` selection types)
  - `[[point_y]]`: y coordinate of selected point (for `MANUAL_POINT` and `PREDEFINED_POINT` selection types)
+ - `[[variables]]`: a list of variables for all selections
 
 It is possible to use any value from `variables` section (wrapped with double rectangular brackets):
 ```yaml
@@ -433,6 +414,7 @@ service_call_schema:
 
 It is possible to use following modifiers in `service_data` section:
 - `|[[jsonify]]`: if value ends with this modifier it will be decoded as a JSON and attached to service call in unwrapped form
+- `|[[jsonify_jinja]]`: behaves in the same way as `|[[jsonify]]`, but is executed after jinja templating
 
 
 #### Supported repeats types
@@ -453,8 +435,9 @@ Format of data depends on selected `selection_type`:
   | `zones` | list | yes | - | List of lists containing zone's coordinates in `[x,y,width,height]` format (e.g. `[[25500, 25000, 26500, 26500]]`) |
   | `icon` | object | no | - | [Icon definition](#icon-options) |
   | `label` | object | no | - | [Label definition](#label-options) |
+  | `variables` | object | no | - | Variables that should be passed to `service_call_schema` |
 
-  > See [hints](#hints) to check how to easily retrieve zone coordinates.
+  > See [this page](/docs/templates/setup.md#getting-coordinates) to check how to easily retrieve zone coordinates.
 
 * `PREDEFINED_POINT`
 
@@ -463,8 +446,9 @@ Format of data depends on selected `selection_type`:
   | `position` | list | yes | - | Point's coordinates in `[x,y]` format (e.g. `[25500, 25000]`) |
   | `icon` | object | no | - | [Icon definition](#icon-options) |
   | `label` | object | no | - | [Label definition](#label-options) |
+  | `variables` | object | no | - | Variables that should be passed to `service_call_schema` |
 
-  > See [hints](#hints) to check how to easily retrieve point coordinates.
+  > See [this page](/docs/templates/setup.md#getting-coordinates) to check how to easily retrieve point coordinates.
 
 * `ROOM`
 
@@ -474,8 +458,9 @@ Format of data depends on selected `selection_type`:
   | `outline` | list | no | - | List of points forming an outline of a room (e.g. `[[25500,25500],[26500,25500],[25500,26500]]` |
   | `icon` | object | no | - | [Icon definition](#icon-options) |
   | `label` | object | no | - | [Label definition](#label-options) |
+  | `variables` | object | no | - | Variables that should be passed to `service_call_schema` |
 
-  > See [hints](#hints) to check how to easily create outline.
+  > See [this page](/docs/templates/setup.md#getting-coordinates) to check how to easily create outline.
 
 #### Icon options
 
@@ -496,6 +481,23 @@ Format of data depends on selected `selection_type`:
 | `offset_y` | number | no | - | Offset that should be applied to label in Y direction (in pixels) |
 
 
+### Action handling
+
+To enable handling actions you have to configure `action_handler_id` in [Main options](#main-options).
+This card handles following actions:
+
+- Set a value of internal variable
+  ```yaml
+    tap_action:
+      action: fire-dom-event
+      xiaomi_vacuum_map_card:
+        action_handler_id: xiaomi_vacuum_map_card_id_1
+        action: set_internal_variable
+        variable: variable_1
+        value: "some value"
+  ```
+
+
 ## FAQ
 
 - **Make sure to check out [FAQ section in Discussions](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/categories/faq), it contains a lot of useful information**
@@ -506,7 +508,7 @@ Format of data depends on selected `selection_type`:
 
 - **How to create a map?**
 
-  The easiest way is to use [Xiaomi Cloud Map Extractor](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor), but you can use any image (e.g. a screenshot from Mi Home/FloleVac).
+  The easiest way is to use [Xiaomi Cloud Map Extractor](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor), but you can use any image (e.g., a screenshot from Mi Home/FloleVac).
 
 - **Can I use image that has a perspective distortion?**
 
@@ -642,6 +644,7 @@ Currently, this card contains translations for following languages:
 * `hu` - Hungarian (Magyar)
 * `is` - Icelandic (Íslenska)
 * `it` - Italian (Italiano)
+* `nb-NO` - Norwegian Bokmål (Norsk bokmål)
 * `nl` - Dutch (Nederlands)
 * `pl` - Polish (Polski)
 * `pt-BR` - Brazilian Portuguese (Português Brasileiro)
@@ -664,4 +667,5 @@ I'd like to give special thanks to people who helped me with card's design and d
 * [Marek Trochimiak](https://github.com/tromarek1)
 
 
-<a href="https://www.buymeacoffee.com/PiotrMachowski" target="_blank"><img src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
+<a href='https://ko-fi.com/piotrmachowski' target='_blank'><img height='35' style='border:0px;height:46px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+<a href="https://paypal.me/PiMachowski" target="_blank"><img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" border="0" alt="PayPal Logo" style="height: auto !important;width: auto !important;"></a>

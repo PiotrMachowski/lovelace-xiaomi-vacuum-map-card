@@ -51,7 +51,7 @@
             "tiles": {
                 "invalid": "Erro na configuração: tiles",
                 "entity": {
-                    "missing": "Cada entrada da lista de tiles deve conter entidade"
+                    "missing_outdated_translation": "Cada entrada da lista de tiles deve conter entidade"
                 },
                 "label": {
                     "missing": "Cada entrada da lista de tiles deve conter label"

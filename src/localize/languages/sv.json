@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Fel i konfigurationen: tiles",
                 "entity": {
-                    "missing": "Varje post med tiles måste innehålla entity"
+                    "missing_outdated_translation": "Varje post med tiles måste innehålla entity"
                 },
                 "label": {
                     "missing": "Varje post med tiles måste innehålla label"
@@ -130,27 +130,27 @@
         "status": {
             "label": "Status",
             "value": {
-                "Starting": "Startar",
-                "Charger disconnected": "Laddare frånkopplad",
-                "Idle": "Inaktiv",
-                "Remote control active": "Fjärrkontroll aktiv",
-                "Cleaning": "Städar",
-                "Returning home": "Återvänder hem",
-                "Manual mode": "Manuellt läge",
-                "Charging": "Laddar",
-                "Charging problem": "Laddningsproblem",
-                "Paused": "Pausad",
-                "Spot cleaning": "Spot-rengöring",
-                "Error": "Fel",
-                "Shutting down": "Stänger av",
-                "Updating": "Uppdaterar",
-                "Docking": "Dockar",
-                "Going to target": "Går till destination",
-                "Zoned cleaning": "Städning av zon",
-                "Segment cleaning": "Städning av rum",
-                "Emptying the bin": "Tömmer behållaren",
-                "Charging complete": "Färdigladdad",
-                "Device offline": "Enhet offline"
+                "starting": "Startar",
+                "charger disconnected": "Laddare frånkopplad",
+                "idle": "Inaktiv",
+                "remote control active": "Fjärrkontroll aktiv",
+                "cleaning": "Städar",
+                "returning home": "Återvänder hem",
+                "manual mode": "Manuellt läge",
+                "charging": "Laddar",
+                "charging problem": "Laddningsproblem",
+                "paused": "Pausad",
+                "spot cleaning": "Spot-rengöring",
+                "error": "Fel",
+                "shutting down": "Stänger av",
+                "updating": "Uppdaterar",
+                "docking": "Dockar",
+                "going to target": "Går till destination",
+                "zoned cleaning": "Städning av zon",
+                "segment cleaning": "Städning av rum",
+                "emptying the bin": "Tömmer behållaren",
+                "charging complete": "Färdigladdad",
+                "device offline": "Enhet offline"
             }
         },
         "battery_level": {
@@ -159,12 +159,12 @@
         "fan_speed": {
             "label": "Fläkthastighet",
             "value": {
-                "Silent": "Tyst",
-                "Standard": "Standard",
-                "Medium": "Medium",
-                "Turbo": "Turbo",
-                "Auto": "Auto",
-                "Gentle": "Försiktig"
+                "silent": "Tyst",
+                "standard": "Standard",
+                "medium": "Medium",
+                "turbo": "Turbo",
+                "auto": "Auto",
+                "gentle": "Försiktig"
             }
         },
         "sensor_dirty_left": {

@@ -21,7 +21,10 @@ export type PredefinedSelectionConfig = PredefinedZoneConfig | PredefinedPointCo
 export type TranslatableString = string | [string, string, string];
 export type Language = string | undefined;
 export type ReplacedKey = string | Record<string, unknown> | number | unknown[];
+export type VariablesStorage = Record<string, ReplacedKey>;
 export type KeyReplacer = (key: string) => ReplacedKey;
+export type LovelaceDomEvent = CustomEvent<Record<string, never>>;
+
 export type EntityRegistryEntry = {
     entity_id: string;
     original_icon: string;
@@ -35,6 +38,7 @@ export interface XiaomiVacuumMapCardConfig extends LovelaceCardConfig, CardPrese
     readonly additional_presets?: CardPresetConfig[];
     readonly language?: Language;
     readonly debug?: boolean;
+    readonly action_handler_id?: string;
 }
 
 export interface CardPresetConfig extends ConditionalObjectConfig {
@@ -53,6 +57,7 @@ export interface CardPresetConfig extends ConditionalObjectConfig {
     readonly activate?: ServiceCallSchemaConfig;
     readonly activate_on_switch?: boolean;
     readonly clean_selection_on_start?: boolean;
+    readonly internal_variables?: VariablesStorage;
 }
 
 export interface MapSourceConfig {
@@ -81,7 +86,7 @@ export interface MapModeConfig {
     readonly max_repeats?: number;
     readonly service_call_schema?: ServiceCallSchemaConfig;
     readonly predefined_selections?: PredefinedSelectionConfig[];
-    readonly variables?: Record<string, ReplacedKey>;
+    readonly variables?: VariablesStorage;
 }
 
 export interface PlatformTemplate {
@@ -96,21 +101,17 @@ export interface PlatformTemplate {
     };
 }
 
-export interface TileFromAttributeTemplate {
-    readonly attribute: string;
-    readonly label: string;
-    readonly icon: string;
-    readonly unit?: string;
-    readonly multiplier?: number;
-    readonly precision?: number;
+export interface TileTemplate extends TileConfig {
+    readonly translation_keys?: Array<string>;
 }
 
-export interface TileFromSensorTemplate {
-    readonly unique_id_prefix: string;
-    readonly label: string;
-    readonly unit?: string;
-    readonly multiplier?: number;
-    readonly precision?: number;
+export interface TileFromAttributeTemplate extends TileTemplate {
+    readonly attribute: string;
+    readonly icon: string;
+}
+
+export interface TileFromSensorTemplate extends TileTemplate {
+    readonly unique_id_regex: string;
 }
 
 export interface IconActionConfig extends ActionableObjectConfig, ConditionalObjectConfig {
@@ -119,10 +120,12 @@ export interface IconActionConfig extends ActionableObjectConfig, ConditionalObj
 }
 
 export interface TileConfig extends ActionableObjectConfig, ConditionalObjectConfig {
+    readonly tile_id?: string;
     readonly label: string;
     readonly tooltip?: string;
     readonly icon?: string;
-    readonly entity: string;
+    readonly internal_variable?: string;
+    readonly entity?: string;
     readonly attribute?: string;
     readonly unit?: string;
     readonly multiplier?: number;
@@ -141,7 +144,8 @@ export interface ConditionalObjectConfig {
 }
 
 export interface ConditionConfig {
-    readonly entity: string;
+    readonly entity?: string;
+    readonly internal_variable?: string;
     readonly attribute?: string;
     readonly value?: string;
     readonly value_not?: string;
@@ -157,23 +161,23 @@ export interface Point {
     readonly y: number;
 }
 
-export interface PredefinedZoneConfig {
+export interface PredefinedSelectionCommonConfig {
+    readonly label?: LabelConfig;
+    readonly icon?: IconConfig;
+    readonly variables?: VariablesStorage;
+}
+
+export interface PredefinedZoneConfig extends PredefinedSelectionCommonConfig {
     readonly zones: ZoneType[] | string;
-    readonly label?: LabelConfig;
-    readonly icon?: IconConfig;
 }
 
-export interface PredefinedPointConfig {
+export interface PredefinedPointConfig extends PredefinedSelectionCommonConfig {
     readonly position: PointType | string;
-    readonly label?: LabelConfig;
-    readonly icon?: IconConfig;
 }
 
-export interface RoomConfig {
+export interface RoomConfig extends PredefinedSelectionCommonConfig {
     readonly id: number | string;
     readonly outline?: [number, number][];
-    readonly label?: LabelConfig;
-    readonly icon?: IconConfig;
 }
 
 export interface LabelConfig {
@@ -194,6 +198,7 @@ export interface ServiceCallSchemaConfig {
     readonly service: string;
     readonly service_data?: Record<string, unknown>;
     readonly target?: Record<string, unknown>;
+    readonly evaluate_data_as_template?: boolean;
 }
 
 export interface MapCroppingConfig {
@@ -201,4 +206,17 @@ export interface MapCroppingConfig {
     readonly bottom?: number;
     readonly left?: number;
     readonly right?: number;
+}
+
+export interface MapExtractorRoom {
+    readonly x0: number;
+    readonly y0: number;
+    readonly x1: number;
+    readonly y1: number;
+    readonly name: string | undefined;
+}
+
+export interface RoomConfigEventData {
+    readonly modeIndex: number;
+    readonly rooms: Array<RoomConfig>;
 }

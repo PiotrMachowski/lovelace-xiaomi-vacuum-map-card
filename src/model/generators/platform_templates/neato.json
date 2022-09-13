@@ -1,6 +1,6 @@
 {
     "map_modes": {
-        "defaultTemplates": ["vacuum_clean_segment"],
+        "defaultTemplates": [],
         "templates": {
             "vacuum_clean_segment": {
                 "name": "map_mode.vacuum_clean_segment",
@@ -20,6 +20,7 @@
     "tiles": {
         "from_attributes": [
             {
+                "tile_id": "cleaned_area",
                 "attribute": "clean_area",
                 "label": "tile.cleaned_area.label",
                 "icon": "mdi:texture-box",

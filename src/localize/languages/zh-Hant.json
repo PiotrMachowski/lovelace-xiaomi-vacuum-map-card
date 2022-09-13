@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "設定錯誤: tiles",
                 "entity": {
-                    "missing": "tiles list 必須包含 entity"
+                    "missing_outdated_translation": "tiles list 必須包含 entity"
                 },
                 "label": {
                     "missing": "tiles list 必須包含 label"
@@ -130,27 +130,27 @@
         "status": {
             "label": "狀態",
             "value": {
-                "Starting": "開始清掃",
-                "Charger disconnected": "與充電座斷開",
-                "Idle": "閒置",
-                "Remote control active": "開始遙控模式",
-                "Cleaning": "清掃中",
-                "Returning home": "回充中",
-                "Manual mode": "手動模式",
-                "Charging": "充電中",
-                "Charging problem": "充電錯誤",
-                "Paused": "暫停",
-                "Spot cleaning": "局部清掃",
-                "Error": "錯誤",
-                "Shutting down": "關機中",
-                "Updating": "更新中",
-                "Docking": "Docking",
-                "Going to target": "正在行進至目標點",
-                "Zoned cleaning": "劃區清掃",
-                "Segment cleaning": "選區清掃",
-                "Emptying the bin": "清理集塵盒",
-                "Charging complete": "充電完成",
-                "Device offline": "裝置離線"
+                "starting": "開始清掃",
+                "charger disconnected": "與充電座斷開",
+                "idle": "閒置",
+                "remote control active": "開始遙控模式",
+                "cleaning": "清掃中",
+                "returning home": "回充中",
+                "manual mode": "手動模式",
+                "charging": "充電中",
+                "charging problem": "充電錯誤",
+                "paused": "暫停",
+                "spot cleaning": "局部清掃",
+                "error": "錯誤",
+                "shutting down": "關機中",
+                "updating": "更新中",
+                "docking": "Docking",
+                "going to target": "正在行進至目標點",
+                "zoned cleaning": "劃區清掃",
+                "segment cleaning": "選區清掃",
+                "emptying the bin": "清理集塵盒",
+                "charging complete": "充電完成",
+                "device offline": "裝置離線"
             }
         },
         "battery_level": {
@@ -159,12 +159,12 @@
         "fan_speed": {
             "label": "吸力",
             "value": {
-                "Silent": "安靜",
-                "Standard": "標準",
-                "Medium": "強力",
-                "Turbo": "MAX",
-                "Auto": "自動",
-                "Gentle": "拖地"
+                "silent": "安靜",
+                "standard": "標準",
+                "medium": "強力",
+                "turbo": "MAX",
+                "auto": "自動",
+                "gentle": "拖地"
             }
         },
         "sensor_dirty_left": {

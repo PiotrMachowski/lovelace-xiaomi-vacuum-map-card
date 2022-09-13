@@ -5,12 +5,15 @@ import {
     Language,
     MapModeConfig,
     PredefinedSelectionConfig,
-    ReplacedKey,
     ServiceCallSchemaConfig,
+    VariablesStorage,
 } from "../../types/types";
 import { localize } from "../../localize/localize";
 import { ServiceCall } from "./service-call";
 import { PlatformGenerator } from "../generators/platform-generator";
+import { HomeAssistant } from "custom-card-helpers";
+import { evaluateJinjaTemplate, replaceInTarget } from "../../utils";
+import { Modifier } from "./modifier";
 
 export class MapMode {
     private static readonly PREDEFINED_SELECTION_TYPES = [
@@ -29,7 +32,7 @@ export class MapMode {
     public maxRepeats: number;
     public serviceCallSchema: ServiceCallSchema;
     public predefinedSelections: PredefinedSelectionConfig[];
-    public variables: Record<string, ReplacedKey>;
+    public variables: VariablesStorage;
 
     constructor(vacuumPlatform: string, public readonly config: MapModeConfig, language: Language) {
         this.name = config.name ?? localize("map_mode.invalid", language);
@@ -44,11 +47,58 @@ export class MapMode {
         this.maxRepeats = config.max_repeats ?? 1;
         this.serviceCallSchema = new ServiceCallSchema(config.service_call_schema ?? ({} as ServiceCallSchemaConfig));
         this.predefinedSelections = config.predefined_selections ?? [];
-        this.variables = Object.fromEntries(Object.entries(config.variables ?? {}).map(([k, v]) => [`[[${k}]]`, v]));
+        this.variables = config.variables ?? {};
         this._applyTemplateIfPossible(vacuumPlatform, config, language);
         if (!MapMode.PREDEFINED_SELECTION_TYPES.includes(this.selectionType)) {
             this.runImmediately = false;
         }
+    }
+
+    public async getServiceCall(
+        hass: HomeAssistant,
+        entityId: string,
+        selection: unknown[],
+        repeats: number,
+        selectionVariables: VariablesStorage,
+    ): Promise<ServiceCall> {
+        let serviceCall = this._applyData(entityId, selection, repeats, selectionVariables);
+        if (this.serviceCallSchema.evaluateDataAsTemplate) {
+            try {
+                const output = await evaluateJinjaTemplate(hass, JSON.stringify(serviceCall.serviceData));
+                try {
+                    const serviceData = typeof output === "string" ? JSON.parse(output) : output;
+                    replaceInTarget(serviceData, v =>
+                        v.endsWith(Modifier.JSONIFY_JINJA) ? JSON.parse(v.replace(Modifier.JSONIFY_JINJA, "")) : v,
+                    );
+                    serviceCall = { ...serviceCall, serviceData: serviceData };
+                } catch (e) {
+                    console.error("Failed to parse template output", output);
+                    // noinspection ExceptionCaughtLocallyJS
+                    throw e;
+                }
+            } catch {
+                console.error("Failed to evaluate template", serviceCall.serviceData);
+            }
+        }
+        return serviceCall;
+    }
+
+    public toMapModeConfig(): MapModeConfig {
+        return {
+            name: this.name,
+            icon: this.icon,
+            run_immediately: this.runImmediately,
+            coordinates_rounding: this.coordinatesRounding,
+            selection_type: SelectionType[this.selectionType],
+            max_selections: this.maxSelections,
+            repeats_type: RepeatsType[this.repeatsType],
+            max_repeats: this.maxRepeats,
+            service_call_schema: this.serviceCallSchema.config,
+            predefined_selections: this.predefinedSelections,
+            variables: Object.fromEntries(
+                Object.entries(this.variables ?? {}).map(([k, v]) => [k.substr(2, k.length - 4), v]),
+            ),
+        };
     }
 
     private _applyTemplateIfPossible(vacuumPlatform: string, config: MapModeConfig, language: Language): void {
@@ -70,7 +120,12 @@ export class MapMode {
             this.serviceCallSchema = new ServiceCallSchema(templateValue.service_call_schema);
     }
 
-    public getServiceCall(entityId: string, selection: unknown[], repeats: number): ServiceCall {
-        return this.serviceCallSchema.apply(entityId, selection, repeats, this.variables);
+    private _applyData(
+        entityId: string,
+        selection: unknown[],
+        repeats: number,
+        selectionVariables: VariablesStorage,
+    ): ServiceCall {
+        return this.serviceCallSchema.apply(entityId, selection, repeats, { ...this.variables, ...selectionVariables });
     }
 }

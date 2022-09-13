@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Neplatná konfigurácia pre položku \"tiles\"",
                 "entity": {
-                    "missing": "Každý záznam v zozname dlaždíc musí vždy obsahovať položku \"entity\""
+                    "missing_outdated_translation": "Každý záznam v zozname dlaždíc musí vždy obsahovať položku \"entity\""
                 },
                 "label": {
                     "missing": "Každý záznam v zozname dlaždíc musí vždy obsahovať položku \"label\""
@@ -130,27 +130,27 @@
         "status": {
             "label": "Stav",
             "value": {
-                "Starting": "Zapínanie",
-                "Charger disconnected": "Nabíječka odpojena",
-                "Idle": "Nečinný",
-                "Remote control active": "Diaľkové ovládanie aktívne",
-                "Cleaning": "Upratovanie",
-                "Returning home": "Návrat do základne",
-                "Manual mode": "Manuálny režim",
-                "Charging": "Nabíjanie",
-                "Charging problem": "Problém s nabíjaním",
-                "Paused": "Pozastavený",
-                "Spot cleaning": "Upratovanie bodu",
-                "Error": "Chyba",
-                "Shutting down": "Vypínanie",
-                "Updating": "Prebieha aktualizácia",
-                "Docking": "Parkovanie",
-                "Going to target": "Presun na bod",
-                "Zoned cleaning": "Upratovanie oblasti",
-                "Segment cleaning": "Upratovanie miestnosti",
-                "Emptying the bin": "Vyprázdňovanie zásobníka",
-                "Charging complete": "Nabíjanie dokončené",
-                "Device offline": "Zariadenie je nedostupné"
+                "starting": "Zapínanie",
+                "charger disconnected": "Nabíječka odpojena",
+                "idle": "Nečinný",
+                "remote control active": "Diaľkové ovládanie aktívne",
+                "cleaning": "Upratovanie",
+                "returning home": "Návrat do základne",
+                "manual mode": "Manuálny režim",
+                "charging": "Nabíjanie",
+                "charging problem": "Problém s nabíjaním",
+                "paused": "Pozastavený",
+                "spot cleaning": "Upratovanie bodu",
+                "error": "Chyba",
+                "shutting down": "Vypínanie",
+                "updating": "Prebieha aktualizácia",
+                "docking": "Parkovanie",
+                "going to target": "Presun na bod",
+                "zoned cleaning": "Upratovanie oblasti",
+                "segment cleaning": "Upratovanie miestnosti",
+                "emptying the bin": "Vyprázdňovanie zásobníka",
+                "charging complete": "Nabíjanie dokončené",
+                "device offline": "Zariadenie je nedostupné"
             }
         },
         "battery_level": {
@@ -159,12 +159,12 @@
         "fan_speed": {
             "label": "Stupeň vysávania",
             "value": {
-                "Silent": "Tiché",
-                "Standard": "Štandardné",
-                "Medium": "Stredné",
-                "Turbo": "Turbo",
-                "Auto": "Automatické",
-                "Gentle": "Slabé"
+                "silent": "Tiché",
+                "standard": "Štandardné",
+                "medium": "Stredné",
+                "turbo": "Turbo",
+                "auto": "Automatické",
+                "gentle": "Slabé"
             }
         },
         "sensor_dirty_left": {

@@ -1,20 +1,45 @@
 import { css, CSSResultGroup, html, TemplateResult } from "lit";
+import { delay } from "../utils";
 
 export class ToastRenderer {
-    public static render(): TemplateResult {
+    public static render(idPrefix: string): TemplateResult {
         return html`
-            <div id="toast">
-                <div id="toast-icon">
+            <div id="${idPrefix}-toast" class="toast">
+                <div id="${idPrefix}-toast-icon" class="toast-icon">
                     <ha-icon icon="mdi:check" style="vertical-align: center"></ha-icon>
                 </div>
-                <div id="toast-text">Success!</div>
+                <div id="${idPrefix}-toast-text" class="toast-text">Success!</div>
             </div>
         `;
     }
 
+    public static showToast(
+        shadowRoot: ShadowRoot | null,
+        localize: (TranslatableString) => string,
+        idPrefix: string,
+        text: string,
+        icon: string,
+        successful: boolean,
+        additionalText = "",
+        timeout = 2000,
+    ): void {
+        const toast = shadowRoot?.getElementById(`${idPrefix}-toast`);
+        const toastText = shadowRoot?.getElementById(`${idPrefix}-toast-text`);
+        const toastIcon = shadowRoot?.getElementById(`${idPrefix}-toast-icon`);
+        if (toast && toastText && toastIcon) {
+            toast.className += " show";
+            toastText.innerText = localize(text) + (additionalText ? `\n${additionalText}` : "");
+            toastIcon.children[0].setAttribute("icon", icon);
+            toastIcon.style.color = successful
+                ? "var(--map-card-internal-toast-successful-icon-color)"
+                : "var(--map-card-internal-toast-unsuccessful-icon-color)";
+            delay(timeout).then(() => (toast.className = toast.className.replace(" show", "")));
+        }
+    }
+
     public static get styles(): CSSResultGroup {
         return css`
-            #toast {
+            .toast {
                 visibility: hidden;
                 display: inline-flex;
                 width: calc(100% - 60px);
@@ -29,7 +54,7 @@ export class ToastRenderer {
                 font-size: 17px;
             }
 
-            #toast #toast-icon {
+            .toast-icon {
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -40,7 +65,7 @@ export class ToastRenderer {
                 color: #0f0;
             }
 
-            #toast #toast-text {
+            .toast-text {
                 box-sizing: border-box;
                 display: flex;
                 align-items: center;
@@ -59,7 +84,7 @@ export class ToastRenderer {
                 border-end-end-radius: var(--map-card-internal-small-radius);
             }
 
-            #toast.show {
+            .toast.show {
                 visibility: visible;
                 -webkit-animation: fadein 0.5s, stay 1s 1s, fadeout 0.5s 1.5s;
                 animation: fadein 0.5s, stay 1s 1s, fadeout 0.5s 1.5s;

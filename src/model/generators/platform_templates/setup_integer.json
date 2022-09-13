@@ -1,0 +1,52 @@
+{
+    "map_modes": {
+        "defaultTemplates": ["vacuum_clean_zone", "vacuum_goto", "vacuum_follow_path"],
+        "templates": {
+            "vacuum_clean_zone": {
+                "name": "map_mode.vacuum_clean_zone",
+                "icon": "mdi:select-drag",
+                "selection_type": "MANUAL_RECTANGLE",
+                "coordinates_rounding": true,
+                "max_selections": 1,
+                "repeats_type": "NONE",
+                "service_call_schema": {
+                    "service": "persistent_notification.create",
+                    "service_data": {
+                        "zones": "[[selection]]"
+                    }
+                }
+            },
+            "vacuum_goto": {
+                "name": "map_mode.vacuum_goto",
+                "icon": "mdi:map-marker-plus",
+                "selection_type": "MANUAL_POINT",
+                "coordinates_rounding": true,
+                "repeats_type": "NONE",
+                "service_call_schema": {
+                    "service": "persistent_notification.create",
+                    "service_data": {
+                        "x_coord": "[[point_x]]",
+                        "y_coord": "[[point_y]]",
+                        "point": "[[selection]]"
+                    }
+                }
+            },
+            "vacuum_follow_path": {
+                "name": "map_mode.vacuum_follow_path",
+                "icon": "mdi:map-marker-path",
+                "selection_type": "MANUAL_PATH",
+                "coordinates_rounding": true,
+                "repeats_type": "NONE",
+                "service_call_schema": {
+                    "service": "persistent_notification.create",
+                    "service_data": {
+                        "path": "[[selection]]"
+                    }
+                }
+            }
+        }
+    },
+    "tiles": {
+        "from_attributes": []
+    }
+}

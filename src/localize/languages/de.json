@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Fehler in der Konfiguration: tiles",
                 "entity": {
-                    "missing": "Jeder Eintrag der Kachel-Liste muss eine Entität enthalten"
+                    "missing_outdated_translation": "Jeder Eintrag der Kachel-Liste muss eine Entität enthalten"
                 },
                 "label": {
                     "missing": "Jeder Eintrag der Kachel-Liste muss ein Label enthalten"
@@ -130,27 +130,27 @@
         "status": {
             "label": "Status",
             "value": {
-                "Starting": "Starte",
-                "Charger disconnected": "Ladegerät getrennt",
-                "Idle": "Inaktiv",
-                "Remote control active": "Fernsteuerung aktiv",
-                "Cleaning": "Säubern",
-                "Returning home": "Kehre zur Ladestation zurück",
-                "Manual mode": "Manueller Modus",
-                "Charging": "Lade",
-                "Charging problem": "Lade-Problem",
-                "Paused": "Pause",
-                "Spot cleaning": "Spot-Reinigung",
-                "Error": "Fehler",
-                "Shutting down": "Herunterfahren",
-                "Updating": "Aktualisiere",
-                "Docking": "Andocken",
-                "Going to target": "Fahre zum Ziel",
-                "Zoned cleaning": "Zonen-Reinigung",
-                "Segment cleaning": "Segment-Reinigung",
-                "Emptying the bin": "Leere den Staubbehälter",
-                "Charging complete": "Ladung vollständig",
-                "Device offline": "Gerät offline"
+                "starting": "Starte",
+                "charger disconnected": "Ladegerät getrennt",
+                "idle": "Inaktiv",
+                "remote control active": "Fernsteuerung aktiv",
+                "cleaning": "Säubern",
+                "returning home": "Kehre zur Ladestation zurück",
+                "manual mode": "Manueller Modus",
+                "charging": "Lade",
+                "charging problem": "Lade-Problem",
+                "paused": "Pause",
+                "spot cleaning": "Spot-Reinigung",
+                "error": "Fehler",
+                "shutting down": "Herunterfahren",
+                "updating": "Aktualisiere",
+                "docking": "Andocken",
+                "going to target": "Fahre zum Ziel",
+                "zoned cleaning": "Zonen-Reinigung",
+                "segment cleaning": "Segment-Reinigung",
+                "emptying the bin": "Leere den Staubbehälter",
+                "charging complete": "Ladung vollständig",
+                "device offline": "Gerät offline"
             }
         },
         "battery_level": {
@@ -159,12 +159,12 @@
         "fan_speed": {
             "label": "Lüftergeschwindigkeit",
             "value": {
-                "Silent": "Leise",
-                "Standard": "Standard",
-                "Medium": "Medium",
-                "Turbo": "Turbo",
-                "Auto": "Auto",
-                "Gentle": "Sanft"
+                "silent": "Leise",
+                "standard": "Standard",
+                "medium": "Medium",
+                "turbo": "Turbo",
+                "auto": "Auto",
+                "gentle": "Sanft"
             }
         },
         "sensor_dirty_left": {

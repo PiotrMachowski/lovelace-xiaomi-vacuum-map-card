@@ -3,7 +3,13 @@ import { css, CSSResultGroup, svg, SVGTemplateResult } from "lit";
 import { forwardHaptic, HomeAssistant } from "custom-card-helpers";
 
 import { Context } from "./context";
-import { IconConfig, PointType, PointWithRepeatsType, PredefinedPointConfig } from "../../types/types";
+import {
+    IconConfig,
+    PointType,
+    PointWithRepeatsType,
+    PredefinedPointConfig,
+    VariablesStorage,
+} from "../../types/types";
 import { MapObject } from "./map-object";
 import { deleteFromArray } from "../../utils";
 import { MapMode } from "../map_mode/map-mode";
@@ -26,6 +32,47 @@ export class PredefinedPoint extends MapObject {
             } as IconConfig);
     }
 
+    public get variables(): VariablesStorage {
+        return this._config.variables ?? super.variables;
+    }
+
+    public static getFromEntities(
+        newMode: MapMode,
+        hass: HomeAssistant,
+        contextCreator: () => Context,
+    ): PredefinedPoint[] {
+        return newMode.predefinedSelections
+            .map(ps => ps as PredefinedPointConfig)
+            .filter(pzc => typeof pzc.position === "string")
+            .map(pzc => (pzc.position as string).split(".attributes."))
+            .flatMap(z => {
+                const entity = hass.states[z[0]];
+                const value = z.length === 2 ? entity.attributes[z[1]] : entity.state;
+                let parsed;
+                try {
+                    parsed = JSON.parse(value) as PointType[];
+                } catch {
+                    parsed = value as PointType[];
+                }
+                return parsed;
+            })
+            .map(
+                p =>
+                    new PredefinedPoint(
+                        {
+                            position: p,
+                            label: undefined,
+                            icon: {
+                                x: p[0],
+                                y: p[1],
+                                name: "mdi:map-marker",
+                            },
+                        },
+                        contextCreator(),
+                    ),
+            );
+    }
+
     public render(): SVGTemplateResult {
         return svg`
             <g class="predefined-point-wrapper ${this._selected ? "selected" : ""}">
@@ -33,26 +80,6 @@ export class PredefinedPoint extends MapObject {
                 ${this.renderLabel(this._config.label, "predefined-point-label")}
             </g>
         `;
-    }
-
-    private _click(): void {
-        this._selected = !this._selected;
-        forwardHaptic("selection");
-        if (this._selected) {
-            const previous = this._context.selectedPredefinedPoint().pop();
-            if (previous !== undefined) {
-                previous._selected = false;
-            }
-            this._context.selectedPredefinedPoint().push(this);
-        } else {
-            deleteFromArray(this._context.selectedPredefinedPoint(), this);
-        }
-        if (this._context.runImmediately()) {
-            this._selected = false;
-            deleteFromArray(this._context.selectedPredefinedPoint(), this);
-            return;
-        }
-        this.update();
     }
 
     public toVacuum(repeats: number | null = null): PointType | PointWithRepeatsType {
@@ -65,7 +92,27 @@ export class PredefinedPoint extends MapObject {
         return [...this._config.position, repeats];
     }
 
-    static get styles(): CSSResultGroup {
+    private async _click(): Promise<void> {
+        this._selected = !this._selected;
+        forwardHaptic("selection");
+        if (this._selected) {
+            const previous = this._context.selectedPredefinedPoint().pop();
+            if (previous !== undefined) {
+                previous._selected = false;
+            }
+            this._context.selectedPredefinedPoint().push(this);
+        } else {
+            deleteFromArray(this._context.selectedPredefinedPoint(), this);
+        }
+        if (await this._context.runImmediately()) {
+            this._selected = false;
+            deleteFromArray(this._context.selectedPredefinedPoint(), this);
+            return;
+        }
+        this.update();
+    }
+
+    public static get styles(): CSSResultGroup {
         return css`
             .predefined-point-wrapper {
             }
@@ -109,42 +156,5 @@ export class PredefinedPoint extends MapObject {
                 fill: var(--map-card-internal-predefined-point-label-color-selected);
             }
         `;
-    }
-
-    public static getFromEntities(
-        newMode: MapMode,
-        hass: HomeAssistant,
-        contextCreator: () => Context,
-    ): PredefinedPoint[] {
-        return newMode.predefinedSelections
-            .map(ps => ps as PredefinedPointConfig)
-            .filter(pzc => typeof pzc.position === "string")
-            .map(pzc => (pzc.position as string).split(".attributes."))
-            .flatMap(z => {
-                const entity = hass.states[z[0]];
-                const value = z.length === 2 ? entity.attributes[z[1]] : entity.state;
-                let parsed;
-                try {
-                    parsed = JSON.parse(value) as PointType[];
-                } catch {
-                    parsed = value as PointType[];
-                }
-                return parsed;
-            })
-            .map(
-                p =>
-                    new PredefinedPoint(
-                        {
-                            position: p,
-                            label: undefined,
-                            icon: {
-                                x: p[0],
-                                y: p[1],
-                                name: "mdi:map-marker",
-                            },
-                        },
-                        contextCreator(),
-                    ),
-            );
     }
 }

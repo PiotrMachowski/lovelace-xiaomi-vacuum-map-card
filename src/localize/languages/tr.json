@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Yapılandırmada hata: döşemeler",
                 "entity": {
-                    "missing": "Kutucuk listesinin her girişi varlık içermelidir"
+                    "missing_outdated_translation": "Kutucuk listesinin her girişi varlık içermelidir"
                 },
                 "label": {
                     "missing": "Fayans listesinin her girişi etiket içermelidir"
@@ -130,27 +130,27 @@
         "status": {
             "label": "Durum",
             "value": {
-                "Starting": "Başlangıç",
-                "Charger disconnected": "Şarj cihazının bağlantısı kesildi",
-                "Idle": "Idle",
-                "Remote control active": "Uzaktan kumanda aktif",
-                "Cleaning": "Temizleme",
-                "Returning home": "Eve dönüş",
-                "Manual mode": "Manual mod",
-                "Charging": "Şarj oluyor",
-                "Charging problem": "Şarj sorunu",
-                "Paused": "Duraklatıldı",
-                "Spot cleaning": "Nokta temizleme",
-                "Error": "Hata",
-                "Shutting down": "Kapatılıyor",
-                "Updating": "Güncelleniyor",
-                "Docking": "Yerleştirme",
-                "Going to target": "Hedefe gidiyor",
-                "Zoned cleaning": "Bölgeli temizlik",
-                "Segment cleaning": "Segment temizliği",
-                "Emptying the bin": "Çöp haznesini boşalt",
-                "Charging complete": "Şarj tamamlandı",
-                "Device offline": "Cihaz çevrimdışı"
+                "starting": "Başlangıç",
+                "charger disconnected": "Şarj cihazının bağlantısı kesildi",
+                "idle": "Idle",
+                "remote control active": "Uzaktan kumanda aktif",
+                "cleaning": "Temizleme",
+                "returning home": "Eve dönüş",
+                "manual mode": "Manual mod",
+                "charging": "Şarj oluyor",
+                "charging problem": "Şarj sorunu",
+                "paused": "Duraklatıldı",
+                "spot cleaning": "Nokta temizleme",
+                "error": "Hata",
+                "shutting down": "Kapatılıyor",
+                "updating": "Güncelleniyor",
+                "docking": "Yerleştirme",
+                "going to target": "Hedefe gidiyor",
+                "zoned cleaning": "Bölgeli temizlik",
+                "segment cleaning": "Segment temizliği",
+                "emptying the bin": "Çöp haznesini boşalt",
+                "charging complete": "Şarj tamamlandı",
+                "device offline": "Cihaz çevrimdışı"
             }
         },
         "battery_level": {
@@ -159,12 +159,12 @@
         "fan_speed": {
             "label": "Süpürme Modu",
             "value": {
-                "Silent": "Sessiz",
-                "Standard": "Standart",
-                "Medium": "Orta",
-                "Turbo": "Güçlü",
-                "Auto": "Otomatik",
-                "Gentle": "Uysal"
+                "silent": "Sessiz",
+                "standard": "Standart",
+                "medium": "Orta",
+                "turbo": "Güçlü",
+                "auto": "Otomatik",
+                "gentle": "Uysal"
             }
         },
         "sensor_dirty_left": {

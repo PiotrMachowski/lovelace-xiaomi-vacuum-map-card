@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Erreur de configuration : tuiles",
                 "entity": {
-                    "missing": "Chaque élément de la liste de tuiles doit avoir une propriété « entity »"
+                    "missing_outdated_translation": "Chaque élément de la liste de tuiles doit avoir une propriété « entity »"
                 },
                 "label": {
                     "missing": "Chaque élément de la liste de tuiles doit avoir une propriété « label »"
@@ -130,27 +130,27 @@
         "status": {
             "label": "Statut",
             "value": {
-                "Starting": "Démarrage...",
-                "Charger disconnected": "Chargeur déconnecté",
-                "Idle": "Inactif",
-                "Remote control active": "Télécommande active",
-                "Cleaning": "Nettoyage",
-                "Returning home": "Retour à la station",
-                "Manual mode": "Mode manuel",
-                "Charging": "En charge",
-                "Charging problem": "Problème de chargement",
-                "Paused": "En pause",
-                "Spot cleaning": "Nettoyage ciblé",
-                "Error": "Erreur",
-                "Shutting down": "Arrêt en cours...",
-                "Updating": "Mise à jour",
-                "Docking": "Retour à la station",
-                "Going to target": "En route vers la cible",
-                "Zoned cleaning": "Nettoyage de zone",
-                "Segment cleaning": "Nettoyage de pièce",
-                "Emptying the bin": "Vidage du réservoir",
-                "Charging complete": "Chargement terminé",
-                "Device offline": "Hors ligne"
+                "starting": "Démarrage...",
+                "charger disconnected": "Chargeur déconnecté",
+                "idle": "Inactif",
+                "remote control active": "Télécommande active",
+                "cleaning": "Nettoyage",
+                "returning home": "Retour à la station",
+                "manual mode": "Mode manuel",
+                "charging": "En charge",
+                "charging problem": "Problème de chargement",
+                "paused": "En pause",
+                "spot cleaning": "Nettoyage ciblé",
+                "error": "Erreur",
+                "shutting down": "Arrêt en cours...",
+                "updating": "Mise à jour",
+                "docking": "Retour à la station",
+                "going to target": "En route vers la cible",
+                "zoned cleaning": "Nettoyage de zone",
+                "segment cleaning": "Nettoyage de pièce",
+                "emptying the bin": "Vidage du réservoir",
+                "charging complete": "Chargement terminé",
+                "device offline": "Hors ligne"
             }
         },
         "battery_level": {
@@ -159,12 +159,12 @@
         "fan_speed": {
             "label": "Puissance",
             "value": {
-                "Silent": "Silencieux",
-                "Standard": "Standard",
-                "Medium": "Moyen",
-                "Turbo": "Turbo",
-                "Auto": "Auto",
-                "Gentle": "Calme"
+                "silent": "Silencieux",
+                "standard": "Standard",
+                "medium": "Moyen",
+                "turbo": "Turbo",
+                "auto": "Auto",
+                "gentle": "Calme"
             }
         },
         "sensor_dirty_left": {

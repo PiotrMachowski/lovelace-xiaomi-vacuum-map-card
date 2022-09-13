@@ -51,7 +51,7 @@
             "tiles": {
                 "invalid": "Hiba a konfigurációban: tiles",
                 "entity": {
-                    "missing": "A csempelista minden bejegyzésének tartalmaznia kell entitást"
+                    "missing_outdated_translation": "A csempelista minden bejegyzésének tartalmaznia kell entitást"
                 },
                 "label": {
                     "missing": "A csempelista minden bejegyzésének tartalmaznia kell egy címkét"

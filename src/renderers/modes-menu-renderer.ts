@@ -6,7 +6,7 @@ export class ModesMenuRenderer {
     public static render(modes: MapMode[], getMode: number, setMode: (number) => void): TemplateResult {
         const getCurrentMode = (): MapMode => modes[getMode];
         return html`
-            <ha-button-menu class="modes-dropdown-menu">
+            <ha-button-menu class="modes-dropdown-menu" fixed="true" @closed="${(e: Event) => e.stopPropagation()}">
                 <div class="modes-dropdown-menu-button" slot="trigger" alt="bottom align">
                     <paper-button class="modes-dropdown-menu-button-button">
                         <ha-icon icon="${getCurrentMode().icon}" class="dropdown-icon"></ha-icon>
@@ -14,23 +14,23 @@ export class ModesMenuRenderer {
                     <div class="modes-dropdown-menu-button-text">${getCurrentMode().name}</div>
                 </div>
                 ${modes.map(
-                    (mode, index) => html`<mwc-list-item
-                        ?activated=${getMode === index}
-                        @click=${(): void => setMode(index)}>
-                            <div class="modes-dropdown-menu-entry clickable ${getMode === index ? "selected" : ""}">
-                                <div
-                                    class="modes-dropdown-menu-entry-button-wrapper ${index === 0
-                                        ? "first"
-                                        : ""} ${index === modes.length - 1 ? "last" : ""} ${getMode === index
-                                        ? "selected"
-                                        : ""}">
-                                    <paper-button
-                                        class="modes-dropdown-menu-entry-button ${getMode === index ? "selected" : ""}">
-                                        <ha-icon icon="${mode.icon}"></ha-icon>
-                                    </paper-button>
-                                </div>
-                                <div class="modes-dropdown-menu-entry-text">${mode.name}</div>
+                    (mode, index) => html` <mwc-list-item
+                        ?activated="${getMode === index}"
+                        @click="${(): void => setMode(index)}">
+                        <div class="modes-dropdown-menu-entry clickable ${getMode === index ? "selected" : ""}">
+                            <div
+                                class="modes-dropdown-menu-entry-button-wrapper ${index === 0
+                                    ? "first"
+                                    : ""} ${index === modes.length - 1 ? "last" : ""} ${getMode === index
+                                    ? "selected"
+                                    : ""}">
+                                <paper-button
+                                    class="modes-dropdown-menu-entry-button ${getMode === index ? "selected" : ""}">
+                                    <ha-icon icon="${mode.icon}"></ha-icon>
+                                </paper-button>
                             </div>
+                            <div class="modes-dropdown-menu-entry-text">${mode.name}</div>
+                        </div>
                     </mwc-list-item>`,
                 )}
             </ha-button-menu>

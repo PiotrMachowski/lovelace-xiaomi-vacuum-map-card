@@ -1,17 +1,17 @@
 {
     "common": {
-        "version": "Version",
-        "invalid_configuration": "Configuración inválida {0}",
-        "description": "Una tarjeta para controlar tu aspiradora",
-        "old_configuration": "Configuración antigua detectada. Ajusta la configuración al formato actual o crea una nueva tarjeta.",
+        "version": "Versión",
+        "invalid_configuration": "Configuración no válida {0}",
+        "description": "Una tarjeta que te permite controlar la aspiradora",
+        "old_configuration": "Se ha detectado una configuración antigua. Ajusta tu configuración al último esquema o crea una nueva tarjeta desde cero.",
         "old_configuration_migration_link": "Guía de migrado."
     },
     "map_mode": {
-        "invalid": "Plantilla inválida!",
+        "invalid": "Plantilla no válida!",
         "vacuum_goto": "Marcar e ir",
         "vacuum_goto_predefined": "Puntos",
         "vacuum_clean_segment": "Habitaciones",
-        "vacuum_clean_point": "Punto limpio",
+        "vacuum_clean_point": "Limpiar punto",
         "vacuum_clean_point_predefined": "Puntos",
         "vacuum_clean_zone": "Limpiar zona",
         "vacuum_clean_zone_predefined": "Lista de zonas",
@@ -26,7 +26,7 @@
                 "missing": "Propiedad no encontrada: preset_name"
             },
             "platform": {
-                "invalid": "Plataforma de aspiradora inválida: {0}"
+                "invalid": "Plataforma de aspiradora no válida: {0}"
             },
             "map_source": {
                 "missing": "Propiedad no encontrada: map_source",
@@ -35,7 +35,7 @@
             },
             "calibration_source": {
                 "missing": "Propiedad no encontrada: calibration_source",
-                "ambiguous": "Solo se permite una fuente de calibración",
+                "ambiguous": "Sólo se permite una fuente de calibración",
                 "none_provided": "No se proporciona fuente de calibración",
                 "calibration_points": {
                     "invalid_number": "Se requieren 3 o 4 puntos de calibración",
@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Error en la configuración: tiles",
                 "entity": {
-                    "missing": "Cada entrada de la lista de mosaicos debe contener la entidad."
+                    "missing_outdated_translation": "Cada entrada de la lista de mosaicos debe contener la entidad."
                 },
                 "label": {
                     "missing": "Cada entrada de la lista de mosaicos debe contener una etiqueta."
@@ -68,7 +68,7 @@
                     "missing": "Falta el nombre del modo de mapa"
                 },
                 "template": {
-                    "invalid": "Plantilla inválida: {0}"
+                    "invalid": "Plantilla no válida: {0}"
                 },
                 "predefined_selections": {
                     "not_applicable": "El modo {0} no admite selecciones predefinidas",
@@ -85,7 +85,7 @@
                     "rooms": {
                         "id": {
                             "missing": "Falta la identificación de la habitación",
-                            "invalid_format": "Identificación de la habitación inválida: {0}"
+                            "invalid_format": "Identificación de la habitación no válida: {0}"
                         },
                         "outline": {
                             "invalid_parameters_number": "Cada punto del contorno de la habitación debe tener 2 parámetros"
@@ -118,39 +118,39 @@
                     "missing": "Falta un esquema de llamada de servicio",
                     "service": {
                         "missing": "El esquema de llamada de servicio debe contener service",
-                        "invalid": "Servicio inválido: {0}"
+                        "invalid": "Servicio no válido: {0}"
                     }
                 }
             }
         },
-        "invalid_entities": "Entidades inválidas:",
-        "invalid_calibration": "Calibración inválida, verifique la configuración."
+        "invalid_entities": "Entidades no válidas:",
+        "invalid_calibration": "Calibración no válida, verifica la configuración."
     },
     "tile": {
         "status": {
             "label": "Estado",
             "value": {
-                "Starting": "Comenzando",
-                "Charger disconnected": "Cargador desconectado",
-                "Idle": "Inactivo",
-                "Remote control active": "Control remoto activo",
-                "Cleaning": "Limpiando",
-                "Returning home": "Volviendo a la base",
-                "Manual mode": "Modo manual",
-                "Charging": "Cargando",
-                "Charging problem": "Error de carga",
-                "Paused": "Pausado",
-                "Spot cleaning": "Limpieza de manchas",
-                "Error": "Error",
-                "Shutting down": "Apagando",
-                "Updating": "Actualizando",
-                "Docking": "Docking",
-                "Going to target": "Ir al objetivo",
-                "Zoned cleaning": "Limpieza por zonas",
-                "Segment cleaning": "Limpieza por segmentos",
-                "Emptying the bin": "Vaciando el depósito de mugre",
-                "Charging complete": "Carga completa",
-                "Device offline": "Dispositivo desconectado"
+                "starting": "Iniciando",
+                "charger disconnected": "Cargador desconectado",
+                "idle": "Inactivo",
+                "remote control active": "Control remoto activo",
+                "cleaning": "Limpiando",
+                "returning home": "Volviendo a la base",
+                "manual mode": "Modo manual",
+                "charging": "Cargando",
+                "charging problem": "Error de carga",
+                "paused": "Pausado",
+                "spot cleaning": "Limpieza por puntos",
+                "error": "Error",
+                "shutting down": "Apagando",
+                "updating": "Actualizando",
+                "docking": "Acoplamiento",
+                "going to target": "Ir al objetivo",
+                "zoned cleaning": "Limpieza por zonas",
+                "segment cleaning": "Limpieza por segmentos",
+                "emptying the bin": "Vaciando el depósito",
+                "charging complete": "Carga completa",
+                "device offline": "Dispositivo desconectado"
             }
         },
         "battery_level": {
@@ -159,45 +159,45 @@
         "fan_speed": {
             "label": "Velocidad del ventilador",
             "value": {
-                "Silent": "Silencioso",
-                "Standard": "Normal",
-                "Medium": "Medio",
-                "Turbo": "Turbo",
-                "Auto": "Automático",
-                "Gentle": "Suave"
+                "silent": "Silencioso",
+                "standard": "Normal",
+                "medium": "Medio",
+                "turbo": "Turbo",
+                "auto": "Automático",
+                "gentle": "Suave"
             }
         },
         "sensor_dirty_left": {
-            "label": "Sensor izquierdo"
+            "label": "Sensores"
         },
         "filter_left": {
-            "label": "Filtro derecho"
+            "label": "Filtro"
         },
         "main_brush_left": {
-            "label": "Cepillo principal izquierdo"
+            "label": "Cepillo"
         },
         "side_brush_left": {
-            "label": "Cepillo lateral izquierdo"
+            "label": "Cepillo lateral"
         },
         "cleaning_count": {
             "label": "Contador de limpieza"
         },
         "cleaned_area": {
-            "label": "Área limpia"
+            "label": "Área limpiada"
         },
         "cleaning_time": {
             "label": "Tiempo de limpieza"
         },
         "mop_left": {
-            "label": "Mopa izquierda"
+            "label": "Mopa"
         }
     },
     "icon": {
-        "vacuum_start": "Comenzar",
+        "vacuum_start": "Iniciar",
         "vacuum_pause": "Pausar",
         "vacuum_stop": "Detener",
         "vacuum_return_to_base": "Volver a la base",
-        "vacuum_clean_spot": "Punto limpio",
+        "vacuum_clean_spot": "Limpiar punto",
         "vacuum_locate": "Localizar",
         "vacuum_set_fan_speed": "Cambiar la velocidad del ventilador"
     },
@@ -208,15 +208,15 @@
         "minute_shortcut": "min"
     },
     "popups": {
-        "success": "Listo!",
+        "success": "¡Listo!",
         "no_selection": "No se ha proporcionado ninguna selección",
         "failed": "No se pudo llamar al servicio"
     },
     "editor": {
         "description": {
-            "before_link": "Este editor visual solo admite una configuración básica con una entidad de cámara creada utilizando ",
+            "before_link": "Este editor visual sólo admite una configuración básica con una entidad de cámara creada utilizando ",
             "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": ". Para una configuración más avanzada, utilice el modo YAML."
+            "after_link": ". Para una configuración más avanzada, utiliza el modo YAML."
         },
         "label": {
             "name": "Título (opcional)",

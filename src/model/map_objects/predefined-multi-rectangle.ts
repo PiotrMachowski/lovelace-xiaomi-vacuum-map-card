@@ -5,7 +5,7 @@ import { forwardHaptic, HomeAssistant } from "custom-card-helpers";
 
 import { Context } from "./context";
 import { MapObject } from "./map-object";
-import { PredefinedZoneConfig, ZoneType, ZoneWithRepeatsType } from "../../types/types";
+import { PredefinedZoneConfig, VariablesStorage, ZoneType, ZoneWithRepeatsType } from "../../types/types";
 import { deleteFromArray } from "../../utils";
 import { MapMode } from "../map_mode/map-mode";
 
@@ -17,6 +17,47 @@ export class PredefinedMultiRectangle extends MapObject {
         super(context);
         this._config = config;
         this._selected = false;
+    }
+
+    public get variables(): VariablesStorage {
+        return this._config.variables ?? super.variables;
+    }
+
+    public static getFromEntities(
+        newMode: MapMode,
+        hass: HomeAssistant,
+        contextCreator: () => Context,
+    ): PredefinedMultiRectangle[] {
+        return newMode.predefinedSelections
+            .map(ps => ps as PredefinedZoneConfig)
+            .filter(pzc => typeof pzc.zones === "string")
+            .map(pzc => (pzc.zones as string).split(".attributes."))
+            .flatMap(z => {
+                const entity = hass.states[z[0]];
+                const value = z.length === 2 ? entity.attributes[z[1]] : entity.state;
+                let parsed;
+                try {
+                    parsed = JSON.parse(value) as ZoneType[];
+                } catch {
+                    parsed = value as ZoneType[];
+                }
+                return parsed;
+            })
+            .map(
+                z =>
+                    new PredefinedMultiRectangle(
+                        {
+                            zones: [z],
+                            label: undefined,
+                            icon: {
+                                x: (z[0] + z[2]) / 2,
+                                y: (z[1] + z[3]) / 2,
+                                name: "mdi:broom",
+                            },
+                        },
+                        contextCreator(),
+                    ),
+            );
     }
 
     public render(): SVGTemplateResult {
@@ -31,7 +72,7 @@ export class PredefinedMultiRectangle extends MapObject {
                     r => svg`
                     <polygon class="predefined-rectangle clickable"
                              points="${r.map(p => p.join(", ")).join(" ")}"
-                             @click="${(): void => this._click()}">
+                             @click="${async (): Promise<void> => this._click()}">
                     </polygon>
                 `,
                 )}
@@ -41,7 +82,19 @@ export class PredefinedMultiRectangle extends MapObject {
         `;
     }
 
-    private _click(): void {
+    public size(): number {
+        return this._config.zones.length;
+    }
+
+    public toVacuum(repeats: number | null): ZoneType[] | ZoneWithRepeatsType[] {
+        if (typeof this._config.zones === "string") {
+            return [];
+        }
+        if (repeats === null) return this._config.zones;
+        return this._config.zones.map(z => [...z, repeats]);
+    }
+
+    private async _click(): Promise<void> {
         if (
             !this._selected &&
             this._context
@@ -60,25 +113,13 @@ export class PredefinedMultiRectangle extends MapObject {
         } else {
             deleteFromArray(this._context.selectedPredefinedRectangles(), this);
         }
-        if (this._context.runImmediately()) {
+        if (await this._context.runImmediately()) {
             this._selected = false;
             deleteFromArray(this._context.selectedPredefinedRectangles(), this);
             return;
         }
         forwardHaptic("selection");
         this.update();
-    }
-
-    public size(): number {
-        return this._config.zones.length;
-    }
-
-    toVacuum(repeats: number | null): ZoneType[] | ZoneWithRepeatsType[] {
-        if (typeof this._config.zones === "string") {
-            return [];
-        }
-        if (repeats === null) return this._config.zones;
-        return this._config.zones.map(z => [...z, repeats]);
     }
 
     public static get styles(): CSSResultGroup {
@@ -149,42 +190,5 @@ export class PredefinedMultiRectangle extends MapObject {
                 fill: var(--map-card-internal-predefined-rectangle-label-color-selected);
             }
         `;
-    }
-
-    public static getFromEntities(
-        newMode: MapMode,
-        hass: HomeAssistant,
-        contextCreator: () => Context,
-    ): PredefinedMultiRectangle[] {
-        return newMode.predefinedSelections
-            .map(ps => ps as PredefinedZoneConfig)
-            .filter(pzc => typeof pzc.zones === "string")
-            .map(pzc => (pzc.zones as string).split(".attributes."))
-            .flatMap(z => {
-                const entity = hass.states[z[0]];
-                const value = z.length === 2 ? entity.attributes[z[1]] : entity.state;
-                let parsed;
-                try {
-                    parsed = JSON.parse(value) as ZoneType[];
-                } catch {
-                    parsed = value as ZoneType[];
-                }
-                return parsed;
-            })
-            .map(
-                z =>
-                    new PredefinedMultiRectangle(
-                        {
-                            zones: [z],
-                            label: undefined,
-                            icon: {
-                                x: (z[0] + z[2]) / 2,
-                                y: (z[1] + z[3]) / 2,
-                                name: "mdi:broom",
-                            },
-                        },
-                        contextCreator(),
-                    ),
-            );
     }
 }

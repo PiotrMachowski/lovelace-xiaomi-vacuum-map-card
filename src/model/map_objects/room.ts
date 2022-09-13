@@ -5,7 +5,7 @@ import { forwardHaptic } from "custom-card-helpers";
 import { Context } from "./context";
 import { MapObject } from "./map-object";
 import { deleteFromArray } from "../../utils";
-import { RoomConfig } from "../../types/types";
+import { RoomConfig, VariablesStorage } from "../../types/types";
 
 export class Room extends MapObject {
     private _selected: boolean;
@@ -17,6 +17,10 @@ export class Room extends MapObject {
         this._selected = false;
     }
 
+    public get variables(): VariablesStorage {
+        return this._config.variables ?? super.variables;
+    }
+
     public render(): SVGTemplateResult {
         const poly = (this._config?.outline ?? []).map(p => this.vacuumToScaledMap(p[0], p[1]));
         return svg`
@@ -24,7 +28,7 @@ export class Room extends MapObject {
             room-${`${this._config.id}`.replace(" ", "_")}-wrapper">
                 <polygon class="room-outline clickable"
                          points="${poly.map(p => p.join(", ")).join(" ")}"
-                         @click="${(): void => this._click()}">
+                         @click="${async (): Promise<void> => this._click()}">
                 </polygon>
                 ${this.renderIcon(this._config.icon, () => this._click(), "room-icon-wrapper")}
                 ${this.renderLabel(this._config.label, "room-label")}
@@ -36,7 +40,7 @@ export class Room extends MapObject {
         return this._config.id;
     }
 
-    private _click(): void {
+    private async _click(): Promise<void> {
         if (!this._selected && this._context.selectedRooms().length >= this._context.maxSelections()) {
             forwardHaptic("failure");
             return;
@@ -47,16 +51,18 @@ export class Room extends MapObject {
         } else {
             deleteFromArray(this._context.selectedRooms(), this);
         }
-        if (this._context.runImmediately()) {
+        this._context.selectionChanged();
+        if (await this._context.runImmediately()) {
             this._selected = false;
             deleteFromArray(this._context.selectedRooms(), this);
+            this._context.selectionChanged();
             return;
         }
         forwardHaptic("selection");
         this.update();
     }
 
-    static get styles(): CSSResultGroup {
+    public static get styles(): CSSResultGroup {
         return css`
             .room-wrapper {
             }

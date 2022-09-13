@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Помилка в конфігурації: tiles",
                 "entity": {
-                    "missing": "Кожен елемент у списку плиток повинен мати параметр \"entity\""
+                    "missing_outdated_translation": "Кожен елемент у списку плиток повинен мати параметр \"entity\""
                 },
                 "label": {
                     "missing": "Кожен елемент у списку плиток повинен мати параметр \"label\""
@@ -130,27 +130,27 @@
         "status": {
             "label": "Статус",
             "value": {
-                "Starting": "Початок",
-                "Charger disconnected": "Зарядний пристрій відключено",
-                "Idle": "Неактивний",
-                "Remote control active": "Пульт",
-                "Cleaning": "Прибирання",
-                "Returning home": "Повернення до док-станції",
-                "Manual mode": "Ручний режим",
-                "Charging": "Заряджання",
-                "Charging problem": "Проблема з заряджанням",
-                "Paused": "Призупинено",
-                "Spot cleaning": "Точкове очищення",
-                "Error": "Помилка",
-                "Shutting down": "Вимкнення",
-                "Updating": "Оновлення",
-                "Docking": "Стиковка",
-                "Going to target": "По шляху до цілі",
-                "Zoned cleaning": "Зональне прибирання",
-                "Segment cleaning": "Прибирання кімнати",
-                "Emptying the bin": "Спорожнення контейнера",
-                "Charging complete": "Заряджання завершено",
-                "Device offline": "Офлайн"
+                "starting": "Початок",
+                "charger disconnected": "Зарядний пристрій відключено",
+                "idle": "Неактивний",
+                "remote control active": "Пульт",
+                "cleaning": "Прибирання",
+                "returning home": "Повернення до док-станції",
+                "manual mode": "Ручний режим",
+                "charging": "Заряджання",
+                "charging problem": "Проблема з заряджанням",
+                "paused": "Призупинено",
+                "spot cleaning": "Точкове очищення",
+                "error": "Помилка",
+                "shutting down": "Вимкнення",
+                "updating": "Оновлення",
+                "docking": "Стиковка",
+                "going to target": "По шляху до цілі",
+                "zoned cleaning": "Зональне прибирання",
+                "segment cleaning": "Прибирання кімнати",
+                "emptying the bin": "Спорожнення контейнера",
+                "charging complete": "Заряджання завершено",
+                "device offline": "Офлайн"
             }
         },
         "battery_level": {
@@ -159,12 +159,12 @@
         "fan_speed": {
             "label": "Потужність",
             "value": {
-                "Silent": "Тихий",
-                "Standard": "Стандарт",
-                "Medium": "Середній",
-                "Turbo": "Турбо",
-                "Auto": "Авто",
-                "Gentle": "Делікатний"
+                "silent": "Тихий",
+                "standard": "Стандарт",
+                "medium": "Середній",
+                "turbo": "Турбо",
+                "auto": "Авто",
+                "gentle": "Делікатний"
             }
         },
         "sensor_dirty_left": {

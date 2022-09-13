@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Villa í stillingum: tiles",
                 "entity": {
-                    "missing": "Hver færsla á lista verður að innihalda \"entity\""
+                    "missing_outdated_translation": "Hver færsla á lista verður að innihalda \"entity\""
                 },
                 "label": {
                     "missing": "Hver færsla á lista verður að innihalda \"label\""
@@ -130,27 +130,27 @@
         "status": {
             "label": "Staða",
             "value": {
-                "Starting": "Ræsi",
-                "Charger disconnected": "Hleðslutæki aftengt",
-                "Idle": "Aðgerðarlaus",
-                "Remote control active": "Fjarstýring virk",
-                "Cleaning": "Að þrífa",
-                "Returning home": "Á leiðinni heim",
-                "Manual mode": "Handvirk stýring",
-                "Charging": "Í hleðslu",
-                "Charging problem": "Vandamál við hleðslu",
-                "Paused": "Í bið",
-                "Spot cleaning": "Hreinsa blett",
-                "Error": "Villa",
-                "Shutting down": "Slekk á",
-                "Updating": "Uppfæri",
-                "Docking": "Við hleðslustöð",
-                "Going to target": "Fer á skotmark",
-                "Zoned cleaning": "Þrífa svæði",
-                "Segment cleaning": "Þrífa herbergi",
-                "Emptying the bin": "Tæma ruslatunnu",
-                "Charging complete": "Hleðslu lokið",
-                "Device offline": "Tæki er ótengt"
+                "starting": "Ræsi",
+                "charger disconnected": "Hleðslutæki aftengt",
+                "idle": "Aðgerðarlaus",
+                "remote control active": "Fjarstýring virk",
+                "cleaning": "Að þrífa",
+                "returning home": "Á leiðinni heim",
+                "manual mode": "Handvirk stýring",
+                "charging": "Í hleðslu",
+                "charging problem": "Vandamál við hleðslu",
+                "paused": "Í bið",
+                "spot cleaning": "Hreinsa blett",
+                "error": "Villa",
+                "shutting down": "Slekk á",
+                "updating": "Uppfæri",
+                "docking": "Við hleðslustöð",
+                "going to target": "Fer á skotmark",
+                "zoned cleaning": "Þrífa svæði",
+                "segment cleaning": "Þrífa herbergi",
+                "emptying the bin": "Tæma ruslatunnu",
+                "charging complete": "Hleðslu lokið",
+                "device offline": "Tæki er ótengt"
             }
         },
         "battery_level": {
@@ -159,12 +159,12 @@
         "fan_speed": {
             "label": "Viftuhraði",
             "value": {
-                "Silent": "Hljóðlátur",
-                "Standard": "Venjulegur",
-                "Medium": "Miðlungs",
-                "Turbo": "Túrbó",
-                "Auto": "Sjálfvirkt",
-                "Gentle": "Þægilegur"
+                "silent": "Hljóðlátur",
+                "standard": "Venjulegur",
+                "medium": "Miðlungs",
+                "turbo": "Túrbó",
+                "auto": "Sjálfvirkt",
+                "gentle": "Þægilegur"
             }
         },
         "sensor_dirty_left": {

@@ -74,12 +74,12 @@ function validateIconConfig(config: IconActionConfig): TranslatableString[] {
     return errors;
 }
 
-function validateSensorConfig(config: TileConfig): TranslatableString[] {
+function validateTileConfig(config: TileConfig): TranslatableString[] {
     if (!config) {
         return ["validation.preset.tiles.invalid"];
     }
     const errors: TranslatableString[] = [];
-    if (!config.entity) {
+    if (!config.entity && !config.internal_variable) {
         errors.push("validation.preset.tiles.entity.missing");
     }
     if (!config.label) {
@@ -254,7 +254,7 @@ function validatePreset(config: CardPresetConfig, nameRequired: boolean, languag
         errors.push(["validation.preset.platform.invalid", "{0}", config.vacuum_platform]);
     const vacuumPlatform = config.vacuum_platform ?? "default";
     (config.icons ?? []).flatMap(i => validateIconConfig(i)).forEach(e => errors.push(e));
-    (config.tiles ?? []).flatMap(i => validateSensorConfig(i)).forEach(e => errors.push(e));
+    (config.tiles ?? []).flatMap(i => validateTileConfig(i)).forEach(e => errors.push(e));
     (config.map_modes ?? [])
         .flatMap(i => validateMapModeConfig(vacuumPlatform, i, language))
         .forEach(e => errors.push(e));

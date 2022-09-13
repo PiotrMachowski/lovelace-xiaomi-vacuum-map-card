@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Ошибка в конфигурации: tiles",
                 "entity": {
-                    "missing": "Каждое вхождение в списке плиток должно содержать entity"
+                    "missing_outdated_translation": "Каждое вхождение в списке плиток должно содержать entity"
                 },
                 "label": {
                     "missing": "Каждое вхождение в списке плиток должно содержать label"
@@ -130,27 +130,27 @@
         "status": {
             "label": "Статус",
             "value": {
-                "Starting": "Начало уборки",
-                "Charger disconnected": "Зарядное устройство отключено",
-                "Idle": "Ожидание",
-                "Remote control active": "Включено управление через пульт",
-                "Cleaning": "Уборка",
-                "Returning home": "Возвращение на базу",
-                "Manual mode": "Ручной режим",
-                "Charging": "Зарядка",
-                "Charging problem": "Проблема с зарядкой",
-                "Paused": "Пауза",
-                "Spot cleaning": "Уборка точки",
-                "Error": "Ошибка",
-                "Shutting down": "Выключение",
-                "Updating": "Обновление",
-                "Docking": "Остановка у базы",
-                "Going to target": "Направление до точки",
-                "Zoned cleaning": "Уборка зоны",
-                "Segment cleaning": "Уборка",
-                "Emptying the bin": "Очистка бака",
-                "Charging complete": "Зарядка завершена",
-                "Device offline": "Устройство не в сети"
+                "starting": "Начало уборки",
+                "charger disconnected": "Зарядное устройство отключено",
+                "idle": "Ожидание",
+                "remote control active": "Включено управление через пульт",
+                "cleaning": "Уборка",
+                "returning home": "Возвращение на базу",
+                "manual mode": "Ручной режим",
+                "charging": "Зарядка",
+                "charging problem": "Проблема с зарядкой",
+                "paused": "Пауза",
+                "spot cleaning": "Уборка точки",
+                "error": "Ошибка",
+                "shutting down": "Выключение",
+                "updating": "Обновление",
+                "docking": "Остановка у базы",
+                "going to target": "Направление до точки",
+                "zoned cleaning": "Уборка зоны",
+                "segment cleaning": "Уборка",
+                "emptying the bin": "Очистка бака",
+                "charging complete": "Зарядка завершена",
+                "device offline": "Устройство не в сети"
             }
         },
         "battery_level": {
@@ -159,12 +159,12 @@
         "fan_speed": {
             "label": "Мощность всасывания",
             "value": {
-                "Silent": "Тихий",
-                "Standard": "Стандарт",
-                "Medium": "Средний",
-                "Turbo": "Турбо",
-                "Auto": "Авто",
-                "Gentle": "Слабый"
+                "silent": "Тихий",
+                "standard": "Стандарт",
+                "medium": "Средний",
+                "turbo": "Турбо",
+                "auto": "Авто",
+                "gentle": "Слабый"
             }
         },
         "sensor_dirty_left": {

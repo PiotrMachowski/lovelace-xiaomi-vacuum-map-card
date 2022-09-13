@@ -12,6 +12,7 @@ export class Context {
         public readonly realScale: () => number,
         public readonly mousePositionCalculator: (_: MouseEvent | TouchEvent) => MousePosition,
         public readonly update: () => void,
+        public readonly selectionChanged: () => void,
         public readonly coordinatesConverter: () => CoordinatesConverter | undefined,
         public readonly selectedManualRectangles: () => ManualRectangle[],
         public readonly selectedPredefinedRectangles: () => PredefinedMultiRectangle[],
@@ -20,7 +21,7 @@ export class Context {
         public readonly roundingEnabled: () => boolean,
         public readonly maxSelections: () => number,
         public readonly cssEvaluator: (_: string) => string,
-        public readonly runImmediately: () => boolean,
+        public readonly runImmediately: () => Promise<boolean>,
         public readonly localize: (_: TranslatableString) => string,
     ) {}
 

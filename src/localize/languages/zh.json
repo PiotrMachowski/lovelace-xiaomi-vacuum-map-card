@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "配置错误：tiles",
                 "entity": {
-                    "missing": "板块列表中每一条记录必须包含实体"
+                    "missing_outdated_translation": "板块列表中每一条记录必须包含实体"
                 },
                 "label": {
                     "missing": "板块列表中每一条记录必须包含标签"
@@ -130,27 +130,27 @@
         "status": {
             "label": "状态",
             "value": {
-                "Starting": "开始清扫",
-                "Charger disconnected": "与充电座断开",
-                "Idle": "空闲",
-                "Remote control active": "开始遥控模式",
-                "Cleaning": "清扫中",
-                "Returning home": "正在回充",
-                "Manual mode": "手动模式",
-                "Charging": "正在充电",
-                "Charging problem": "充电错误",
-                "Paused": "暂停",
-                "Spot cleaning": "局部清扫",
-                "Error": "错误",
-                "Shutting down": "正在关机",
-                "Updating": "正在更新",
-                "Docking": "停靠",
-                "Going to target": "正在前往目标点",
-                "Zoned cleaning": "划区清扫",
-                "Segment cleaning": "选区清扫",
-                "Emptying the bin": "清理尘盒",
-                "Charging complete": "充电完成",
-                "Device offline": "设备离线"
+                "starting": "开始清扫",
+                "charger disconnected": "与充电座断开",
+                "idle": "空闲",
+                "remote control active": "开始遥控模式",
+                "cleaning": "清扫中",
+                "returning home": "正在回充",
+                "manual mode": "手动模式",
+                "charging": "正在充电",
+                "charging problem": "充电错误",
+                "paused": "暂停",
+                "spot cleaning": "局部清扫",
+                "error": "错误",
+                "shutting down": "正在关机",
+                "updating": "正在更新",
+                "docking": "停靠",
+                "going to target": "正在前往目标点",
+                "zoned cleaning": "划区清扫",
+                "segment cleaning": "选区清扫",
+                "emptying the bin": "清理尘盒",
+                "charging complete": "充电完成",
+                "device offline": "设备离线"
             }
         },
         "battery_level": {
@@ -159,12 +159,12 @@
         "fan_speed": {
             "label": "吸力",
             "value": {
-                "Silent": "安静",
-                "Standard": "标准",
-                "Medium": "强力",
-                "Turbo": "MAX",
-                "Auto": "自动",
-                "Gentle": "轻柔"
+                "silent": "安静",
+                "standard": "标准",
+                "medium": "强力",
+                "turbo": "MAX",
+                "auto": "自动",
+                "gentle": "轻柔"
             }
         },
         "sensor_dirty_left": {

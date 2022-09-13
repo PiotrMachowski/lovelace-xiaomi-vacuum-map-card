@@ -7,15 +7,19 @@ import {
     ConditionalObjectConfig,
     ConditionConfig,
     EntityRegistryEntry,
+    KeyReplacer,
     Language,
     PredefinedPointConfig,
     PredefinedZoneConfig,
+    ReplacedKey,
+    VariablesStorage,
     XiaomiVacuumMapCardConfig,
 } from "./types/types";
 import { MapMode } from "./model/map_mode/map-mode";
 import { SelectionType } from "./model/map_mode/selection-type";
 import { MousePosition } from "./model/map_objects/mouse-position";
 import { XiaomiVacuumMapCard } from "./xiaomi-vacuum-map-card";
+import { Modifier } from "./model/map_mode/modifier";
 
 export function stopEvent(event: MouseEvent | TouchEvent): void {
     event.preventDefault();
@@ -73,7 +77,9 @@ export function getWatchedEntitiesForPreset(config: CardPresetConfig, language: 
         .forEach(e => {
             if (e) watchedEntities.add(e);
         });
-    (config.tiles ?? []).forEach(s => watchedEntities.add(s.entity));
+    (config.tiles ?? []).forEach(s => {
+        if (s.entity) watchedEntities.add(s.entity);
+    });
     (config.tiles ?? [])
         .filter(s => s.conditions)
         .flatMap(s => s.conditions)
@@ -95,10 +101,19 @@ export function getWatchedEntities(config: XiaomiVacuumMapCardConfig): string[] 
     return [...watchedEntities];
 }
 
-export function isConditionMet(condition: ConditionConfig, hass: HomeAssistant): boolean {
-    const currentValue = condition.attribute
-        ? hass.states[condition.entity].attributes[condition.attribute]
-        : hass.states[condition.entity].state;
+export function isConditionMet(
+    condition: ConditionConfig,
+    internalVariables: VariablesStorage,
+    hass: HomeAssistant,
+): boolean {
+    let currentValue: ReplacedKey = "";
+    if (condition.internal_variable && condition.internal_variable in internalVariables) {
+        currentValue = internalVariables[condition.internal_variable];
+    } else if (condition.entity) {
+        currentValue = condition.attribute
+            ? hass.states[condition.entity].attributes[condition.attribute]
+            : hass.states[condition.entity].state;
+    }
     if (condition.value) {
         return currentValue == condition.value;
     }
@@ -108,8 +123,12 @@ export function isConditionMet(condition: ConditionConfig, hass: HomeAssistant):
     return false;
 }
 
-export function areConditionsMet(config: ConditionalObjectConfig, hass: HomeAssistant): boolean {
-    return (config.conditions ?? []).every(condition => isConditionMet(condition, hass));
+export function areConditionsMet(
+    config: ConditionalObjectConfig,
+    internalVariables: VariablesStorage,
+    hass: HomeAssistant,
+): boolean {
+    return (config.conditions ?? []).every(condition => isConditionMet(condition, internalVariables, hass));
 }
 
 export function hasConfigOrAnyEntityChanged(
@@ -161,17 +180,17 @@ export async function getAllEntitiesFromTheSameDevice(
     hass: HomeAssistant,
     entity: string,
 ): Promise<EntityRegistryEntry[]> {
-    const vacuumConfigEntryId = (
-        await hass.callWS<Map<string, unknown>>({
-            type: "entity/source",
-            entity_id: [entity],
+    const vacuumDeviceId = (
+        await hass.callWS<EntityRegistryEntry>({
+            type: "config/entity_registry/get",
+            entity_id: entity,
         })
-    )[entity]["config_entry"];
+    )["device_id"];
     const vacuumSensors = (
-        await hass.callWS<{ config_entry_id: string; entity_id: string }[]>({
+        await hass.callWS<{ device_id: string; entity_id: string }[]>({
             type: "config/entity_registry/list",
         })
-    ).filter(e => e.config_entry_id === vacuumConfigEntryId);
+    ).filter(e => e.device_id === vacuumDeviceId);
     return Promise.all(
         vacuumSensors.map(vs =>
             hass.callWS<EntityRegistryEntry>({
@@ -180,4 +199,83 @@ export async function getAllEntitiesFromTheSameDevice(
             }),
         ),
     );
+}
+
+export async function delay(ms: number): Promise<void> {
+    await new Promise<void>(resolve => setTimeout(() => resolve(), ms));
+}
+
+export function copyMessage(val: string): void {
+    const selBox = document.createElement("textarea");
+    selBox.style.position = "fixed";
+    selBox.style.left = "0";
+    selBox.style.top = "0";
+    selBox.style.opacity = "0";
+    selBox.value = val;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand("copy");
+    document.body.removeChild(selBox);
+}
+
+export async function evaluateJinjaTemplate(
+    hass: HomeAssistant,
+    template: string,
+): Promise<string | Record<string, unknown>> {
+    return new Promise(resolve => {
+        hass.connection.subscribeMessage((msg: { result: string | Record<string, unknown> }) => resolve(msg.result), {
+            type: "render_template",
+            template: template,
+        });
+    });
+}
+
+export function replaceInTarget(target: Record<string, unknown>, keyReplacer: KeyReplacer): void {
+    for (const [key, value] of Object.entries(target)) {
+        if (typeof value == "object") {
+            replaceInTarget(value as Record<string, unknown>, keyReplacer);
+        } else if (typeof value == "string") {
+            target[key] = keyReplacer(value as string);
+        }
+    }
+}
+
+export function getReplacedValue(value: string, variables: VariablesStorage): ReplacedKey {
+    const vars = Object.fromEntries(Object.entries(variables ?? {}).map(([k, v]) => [`[[${k}]]`, v]));
+    const fullValueReplacer = (v: string): ReplacedKey | null => (v in vars ? vars[v] : null);
+    return fullValueReplacer(value) ?? replaceInStr(value, vars, fullValueReplacer);
+}
+
+export function replaceInStr(
+    value: string,
+    variables: VariablesStorage,
+    kr: (string) => ReplacedKey | null,
+): ReplacedKey {
+    let output = value;
+    Object.keys(variables).forEach(tv => {
+        let replaced = kr(tv);
+        if (typeof replaced == "object") {
+            replaced = JSON.stringify(replaced);
+        }
+        output = output.replaceAll(tv, `${replaced}`);
+    });
+    if (output.endsWith(Modifier.JSONIFY)) {
+        return JSON.parse(output.replace(Modifier.JSONIFY, ""));
+    }
+    return output;
+}
+
+export function getFilledTemplate(
+    template: Record<string, unknown>,
+    ...variablesStorages: VariablesStorage[]
+): ReplacedKey {
+    const target = JSON.parse(JSON.stringify(template));
+    let variables: VariablesStorage = {};
+    for (const variablesStorage of variablesStorages) {
+        variables = { ...variablesStorage, ...variables };
+    }
+    const keyReplacer = v => getReplacedValue(v, variables);
+    replaceInTarget(target, keyReplacer);
+    return target;
 }

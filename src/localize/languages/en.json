@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Error in configuration: tiles",
                 "entity": {
-                    "missing": "Each entry of tiles list must contain entity"
+                    "missing": "Each entry of tiles list must contain entity or internal variable"
                 },
                 "label": {
                     "missing": "Each entry of tiles list must contain label"
@@ -130,27 +130,27 @@
         "status": {
             "label": "Status",
             "value": {
-                "Starting": "Starting",
-                "Charger disconnected": "Charger disconnected",
-                "Idle": "Idle",
-                "Remote control active": "Remote control active",
-                "Cleaning": "Cleaning",
-                "Returning home": "Returning home",
-                "Manual mode": "Manual mode",
-                "Charging": "Charging",
-                "Charging problem": "Charging problem",
-                "Paused": "Paused",
-                "Spot cleaning": "Spot cleaning",
-                "Error": "Error",
-                "Shutting down": "Shutting down",
-                "Updating": "Updating",
-                "Docking": "Docking",
-                "Going to target": "Going to target",
-                "Zoned cleaning": "Zoned cleaning",
-                "Segment cleaning": "Segment cleaning",
-                "Emptying the bin": "Emptying the bin",
-                "Charging complete": "Charging complete",
-                "Device offline": "Device offline"
+                "starting": "Starting",
+                "charger disconnected": "Charger disconnected",
+                "idle": "Idle",
+                "remote control active": "Remote control active",
+                "cleaning": "Cleaning",
+                "returning home": "Returning home",
+                "manual mode": "Manual mode",
+                "charging": "Charging",
+                "charging problem": "Charging problem",
+                "paused": "Paused",
+                "spot cleaning": "Spot cleaning",
+                "error": "Error",
+                "shutting down": "Shutting down",
+                "updating": "Updating",
+                "docking": "Docking",
+                "going to target": "Going to target",
+                "zoned cleaning": "Zoned cleaning",
+                "segment cleaning": "Segment cleaning",
+                "emptying the bin": "Emptying the bin",
+                "charging complete": "Charging complete",
+                "device offline": "Device offline"
             }
         },
         "battery_level": {
@@ -159,12 +159,12 @@
         "fan_speed": {
             "label": "Fan speed",
             "value": {
-                "Silent": "Silent",
-                "Standard": "Standard",
-                "Medium": "Medium",
-                "Turbo": "Turbo",
-                "Auto": "Auto",
-                "Gentle": "Gentle"
+                "silent": "Silent",
+                "standard": "Standard",
+                "medium": "Medium",
+                "turbo": "Turbo",
+                "auto": "Auto",
+                "gentle": "Gentle"
             }
         },
         "sensor_dirty_left": {
@@ -190,6 +190,20 @@
         },
         "mop_left": {
             "label": "Mop left"
+        },
+        "bin_full": {
+            "label": "Bin full",
+            "value": {
+                "true": "Yes",
+                "false": "No"
+            }
+        },
+        "bin_present": {
+            "label": "Bin present",
+            "value": {
+                "true": "Yes",
+                "false": "No"
+            }
         }
     },
     "icon": {
@@ -224,7 +238,16 @@
             "camera": "Camera entity (required)",
             "vacuum_platform": "Vacuum platform (required)",
             "map_locked": "Map locked (optional)",
-            "two_finger_pan": "Two finger pan (optional)"
+            "two_finger_pan": "Two finger pan (optional)",
+            "platforms_documentation": "Chosen platform's documentation ({0})",
+            "selection": "Selection:",
+            "copy": "Copy",
+            "copied": "Copied!",
+            "set_static_config": "Generate static config",
+            "config_set": "Config set!\nOpen config editor to adjust it.",
+            "config_set_failed": "Failed to update config.",
+            "generate_rooms_config": "Generate rooms config",
+            "copy_service_call": "Copy service call"
         }
     }
 }
