@@ -545,7 +545,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                       ...(config.icons ?? []),
                   ]
                 : config.icons;
-        const tilesToIgnore = (config.tiles ?? []).filter(t => t.tile_id !== undefined).map(t => t.tile_id as string);
+        const tilesToIgnore = (config.tiles ?? []).filter(t => t.tile_id !== undefined);
         const tilesGenerated: Promise<TileConfig[]> =
             (config.tiles?.length ?? -1) === -1
                 ? TilesGenerator.generate(
@@ -564,7 +564,13 @@ export class XiaomiVacuumMapCard extends LitElement {
                       this.config.language,
                       tilesToIgnore,
                       this.internalVariables,
-                  ).then(tiles => [...tiles, ...(config.tiles ?? [])])
+                  ).then(tiles => {
+                      const tilesIds = tiles.map(t => t.tile_id ?? "");
+                      return [
+                          ...tiles,
+                          ...(config.tiles ?? []).filter(t => t.tile_id === undefined || !tilesIds.includes(t.tile_id)),
+                      ];
+                  })
                 : new Promise(resolve => resolve(config.tiles ?? []));
         tilesGenerated
             .then(tiles => this._setPreset({ ...config, tiles: tiles, icons: icons }))

@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Erreur de configuration : tuiles",
                 "entity": {
-                    "missing": "Chaque élément de la liste de tuiles doit avoir une propriété « entity »"
+                    "missing_outdated_translation": "Chaque élément de la liste de tuiles doit avoir une propriété « entity »"
                 },
                 "label": {
                     "missing": "Chaque élément de la liste de tuiles doit avoir une propriété « label »"

@@ -21,7 +21,7 @@ export class TilesGenerator {
         vacuumEntity: string,
         platform: string,
         language: Language,
-        tilesToIgnore: Array<string>,
+        tilesToOverride: Array<TileConfig>,
         variables: VariablesStorage,
     ): Promise<TileConfig[]> {
         if (!hass) return new Promise<TileConfig[]>(resolve => resolve([]));
@@ -33,9 +33,9 @@ export class TilesGenerator {
             return new Promise<TileConfig[]>(resolve => resolve(tiles));
         }
 
-        tiles.push(...this.getCommonTiles(state, vacuumEntity, language, tilesToIgnore));
+        tiles.push(...this.getCommonTiles(state, vacuumEntity, language));
         if (useNewGenerator) {
-            return this.addTilesFromSensors(hass, vacuumEntity, platform, tiles, language, tilesToIgnore, variables);
+            return this.addTilesFromSensors(hass, vacuumEntity, platform, tiles, language, tilesToOverride, variables);
         } else {
             return new Promise<TileConfig[]>(resolve =>
                 resolve(
@@ -45,7 +45,7 @@ export class TilesGenerator {
                         platform,
                         tiles,
                         language,
-                        tilesToIgnore,
+                        tilesToOverride,
                         variables,
                     ),
                 ),
@@ -53,14 +53,9 @@ export class TilesGenerator {
         }
     }
 
-    private static getCommonTiles(
-        state: HassEntity,
-        vacuumEntity: string,
-        language: Language,
-        tilesToIgnore: Array<string>,
-    ): TileConfig[] {
+    private static getCommonTiles(state: HassEntity, vacuumEntity: string, language: Language): TileConfig[] {
         const tiles: TileConfig[] = [];
-        if ("status" in state.attributes && !tilesToIgnore.includes("status"))
+        if ("status" in state.attributes)
             tiles.push({
                 tile_id: "status",
                 entity: vacuumEntity,
@@ -95,32 +90,27 @@ export class TilesGenerator {
                     language,
                 ),
             });
-        if (
-            "battery_level" in state.attributes &&
-            "battery_icon" in state.attributes &&
-            !tilesToIgnore.includes("battery_level")
-        )
+        if ("battery_level" in state.attributes && "battery_icon" in state.attributes)
             tiles.push({
+                tile_id: "battery_level",
                 entity: vacuumEntity,
                 label: localize("tile.battery_level.label", language),
                 attribute: "battery_level",
                 icon: state.attributes["battery_icon"],
                 unit: "%",
             });
-        if (
-            "battery_level" in state.attributes &&
-            !("battery_icon" in state.attributes) &&
-            !tilesToIgnore.includes("battery_level")
-        )
+        if ("battery_level" in state.attributes && !("battery_icon" in state.attributes))
             tiles.push({
+                tile_id: "battery_level",
                 entity: vacuumEntity,
                 label: localize("tile.battery_level.label", language),
                 attribute: "battery_level",
                 icon: "mdi:battery",
                 unit: "%",
             });
-        if ("fan_speed" in state.attributes && !tilesToIgnore.includes("fan_speed"))
+        if ("fan_speed" in state.attributes)
             tiles.push({
+                tile_id: "fan_speed",
                 entity: vacuumEntity,
                 label: localize("tile.fan_speed.label", language),
                 attribute: "fan_speed",
@@ -140,14 +130,13 @@ export class TilesGenerator {
         platform: string,
         tiles: TileConfig[],
         language: Language,
-        tilesToIgnore: Array<string>,
+        tilesToOverride: Array<TileConfig>,
         variables: VariablesStorage,
     ): TileConfig[] {
         PlatformGenerator.getTilesFromAttributesTemplates(platform)
             .filter(t => t.attribute in state.attributes)
-            .filter(t => !tilesToIgnore.includes(t.tile_id ?? ""))
             .forEach(t => tiles.push(this.mapAttributeToTile(vacuumEntity, t, language, variables)));
-        return tiles;
+        return this.replaceDuplicates(tiles, tilesToOverride);
     }
 
     private static async addTilesFromSensors(
@@ -156,7 +145,7 @@ export class TilesGenerator {
         platform: string,
         tiles: TileConfig[],
         language: Language,
-        tilesToIgnore: Array<string>,
+        tilesToOverride: Array<TileConfig>,
         variables: VariablesStorage,
     ): Promise<TileConfig[]> {
         let entityRegistryEntries;
@@ -169,7 +158,6 @@ export class TilesGenerator {
         }
         if (entityRegistryEntries.length > 0) {
             PlatformGenerator.getTilesFromSensorsTemplates(platform)
-                .filter(t => !tilesToIgnore.includes(t.tile_id ?? ""))
                 .map(t => ({
                     tile: t,
                     entity: entityRegistryEntries.filter(e => e.unique_id.match(t.unique_id_regex)),
@@ -177,7 +165,7 @@ export class TilesGenerator {
                 .flatMap(v => v.entity.map(e => this.mapEntryToTile(vacuumEntityId, e, v.tile, language, variables)))
                 .forEach(t => tiles.push(t));
         }
-        return new Promise<TileConfig[]>(resolve => resolve(tiles));
+        return new Promise<TileConfig[]>(resolve => resolve(this.replaceDuplicates(tiles, tilesToOverride)));
     }
 
     private static mapEntryToTile(
@@ -282,5 +270,19 @@ export class TilesGenerator {
         defaultVariables[TemplatableTileValue.VACUUM_ENTITY] = vacuumEntity;
         defaultVariables[TemplatableTileValue.ATTRIBUTE] = attribute ?? "";
         return defaultVariables;
+    }
+
+    private static replaceDuplicates(
+        autogeneratedTiles: Array<TileConfig>,
+        tilesToOverride: Array<TileConfig>,
+    ): Array<TileConfig> {
+        const overriddenTileIds = tilesToOverride.map(t => t.tile_id ?? "");
+        for (let i = 0; i < autogeneratedTiles.length; i++) {
+            const tileId = autogeneratedTiles[i].tile_id ?? "";
+            if (overriddenTileIds.includes(tileId)) {
+                autogeneratedTiles[i] = tilesToOverride[overriddenTileIds.indexOf(tileId)];
+            }
+        }
+        return autogeneratedTiles;
     }
 }

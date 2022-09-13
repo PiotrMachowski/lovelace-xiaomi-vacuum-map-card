@@ -51,7 +51,7 @@
             "tiles": {
                 "invalid": "Fejl i konfiguration: tiles",
                 "entity": {
-                    "missing": "Alle punkter i tiles listen skal indehold entity egenskaben"
+                    "missing_outdated_translation": "Alle punkter i tiles listen skal indehold entity egenskaben"
                 },
                 "label": {
                     "missing": "Alle punkter i tiles listen skal indehold label egenskaben"

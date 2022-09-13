@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Villa í stillingum: tiles",
                 "entity": {
-                    "missing": "Hver færsla á lista verður að innihalda \"entity\""
+                    "missing_outdated_translation": "Hver færsla á lista verður að innihalda \"entity\""
                 },
                 "label": {
                     "missing": "Hver færsla á lista verður að innihalda \"label\""

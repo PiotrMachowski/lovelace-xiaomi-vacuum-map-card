@@ -51,7 +51,7 @@
             "tiles": {
                 "invalid": "Errore nella configurazione: tiles",
                 "entity": {
-                    "missing": "Ogni voce dell'elenco 'tile' deve contenere una entity"
+                    "missing_outdated_translation": "Ogni voce dell'elenco 'tile' deve contenere una entity"
                 },
                 "label": {
                     "missing": "Ogni voce dell'elenco 'tile' deve contenere una label"

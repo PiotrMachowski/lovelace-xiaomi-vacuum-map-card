@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "配置错误：tiles",
                 "entity": {
-                    "missing": "板块列表中每一条记录必须包含实体"
+                    "missing_outdated_translation": "板块列表中每一条记录必须包含实体"
                 },
                 "label": {
                     "missing": "板块列表中每一条记录必须包含标签"

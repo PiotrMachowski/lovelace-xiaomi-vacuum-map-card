@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Neplatná konfigurace pro položku \"tiles\"",
                 "entity": {
-                    "missing": "Každý záznam v seznamu dlaždic musí vždy obsahovat položku \"entity\""
+                    "missing_outdated_translation": "Každý záznam v seznamu dlaždic musí vždy obsahovat položku \"entity\""
                 },
                 "label": {
                     "missing": "Každý záznam v seznamu dlaždic musí vždy obsahovat položku \"label\""

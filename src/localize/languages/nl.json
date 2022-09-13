@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Fout in configuratie: tiles",
                 "entity": {
-                    "missing": "Elk item in de lijst moet de eigenschap « entity » bevatten"
+                    "missing_outdated_translation": "Elk item in de lijst moet de eigenschap « entity » bevatten"
                 },
                 "label": {
                     "missing": "Elk item in de lijst moet de eigenschap « label » bevatten"

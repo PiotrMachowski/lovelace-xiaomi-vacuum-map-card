@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Fehler in der Konfiguration: tiles",
                 "entity": {
-                    "missing": "Jeder Eintrag der Kachel-Liste muss eine Entität enthalten"
+                    "missing_outdated_translation": "Jeder Eintrag der Kachel-Liste muss eine Entität enthalten"
                 },
                 "label": {
                     "missing": "Jeder Eintrag der Kachel-Liste muss ein Label enthalten"

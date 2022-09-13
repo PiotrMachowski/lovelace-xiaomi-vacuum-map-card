@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "設定錯誤: tiles",
                 "entity": {
-                    "missing": "tiles list 必須包含 entity"
+                    "missing_outdated_translation": "tiles list 必須包含 entity"
                 },
                 "label": {
                     "missing": "tiles list 必須包含 label"

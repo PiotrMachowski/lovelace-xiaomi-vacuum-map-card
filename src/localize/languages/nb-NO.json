@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Feil i konfigurasjon: tiles",
                 "entity": {
-                    "missing": "Hver post med tiles må inneholde entity"
+                    "missing_outdated_translation": "Hver post med tiles må inneholde entity"
                 },
                 "label": {
                     "missing": "Hver post med tiles må inneholde label"

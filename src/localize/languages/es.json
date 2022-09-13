@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Error en la configuración: tiles",
                 "entity": {
-                    "missing": "Cada entrada de la lista de mosaicos debe contener la entidad."
+                    "missing_outdated_translation": "Cada entrada de la lista de mosaicos debe contener la entidad."
                 },
                 "label": {
                     "missing": "Cada entrada de la lista de mosaicos debe contener una etiqueta."

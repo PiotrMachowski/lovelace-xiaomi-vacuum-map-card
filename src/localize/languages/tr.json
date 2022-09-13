@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Yapılandırmada hata: döşemeler",
                 "entity": {
-                    "missing": "Kutucuk listesinin her girişi varlık içermelidir"
+                    "missing_outdated_translation": "Kutucuk listesinin her girişi varlık içermelidir"
                 },
                 "label": {
                     "missing": "Fayans listesinin her girişi etiket içermelidir"

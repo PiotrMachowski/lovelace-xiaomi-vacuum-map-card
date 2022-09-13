@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Error in configuration: tiles",
                 "entity": {
-                    "missing": "Each entry of tiles list must contain entity"
+                    "missing": "Each entry of tiles list must contain entity or internal variable"
                 },
                 "label": {
                     "missing": "Each entry of tiles list must contain label"

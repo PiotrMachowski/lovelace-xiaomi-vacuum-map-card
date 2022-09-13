@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Błąd w konfiguracji: tiles",
                 "entity": {
-                    "missing": "Każda pozycja na liście kafelków musi posiadać parametr \"entity\""
+                    "missing": "Każda pozycja na liście kafelków musi posiadać parametr \"entity\" albo \"internal_variable\""
                 },
                 "label": {
                     "missing": "Każda pozycja na liście kafelków musi posiadać parametr \"label\""

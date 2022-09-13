@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Λάθος στις ρυθμίσεις: tiles",
                 "entity": {
-                    "missing": "Κάθε εγγραφή tile πρέπει να περιέχει entity"
+                    "missing_outdated_translation": "Κάθε εγγραφή tile πρέπει να περιέχει entity"
                 },
                 "label": {
                     "missing": "Κάθε εγγραφή tile πρέπει να περιέχει label"
