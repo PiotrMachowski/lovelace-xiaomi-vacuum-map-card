@@ -17,6 +17,8 @@ calibration_source:
 * ### Room cleaning (`vacuum_clean_segment`)
 
   Uses IDs to clean specific rooms. Requires `predefined_selections` to be provided.
+  
+  [Retrieving room IDs and types](https://blog.hessindustria.com/home-assistant-roomba-s9-integration/)
 
   [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
