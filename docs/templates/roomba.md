@@ -31,7 +31,7 @@ calibration_source:
       variables:
         pmap_id: abc123def456
       predefined_selections:
-        - id: Bedroom
+        - id: 9
           variables:
             type: rid
           outline: [[ 21458, 32131 ], [ 24235, 32152 ], [ 24194, 27409 ], [ 23181, 27409 ]]
@@ -44,7 +44,7 @@ calibration_source:
             name: "mdi:bed"
             x: 22932
             y: 30339
-        - id: Bathroom
+        - id: 0
           variables:
             type: zid
           outline: [[ 21478, 27237 ], [ 23048, 27250 ], [ 23061, 25655 ], [ 21478, 25680 ]]
