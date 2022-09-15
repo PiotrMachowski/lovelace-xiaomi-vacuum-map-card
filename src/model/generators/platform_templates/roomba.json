@@ -16,7 +16,7 @@
                         "command": "start",
                         "params": {
                             "pmap_id": "[[pmap_id]]",
-                            "regions": "[{%set s='[[selection]]'|from_json%}{%set v='[[variables]]'|from_json%}{%for i in range(s|length)%} {\"params\": {\"noAutoPasses\": true, \"twoPass\": {%if [[repeats]] == 2 %}true{%else%}false{%endif%}}, \"region_id\": \"{{s[i]}}\", \"type\": \"{{v[i]['type']}}\" }{%if not loop.last%},{%endif%}{%endfor%}]|[[jsonify_jinja]]"
+                            "regions": "[{%set s='[[selection]]'|from_json%}{%set v='[[variables]]'|from_json%}{%for i in range(s|length)%} {\"params\": {\"noAutoPasses\": true, \"twoPass\": {{ (([[repeats]] == 2) | string).lower() }}}, \"region_id\": \"{{s[i]}}\", \"type\": \"{{v[i]['type']}}\" }{%if not loop.last%},{%endif%}{%endfor%}]|[[jsonify_jinja]]"
                         }
                     }
                 }
