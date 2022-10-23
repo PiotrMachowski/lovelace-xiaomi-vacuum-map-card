@@ -253,6 +253,7 @@ Following vacuum platforms are supported out of the box at this moment:
 - [`al-one/Xiaomi MIoT`](/docs/templates/alOneHassXiaomiMiot.md) (additional manual configuration required)
 - [`Neato`](/docs/templates/neato.md)
 - [`Roomba`](/docs/templates/roomba.md)
+- [`Tasshack/dreame-vacuum`](/docs/templates/tasshackDreameVacuum.md)
 
 [Create a request for a new built-in platform](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/new?assignees=PiotrMachowski&labels=new+platform&template=new_platform_request.yml)
 

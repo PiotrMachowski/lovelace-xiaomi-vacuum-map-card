@@ -28,6 +28,7 @@ To get coordinates of zone, point or outline you have to:
              <li>send_command</li>
              <li>Neato</li>
              <li>Roomba</li>
+             <li>Tasshack/dreame-vacuum</li>
            </ul>
          </td>
          <td valign="top">

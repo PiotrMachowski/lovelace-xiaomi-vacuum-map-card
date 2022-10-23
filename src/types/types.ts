@@ -214,6 +214,9 @@ export interface MapExtractorRoom {
     readonly x1: number;
     readonly y1: number;
     readonly name: string | undefined;
+    readonly icon: string | undefined;
+    readonly x: number | undefined;
+    readonly y: number | undefined;
 }
 
 export interface RoomConfigEventData {
