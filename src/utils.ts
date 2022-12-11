@@ -258,7 +258,7 @@ export function replaceInStr(
         if (typeof replaced == "object") {
             replaced = JSON.stringify(replaced);
         }
-        output = output.replaceAll(tv, `${replaced}`);
+        output = output.replace(/tv/g, `${replaced}`);
     });
     if (output.endsWith(Modifier.JSONIFY)) {
         return JSON.parse(output.replace(Modifier.JSONIFY, ""));

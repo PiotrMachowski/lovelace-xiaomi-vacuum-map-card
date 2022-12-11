@@ -41,9 +41,7 @@ export class ServiceCallSchema {
         variables[TemplatableValue.SELECTION] = selection;
         variables[TemplatableValue.SELECTION_SIZE] = selection.length;
         variables[TemplatableValue.SELECTION_UNWRAPPED] = JSON.stringify(selection)
-            .replaceAll("[", "")
-            .replaceAll("]", "")
-            .replaceAll('"', "");
+            .replace(/[\[\]"]/g, "");
         variables[TemplatableValue.REPEATS] = repeats;
         variables[TemplatableValue.POINT_X] = this.isPoint(selection) ? (selection[0] as number) : "";
         variables[TemplatableValue.POINT_Y] = this.isPoint(selection) ? (selection[1] as number) : "";
