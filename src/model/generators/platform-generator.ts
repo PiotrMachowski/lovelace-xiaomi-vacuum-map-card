@@ -10,6 +10,7 @@ import * as neatoTemplate from "./platform_templates/neato.json";
 import * as roombaTemplate from "./platform_templates/roomba.json";
 import * as setupDecimalTemplate from "./platform_templates/setup_decimal.json";
 import * as setupIntegerTemplate from "./platform_templates/setup_integer.json";
+import * as dreameVacuumTemplate from "./platform_templates/send-command.json";
 import { MapModeConfig, PlatformTemplate, TileFromAttributeTemplate, TileFromSensorTemplate } from "../../types/types";
 import { HomeAssistant } from "custom-card-helpers";
 import { compare } from "compare-versions";
@@ -28,7 +29,8 @@ export class PlatformGenerator {
     public static ROOMBA_PLATFORM = "Roomba";
     public static SETUP_INTEGER_PLATFORM = "Setup integer";
     public static SETUP_DECIMAL_PLATFORM = "Setup decimal";
-
+    public static DREAME_VACUUM_PLATFORM = "Dreame Vacuum";
+    
     private static DOCUMENTATION_URL_FORMAT =
         "https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/tree/master/docs/templates/{0}.md";
 
@@ -45,6 +47,7 @@ export class PlatformGenerator {
         [PlatformGenerator.ROOMBA_PLATFORM, roombaTemplate],
         [PlatformGenerator.SETUP_INTEGER_PLATFORM, setupIntegerTemplate],
         [PlatformGenerator.SETUP_DECIMAL_PLATFORM, setupDecimalTemplate],
+        [PlatformGenerator.DREAME_VACUUM_PLATFORM, dreameVacuumTemplate],
     ]);
 
     private static TEMPLATE_DOCUMENTATIONS_URLS = new Map<string, string>([
@@ -60,6 +63,7 @@ export class PlatformGenerator {
         [PlatformGenerator.ROOMBA_PLATFORM, "roomba"],
         [PlatformGenerator.SETUP_INTEGER_PLATFORM, "setup"],
         [PlatformGenerator.SETUP_DECIMAL_PLATFORM, "setup"],
+        [PlatformGenerator.DREAME_VACUUM_PLATFORM, "dreameVacuum"],
     ]);
 
     public static getPlatforms(): string[] {
