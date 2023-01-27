@@ -917,14 +917,14 @@ export class XiaomiVacuumMapCard extends LitElement {
                 const roomConfig = {
                     id: room_id,
                     icon: {
-                        name: "mdi:broom",
-                        x: formatCoord(room.x0 + room.x1, 2),
-                        y: formatCoord(room.y0 + room.y1, 2),
+                        name: room.icon ?? "mdi:broom",
+                        x: room.x ?? formatCoord(room.x0 + room.x1, 2),
+                        y: room.y ?? formatCoord(room.y0 + room.y1, 2),
                     },
                     label: {
                         text: room.name ?? `Room ${room_id}`,
-                        x: formatCoord(room.x0 + room.x1, 2),
-                        y: formatCoord(room.y0 + room.y1, 2),
+                        x: room.x ?? formatCoord(room.x0 + room.x1, 2),
+                        y: room.y ?? formatCoord(room.y0 + room.y1, 2),
                         offset_y: 35,
                     },
                     outline: [
