@@ -633,6 +633,7 @@ map_modes:
 ## Translations
 
 Currently, this card contains translations for following languages:
+* `ca` - Catalan (Català)
 * `cs` - Czech (Čeština)
 * `da` - Danish (Dansk)
 * `de` - German (Deutsch)
