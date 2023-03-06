@@ -581,6 +581,9 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (user && this.currentPreset.activate_on_switch) {
             this._executePresetsActivation();
         }
+        if (user && this.currentPreset.generate_room_config_on_switch) {
+            this._handleRoomsConfigGet();
+        }
         this._selectionChanged();
     }
 
