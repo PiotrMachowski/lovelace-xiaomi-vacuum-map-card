@@ -5,7 +5,6 @@
 [![Ko-Fi][ko_fi_shield]][ko_fi]
 [![PayPal.Me][paypal_me_shield]][paypal_me]
 
-
 [hacs_shield]: https://img.shields.io/static/v1.svg?label=HACS&message=Default&style=popout&color=green&labelColor=41bdf5&logo=HomeAssistantCommunityStore&logoColor=white
 [hacs]: https://hacs.xyz/docs/default_repositories
 
