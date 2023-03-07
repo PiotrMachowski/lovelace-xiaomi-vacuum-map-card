@@ -185,8 +185,14 @@
         "cleaned_area": {
             "label": "Cleaned area"
         },
+        "total_cleaned_area": {
+            "label": "Total cleaned area"
+        },
         "cleaning_time": {
             "label": "Cleaning time"
+        },
+        "total_cleaning_time": {
+            "label": "Total cleaning time"
         },
         "mop_left": {
             "label": "Mop left"

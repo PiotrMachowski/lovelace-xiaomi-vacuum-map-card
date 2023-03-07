@@ -185,8 +185,14 @@
         "cleaned_area": {
             "label": "Powierzchnia"
         },
+        "total_cleaned_area": {
+            "label": "Całkowita powierzchnia"
+        },
         "cleaning_time": {
             "label": "Czas sprzątania"
+        },
+        "total_cleaning_time": {
+            "label": "Całkowity czas sprzątania"
         },
         "mop_left": {
             "label": "Mop"

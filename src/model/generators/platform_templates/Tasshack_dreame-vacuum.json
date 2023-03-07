@@ -128,11 +128,10 @@
       {
         "tile_id": "total_cleaned_area",
         "attribute": "total_cleaned_area",
-        "label": "Total cleaned area",
+        "label": "tile.total_cleaned_area.label",
         "icon": "mdi:set-square",
         "unit": "unit.meter_squared_shortcut"
       }
-    ],
-    "from_sensors": []
+    ]
   }
 }
