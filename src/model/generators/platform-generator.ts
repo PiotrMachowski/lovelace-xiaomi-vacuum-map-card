@@ -8,6 +8,7 @@ import * as tykarolViomiVacuumV8Template from "./platform_templates/tykarol_viom
 import * as hypferValetudoTemplate from "./platform_templates/hypfer_valetudo.json";
 import * as neatoTemplate from "./platform_templates/neato.json";
 import * as roombaTemplate from "./platform_templates/roomba.json";
+import * as deebotTemplate from "./platform_templates/DeebotUniverse_Deebot-4-Home-Assistant.json";
 import * as tasshackDreameVacuumTemplate from "./platform_templates/Tasshack_dreame-vacuum.json";
 import * as setupDecimalTemplate from "./platform_templates/setup_decimal.json";
 import * as setupIntegerTemplate from "./platform_templates/setup_integer.json";
@@ -28,6 +29,7 @@ export class PlatformGenerator {
     public static NEATO_PLATFORM = "Neato";
     public static ROOMBA_PLATFORM = "Roomba";
     public static TASSHACK_DREAME_VACUUM_PLATFORM = "Tasshack/dreame-vacuum";
+    public static DEEBOTUNIVERSE_DEEBOT_4_HOME_ASSISTANT_PLATFORM = "DeebotUniverse/Deebot-4-Home-Assistant";
     public static SETUP_INTEGER_PLATFORM = "Setup integer";
     public static SETUP_DECIMAL_PLATFORM = "Setup decimal";
 
@@ -46,6 +48,7 @@ export class PlatformGenerator {
         [PlatformGenerator.ALONE_XIAOMI_MIOT_PLATFORM, alOneHassXiaomiMiotTemplate],
         [PlatformGenerator.NEATO_PLATFORM, neatoTemplate],
         [PlatformGenerator.ROOMBA_PLATFORM, roombaTemplate],
+        [PlatformGenerator.DEEBOTUNIVERSE_DEEBOT_4_HOME_ASSISTANT_PLATFORM, deebotTemplate],
         [PlatformGenerator.SETUP_INTEGER_PLATFORM, setupIntegerTemplate],
         [PlatformGenerator.SETUP_DECIMAL_PLATFORM, setupDecimalTemplate],
     ]);
@@ -62,6 +65,7 @@ export class PlatformGenerator {
         [PlatformGenerator.ALONE_XIAOMI_MIOT_PLATFORM, "alOneHassXiaomiMiot"],
         [PlatformGenerator.NEATO_PLATFORM, "neato"],
         [PlatformGenerator.ROOMBA_PLATFORM, "roomba"],
+        [PlatformGenerator.DEEBOTUNIVERSE_DEEBOT_4_HOME_ASSISTANT_PLATFORM, "DeebotUniverseDeebot4homeAssistant"],
         [PlatformGenerator.SETUP_INTEGER_PLATFORM, "setup"],
         [PlatformGenerator.SETUP_DECIMAL_PLATFORM, "setup"],
     ]);

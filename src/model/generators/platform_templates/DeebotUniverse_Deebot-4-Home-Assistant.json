@@ -1,0 +1,117 @@
+{
+    "map_modes": {
+        "defaultTemplates": [],
+        "templates": {
+            "vacuum_clean_segment": {
+                "name": "map_mode.vacuum_clean_segment",
+                "icon": "mdi:floor-plan",
+                "selection_type": "ROOM",
+                "repeats_type": "EXTERNAL",
+                "max_repeats": 3,
+                "service_call_schema": {
+                    "service": "vacuum.send_command",
+                    "service_data": {
+                        "entity_id": "[[entity_id]]",
+                        "command": "spot_area",
+                        "params": {
+                            "rooms": "[[selection_unwrapped]]",
+                            "cleanings": "[[repeats]]"
+                        }
+                    }
+                }
+            },
+            "vacuum_clean_zone": {
+                "name": "map_mode.vacuum_clean_zone",
+                "icon": "mdi:select-drag",
+                "selection_type": "MANUAL_RECTANGLE",
+                "coordinates_rounding": true,
+                "repeats_type": "NONE",
+                "max_selections": 1,
+                "service_call_schema": {
+                    "service": "vacuum.send_command",
+                    "service_data": {
+                        "entity_id": "[[entity_id]]",
+                        "command": "custom_area",
+                        "params": {
+                            "coordinates": "[[selection_unwrapped]]"
+                        }
+                    }
+                }
+            },
+            "vacuum_clean_zone_predefined": {
+                "name": "map_mode.vacuum_clean_zone_predefined",
+                "icon": "mdi:floor-plan",
+                "selection_type": "PREDEFINED_RECTANGLE",
+                "max_selections": 1,
+                "coordinates_rounding": true,
+                "repeats_type": "NONE",
+                "service_call_schema": {
+                    "service": "xiaomi_miio.vacuum_clean_zone",
+                    "service_data": {
+                        "entity_id": "[[entity_id]]",
+                        "command": "custom_area",
+                        "params": {
+                            "coordinates": "[[selection_unwrapped]]"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tiles": {
+        "from_sensors": [
+            {
+                "tile_id": "water_amount",
+                "unique_id_regex": "_water_amount",
+                "label": "tile.water_amount.label",
+                "icon": "mdi:water"
+            },
+            {
+                "tile_id": "cleaning_time",
+                "unique_id_regex": "_stats_time",
+                "label": "tile.cleaning_time.label",
+                "icon": "mdi:timer-sand",
+                "unit": "unit.minute_shortcut"
+            },
+            {
+                "tile_id": "cleaned_area",
+                "unique_id_regex": "_stats_area",
+                "label": "tile.cleaned_area.label",
+                "icon": "mdi:texture-box",
+                "unit": "unit.meter_squared_shortcut"
+            },
+            {
+                "tile_id": "mop_attached",
+                "unique_id_regex": "_mop_attached",
+                "label": "tile.mop_attached.label",
+                "icon": "mdi:water"
+            },
+            {
+                "tile_id": "cleaning_time",
+                "unique_id_regex": "_stats_time",
+                "label": "tile.cleaning_time.label",
+                "icon": "mdi:timer-sand",
+                "unit": "unit.minute_shortcut"
+            },
+            {
+                "tile_id": "total_cleaned_area",
+                "unique_id_regex": "_stats_total_area",
+                "label": "tile.total_cleaned_area.label",
+                "icon": "mdi:texture-box",
+                "unit": "unit.meter_squared_shortcut"
+            },
+            {
+                "tile_id": "cleaning_time",
+                "unique_id_regex": "_stats_total_time",
+                "label": "tile.total_cleaning_time.label",
+                "icon": "mdi:timer-sand",
+                "unit": "unit.hour_shortcut"
+            },
+            {
+                "tile_id": "cleaning_count",
+                "unique_id_regex": "_stats_total_cleanings",
+                "label": "tile.cleaning_count.label"
+            }
+        ]
+    }
+}
