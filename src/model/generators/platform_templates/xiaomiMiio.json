@@ -110,7 +110,7 @@
                 "hold_action": {
                     "action": "call-service",
                     "service": "vacuum.send_command",
-                    "confirmation": true,
+                    "confirmation": {},
                     "service_data": {
                         "command": "reset_consumable",
                         "params": "sensor_dirty_time",
@@ -127,7 +127,7 @@
                 "hold_action": {
                     "action": "call-service",
                     "service": "vacuum.send_command",
-                    "confirmation": true,
+                    "confirmation": {},
                     "service_data": {
                         "command": "reset_consumable",
                         "params": "filter_work_time",
@@ -144,7 +144,7 @@
                 "hold_action": {
                     "action": "call-service",
                     "service": "vacuum.send_command",
-                    "confirmation": true,
+                    "confirmation": {},
                     "service_data": {
                         "command": "reset_consumable",
                         "params": "main_brush_work_time",
@@ -161,7 +161,7 @@
                 "hold_action": {
                     "action": "call-service",
                     "service": "vacuum.send_command",
-                    "confirmation": true,
+                    "confirmation": {},
                     "service_data": {
                         "command": "reset_consumable",
                         "params": "side_brush_work_time",
@@ -186,7 +186,7 @@
                 "hold_action": {
                     "action": "call-service",
                     "service": "vacuum.send_command",
-                    "confirmation": true,
+                    "confirmation": {},
                     "service_data": {
                         "command": "reset_consumable",
                         "params": "sensor_dirty_time",
@@ -203,7 +203,7 @@
                 "hold_action": {
                     "action": "call-service",
                     "service": "vacuum.send_command",
-                    "confirmation": true,
+                    "confirmation": {},
                     "service_data": {
                         "command": "reset_consumable",
                         "params": "filter_work_time",
@@ -220,7 +220,7 @@
                 "hold_action": {
                     "action": "call-service",
                     "service": "vacuum.send_command",
-                    "confirmation": true,
+                    "confirmation": {},
                     "service_data": {
                         "command": "reset_consumable",
                         "params": "main_brush_work_time",
@@ -237,7 +237,7 @@
                 "hold_action": {
                     "action": "call-service",
                     "service": "vacuum.send_command",
-                    "confirmation": true,
+                    "confirmation": {},
                     "service_data": {
                         "command": "reset_consumable",
                         "params": "side_brush_work_time",

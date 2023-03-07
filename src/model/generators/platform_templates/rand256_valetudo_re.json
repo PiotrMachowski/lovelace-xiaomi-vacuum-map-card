@@ -90,7 +90,7 @@
                 "hold_action": {
                     "action": "call-service",
                     "service": "mqtt.publish",
-                    "confirmation": true,
+                    "confirmation": {},
                     "service_data": {
                         "topic": "[[topic]]/custom_command",
                         "payload": "{\"command\": \"reset_consumable\",\n\"consumable\": \"filter_work_time\"}"
@@ -106,7 +106,7 @@
                 "hold_action": {
                     "action": "call-service",
                     "service": "mqtt.publish",
-                    "confirmation": true,
+                    "confirmation": {},
                     "service_data": {
                         "topic": "[[topic]]/custom_command",
                         "payload": "{\"command\": \"reset_consumable\",\n\"consumable\": \"main_brush_work_time\"}"
@@ -122,7 +122,7 @@
                 "hold_action": {
                     "action": "call-service",
                     "service": "mqtt.publish",
-                    "confirmation": true,
+                    "confirmation": {},
                     "service_data": {
                         "topic": "[[topic]]/custom_command",
                         "payload": "{\"command\": \"reset_consumable\",\n\"consumable\": \"side_brush_work_time\"}"
