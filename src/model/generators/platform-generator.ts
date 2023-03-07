@@ -10,6 +10,7 @@ import * as neatoTemplate from "./platform_templates/neato.json";
 import * as roombaTemplate from "./platform_templates/roomba.json";
 import * as deebotTemplate from "./platform_templates/DeebotUniverse_Deebot-4-Home-Assistant.json";
 import * as tasshackDreameVacuumTemplate from "./platform_templates/Tasshack_dreame-vacuum.json";
+import * as roborockTemplate from "./platform_templates/humbertogontijo_homeassistant-roborock.json";
 import * as setupDecimalTemplate from "./platform_templates/setup_decimal.json";
 import * as setupIntegerTemplate from "./platform_templates/setup_integer.json";
 import { MapModeConfig, PlatformTemplate, TileFromAttributeTemplate, TileFromSensorTemplate } from "../../types/types";
@@ -30,6 +31,7 @@ export class PlatformGenerator {
     public static ROOMBA_PLATFORM = "Roomba";
     public static TASSHACK_DREAME_VACUUM_PLATFORM = "Tasshack/dreame-vacuum";
     public static DEEBOTUNIVERSE_DEEBOT_4_HOME_ASSISTANT_PLATFORM = "DeebotUniverse/Deebot-4-Home-Assistant";
+    public static HUMBERTOGONTIJO_ROBOROCK_PLATFORM = "humbertogontijo/homeassistant-roborock";
     public static SETUP_INTEGER_PLATFORM = "Setup integer";
     public static SETUP_DECIMAL_PLATFORM = "Setup decimal";
 
@@ -43,7 +45,8 @@ export class PlatformGenerator {
         [PlatformGenerator.TYKAROL_VIOMI_VACUUM_V8_PLATFORM, tykarolViomiVacuumV8Template],
         [PlatformGenerator.HYPFER_VALETUDO_PLATFORM, hypferValetudoTemplate],
         [PlatformGenerator.RAND256_VALETUDO_RE_PLATFORM, rand256ValetudoReTemplate as PlatformTemplate],
-        [PlatformGenerator.TASSHACK_DREAME_VACUUM_PLATFORM, tasshackDreameVacuumTemplate as PlatformTemplate],
+        [PlatformGenerator.TASSHACK_DREAME_VACUUM_PLATFORM, tasshackDreameVacuumTemplate],
+        [PlatformGenerator.HUMBERTOGONTIJO_ROBOROCK_PLATFORM, roborockTemplate as PlatformTemplate],
         [PlatformGenerator.SEND_COMMAND_PLATFORM, sendCommandTemplate],
         [PlatformGenerator.ALONE_XIAOMI_MIOT_PLATFORM, alOneHassXiaomiMiotTemplate],
         [PlatformGenerator.NEATO_PLATFORM, neatoTemplate],
@@ -61,6 +64,7 @@ export class PlatformGenerator {
         [PlatformGenerator.HYPFER_VALETUDO_PLATFORM, "hypferValetudo"],
         [PlatformGenerator.RAND256_VALETUDO_RE_PLATFORM, "rand256ValetudoRe"],
         [PlatformGenerator.TASSHACK_DREAME_VACUUM_PLATFORM, "tasshackDreameVacuum"],
+        [PlatformGenerator.HUMBERTOGONTIJO_ROBOROCK_PLATFORM, "humbertogontijoHomeassistantRoborock"],
         [PlatformGenerator.SEND_COMMAND_PLATFORM, "sendCommand"],
         [PlatformGenerator.ALONE_XIAOMI_MIOT_PLATFORM, "alOneHassXiaomiMiot"],
         [PlatformGenerator.NEATO_PLATFORM, "neato"],
