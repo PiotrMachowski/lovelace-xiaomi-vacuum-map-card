@@ -11,9 +11,9 @@ import {
 import { localize } from "../../localize/localize";
 import { ServiceCall } from "./service-call";
 import { PlatformGenerator } from "../generators/platform-generator";
-import { HomeAssistant } from "custom-card-helpers";
 import { evaluateJinjaTemplate, replaceInTarget } from "../../utils";
 import { Modifier } from "./modifier";
+import { HomeAssistantFixed } from "../../types/fixes";
 
 export class MapMode {
     private static readonly PREDEFINED_SELECTION_TYPES = [
@@ -55,7 +55,7 @@ export class MapMode {
     }
 
     public async getServiceCall(
-        hass: HomeAssistant,
+        hass: HomeAssistantFixed,
         entityId: string,
         selection: unknown[],
         repeats: number,

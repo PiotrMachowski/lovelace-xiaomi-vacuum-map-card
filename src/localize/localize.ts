@@ -22,7 +22,7 @@ import * as uk from "./languages/uk.json";
 import * as zh from "./languages/zh.json";
 import * as zhHant from "./languages/zh-Hant.json";
 import { Language, TranslatableString, XiaomiVacuumMapCardConfig } from "../types/types";
-import { HomeAssistant } from "custom-card-helpers";
+import { HomeAssistantFixed } from "../types/fixes";
 
 const languages: Record<string, unknown> = {
     ca: ca,
@@ -95,7 +95,7 @@ export function localize(ts: TranslatableString, lang?: Language, fallback?: str
 
 export function localizeWithHass(
     ts: TranslatableString,
-    hass?: HomeAssistant,
+    hass?: HomeAssistantFixed,
     config?: XiaomiVacuumMapCardConfig,
     fallback?: string,
 ): string {

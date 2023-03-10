@@ -1,13 +1,14 @@
 // noinspection CssUnresolvedCustomProperty
 
 import { css, CSSResultGroup, svg, SVGTemplateResult } from "lit";
-import { forwardHaptic, HomeAssistant } from "custom-card-helpers";
+import { forwardHaptic } from "custom-card-helpers";
 
 import { Context } from "./context";
 import { MapObject } from "./map-object";
 import { PredefinedZoneConfig, VariablesStorage, ZoneType, ZoneWithRepeatsType } from "../../types/types";
 import { deleteFromArray } from "../../utils";
 import { MapMode } from "../map_mode/map-mode";
+import { HomeAssistantFixed } from "../../types/fixes";
 
 export class PredefinedMultiRectangle extends MapObject {
     private readonly _config: PredefinedZoneConfig;
@@ -25,7 +26,7 @@ export class PredefinedMultiRectangle extends MapObject {
 
     public static getFromEntities(
         newMode: MapMode,
-        hass: HomeAssistant,
+        hass: HomeAssistantFixed,
         contextCreator: () => Context,
     ): PredefinedMultiRectangle[] {
         return newMode.predefinedSelections

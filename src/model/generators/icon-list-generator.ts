@@ -1,8 +1,8 @@
 import { HassEntity } from "home-assistant-js-websocket/dist/types";
-import { HomeAssistant } from "custom-card-helpers";
 
 import { IconActionConfig, Language } from "../../types/types";
 import { localize } from "../../localize/localize";
+import { HomeAssistantFixed } from "../../types/fixes";
 
 export class IconListGenerator {
     private static _ICON_MAPPING = {
@@ -17,7 +17,7 @@ export class IconListGenerator {
         Gentle: "mdi:waves",
     };
 
-    public static generate(hass: HomeAssistant, vacuumEntity: string, language: Language): IconActionConfig[] {
+    public static generate(hass: HomeAssistantFixed, vacuumEntity: string, language: Language): IconActionConfig[] {
         if (!hass) return [];
         const state = hass.states[vacuumEntity];
         const state_available = state && state.attributes;

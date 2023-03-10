@@ -1,4 +1,3 @@
-import { HomeAssistant } from "custom-card-helpers";
 import { HassEntity } from "home-assistant-js-websocket";
 
 import {
@@ -14,10 +13,11 @@ import { localize } from "../../localize/localize";
 import { getAllEntitiesFromTheSameDevice, getFilledTemplate } from "../../utils";
 import { PlatformGenerator } from "./platform-generator";
 import { TemplatableTileValue } from "../map_mode/templatable-value";
+import { HomeAssistantFixed } from "../../types/fixes";
 
 export class TilesGenerator {
     public static generate(
-        hass: HomeAssistant,
+        hass: HomeAssistantFixed,
         vacuumEntity: string,
         platform: string,
         language: Language,
@@ -140,7 +140,7 @@ export class TilesGenerator {
     }
 
     private static async addTilesFromSensors(
-        hass: HomeAssistant,
+        hass: HomeAssistantFixed,
         vacuumEntityId: string,
         platform: string,
         tiles: TileConfig[],

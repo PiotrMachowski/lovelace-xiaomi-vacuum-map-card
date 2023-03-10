@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { css, CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators";
-import { fireEvent, HomeAssistant, LovelaceCardEditor } from "custom-card-helpers";
+import { fireEvent, LovelaceCardEditor } from "custom-card-helpers";
 
 import { RoomConfigEventData, TranslatableString, XiaomiVacuumMapCardConfig } from "./types/types";
 import { localizeWithHass } from "./localize/localize";
@@ -18,10 +18,11 @@ import {
 } from "./const";
 import { copyMessage } from "./utils";
 import { ToastRenderer } from "./renderers/toast-renderer";
+import { HomeAssistantFixed } from "./types/fixes";
 
 @customElement(EDITOR_CUSTOM_ELEMENT_NAME)
-export class XiaomiVacuumMapCardEditor extends LitElement implements LovelaceCardEditor {
-    @property({ attribute: false }) public hass?: HomeAssistant;
+export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<LovelaceCardEditor, "hass"> {
+    @property({ attribute: false }) public hass?: HomeAssistantFixed;
     @state() private _config?: XiaomiVacuumMapCardConfig;
     @state() private _helpers?: any;
     @state() private _lastSelection?: any;

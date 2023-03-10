@@ -1,5 +1,3 @@
-import { HomeAssistant } from "custom-card-helpers";
-
 import {
     CalibrationPoint,
     CalibrationSourceConfig,
@@ -23,6 +21,7 @@ import { localize } from "./localize/localize";
 import { MapMode } from "./model/map_mode/map-mode";
 import { SelectionType } from "./model/map_mode/selection-type";
 import { PlatformGenerator } from "./model/generators/platform-generator";
+import { HomeAssistantFixed } from "./types/fixes";
 
 function validateMapSource(mapSource: MapSourceConfig): TranslatableString[] {
     if (!mapSource.camera && !mapSource.image) {
@@ -276,7 +275,7 @@ export function isOldConfig(config: XiaomiVacuumMapCardConfig): boolean {
     return config.map_image || config.map_camera;
 }
 
-export function areAllEntitiesDefined(usedEntities: string[], hass: HomeAssistant): string[] {
+export function areAllEntitiesDefined(usedEntities: string[], hass: HomeAssistantFixed): string[] {
     const availableEntities = Object.keys(hass.states);
     return usedEntities.filter(e => !availableEntities.includes(e));
 }

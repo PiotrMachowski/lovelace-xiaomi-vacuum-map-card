@@ -20,6 +20,7 @@ import { SelectionType } from "./model/map_mode/selection-type";
 import { MousePosition } from "./model/map_objects/mouse-position";
 import { XiaomiVacuumMapCard } from "./xiaomi-vacuum-map-card";
 import { Modifier } from "./model/map_mode/modifier";
+import { HomeAssistantFixed } from "./types/fixes";
 
 export function stopEvent(event: MouseEvent | TouchEvent): void {
     event.preventDefault();
@@ -104,7 +105,7 @@ export function getWatchedEntities(config: XiaomiVacuumMapCardConfig): string[] 
 export function isConditionMet(
     condition: ConditionConfig,
     internalVariables: VariablesStorage,
-    hass: HomeAssistant,
+    hass: HomeAssistantFixed,
 ): boolean {
     let currentValue: ReplacedKey = "";
     if (condition.internal_variable && condition.internal_variable in internalVariables) {
@@ -126,7 +127,7 @@ export function isConditionMet(
 export function areConditionsMet(
     config: ConditionalObjectConfig,
     internalVariables: VariablesStorage,
-    hass: HomeAssistant,
+    hass: HomeAssistantFixed,
 ): boolean {
     return (config.conditions ?? []).every(condition => isConditionMet(condition, internalVariables, hass));
 }
@@ -135,12 +136,12 @@ export function hasConfigOrAnyEntityChanged(
     watchedEntities: string[],
     changedProps: PropertyValues,
     forceUpdate: boolean,
-    hass?: HomeAssistant,
+    hass?: HomeAssistantFixed,
 ): boolean {
     if (changedProps.has("config") || forceUpdate) {
         return true;
     }
-    const oldHass = changedProps.get("hass") as HomeAssistant | undefined;
+    const oldHass = changedProps.get("hass") as HomeAssistantFixed | undefined;
     return !oldHass || watchedEntities.some(entity => oldHass.states[entity] !== hass?.states[entity]);
 }
 
@@ -154,7 +155,7 @@ export function handleActionWithConfig(
 ): (ev: ActionHandlerEvent) => void {
     return (ev: ActionHandlerEvent): void => {
         if (node.hass && config && ev.detail.action) {
-            handleAction(node, node.hass, config, ev.detail.action);
+            handleAction(node, node.hass as unknown as HomeAssistant, config, ev.detail.action);
         }
     };
 }
@@ -177,7 +178,7 @@ export function getMousePosition(
 }
 
 export async function getAllEntitiesFromTheSameDevice(
-    hass: HomeAssistant,
+    hass: HomeAssistantFixed,
     entity: string,
 ): Promise<EntityRegistryEntry[]> {
     const vacuumDeviceId = (
@@ -220,7 +221,7 @@ export function copyMessage(val: string): void {
 }
 
 export async function evaluateJinjaTemplate(
-    hass: HomeAssistant,
+    hass: HomeAssistantFixed,
     template: string,
 ): Promise<string | Record<string, unknown>> {
     return new Promise(resolve => {

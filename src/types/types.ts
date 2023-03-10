@@ -223,3 +223,16 @@ export interface RoomConfigEventData {
     readonly modeIndex: number;
     readonly rooms: Array<RoomConfig>;
 }
+
+export interface Translation {
+    nativeName: string;
+    isRTL: boolean;
+    hash: string;
+}
+
+export interface TranslationMetadata {
+    fragments: string[];
+    translations: {
+        [lang: string]: Translation;
+    };
+}
