@@ -21,7 +21,7 @@ export const computeStateDisplay = (
     stateObj: HassEntity,
     locale: FrontendLocaleDataFixed,
     entities: HomeAssistantFixed["entities"],
-    state?: string
+    skipUnit = false,
 ): string =>
     computeStateDisplayFromEntityAttributes(
         localize,
@@ -29,7 +29,8 @@ export const computeStateDisplay = (
         entities,
         stateObj.entity_id,
         stateObj.attributes,
-        state !== undefined ? state : stateObj.state
+        stateObj.state,
+        skipUnit
     );
 
 export const computeStateDisplayFromEntityAttributes = (
@@ -38,7 +39,8 @@ export const computeStateDisplayFromEntityAttributes = (
     entities: HomeAssistantFixed["entities"],
     entityId: string,
     attributes: any,
-    state: string
+    state: string,
+    skipUnit = false,
 ): string => {
     if (state === UNKNOWN || state === UNAVAILABLE) {
         return localize(`state.default.${state}`);
@@ -63,7 +65,7 @@ export const computeStateDisplayFromEntityAttributes = (
         if (attributes.device_class === "monetary") {
             try {
                 return formatNumber(state, locale, {
-                    style: "currency",
+                    style: skipUnit ? undefined: "currency",
                     currency: attributes.unit_of_measurement,
                     minimumFractionDigits: 2,
                     // Override monetary options with number format
@@ -76,7 +78,7 @@ export const computeStateDisplayFromEntityAttributes = (
                 // fallback to default
             }
         }
-        const unit = !attributes.unit_of_measurement
+        const unit = !attributes.unit_of_measurement || skipUnit
             ? ""
             : attributes.unit_of_measurement === "%"
                 ? blankBeforePercent(locale) + "%"

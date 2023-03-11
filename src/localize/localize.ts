@@ -21,8 +21,11 @@ import * as tr from "./languages/tr.json";
 import * as uk from "./languages/uk.json";
 import * as zh from "./languages/zh.json";
 import * as zhHant from "./languages/zh-Hant.json";
-import { Language, TranslatableString, XiaomiVacuumMapCardConfig } from "../types/types";
+import { EntityConfig, Language, TranslatableString, XiaomiVacuumMapCardConfig } from "../types/types";
 import { HomeAssistantFixed } from "../types/fixes";
+import { HassEntity } from "home-assistant-js-websocket/dist/types";
+import { formatAttributeValue } from "./hass/entity_attributes";
+import { computeStateDisplay } from "./hass/compute_state_display";
 
 const languages: Record<string, unknown> = {
     ca: ca,
@@ -100,4 +103,22 @@ export function localizeWithHass(
     fallback?: string,
 ): string {
     return localize(ts, config?.language ?? hass?.locale?.language, fallback);
+}
+
+export function localizeEntity(hass: HomeAssistantFixed, config: EntityConfig, entity: HassEntity): string {
+    return "attribute" in config && config.attribute !== undefined
+        ? entity.attributes[config.attribute] !== undefined
+            ? formatAttributeValue(
+                hass,
+                entity,
+                config.attribute,
+            )
+            : hass.localize("state.default.unknown")
+        : computeStateDisplay(
+            hass.localize,
+            entity,
+            hass.locale,
+            hass.entities,
+            config.unit !== undefined,
+        );
 }

@@ -81,7 +81,7 @@ function validateTileConfig(config: TileConfig): TranslatableString[] {
     if (!config.entity && !config.internal_variable) {
         errors.push("validation.preset.tiles.entity.missing");
     }
-    if (!config.label) {
+    if (!config.label && !config.entity) {
         errors.push("validation.preset.tiles.label.missing");
     }
     return errors;

@@ -121,7 +121,7 @@ export interface IconActionConfig extends ActionableObjectConfig, ConditionalObj
 
 export interface TileConfig extends ActionableObjectConfig, ConditionalObjectConfig {
     readonly tile_id?: string;
-    readonly label: string;
+    readonly label?: string;
     readonly tooltip?: string;
     readonly icon?: string;
     readonly internal_variable?: string;
@@ -235,4 +235,10 @@ export interface TranslationMetadata {
     translations: {
         [lang: string]: Translation;
     };
+}
+
+export interface EntityConfig {
+    entity: string;
+    attribute?: string;
+    unit?: string;
 }

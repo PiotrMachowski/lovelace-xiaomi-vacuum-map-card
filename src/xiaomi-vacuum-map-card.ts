@@ -596,6 +596,7 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _setPreset(config: CardPresetConfig): void {
         this.currentPreset = config;
+        this.watchedEntities = getWatchedEntities({type: "", ...config});
     }
 
     private _updateCalibration(config: CardPresetConfig): void {

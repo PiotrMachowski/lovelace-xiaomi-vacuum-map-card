@@ -1,10 +1,16 @@
 import { css, CSSResultGroup, html, TemplateResult } from "lit";
-import { hasAction } from "custom-card-helpers";
+import { ifDefined } from "lit/directives/if-defined";
+import { computeStateDomain, hasAction } from "custom-card-helpers";
+import { HassEntity } from "home-assistant-js-websocket/dist/types";
 
 import { actionHandler } from "../action-handler-directive";
 import { conditional, handleActionWithConfig } from "../utils";
-import { ReplacedKey, TileConfig, VariablesStorage } from "../types/types";
+import { EntityConfig, ReplacedKey, TileConfig, VariablesStorage } from "../types/types";
 import { XiaomiVacuumMapCard } from "../xiaomi-vacuum-map-card";
+import { HomeAssistantFixed } from "../types/fixes";
+import { localizeEntity } from "../localize/localize";
+import { computeAttributeNameDisplay } from "../localize/hass/compute_attribute_display";
+import { blankBeforePercent } from "../localize/hass/blank_before_percent";
 
 export class TileRenderer {
     public static render(
@@ -12,24 +18,12 @@ export class TileRenderer {
         internalVariables: VariablesStorage,
         card: XiaomiVacuumMapCard,
     ): TemplateResult {
-        let value: ReplacedKey = "";
-        if (config.entity) {
-            value = config.attribute
-                ? card.hass.states[config.entity].attributes[config.attribute]
-                : card.hass.states[config.entity].state;
-        } else if (config.internal_variable && config.internal_variable in internalVariables) {
-            value = internalVariables[config.internal_variable];
-        }
-        if (value !== null && (typeof value === "number" || !isNaN(+value))) {
-            value = parseFloat(value.toString()) * (config.multiplier ?? 1);
-            if (config.precision != undefined) {
-                value = value.toFixed(config.precision);
-            }
-        }
-        const translations = config.translations ?? {};
-        if (`${value}`.toLowerCase() in translations) {
-            value = translations[`${value}`.toLowerCase()];
-        }
+        const stateObj = config.entity ? card.hass.states[config.entity] : undefined;
+        const title = this.getTileLabel(card.hass, config, stateObj);
+        const value = this.getTileValue(card.hass, config, internalVariables, stateObj);
+        const icon = this.getIcon(config, stateObj);
+        const domain = stateObj ? computeStateDomain(stateObj) : undefined;
+
         return html`
             <div
                 class="tile-wrapper clickable ripple ${config.tile_id ? `tile-${config.tile_id}-wrapper` : ""}"
@@ -39,18 +33,86 @@ export class TileRenderer {
                     hasHold: hasAction(config?.hold_action),
                     hasDoubleClick: hasAction(config?.double_tap_action),
                 })}>
-                <div class="tile-title">${config.label}</div>
+                <div class="tile-title">${title}</div>
                 <div class="tile-value-wrapper">
                     ${conditional(
-                        !!config.icon,
-                        () => html` <div class="tile-icon">
-                            <ha-icon icon="${config.icon}"></ha-icon>
+                        icon !== "",
+                        () => html`<div class="tile-icon">
+                            <ha-state-icon
+                                .icon=${icon}
+                                .state=${stateObj}
+                                data-domain=${ifDefined(domain)}
+                                data-state=${stateObj?.state}>
+                            </ha-state-icon>
                         </div>`,
                     )}
-                    <div class="tile-value">${value}${config.unit ?? ""}</div>
+                    <div class="tile-value">${value}</div>
                 </div>
             </div>
         `;
+    }
+
+    private static getTileLabel(
+        hass: HomeAssistantFixed,
+        tile: TileConfig,
+        stateObject?: HassEntity,
+    ) {
+        if (tile.label !== undefined)
+            return tile.label;
+        if (stateObject !== undefined) {
+            if (tile.attribute !== undefined)
+                return computeAttributeNameDisplay(hass.localize, stateObject, hass.entities, tile.attribute);
+            return stateObject.attributes?.friendly_name ?? tile.entity;
+        }
+        return tile.tile_id ?? "tile";
+    }
+
+    private static getTileValue(
+        hass: HomeAssistantFixed,
+        config: TileConfig,
+        internalVariables: VariablesStorage,
+        stateObject?: HassEntity,
+    ) {
+        let value: ReplacedKey = "";
+        const processNumber = config.multiplier !== undefined || config.precision !== undefined;
+        if (config.entity && stateObject) {
+            if (processNumber) {
+                value = config.attribute
+                    ? stateObject.attributes[config.attribute]
+                    : stateObject.state;
+            } else {
+                value = localizeEntity(hass, config as EntityConfig, hass.states[config.entity]);
+            }
+        } else if (config.internal_variable && config.internal_variable in internalVariables) {
+            value = internalVariables[config.internal_variable];
+        }
+        if (processNumber && value !== null && (typeof value === "number" || !isNaN(+value))) {
+            value = parseFloat(value.toString()) * (config.multiplier ?? 1);
+            if (config.precision !== undefined) {
+                value = value.toFixed(config.precision);
+            }
+        }
+        const translations = config.translations ?? {};
+        if (`${value}`.toLowerCase() in translations) {
+            value = translations[`${value}`.toLowerCase()];
+        }
+        const unit = this.getUnit(hass, config);
+        return `${value}${unit}`;
+    }
+
+    private static getIcon(config: TileConfig, stateObject?: HassEntity) {
+        if (config.icon === undefined && stateObject) {
+            return stateObject.attributes.icon ?? null;
+        }
+        return config.icon;
+    }
+
+    private static getUnit(hass: HomeAssistantFixed, config: TileConfig) {
+        return !config.unit
+            ? "" :
+            config.unit === "%"
+                ? blankBeforePercent(hass.locale) + "%"
+                : ` ${config.unit}`;
     }
 
     public static get styles(): CSSResultGroup {

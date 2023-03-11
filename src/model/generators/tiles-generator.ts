@@ -14,6 +14,7 @@ import { getAllEntitiesFromTheSameDevice, getFilledTemplate } from "../../utils"
 import { PlatformGenerator } from "./platform-generator";
 import { TemplatableTileValue } from "../map_mode/templatable-value";
 import { HomeAssistantFixed } from "../../types/fixes";
+import { computeAttributeNameDisplay } from "../../localize/hass/compute_attribute_display";
 
 export class TilesGenerator {
     public static generate(
@@ -40,6 +41,7 @@ export class TilesGenerator {
             return new Promise<TileConfig[]>(resolve =>
                 resolve(
                     this.addTilesFromAttributes(
+                        hass,
                         state,
                         vacuumEntity,
                         platform,
@@ -125,6 +127,7 @@ export class TilesGenerator {
     }
 
     private static addTilesFromAttributes(
+        hass: HomeAssistantFixed,
         state: HassEntity,
         vacuumEntity: string,
         platform: string,
@@ -135,7 +138,7 @@ export class TilesGenerator {
     ): TileConfig[] {
         PlatformGenerator.getTilesFromAttributesTemplates(platform)
             .filter(t => t.attribute in state.attributes)
-            .forEach(t => tiles.push(this.mapAttributeToTile(vacuumEntity, t, language, variables)));
+            .forEach(t => tiles.push(this.mapAttributeToTile(hass, vacuumEntity, t, language, variables)));
         return this.replaceDuplicates(tiles, tilesToOverride);
     }
 
@@ -162,13 +165,14 @@ export class TilesGenerator {
                     tile: t,
                     entity: entityRegistryEntries.filter(e => e.unique_id.match(t.unique_id_regex)),
                 }))
-                .flatMap(v => v.entity.map(e => this.mapEntryToTile(vacuumEntityId, e, v.tile, language, variables)))
+                .flatMap(v => v.entity.map(e => this.mapEntryToTile(hass, vacuumEntityId, e, v.tile, language, variables)))
                 .forEach(t => tiles.push(t));
         }
         return new Promise<TileConfig[]>(resolve => resolve(this.replaceDuplicates(tiles, tilesToOverride)));
     }
 
     private static mapEntryToTile(
+        hass: HomeAssistantFixed,
         vacuum_entity_id: string,
         entry: EntityRegistryEntry,
         tile_template: TileFromSensorTemplate,
@@ -176,6 +180,7 @@ export class TilesGenerator {
         variables: VariablesStorage,
     ): TileConfig {
         return this.mapToTile(
+            hass,
             tile_template,
             vacuum_entity_id,
             entry.entity_id,
@@ -187,12 +192,14 @@ export class TilesGenerator {
     }
 
     private static mapAttributeToTile(
+        hass: HomeAssistantFixed,
         entity_id: string,
         tile_template: TileFromAttributeTemplate,
         language: Language,
         variables: VariablesStorage,
     ): TileConfig {
         return this.mapToTile(
+            hass,
             tile_template,
             entity_id,
             entity_id,
@@ -204,6 +211,7 @@ export class TilesGenerator {
     }
 
     private static mapToTile(
+        hass: HomeAssistantFixed,
         tileTemplate: TileTemplate,
         vacuum_entity_id: string,
         entity_id: string,
@@ -215,7 +223,7 @@ export class TilesGenerator {
         const tileConfig: TileConfig = {
             ...tileTemplate,
             entity: entity_id,
-            label: localize(tileTemplate.label, language),
+            label: this.getTileLabel(hass, tileTemplate, language, entity_id, attribute),
             attribute: attribute,
             icon: icon,
             unit: tileTemplate.unit ? localize(tileTemplate.unit, language) : undefined,
@@ -232,6 +240,19 @@ export class TilesGenerator {
             this.getDefaultVariables(vacuum_entity_id, entity_id, attribute),
             variables,
         ) as unknown as TileConfig;
+    }
+
+    private static getTileLabel(
+        hass: HomeAssistantFixed,
+        tile: TileConfig,
+        language: Language,
+        entity_id: string,
+        attribute: string | undefined) {
+        if (tile.label !== undefined)
+            return localize(tile.label, language);
+        if (attribute !== undefined)
+            return computeAttributeNameDisplay(hass.localize, hass.states[entity_id], hass.entities, attribute);
+        return hass.states[entity_id].attributes.friendly_name ?? entity_id;
     }
 
     private static generateTranslationKeys(

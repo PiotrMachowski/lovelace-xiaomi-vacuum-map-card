@@ -13,7 +13,7 @@ export const UNIT_TO_SECOND_CONVERT = {
 
 const leftPad = (num: number) => (num < 10 ? `0${num}` : num);
 
-export function secondsToDuration(d: number) {
+export function secondsToDuration(d: number): string | null {
     const h = Math.floor(d / 3600);
     const m = Math.floor((d % 3600) / 60);
     const s = Math.floor((d % 3600) % 60);
@@ -30,6 +30,7 @@ export function secondsToDuration(d: number) {
     return null;
 }
 
-export const formatDuration = (duration: string, units: string): string =>
-    secondsToDuration(parseFloat(duration) * UNIT_TO_SECOND_CONVERT[units]) ||
-    "0";
+export const formatDuration = (duration: string, units: string): string => {
+    const seconds = parseFloat(duration) * UNIT_TO_SECOND_CONVERT[units];
+    return (seconds >= 0 ? secondsToDuration(seconds) : `-${secondsToDuration(-seconds)}`) ?? "0";
+};

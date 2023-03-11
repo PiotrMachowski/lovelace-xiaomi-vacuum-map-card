@@ -50,7 +50,7 @@ export function formatAttributeValue(
     hass: HomeAssistantFixed,
     stateObj: HassEntity,
     attribute: string
-): string | TemplateResult {
+): string {
     const value = stateObj.attributes[attribute];
 
     if (value === null) {
@@ -62,43 +62,26 @@ export function formatAttributeValue(
         (Array.isArray(value) && value.some((val) => val instanceof Object)) ||
         (!Array.isArray(value) && value instanceof Object)
     ) {
-        return html`<pre>${value}</pre>`;
+        return JSON.stringify(value);
     }
 
     if (typeof value === "number") {
         return formatNumber(value, hass.locale);
     }
 
-    if (typeof value === "string") {
-        // URL handling
-        if (value.startsWith("http")) {
-            try {
-                // If invalid URL, exception will be raised
-                const url = new URL(value);
-                if (url.protocol === "http:" || url.protocol === "https:")
-                    return html`<a target="_blank" rel="noreferrer" href=${value}
-            >${value}</a
-          >`;
-            } catch (_) {
-                // Nothing to do here
+    if (typeof value === "string" && isDate(value, true)) {
+        // Timestamp handling
+        if (isTimestamp(value)) {
+            const date = new Date(value);
+            if (checkValidDate(date)) {
+                return formatDateTimeWithSeconds(date, hass.locale);
             }
         }
 
-        // Date handling
-        if (isDate(value, true)) {
-            // Timestamp handling
-            if (isTimestamp(value)) {
-                const date = new Date(value);
-                if (checkValidDate(date)) {
-                    return formatDateTimeWithSeconds(date, hass.locale);
-                }
-            }
-
-            // Value was not a timestamp, so only do date formatting
-            const date = new Date(value);
-            if (checkValidDate(date)) {
-                return formatDate(date, hass.locale);
-            }
+        // Value was not a timestamp, so only do date formatting
+        const date = new Date(value);
+        if (checkValidDate(date)) {
+            return formatDate(date, hass.locale);
         }
     }
 
