@@ -1,4 +1,4 @@
-export const CARD_VERSION = "v2.1.3-beta";
+export const CARD_VERSION = "@VACUUM_MAP_CARD_VERSION_PLACEHOLDER@";
 export const CARD_CUSTOM_ELEMENT_NAME = "xiaomi-vacuum-map-card";
 export const EDITOR_CUSTOM_ELEMENT_NAME = "xiaomi-vacuum-map-card-editor";
 export const ACTION_HANDLER_CUSTOM_ELEMENT_NAME = "action-handler-xiaomi-vacuum-map-card";
