@@ -912,28 +912,34 @@ export class XiaomiVacuumMapCard extends LitElement {
             for (const room_id in rooms) {
                 if (!rooms.hasOwnProperty(room_id)) continue;
                 const room = rooms[room_id];
-                const keepFloat = room.x0.toString().includes(".");
+                if(!room.outline && !room.x0 && !room.y0 && !room.x1 && !room.y1)
+                    continue;
+                const outline = room.outline ?? [
+                    [room.x0, room.y0],
+                    [room.x1, room.y0],
+                    [room.x1, room.y1],
+                    [room.x0, room.y1],
+                ];
+                const keepFloat = outline.toString().includes(".");
                 const formatCoord = (v: number, divide = 1): number =>
                     keepFloat ? v / divide : Math.round(v / divide);
+                const x = outline.reduce((a, v) => a + (v[0] ?? 0), 0);
+                const y = outline.reduce((a, v) => a + (v[1] ?? 0), 0);
+
                 const roomConfig = {
                     id: room_id,
                     icon: {
                         name: room.icon ?? "mdi:broom",
-                        x: room.x ?? formatCoord(room.x0 + room.x1, 2),
-                        y: room.y ?? formatCoord(room.y0 + room.y1, 2),
+                        x: room.x ?? formatCoord(x, outline.length),
+                        y: room.y ?? formatCoord(y, outline.length),
                     },
                     label: {
                         text: room.name ?? `Room ${room_id}`,
-                        x: room.x ?? formatCoord(room.x0 + room.x1, 2),
-                        y: room.y ?? formatCoord(room.y0 + room.y1, 2),
+                        x: room.x ?? formatCoord(x, outline.length),
+                        y: room.y ?? formatCoord(y, outline.length),
                         offset_y: 35,
                     },
-                    outline: [
-                        [room.x0, room.y0],
-                        [room.x1, room.y0],
-                        [room.x1, room.y1],
-                        [room.x0, room.y1],
-                    ],
+                    outline: outline,
                 } as RoomConfig;
                 roomsConfig.push(roomConfig);
             }

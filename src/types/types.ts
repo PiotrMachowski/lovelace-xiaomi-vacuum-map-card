@@ -16,6 +16,7 @@ export type RectangleType = [PointType, PointType, PointType, PointType];
 export type ZoneType = [number, number, number, number];
 export type ZoneWithRepeatsType = [number, number, number, number, number];
 export type PointType = [number, number];
+export type OutlineType = PointType[];
 export type PointWithRepeatsType = [number, number, number];
 export type PredefinedSelectionConfig = PredefinedZoneConfig | PredefinedPointConfig | RoomConfig;
 export type TranslatableString = string | [string, string, string];
@@ -177,7 +178,7 @@ export interface PredefinedPointConfig extends PredefinedSelectionCommonConfig {
 
 export interface RoomConfig extends PredefinedSelectionCommonConfig {
     readonly id: number | string;
-    readonly outline?: [number, number][];
+    readonly outline?: OutlineType;
 }
 
 export interface LabelConfig {
@@ -209,10 +210,11 @@ export interface MapCroppingConfig {
 }
 
 export interface MapExtractorRoom {
-    readonly x0: number;
-    readonly y0: number;
-    readonly x1: number;
-    readonly y1: number;
+    readonly x0: number | undefined;
+    readonly y0: number | undefined;
+    readonly x1: number | undefined;
+    readonly y1: number | undefined;
+    readonly outline: OutlineType | undefined;
     readonly name: string | undefined;
     readonly icon: string | undefined;
     readonly x: number | undefined;
