@@ -62,7 +62,7 @@ import { MapMode } from "./model/map_mode/map-mode";
 import { SelectionType } from "./model/map_mode/selection-type";
 import { RepeatsType } from "./model/map_mode/repeats-type";
 import { PlatformGenerator } from "./model/generators/platform-generator";
-import { TilesGenerator } from "./model/generators/tiles-generator";
+import { sortTiles, TilesGenerator } from "./model/generators/tiles-generator";
 import { IconListGenerator } from "./model/generators/icon-list-generator";
 import { TileRenderer } from "./renderers/tile-renderer";
 import { IconRenderer } from "./renderers/icon-renderer";
