@@ -69,15 +69,14 @@
                 "icon": "mdi:floor-plan",
                 "selection_type": "ROOM",
                 "max_selections": 5,
-                "repeats_type": "EXTERNAL",
-                "max_repeats": 3,
+                "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "vacuum.send_command",
                     "evaluate_data_as_template": true,
                     "service_data": {
                         "entity_id": "[[entity_id]]",
                         "command": "set_mode_withroom",
-                        "params": "[ \"{{state_attr('[[entity_id]]', 'is_mop')}}\", [[repeats]], [[selection_size]], [[selection_unwrapped]] ]|[[jsonify]]"
+                        "params": "[ \"{{state_attr('[[entity_id]]', 'is_mop')}}\", 1, [[selection_size]], [[selection_unwrapped]] ]|[[jsonify]]"
                     }
                 }
             }
