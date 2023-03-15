@@ -35,7 +35,13 @@ class TilesGeneratorContext {
             return;
         }
         if (tile.tile_id && this._userDefinedTiles.some(t => t.tile_id === tile.tile_id)) {
-            this._userDefinedTiles.filter(t => t.tile_id === tile.tile_id).forEach(t => this._tiles.push(t));
+            this._userDefinedTiles.filter(t => t.tile_id === tile.tile_id).forEach(t => {
+                if (t.replace_config) {
+                    this._tiles.push({ ...tile, ...t });
+                } else {
+                    this._tiles.push(t);
+                }
+            });
             return;
         }
         this._tiles.push(tile);

@@ -78,6 +78,9 @@ function validateTileConfig(config: TileConfig): TranslatableString[] {
         return ["validation.preset.tiles.invalid"];
     }
     const errors: TranslatableString[] = [];
+    if (config.replace_config) {
+        return errors;
+    }
     if (!config.entity && !config.internal_variable) {
         errors.push("validation.preset.tiles.entity.missing");
     }

@@ -568,7 +568,8 @@ export class XiaomiVacuumMapCard extends LitElement {
                       const tilesIds = tiles.map(t => t.tile_id ?? "");
                       return [
                           ...tiles,
-                          ...(config.tiles ?? []).filter(t => t.tile_id === undefined || !tilesIds.includes(t.tile_id)),
+                          ...(config.tiles ?? []).filter(t => !t.replace_config &&
+                              (t.tile_id === undefined || !tilesIds.includes(t.tile_id))),
                       ];
                   })
                 : new Promise(resolve => resolve(config.tiles ?? []));
