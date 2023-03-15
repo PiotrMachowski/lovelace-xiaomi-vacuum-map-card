@@ -78,7 +78,6 @@
             }
         }
     },
-    "sensors_from": "2020.1.0",
     "tiles": {
         "from_sensors": [
             {

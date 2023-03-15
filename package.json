@@ -20,8 +20,7 @@
         "lit": "^2.0.0",
         "pointer-tracker": "^2.4.0",
         "transformation-matrix": "^2.8.0",
-        "change-perspective": "^1.0.1",
-        "compare-versions": "^4.0.1"
+        "change-perspective": "^1.0.1"
     },
     "devDependencies": {
         "@babel/core": "^7.15.0",

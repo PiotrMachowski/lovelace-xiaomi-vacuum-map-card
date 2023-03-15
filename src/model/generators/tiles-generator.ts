@@ -16,8 +16,39 @@ import { TemplatableTileValue } from "../map_mode/templatable-value";
 import { HomeAssistantFixed } from "../../types/fixes";
 import { computeAttributeNameDisplay } from "../../localize/hass/compute_attribute_display";
 
+
+class TilesGeneratorContext {
+    private readonly _tiles: TileConfig[];
+    private readonly _userDefinedTiles: TileConfig[];
+
+    constructor(userDefinedTiles: TileConfig[]) {
+        this._userDefinedTiles = userDefinedTiles;
+        this._tiles = [];
+    }
+
+    public addTiles(tiles: TileConfig[]): void {
+        tiles.forEach(t => this.addTile(t));
+    }
+
+    public addTile(tile: TileConfig): void {
+        if (tile.tile_id && this._tiles.map(t => t.tile_id).includes(tile.tile_id)) {
+            return;
+        }
+        if (tile.tile_id && this._userDefinedTiles.some(t => t.tile_id === tile.tile_id)) {
+            this._userDefinedTiles.filter(t => t.tile_id === tile.tile_id).forEach(t => this._tiles.push(t));
+            return;
+        }
+        this._tiles.push(tile);
+    }
+
+    public get tiles(): TileConfig[] {
+        return this._tiles;
+    }
+}
+
+
 export class TilesGenerator {
-    public static generate(
+    public static async generate(
         hass: HomeAssistantFixed,
         vacuumEntity: string,
         platform: string,
@@ -26,33 +57,16 @@ export class TilesGenerator {
         variables: VariablesStorage,
     ): Promise<TileConfig[]> {
         if (!hass) return new Promise<TileConfig[]>(resolve => resolve([]));
-        const useNewGenerator = PlatformGenerator.usesSensors(hass, platform);
-
         const state = hass.states[vacuumEntity];
         const tiles: TileConfig[] = [];
         if (!state) {
-            return new Promise<TileConfig[]>(resolve => resolve(tiles));
+            return tiles;
         }
-
-        tiles.push(...this.getCommonTiles(state, vacuumEntity, language));
-        if (useNewGenerator) {
-            return this.addTilesFromSensors(hass, vacuumEntity, platform, tiles, language, tilesToOverride, variables);
-        } else {
-            return new Promise<TileConfig[]>(resolve =>
-                resolve(
-                    this.addTilesFromAttributes(
-                        hass,
-                        state,
-                        vacuumEntity,
-                        platform,
-                        tiles,
-                        language,
-                        tilesToOverride,
-                        variables,
-                    ),
-                ),
-            );
-        }
+        const context = new TilesGeneratorContext(tilesToOverride);
+        context.addTiles(this.getCommonTiles(state, vacuumEntity, language));
+        context.addTiles(await this.getTilesFromSensors(hass, vacuumEntity, platform, language, variables));
+        context.addTiles(this.getTilesFromAttributes(hass, state, vacuumEntity, platform, language, variables));
+        return context.tiles;
     }
 
     private static getCommonTiles(state: HassEntity, vacuumEntity: string, language: Language): TileConfig[] {
@@ -126,29 +140,24 @@ export class TilesGenerator {
         return tiles;
     }
 
-    private static addTilesFromAttributes(
+    private static getTilesFromAttributes(
         hass: HomeAssistantFixed,
         state: HassEntity,
         vacuumEntity: string,
         platform: string,
-        tiles: TileConfig[],
         language: Language,
-        tilesToOverride: Array<TileConfig>,
         variables: VariablesStorage,
     ): TileConfig[] {
-        PlatformGenerator.getTilesFromAttributesTemplates(platform)
+        return PlatformGenerator.getTilesFromAttributesTemplates(platform)
             .filter(t => t.attribute in state.attributes)
-            .forEach(t => tiles.push(this.mapAttributeToTile(hass, vacuumEntity, t, language, variables)));
-        return this.replaceDuplicates(tiles, tilesToOverride);
+            .map(t => this.mapAttributeToTile(hass, vacuumEntity, t, language, variables));
     }
 
-    private static async addTilesFromSensors(
+    private static async getTilesFromSensors(
         hass: HomeAssistantFixed,
         vacuumEntityId: string,
         platform: string,
-        tiles: TileConfig[],
         language: Language,
-        tilesToOverride: Array<TileConfig>,
         variables: VariablesStorage,
     ): Promise<TileConfig[]> {
         let entityRegistryEntries;
@@ -160,15 +169,14 @@ export class TilesGenerator {
             entityRegistryEntries = [];
         }
         if (entityRegistryEntries.length > 0) {
-            PlatformGenerator.getTilesFromSensorsTemplates(platform)
+            return PlatformGenerator.getTilesFromSensorsTemplates(platform)
                 .map(t => ({
                     tile: t,
                     entity: entityRegistryEntries.filter(e => e.unique_id.match(t.unique_id_regex)),
                 }))
                 .flatMap(v => v.entity.map(e => this.mapEntryToTile(hass, vacuumEntityId, e, v.tile, language, variables)))
-                .forEach(t => tiles.push(t));
         }
-        return new Promise<TileConfig[]>(resolve => resolve(this.replaceDuplicates(tiles, tilesToOverride)));
+        return [];
     }
 
     private static mapEntryToTile(
@@ -293,17 +301,4 @@ export class TilesGenerator {
         return defaultVariables;
     }
 
-    private static replaceDuplicates(
-        autogeneratedTiles: Array<TileConfig>,
-        tilesToOverride: Array<TileConfig>,
-    ): Array<TileConfig> {
-        const overriddenTileIds = tilesToOverride.map(t => t.tile_id ?? "");
-        for (let i = 0; i < autogeneratedTiles.length; i++) {
-            const tileId = autogeneratedTiles[i].tile_id ?? "";
-            if (overriddenTileIds.includes(tileId)) {
-                autogeneratedTiles[i] = tilesToOverride[overriddenTileIds.indexOf(tileId)];
-            }
-        }
-        return autogeneratedTiles;
-    }
 }

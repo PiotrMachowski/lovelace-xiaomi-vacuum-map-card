@@ -98,7 +98,6 @@
             }
         }
     },
-    "sensors_from": "2021.11.0",
     "tiles": {
         "from_attributes": [
             {

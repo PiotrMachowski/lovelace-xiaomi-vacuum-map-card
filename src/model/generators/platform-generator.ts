@@ -15,9 +15,7 @@ import * as simpleWyzeTemplate from "./platform_templates/romedtino_simple-wyze-
 import * as setupDecimalTemplate from "./platform_templates/setup_decimal.json";
 import * as setupIntegerTemplate from "./platform_templates/setup_integer.json";
 import { MapModeConfig, PlatformTemplate, TileFromAttributeTemplate, TileFromSensorTemplate } from "../../types/types";
-import { compare } from "compare-versions";
 import { SelectionType } from "../map_mode/selection-type";
-import { HomeAssistantFixed } from "../../types/fixes";
 
 export class PlatformGenerator {
     public static XIAOMI_MIIO_PLATFORM = "default";
@@ -111,14 +109,6 @@ export class PlatformGenerator {
 
     public static getTilesFromSensorsTemplates(platform: string): TileFromSensorTemplate[] {
         return this.getPlatformTemplate(platform).tiles.from_sensors ?? [];
-    }
-
-    public static usesSensors(hass: HomeAssistantFixed, platform: string): boolean {
-        const sensorsFrom = this.getPlatformTemplate(platform).sensors_from;
-        if (sensorsFrom) {
-            return compare(hass.config.version.replace(/\.*[a-z].*/, ""), sensorsFrom, ">=");
-        }
-        return false;
     }
 
     public static getRoomsTemplate(platform: string): string | undefined {
