@@ -574,6 +574,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                   })
                 : new Promise(resolve => resolve(config.tiles ?? []));
         tilesGenerated
+            .then(t => t.sort(sortTiles))
             .then(tiles => this._setPreset({ ...config, tiles: tiles, icons: icons }))
             .then(() => setTimeout(() => this.requestUpdate(), 100))
             .then(() => this._setCurrentMode(0, false));

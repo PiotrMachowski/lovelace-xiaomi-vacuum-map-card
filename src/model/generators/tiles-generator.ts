@@ -308,3 +308,13 @@ export class TilesGenerator {
     }
 
 }
+
+export function sortTiles(t1: TileConfig, t2: TileConfig): number {
+    if (t1.order === undefined && t2.order === undefined)
+        return 0;
+    if (t1.order === undefined)
+        return 1;
+    if (t2.order === undefined)
+        return -1;
+    return t1.order - t2.order;
+}
