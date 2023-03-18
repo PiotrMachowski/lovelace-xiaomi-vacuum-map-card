@@ -20,10 +20,10 @@
     "validation": {
         "preset": {
             "entity": {
-                "missing": "Missing property: entity"
+                "missing": "Proprietate lipsă: entity"
             },
             "preset_name": {
-                "missing": "Missing property: preset_name"
+                "missing": "Proprietate lipsă: preset_name"
             },
             "platform": {
                 "invalid": "Invalid vacuum platform: {0}"
