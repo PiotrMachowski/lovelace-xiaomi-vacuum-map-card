@@ -233,21 +233,21 @@
             "after_link": ". Pentru o configurare mai avansată, utilizați modul YAML."
         },
         "label": {
-            "name": "Titlu (optional)",
-            "entity": "Entitate aspirator (required)",
-            "camera": "Entitate camera (required)",
-            "vacuum_platform": "Vacuum platform (required)",
-            "map_locked": "Map locked (optional)",
-            "two_finger_pan": "Two finger pan (optional)",
-            "platforms_documentation": "Chosen platform's documentation ({0})",
-            "selection": "Selection:",
-            "copy": "Copy",
-            "copied": "Copied!",
-            "set_static_config": "Generate static config",
-            "config_set": "Config set!\nOpen config editor to adjust it.",
-            "config_set_failed": "Failed to update config.",
-            "generate_rooms_config": "Generate rooms config",
-            "copy_service_call": "Copy service call"
+            "name": "Titlu (opțional)",
+            "entity": "Entitate aspirator (necesar)",
+            "camera": "Entitate camera (necesar)",
+            "vacuum_platform": "Platformă aspirator (necesar)",
+            "map_locked": "Hartă blocată (opțional)",
+            "two_finger_pan": "Mișcare hartă cu două degete (opțional)",
+            "platforms_documentation": "Documentația platformei alese ({0})",
+            "selection": "Selecție:",
+            "copy": "Copiază",
+            "copied": "Copiat!",
+            "set_static_config": "Generează config static",
+            "config_set": "Configurare setată!\nDeschide editorul de configurare pentru a-l ajusta.",
+            "config_set_failed": "Nu s-a putut actualiza configurația.",
+            "generate_rooms_config": "Generați configurația camerelor",
+            "copy_service_call": "Copiere apel de serviciu"
         }
     }
 }
