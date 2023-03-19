@@ -648,6 +648,7 @@ Currently, this card contains translations for following languages:
 * `nl` - Dutch (Nederlands)
 * `pl` - Polish (Polski)
 * `pt-BR` - Brazilian Portuguese (Português Brasileiro)
+* `ro` - Romanian (Română)
 * `ru` - Russian (Русский)
 * `sk` - Slovak (Slovenčina)
 * `sv` - Swedish (Svenska)
