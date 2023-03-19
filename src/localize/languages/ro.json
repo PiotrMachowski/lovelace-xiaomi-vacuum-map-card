@@ -8,7 +8,7 @@
     },
     "map_mode": {
         "invalid": "Template invalid!",
-        "vacuum_goto": "Punct și Dute",
+        "vacuum_goto": "Punct și Mergi",
         "vacuum_goto_predefined": "Puncte",
         "vacuum_clean_segment": "Camere",
         "vacuum_clean_point": "Punct de curățare",
@@ -45,175 +45,175 @@
                 }
             },
             "icons": {
-                "invalid": "Error in configuration: icons",
+                "invalid": "Eroare în configurare: icons",
                 "icon": {
-                    "missing": "Each entry of icons list must contain icon property"
+                    "missing": "Fiecare intrare din lista de pictograme trebuie să conțină proprietatea pictogramei"
                 }
             },
             "tiles": {
-                "invalid": "Error in configuration: tiles",
+                "invalid": "Eroare în configurare: tiles",
                 "entity": {
                     "missing": "Each entry of tiles list must contain entity or internal variable"
                 },
                 "label": {
-                    "missing": "Each entry of tiles list must contain label"
+                    "missing": "Fiecare intrare a listei de plăci trebuie să conțină o etichetă"
                 }
             },
             "map_modes": {
-                "invalid": "Error in configuration: map_modes",
+                "invalid": "Eroare în configurare: map_modes",
                 "icon": {
-                    "missing": "Missing icon of map mode"
+                    "missing": "Lipsește pictograma modului hartă"
                 },
                 "name": {
-                    "missing": "Missing name of map mode"
+                    "missing": "Lipsește numele modului hartă"
                 },
                 "template": {
-                    "invalid": "Invalid template: {0}"
+                    "invalid": "Template invalid: {0}"
                 },
                 "predefined_selections": {
-                    "not_applicable": "Mode {0} does not support predefined selections",
+                    "not_applicable": "Modul {0} nu suportă selecțiile predefinite",
                     "zones": {
-                        "missing": "Missing zones configuration",
-                        "invalid_parameters_number": "Each zone must have 4 parameters"
+                        "missing": "Lipsă zone în configurație",
+                        "invalid_parameters_number": "Fiecare zonă trebuie să aibă 4 parametri"
                     },
                     "points": {
                         "position": {
-                            "missing": "Missing points configuration",
-                            "invalid_parameters_number": "Each point must have 2 parameters"
+                            "missing": "Lipsă puncte în configurație",
+                            "invalid_parameters_number": "Fiecare punct trebuie să aibă 2 parametri"
                         }
                     },
                     "rooms": {
                         "id": {
-                            "missing": "Missing room id",
-                            "invalid_format": "Invalid room id: {0}"
+                            "missing": "Lipsă id cameră",
+                            "invalid_format": "Id cameră invalid: {0}"
                         },
                         "outline": {
-                            "invalid_parameters_number": "Each point of room outline must have 2 parameters"
+                            "invalid_parameters_number": "Fiecare punct al conturului camerei trebuie să aibă 2 parametri"
                         }
                     },
                     "label": {
                         "x": {
-                            "missing": "Label must have x property"
+                            "missing": "Eticheta trebuie să aibă proprietatea x"
                         },
                         "y": {
-                            "missing": "Label must have y property"
+                            "missing": "Eticheta trebuie să aibă proprietatea y"
                         },
                         "text": {
-                            "missing": "Label must have text property"
+                            "missing": "Eticheta trebuie să aibă proprietatea text"
                         }
                     },
                     "icon": {
                         "x": {
-                            "missing": "Icon must have x property"
+                            "missing": "Pictograma trebuie să aibă proprietatea x"
                         },
                         "y": {
-                            "missing": "Icon must have y property"
+                            "missing": "Pictograma trebuie să aibă proprietatea y"
                         },
                         "name": {
-                            "missing": "Icon must have name property"
+                            "missing": "Pictograma trebuie să aibă proprietatea nume"
                         }
                     }
                 },
                 "service_call_schema": {
-                    "missing": "Missing service call schema",
+                    "missing": "Lipsește schema de apel de service",
                     "service": {
-                        "missing": "Service call schema must contain service",
-                        "invalid": "Invalid service: {0}"
+                        "missing": "Schema de apel de service trebuie să conțină serviciu",
+                        "invalid": "Serviciu invalid: {0}"
                     }
                 }
             }
         },
-        "invalid_entities": "Invalid entities:",
-        "invalid_calibration": "Invalid calibration, please check your configuration"
+        "invalid_entities": "Entități invalide:",
+        "invalid_calibration": "Calibrare nevalidă, vă rugăm să vă verificați configurația"
     },
     "tile": {
         "status": {
-            "label": "Status",
+            "label": "Stare",
             "value": {
-                "starting": "Starting",
-                "charger disconnected": "Charger disconnected",
-                "idle": "Idle",
-                "remote control active": "Remote control active",
-                "cleaning": "Cleaning",
-                "returning home": "Returning home",
-                "manual mode": "Manual mode",
-                "charging": "Charging",
-                "charging problem": "Charging problem",
-                "paused": "Paused",
-                "spot cleaning": "Spot cleaning",
-                "error": "Error",
-                "shutting down": "Shutting down",
-                "updating": "Updating",
-                "docking": "Docking",
-                "going to target": "Going to target",
-                "zoned cleaning": "Zoned cleaning",
-                "segment cleaning": "Segment cleaning",
-                "emptying the bin": "Emptying the bin",
-                "charging complete": "Charging complete",
-                "device offline": "Device offline"
+                "starting": "Pornire",
+                "charger disconnected": "Încărcătorul a fost deconectat",
+                "idle": "Inactiv",
+                "remote control active": "Telecomanda activa",
+                "cleaning": "Curățare",
+                "returning home": "Întoarcere acasă",
+                "manual mode": "Mod manual",
+                "charging": "Se încarcă",
+                "charging problem": "Probleme de încărcare",
+                "paused": "În pauză",
+                "spot cleaning": "Curățarea petelor",
+                "error": "Eroare",
+                "shutting down": "Se închide",
+                "updating": "Se updatează",
+                "docking": "Andocare",
+                "going to target": "Mergând la țintă",
+                "zoned cleaning": "Curățare zonă",
+                "segment cleaning": "Curățare segment",
+                "emptying the bin": "Golirea coșului de gunoi",
+                "charging complete": "Încarcare completă",
+                "device offline": "Dispozitiv offline"
             }
         },
         "battery_level": {
-            "label": "Battery"
+            "label": "Baterie"
         },
         "fan_speed": {
-            "label": "Fan speed",
+            "label": "Viteza ventilatorului",
             "value": {
-                "silent": "Silent",
+                "silent": "Tăcut",
                 "standard": "Standard",
-                "medium": "Medium",
+                "medium": "Mediu",
                 "turbo": "Turbo",
                 "auto": "Auto",
-                "gentle": "Gentle"
+                "gentle": "Blând"
             }
         },
         "sensor_dirty_left": {
-            "label": "Sensors left"
+            "label": "Timp rămas senzori"
         },
         "filter_left": {
-            "label": "Filter left"
+            "label": "Timp rămas filtru"
         },
         "main_brush_left": {
-            "label": "Main brush left"
+            "label": "Timp rămas peria principală"
         },
         "side_brush_left": {
-            "label": "Side brush left"
+            "label": "Timp rămas peria laterală"
         },
         "cleaning_count": {
-            "label": "Cleaning count"
+            "label": "Număr de curățări"
         },
         "cleaned_area": {
-            "label": "Cleaned area"
+            "label": "Zonă curățată"
         },
         "cleaning_time": {
-            "label": "Cleaning time"
+            "label": "Timp de curățare"
         },
         "mop_left": {
-            "label": "Mop left"
+            "label": "Timp rămas mop"
         },
         "bin_full": {
-            "label": "Bin full",
+            "label": "Coș de gunoi plin",
             "value": {
-                "true": "Yes",
-                "false": "No"
+                "true": "Da",
+                "false": "Nu"
             }
         },
         "bin_present": {
-            "label": "Bin present",
+            "label": "Coș de gunoi prezent",
             "value": {
-                "true": "Yes",
-                "false": "No"
+                "true": "Da",
+                "false": "Nu"
             }
         }
     },
     "icon": {
         "vacuum_start": "Start",
-        "vacuum_pause": "Pause",
+        "vacuum_pause": "Pauză",
         "vacuum_stop": "Stop",
-        "vacuum_return_to_base": "Return to base",
-        "vacuum_clean_spot": "Clean spot",
-        "vacuum_locate": "Locate",
-        "vacuum_set_fan_speed": "Change fan speed"
+        "vacuum_return_to_base": "Întoarceți-vă la bază",
+        "vacuum_clean_spot": "Curățare pată",
+        "vacuum_locate": "Localizați",
+        "vacuum_set_fan_speed": "Schimbă viteza ventilatorului"
     },
     "unit": {
         "hour_shortcut": "h",
@@ -222,20 +222,20 @@
         "minute_shortcut": "min"
     },
     "popups": {
-        "success": "Success!",
-        "no_selection": "No selection provided",
-        "failed": "Failed to call service"
+        "success": "Succes!",
+        "no_selection": "Nu este oferită nicio selecție",
+        "failed": "Nu s-a putut apela serviciul"
     },
     "editor": {
         "description": {
-            "before_link": "This visual editor supports only a basic configuration with a camera entity created using ",
+            "before_link": "Acest editor vizual acceptă doar o configurație de bază cu o entitate de cameră creată folosind ",
             "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": ". For more advanced setup use YAML mode."
+            "after_link": ". Pentru o configurare mai avansată, utilizați modul YAML."
         },
         "label": {
-            "name": "Title (optional)",
-            "entity": "Vacuum entity (required)",
-            "camera": "Camera entity (required)",
+            "name": "Titlu (optional)",
+            "entity": "Entitate aspirator (required)",
+            "camera": "Entitate camera (required)",
             "vacuum_platform": "Vacuum platform (required)",
             "map_locked": "Map locked (optional)",
             "two_finger_pan": "Two finger pan (optional)",
