@@ -113,7 +113,7 @@
                     "service_data": {
                         "command": "reset_consumable",
                         "params": "sensor_dirty_time",
-                        "entity_id": "[[vacuum_entity]]"
+                        "entity_id": "[[vacuum_entity_id]]"
                     }
                 }
             },
@@ -130,7 +130,7 @@
                     "service_data": {
                         "command": "reset_consumable",
                         "params": "filter_work_time",
-                        "entity_id": "[[vacuum_entity]]"
+                        "entity_id": "[[vacuum_entity_id]]"
                     }
                 }
             },
@@ -147,7 +147,7 @@
                     "service_data": {
                         "command": "reset_consumable",
                         "params": "main_brush_work_time",
-                        "entity_id": "[[vacuum_entity]]"
+                        "entity_id": "[[vacuum_entity_id]]"
                     }
                 }
             },
@@ -164,7 +164,7 @@
                     "service_data": {
                         "command": "reset_consumable",
                         "params": "side_brush_work_time",
-                        "entity_id": "[[vacuum_entity]]"
+                        "entity_id": "[[vacuum_entity_id]]"
                     }
                 }
             },

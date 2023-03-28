@@ -302,7 +302,7 @@ export class TilesGenerator {
     ): VariablesStorage {
         const defaultVariables: VariablesStorage = {};
         defaultVariables[TemplatableTileValue.ENTITY_ID] = entityId ?? vacuumEntity;
-        defaultVariables[TemplatableTileValue.VACUUM_ENTITY] = vacuumEntity;
+        defaultVariables[TemplatableTileValue.VACUUM_ENTITY_ID] = vacuumEntity;
         defaultVariables[TemplatableTileValue.ATTRIBUTE] = attribute ?? "";
         return defaultVariables;
     }

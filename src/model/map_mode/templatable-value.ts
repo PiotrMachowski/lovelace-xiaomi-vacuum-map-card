@@ -10,6 +10,6 @@ export enum TemplatableValue {
 
 export enum TemplatableTileValue {
     ENTITY_ID = "entity_id",
-    VACUUM_ENTITY = "vacuum_entity",
+    VACUUM_ENTITY_ID = "vacuum_entity_id",
     ATTRIBUTE = "attribute",
 }

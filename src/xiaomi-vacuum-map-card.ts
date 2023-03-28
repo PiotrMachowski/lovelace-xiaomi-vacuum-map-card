@@ -107,12 +107,12 @@ export class XiaomiVacuumMapCard extends LitElement {
     @state() private mapScale!: number;
     @state() private mapX!: number;
     @state() private mapY!: number;
-    @state() private repeats = 1;
+    @state() public repeats = 1;
     @state() private selectedMode = 0;
     @state() private mapLocked = false;
     @state() private configErrors: string[] = [];
     @state() private connected = false;
-    @state() private internalVariables = {};
+    @state() public internalVariables = {};
     private currentPreset!: CardPresetConfig;
     private watchedEntities: string[] = [];
     private selectedManualRectangles: ManualRectangle[] = [];
@@ -420,7 +420,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         this._updateElements();
     }
 
-    private _getCurrentPreset(): CardPresetConfig {
+    public _getCurrentPreset(): CardPresetConfig {
         return this.currentPreset;
     }
 
@@ -763,11 +763,11 @@ export class XiaomiVacuumMapCard extends LitElement {
         this._selectionChanged();
     }
 
-    private _getCurrentMode(): MapMode {
+    public _getCurrentMode(): MapMode {
         return this.modes[this.selectedMode];
     }
 
-    private _getSelection(mode: MapMode): { selection: unknown[]; variables: VariablesStorage } {
+    public _getSelection(mode: MapMode): { selection: unknown[]; variables: VariablesStorage } {
         if (!mode) {
             return { selection: [], variables: {} };
         }

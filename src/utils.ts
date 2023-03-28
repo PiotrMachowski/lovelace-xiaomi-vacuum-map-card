@@ -21,6 +21,8 @@ import { MousePosition } from "./model/map_objects/mouse-position";
 import { XiaomiVacuumMapCard } from "./xiaomi-vacuum-map-card";
 import { Modifier } from "./model/map_mode/modifier";
 import { HomeAssistantFixed } from "./types/fixes";
+import { ServiceCallSchema } from "./model/map_mode/service-call-schema";
+import { TemplatableTileValue } from "./model/map_mode/templatable-value";
 
 export function stopEvent(event: MouseEvent | TouchEvent): void {
     event.preventDefault();
@@ -155,7 +157,18 @@ export function handleActionWithConfig(
 ): (ev: ActionHandlerEvent) => void {
     return (ev: ActionHandlerEvent): void => {
         if (node.hass && config && ev.detail.action) {
-            handleAction(node, node.hass as unknown as HomeAssistant, config, ev.detail.action);
+            const currentPreset = node._getCurrentPreset();
+            const currentMode = node._getCurrentMode();
+            const tileVariables = {};
+            tileVariables[TemplatableTileValue.VACUUM_ENTITY_ID] = currentPreset.entity;
+            if (config.hasOwnProperty("attribute")) {
+                tileVariables[TemplatableTileValue.ATTRIBUTE] = config["attribute"];
+            }
+            const entity_id = config.hasOwnProperty("entity") ? config["entity"]: currentPreset.entity;
+            const { selection, variables } = node._getSelection(currentMode);
+            const defaultVariables = ServiceCallSchema.getDefaultVariables(entity_id, selection, node.repeats);
+            const filled = getFilledTemplate(config as Record<string, unknown>, defaultVariables, tileVariables, node.internalVariables, variables);
+            handleAction(node, node.hass as unknown as HomeAssistant, filled as ActionableObjectConfig, ev.detail.action);
         }
     };
 }
@@ -276,6 +289,7 @@ export function getFilledTemplate(
     for (const variablesStorage of variablesStorages) {
         variables = { ...variablesStorage, ...variables };
     }
+    console.log("VARIABLES", variables);
     const keyReplacer = v => getReplacedValue(v, variables);
     replaceInTarget(target, keyReplacer);
     return target;
