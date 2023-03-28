@@ -1,0 +1,253 @@
+{
+    "common": {
+        "version": "Versiune",
+        "invalid_configuration": "Configurație invalidă {0}",
+        "description": "Un card care vă lasă să vă configurați aspiratorul",
+        "old_configuration": "Configurație veche detectată. Modificați fisierul de configurare la ultima versiune sau creați un nou card de la inceput.",
+        "old_configuration_migration_link": "Ghid de migrare"
+    },
+    "map_mode": {
+        "invalid": "Template invalid!",
+        "vacuum_goto": "Punct și Mergi",
+        "vacuum_goto_predefined": "Puncte",
+        "vacuum_clean_segment": "Camere",
+        "vacuum_clean_point": "Punct de curățare",
+        "vacuum_clean_point_predefined": "Puncte predefinite",
+        "vacuum_clean_zone": "Zonă de curățare",
+        "vacuum_clean_zone_predefined": "Listă zone",
+        "vacuum_follow_path": "Cale"
+    },
+    "validation": {
+        "preset": {
+            "entity": {
+                "missing": "Proprietate lipsă: entity"
+            },
+            "preset_name": {
+                "missing": "Proprietate lipsă: preset_name"
+            },
+            "platform": {
+                "invalid": "Invalid vacuum platform: {0}"
+            },
+            "map_source": {
+                "missing": "Missing property: map_source",
+                "none_provided": "No camera neither image provided",
+                "ambiguous": "Only one map source allowed"
+            },
+            "calibration_source": {
+                "missing": "Missing property: calibration_source",
+                "ambiguous": "Only one calibration source allowed",
+                "none_provided": "No calibration source provided",
+                "calibration_points": {
+                    "invalid_number": "Exactly 3 or 4 calibration points required",
+                    "missing_map": "Each calibration point must contain map coordinates",
+                    "missing_vacuum": "Each calibration point must contain vacuum coordinates",
+                    "missing_coordinate": "Map and vacuum calibration points must contain both x and y coordinate"
+                }
+            },
+            "icons": {
+                "invalid": "Eroare în configurare: icons",
+                "icon": {
+                    "missing": "Fiecare intrare din lista de pictograme trebuie să conțină proprietatea pictogramei"
+                }
+            },
+            "tiles": {
+                "invalid": "Eroare în configurare: tiles",
+                "entity": {
+                    "missing": "Each entry of tiles list must contain entity or internal variable"
+                },
+                "label": {
+                    "missing": "Fiecare intrare a listei de plăci trebuie să conțină o etichetă"
+                }
+            },
+            "map_modes": {
+                "invalid": "Eroare în configurare: map_modes",
+                "icon": {
+                    "missing": "Lipsește pictograma modului hartă"
+                },
+                "name": {
+                    "missing": "Lipsește numele modului hartă"
+                },
+                "template": {
+                    "invalid": "Template invalid: {0}"
+                },
+                "predefined_selections": {
+                    "not_applicable": "Modul {0} nu suportă selecțiile predefinite",
+                    "zones": {
+                        "missing": "Lipsă zone în configurație",
+                        "invalid_parameters_number": "Fiecare zonă trebuie să aibă 4 parametri"
+                    },
+                    "points": {
+                        "position": {
+                            "missing": "Lipsă puncte în configurație",
+                            "invalid_parameters_number": "Fiecare punct trebuie să aibă 2 parametri"
+                        }
+                    },
+                    "rooms": {
+                        "id": {
+                            "missing": "Lipsă id cameră",
+                            "invalid_format": "Id cameră invalid: {0}"
+                        },
+                        "outline": {
+                            "invalid_parameters_number": "Fiecare punct al conturului camerei trebuie să aibă 2 parametri"
+                        }
+                    },
+                    "label": {
+                        "x": {
+                            "missing": "Eticheta trebuie să aibă proprietatea x"
+                        },
+                        "y": {
+                            "missing": "Eticheta trebuie să aibă proprietatea y"
+                        },
+                        "text": {
+                            "missing": "Eticheta trebuie să aibă proprietatea text"
+                        }
+                    },
+                    "icon": {
+                        "x": {
+                            "missing": "Pictograma trebuie să aibă proprietatea x"
+                        },
+                        "y": {
+                            "missing": "Pictograma trebuie să aibă proprietatea y"
+                        },
+                        "name": {
+                            "missing": "Pictograma trebuie să aibă proprietatea nume"
+                        }
+                    }
+                },
+                "service_call_schema": {
+                    "missing": "Lipsește schema de apel de service",
+                    "service": {
+                        "missing": "Schema de apel de service trebuie să conțină serviciu",
+                        "invalid": "Serviciu invalid: {0}"
+                    }
+                }
+            }
+        },
+        "invalid_entities": "Entități invalide:",
+        "invalid_calibration": "Calibrare nevalidă, vă rugăm să vă verificați configurația"
+    },
+    "tile": {
+        "status": {
+            "label": "Stare",
+            "value": {
+                "starting": "Pornire",
+                "charger disconnected": "Încărcătorul a fost deconectat",
+                "idle": "Inactiv",
+                "remote control active": "Telecomanda activa",
+                "cleaning": "Curățare",
+                "returning home": "Întoarcere acasă",
+                "manual mode": "Mod manual",
+                "charging": "Se încarcă",
+                "charging problem": "Probleme de încărcare",
+                "paused": "În pauză",
+                "spot cleaning": "Curățarea petelor",
+                "error": "Eroare",
+                "shutting down": "Se închide",
+                "updating": "Se updatează",
+                "docking": "Andocare",
+                "going to target": "Mergând la țintă",
+                "zoned cleaning": "Curățare zonă",
+                "segment cleaning": "Curățare segment",
+                "emptying the bin": "Golirea coșului de gunoi",
+                "charging complete": "Încarcare completă",
+                "device offline": "Dispozitiv offline"
+            }
+        },
+        "battery_level": {
+            "label": "Baterie"
+        },
+        "fan_speed": {
+            "label": "Viteza ventilatorului",
+            "value": {
+                "silent": "Tăcut",
+                "standard": "Standard",
+                "medium": "Mediu",
+                "turbo": "Turbo",
+                "auto": "Auto",
+                "gentle": "Blând"
+            }
+        },
+        "sensor_dirty_left": {
+            "label": "Timp rămas senzori"
+        },
+        "filter_left": {
+            "label": "Timp rămas filtru"
+        },
+        "main_brush_left": {
+            "label": "Timp rămas peria principală"
+        },
+        "side_brush_left": {
+            "label": "Timp rămas peria laterală"
+        },
+        "cleaning_count": {
+            "label": "Număr de curățări"
+        },
+        "cleaned_area": {
+            "label": "Zonă curățată"
+        },
+        "cleaning_time": {
+            "label": "Timp de curățare"
+        },
+        "mop_left": {
+            "label": "Timp rămas mop"
+        },
+        "bin_full": {
+            "label": "Coș de gunoi plin",
+            "value": {
+                "true": "Da",
+                "false": "Nu"
+            }
+        },
+        "bin_present": {
+            "label": "Coș de gunoi prezent",
+            "value": {
+                "true": "Da",
+                "false": "Nu"
+            }
+        }
+    },
+    "icon": {
+        "vacuum_start": "Start",
+        "vacuum_pause": "Pauză",
+        "vacuum_stop": "Stop",
+        "vacuum_return_to_base": "Întoarceți-vă la bază",
+        "vacuum_clean_spot": "Curățare pată",
+        "vacuum_locate": "Localizați",
+        "vacuum_set_fan_speed": "Schimbă viteza ventilatorului"
+    },
+    "unit": {
+        "hour_shortcut": "h",
+        "meter_shortcut": "m",
+        "meter_squared_shortcut": "m²",
+        "minute_shortcut": "min"
+    },
+    "popups": {
+        "success": "Succes!",
+        "no_selection": "Nu este oferită nicio selecție",
+        "failed": "Nu s-a putut apela serviciul"
+    },
+    "editor": {
+        "description": {
+            "before_link": "Acest editor vizual acceptă doar o configurație de bază cu o entitate de cameră creată folosind ",
+            "link_text": "Xiaomi Cloud Map Extractor",
+            "after_link": ". Pentru o configurare mai avansată, utilizați modul YAML."
+        },
+        "label": {
+            "name": "Titlu (opțional)",
+            "entity": "Entitate aspirator (necesar)",
+            "camera": "Entitate camera (necesar)",
+            "vacuum_platform": "Platformă aspirator (necesar)",
+            "map_locked": "Hartă blocată (opțional)",
+            "two_finger_pan": "Mișcare hartă cu două degete (opțional)",
+            "platforms_documentation": "Documentația platformei alese ({0})",
+            "selection": "Selecție:",
+            "copy": "Copiază",
+            "copied": "Copiat!",
+            "set_static_config": "Generează config static",
+            "config_set": "Configurare setată!\nDeschide editorul de configurare pentru a-l ajusta.",
+            "config_set_failed": "Nu s-a putut actualiza configurația.",
+            "generate_rooms_config": "Generați configurația camerelor",
+            "copy_service_call": "Copiere apel de serviciu"
+        }
+    }
+}
