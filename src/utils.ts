@@ -289,7 +289,6 @@ export function getFilledTemplate(
     for (const variablesStorage of variablesStorages) {
         variables = { ...variablesStorage, ...variables };
     }
-    console.log("VARIABLES", variables);
     const keyReplacer = v => getReplacedValue(v, variables);
     replaceInTarget(target, keyReplacer);
     return target;
