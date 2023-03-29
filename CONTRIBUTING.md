@@ -16,7 +16,8 @@ To add a new language follow these steps:
 ## Adding new platform
 
 To add a new platform follow these steps:
-1. Fork this repository
+1. Fork this repository (with all branches)
+1. Change branch to `dev`
 1. Create a new json file in `src/model/generators/platform_templates` directory
 1. Copy content of [`src/model/generators/platform_templates/new.json`](/src/model/generators/platform_templates/new.json) file to a newly created file
 1. Adjust configuration according to parameters of added platform
@@ -44,7 +45,7 @@ Note: this is available only in vscode ensure you have the [Remote Containers](h
    `resources:`
 
 ```yaml
-- url: 'http://127.0.0.1:5000/boilerplate-card.js'
+- url: 'http://127.0.0.1:5000/xiaomi-vacuum-map-card.js'
   type: module
 ```
 
