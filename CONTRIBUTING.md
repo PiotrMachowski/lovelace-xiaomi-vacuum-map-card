@@ -5,7 +5,8 @@ Thank you for your contribution! To submit your changes please fork this reposit
 ## Adding new translations
 
 To add a new language follow these steps:
-1. Fork this repository
+1. Fork this repository (with all branches)
+1. Change branch to `dev`
 1. Create a new json file named with a [correct language code](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry) in `/src/localize/languages/` directory
 1. Copy content of [`src/localize/languages/en.json`](/src/localize/languages/en.json) file to a newly created file
 1. Replace English texts with your translations (do not replace keys!)
