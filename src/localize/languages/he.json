@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "שגיאה בתצורה: אריחים",
                 "entity": {
-                    "missing_outdated_translation": "כל ערך של רשימת אריחים חייב להכיל ישות"
+                    "missing": "כל ערך של רשימת אריחים חייב להכיל ישות"
                 },
                 "label": {
                     "missing": "כל כניסה של רשימת אריחים חייבת להכיל תווית"
@@ -128,13 +128,44 @@
     },
     "tile": {
         "status": {
-            "label": "סטטוס"
+            "label": "סטטוס",
+            "value": {
+                "starting": "מתחיל",
+                "charger disconnected": "המטען מנותק",
+                "idle": "ממתין",
+                "remote control active": "שליטה מרוחק פעילה",
+                "cleaning": "מנקה",
+                "returning home": "חוזר הביתה",
+                "manual mode": "מצב ידני",
+                "charging": "טעינה",
+                "charging problem": "בעיית טעינה",
+                "paused": "מושהה",
+                "spot cleaning": "ניקוי נקודתי",
+                "error": "שגיאה",
+                "shutting down": "מתכבה",
+                "updating": "מתעדכן",
+                "docking": "בעגינה",
+                "going to target": "בדרך אל היעד",
+                "zoned cleaning": "ניקוי אזור",
+                "segment cleaning": "ניקוי מקטע",
+                "emptying the bin": "ריקון האשפה",
+                "charging complete": "טעינה הושלמה",
+                "device offline": "התקן לא מקוון"
+            }
         },
         "battery_level": {
             "label": "סוללה"
         },
         "fan_speed": {
-            "label": "מהירות מאוורר"
+            "label": "מהירות מאוורר",
+            "value": {
+                "silent": "שקט",
+                "standard": "סטנדרט",
+                "medium": "בינוני",
+                "turbo": "טורבו",
+                "auto": "אוטומט",
+                "gentle": "עדין"
+            }
         },
         "sensor_dirty_left": {
             "label": "נותר לחיישנים"
@@ -159,6 +190,20 @@
         },
         "mop_left": {
             "label": "נותר למטלית"
+        },
+        "bin_full": {
+            "label": "פח מלא",
+            "value": {
+                "true": "כן",
+                "false": "לא"
+            }
+        },
+        "bin_present": {
+            "label": "מיכל קיים",
+            "value": {
+                "true": "כן",
+                "false": "לא"
+            }
         }
     },
     "icon": {
@@ -194,6 +239,15 @@
             "vacuum_platform": "פלטפורמת שואב (נדרש)",
             "map_locked": "נעילת מפה (אופציונלי)",
             "two_finger_pan": "צביטת שתי אצבעות (אופציונלי)"
+            "platforms_documentation": "תיעוד הפלטפורמה שנבחרה ({0})",
+            "selection": "Selection:",
+            "copy": "העתקה",
+            "copied": "הועתק!",
+            "set_static_config": "יצירת תצורה סטטית",
+            "config_set": "תצורה הוגדרה!\nיש לפתוח את עורך התצורה כדי להתאים אותו.",
+            "config_set_failed": "עדכון התצורה נכשל.",
+            "generate_rooms_config": "יצירת תצורת חדרים",
+            "copy_service_call": "העתקת קריאת שירות"
         }
     }
 }
