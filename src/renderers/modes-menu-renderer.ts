@@ -3,10 +3,11 @@ import { css, CSSResultGroup, html, TemplateResult } from "lit";
 import { MapMode } from "../model/map_mode/map-mode";
 
 export class ModesMenuRenderer {
-    public static render(modes: MapMode[], getMode: number, setMode: (number) => void): TemplateResult {
+    public static render(modes: MapMode[], getMode: number, setMode: (number) => void, menu?: HTMLElement): TemplateResult {
         const getCurrentMode = (): MapMode => modes[getMode];
         return html`
-            <ha-button-menu class="modes-dropdown-menu" fixed="true" @closed="${(e: Event) => e.stopPropagation()}">
+            <ha-button-menu class="modes-dropdown-menu" activatable @closed="${(e: Event) => e.stopPropagation()}"
+                @click="${() => ModesMenuRenderer.updateStyles(menu, modes.length)}">
                 <div class="modes-dropdown-menu-button" slot="trigger" alt="bottom align">
                     <paper-button class="modes-dropdown-menu-button-button">
                         <ha-icon icon="${getCurrentMode().icon}" class="dropdown-icon"></ha-icon>
@@ -14,7 +15,7 @@ export class ModesMenuRenderer {
                     <div class="modes-dropdown-menu-button-text">${getCurrentMode().name}</div>
                 </div>
                 ${modes.map(
-                    (mode, index) => html` <mwc-list-item
+                    (mode, index) => html` <mwc-list-item class="list-item"
                         ?activated="${getMode === index}"
                         @click="${(): void => setMode(index)}">
                         <div class="modes-dropdown-menu-entry clickable ${getMode === index ? "selected" : ""}">
@@ -37,6 +38,29 @@ export class ModesMenuRenderer {
         `;
     }
 
+    private static updateStyles(menu: HTMLElement | undefined, items: number): void {
+        const div = menu?.shadowRoot?.querySelector("div") as HTMLElement;
+        if (menu && div) {
+            const height = 50;
+            const minDiff = (items - 1) * height + 32;
+            if (window.innerHeight - div.getBoundingClientRect().bottom >= minDiff) {
+                div.style.marginBottom = `-${height}px`;
+                menu.style.marginBottom = `${height}px`;
+            } else {
+                div.style.marginBottom = "0px";
+                menu.style.marginBottom = "0px";
+            }
+            const mwcMenu = menu.shadowRoot?.querySelector("mwc-menu") as HTMLElement;
+            if (mwcMenu) {
+                mwcMenu.style.zIndex = "1";
+                mwcMenu.style.position = "fixed";
+            }
+            menu.querySelectorAll("mwc-list-item").forEach((item)=>
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                item.shadowRoot!.querySelector("span")!.style.flexGrow = "1");
+        }
+    }
+
     public static get styles(): CSSResultGroup {
         return css`
             .modes-dropdown-menu {
@@ -50,6 +74,10 @@ export class ModesMenuRenderer {
 
             .modes-dropdown-menu-button {
                 display: inline-flex;
+            }
+          
+            .list-item:host:host {
+                flex-grow: 1;
             }
 
             .modes-dropdown-menu-button-button {

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { css, CSSResultGroup, html, LitElement, PropertyValues, svg, SVGTemplateResult, TemplateResult } from "lit";
-import { customElement, property, state } from "lit/decorators";
+import { customElement, property, state, query } from "lit/decorators";
 import { ActionHandlerEvent, forwardHaptic, LovelaceCard, LovelaceCardEditor } from "custom-card-helpers";
 
 import "./editor";
@@ -113,6 +113,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     @state() private configErrors: string[] = [];
     @state() private connected = false;
     @state() public internalVariables = {};
+    @query(".modes-dropdown-menu") private _modesDropdownMenu?: HTMLElement;
     private currentPreset!: CardPresetConfig;
     private watchedEntities: string[] = [];
     private selectedManualRectangles: ManualRectangle[] = [];
@@ -381,6 +382,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                                     ${conditional(modes.length > 1, () =>
                                         ModesMenuRenderer.render(modes, this.selectedMode, selected =>
                                             this._setCurrentMode(selected),
+                                            this._modesDropdownMenu
                                         ),
                                     )}
                                     ${conditional(
@@ -996,9 +998,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     }
 
     private _updateElements(): void {
-        const s = this.shadowRoot
-            ?.querySelector(".modes-dropdown-menu")
-            ?.shadowRoot?.querySelector(".dropdown-content") as HTMLElement;
+        const s = this._modesDropdownMenu?.shadowRoot?.querySelector(".dropdown-content") as HTMLElement;
         if (s) {
             s.style.borderRadius = this._getCssProperty("--map-card-internal-big-radius");
         }
