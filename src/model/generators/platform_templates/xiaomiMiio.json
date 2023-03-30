@@ -6,13 +6,19 @@
                 "name": "map_mode.vacuum_clean_segment",
                 "icon": "mdi:floor-plan",
                 "selection_type": "ROOM",
-                "repeats_type": "REPEAT",
+                "repeats_type": "EXTERNAL",
                 "max_repeats": 3,
                 "service_call_schema": {
-                    "service": "xiaomi_miio.vacuum_clean_segment",
+                    "service": "vacuum.send_command",
                     "service_data": {
-                        "segments": "[[selection]]",
-                        "entity_id": "[[entity_id]]"
+                        "command": "app_segment_clean",
+                        "entity_id": "[[entity_id]]",
+                        "params": [
+                            {
+                                "segments": "[[selection]]",
+                                "repeat": "[[repeats]]"
+                            }
+                        ]
                     }
                 }
             },
