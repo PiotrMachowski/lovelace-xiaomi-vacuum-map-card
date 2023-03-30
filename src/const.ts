@@ -1,3 +1,7 @@
+import { MapModeConfig } from "./types/types";
+import { SelectionType } from "./model/map_mode/selection-type";
+import { RepeatsType } from "./model/map_mode/repeats-type";
+
 export const CARD_VERSION = "v@VACUUM_MAP_CARD_VERSION_PLACEHOLDER@";
 export const CARD_CUSTOM_ELEMENT_NAME = "xiaomi-vacuum-map-card";
 export const EDITOR_CUSTOM_ELEMENT_NAME = "xiaomi-vacuum-map-card-editor";
@@ -14,3 +18,9 @@ export const EVENT_SERVICE_CALL_GET = "map-card-service-call-get";
 export const EVENT_SERVICE_CALL = "map-card-service-call";
 export const EVENT_LOVELACE_DOM = "ll-custom";
 export const EVENT_LOVELACE_DOM_DETAIL = "xiaomi_vacuum_map_card";
+
+export const EMPTY_MAP_MODE: MapModeConfig = {
+    run_immediately: true,
+    selection_type: SelectionType[SelectionType.ROOM],
+    repeats_type: RepeatsType[RepeatsType.NONE]
+}
