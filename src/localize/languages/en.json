@@ -254,6 +254,9 @@
             "config_set_failed": "Failed to update config.",
             "generate_rooms_config": "Generate rooms config",
             "copy_service_call": "Copy service call"
+        },
+        "alerts": {
+            "set_static_config": "You should use this functionality only if you want to manually adjust automatically generated configuration.\nContinue?"
         }
     }
 }

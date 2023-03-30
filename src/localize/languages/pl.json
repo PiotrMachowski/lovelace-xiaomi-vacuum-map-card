@@ -254,6 +254,9 @@
             "config_set_failed": "Błąd aktualizacji konfiguracji.",
             "generate_rooms_config": "Wygeneruj konfigurację pokoi",
             "copy_service_call": "Skopiuj wywołanie usługi"
+        },
+        "alerts": {
+            "set_static_config": "Ten przycisk powinien zostać użyty tylko wtedy, jeśli chcesz ręcznie dostosować automatycznie wygenerowaną konfigurację.\nKontynuować?"
         }
     }
 }
