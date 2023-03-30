@@ -167,7 +167,8 @@ export function handleActionWithConfig(
             const entity_id = config.hasOwnProperty("entity") ? config["entity"]: currentPreset.entity;
             const { selection, variables } = node._getSelection(currentMode);
             const defaultVariables = ServiceCallSchema.getDefaultVariables(entity_id, selection, node.repeats);
-            const filled = getFilledTemplate(config as Record<string, unknown>, defaultVariables, tileVariables, node.internalVariables, variables);
+            const filled = getFilledTemplate(config as Record<string, unknown>, defaultVariables, tileVariables,
+                node.internalVariables, currentMode.variables, variables);
             handleAction(node, node.hass as unknown as HomeAssistant, filled as ActionableObjectConfig, ev.detail.action);
         }
     };
