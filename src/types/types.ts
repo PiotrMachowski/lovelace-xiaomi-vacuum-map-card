@@ -228,21 +228,20 @@ export interface RoomConfigEventData {
     readonly rooms: Array<RoomConfig>;
 }
 
-export interface Translation {
-    nativeName: string;
-    isRTL: boolean;
-    hash: string;
-}
-
-export interface TranslationMetadata {
-    fragments: string[];
-    translations: {
-        [lang: string]: Translation;
-    };
-}
-
 export interface EntityConfig {
     entity: string;
     attribute?: string;
     unit?: string;
+}
+
+export enum ActionType {
+    CLEANING_START = "cleaning.start",
+    INTERNAL_VARIABLE_SET = "internal_variable.set",
+    MAP_MODE_NEXT = "map_mode.next",
+    MAP_MODE_PREVIOUS = "map_mode.previous",
+    MAP_MODE_SET = "map_mode.set",
+    REPEATS_DECREMENT = "repeats.decrement",
+    REPEATS_INCREMENT = "repeats.increment",
+    REPEATS_SET = "repeats.set",
+    SELECTION_CLEAR = "selection.clear",
 }

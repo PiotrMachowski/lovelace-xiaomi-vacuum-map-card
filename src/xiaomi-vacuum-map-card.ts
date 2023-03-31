@@ -14,6 +14,7 @@ import type {
     XiaomiVacuumMapCardConfig,
 } from "./types/types";
 import {
+    ActionType,
     CalibrationPoint,
     CardPresetConfig,
     MapExtractorRoom,
@@ -892,7 +893,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         }
     }
 
-    private _handleLovelaceDomEvent(e: Event): void {
+    private async _handleLovelaceDomEvent(e: Event): Promise<void> {
         const lovelaceEvent = e as LovelaceDomEvent;
         if (
             EVENT_LOVELACE_DOM_DETAIL in lovelaceEvent.detail &&
@@ -900,8 +901,39 @@ export class XiaomiVacuumMapCard extends LitElement {
             lovelaceEvent.detail[EVENT_LOVELACE_DOM_DETAIL]["action_handler_id"] === this.config.action_handler_id
         ) {
             const details = lovelaceEvent.detail[EVENT_LOVELACE_DOM_DETAIL];
-            if (details["action"] === "set_internal_variable") {
-                this._setInternalVariable(details["variable"], details["value"]);
+            if (details["action"] === undefined)
+                return;
+            const action = details["action"] as ActionType;
+            const data = details["data"];
+            const currentMode = this._getCurrentMode();
+            switch (action) {
+                case ActionType.CLEANING_START:
+                    await this._run(false);
+                    break;
+                case ActionType.INTERNAL_VARIABLE_SET:
+                    this._setInternalVariable(data["variable"], data["value"]);
+                    break;
+                case ActionType.MAP_MODE_NEXT:
+                    this._setCurrentMode((this.selectedMode + 1) % this.modes.length, false);
+                    break;
+                case ActionType.MAP_MODE_PREVIOUS:
+                    this._setCurrentMode((this.selectedMode - 1 + this.modes.length) % this.modes.length, false);
+                    break;
+                case ActionType.MAP_MODE_SET:
+                    this._setCurrentMode(data["index"] % this.modes.length, false);
+                    break;
+                case ActionType.REPEATS_DECREMENT:
+                    this.repeats = ((this.repeats + currentMode.maxRepeats - 2) % currentMode.maxRepeats) + 1;
+                    break;
+                case ActionType.REPEATS_INCREMENT:
+                    this.repeats = (this.repeats % currentMode.maxRepeats) + 1;
+                    break;
+                case ActionType.REPEATS_SET:
+                    this.repeats = ((data["value"] + currentMode.maxRepeats - 1) % currentMode.maxRepeats) + 1;
+                    break;
+                case ActionType.SELECTION_CLEAR:
+                    this._setCurrentMode(this.selectedMode);
+                    break;
             }
         }
     }
