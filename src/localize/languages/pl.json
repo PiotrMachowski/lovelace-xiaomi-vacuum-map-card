@@ -210,6 +210,12 @@
                 "true": "Tak",
                 "false": "Nie"
             }
+        },
+        "water_volume": {
+            "label": "Poziom wody"
+        },
+        "mop_pad_humidity": {
+            "label": "Wilgotność mopa"
         }
     },
     "icon": {

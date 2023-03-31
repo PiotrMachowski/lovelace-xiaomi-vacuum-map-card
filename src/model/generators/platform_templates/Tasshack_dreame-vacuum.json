@@ -95,13 +95,13 @@
       {
         "tile_id": "water_volume",
         "attribute": "water_volume",
-        "label": "Water volume",
+        "label": "tile.water_volume.label",
         "icon": "mdi:water"
       },
       {
         "tile_id": "mop_pad_humidity",
         "attribute": "mop_pad_humidity",
-        "label": "Mop pad",
+        "label": "tile.mop_pad_humidity.label",
         "icon": "mdi:water-percent"
       },
       {

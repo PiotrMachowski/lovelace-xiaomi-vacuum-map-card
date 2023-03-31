@@ -210,6 +210,12 @@
                 "true": "Yes",
                 "false": "No"
             }
+        },
+        "water_volume": {
+            "label": "Water volume"
+        },
+        "mop_pad_humidity": {
+            "label": "Mop pad"
         }
     },
     "icon": {
