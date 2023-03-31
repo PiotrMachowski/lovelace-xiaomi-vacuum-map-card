@@ -73,22 +73,22 @@
                 "predefined_selections": {
                     "not_applicable": "Modus {0} ondersteunt geen vooraf gedefinieerde selecties",
                     "zones": {
-                        "missing": "Zone configuratie ontbreekt",
+                        "missing": "Zone-configuratie ontbreekt",
                         "invalid_parameters_number": "Elke zone moet 4 coördinaten hebben"
                     },
                     "points": {
                         "position": {
-                            "missing": "Punten configuratie ontbreekt",
+                            "missing": "Puntenconfiguratie ontbreekt",
                             "invalid_parameters_number": "Elk punt moet 2 coördinaten hebben"
                         }
                     },
                     "rooms": {
                         "id": {
-                            "missing": "Kamer id ontbreekt",
+                            "missing": "Kamer-id ontbreekt",
                             "invalid_format": "Ongeldige kamer id: {0}"
                         },
                         "outline": {
-                            "invalid_parameters_number": "Elk punt van de kamer omtrek moet 2 coördinaten hebben"
+                            "invalid_parameters_number": "Elk punt van de kameromtrek moet 2 coördinaten hebben"
                         }
                     },
                     "label": {
@@ -117,7 +117,7 @@
                 "service_call_schema": {
                     "missing": "Serviceoproep schema",
                     "service": {
-                        "missing": "Serviceoproep schema moet een service bevatten",
+                        "missing": "Serviceoproepschema moet een service bevatten",
                         "invalid": "Ongeldige service: {0}"
                     }
                 }
@@ -154,10 +154,10 @@
             }
         },
         "battery_level": {
-            "label": "Batterij"
+            "label": "Accupercentage"
         },
         "fan_speed": {
-            "label": "Fan snelheid",
+            "label": "Ventilatorsnelheid",
             "value": {
                 "silent": "Stil",
                 "standard": "Standaard",
@@ -199,7 +199,7 @@
         "vacuum_return_to_base": "Terug naar basisstation",
         "vacuum_clean_spot": "Spot schoonmaak",
         "vacuum_locate": "Lokaliseren",
-        "vacuum_set_fan_speed": "Fan snelheid aanpassen"
+        "vacuum_set_fan_speed": "Ventilatorsnelheid aanpassen"
     },
     "unit": {
         "hour_shortcut": "u",
@@ -214,14 +214,14 @@
     },
     "editor": {
         "description": {
-            "before_link": "Deze grafische editor ondersteunt slechts een basis configuratie met een camera entiteit welke gemaakt is met ",
+            "before_link": "Deze grafische editor ondersteunt slechts een basis-configuratie met een camera-entiteit die gemaakt is met ",
             "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": ". Gebruik de YAML modus voor een geavanceerde configuratie."
+            "after_link": ". Gebruik de YAML-modus voor een meer uitgebreide configuratie."
         },
         "label": {
             "name": "Titel (optioneel)",
-            "entity": "Stofzuiger entiteit (verplicht)",
-            "camera": "Camera entiteit (verplicht)",
+            "entity": "Stofzuiger-entiteit (verplicht)",
+            "camera": "Camera-entiteit (verplicht)",
             "vacuum_platform": "stofzuigerplatform (verplicht)",
             "map_locked": "Kaart vergrendelen (optioneel)",
             "two_finger_pan": "Kaart verplaatsen met twee vingers (optioneel)"
