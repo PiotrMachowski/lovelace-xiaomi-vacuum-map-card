@@ -21,7 +21,7 @@ export class TileRenderer {
         const stateObj = config.entity ? card.hass.states[config.entity] : undefined;
         const title = this.getTileLabel(card.hass, config, stateObj);
         const value = this.getTileValue(card.hass, config, internalVariables, stateObj);
-        const icon = this.getIcon(config, stateObj);
+        const icon = this.getIcon(card.hass, config, stateObj);
         const domain = stateObj ? computeStateDomain(stateObj) : undefined;
 
         return html`
@@ -100,7 +100,16 @@ export class TileRenderer {
         return `${value}${unit}`;
     }
 
-    private static getIcon(config: TileConfig, stateObject?: HassEntity) {
+    private static getIcon(hass: HomeAssistantFixed, config: TileConfig, stateObject?: HassEntity) {
+        if (config.icon_source) {
+            const split = config.icon_source.split(".attributes.");
+            const entity = hass.states[split[0]];
+            let icon = entity.state;
+            if (split.length === 2) {
+                icon = entity.attributes[split[1]];
+            }
+            return icon;
+        }
         if (config.icon === undefined && stateObject) {
             return stateObject.attributes.icon ?? null;
         }

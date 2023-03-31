@@ -118,7 +118,7 @@ export class TilesGenerator {
                 entity: vacuumEntity,
                 label: localize("tile.battery_level.label", language),
                 attribute: "battery_level",
-                icon: state.attributes["battery_icon"],
+                icon_source: `${vacuumEntity}.attributes.battery_icon`,
                 unit: "%",
             });
         if ("battery_level" in state.attributes && !("battery_icon" in state.attributes))

@@ -83,6 +83,9 @@ export function getWatchedEntitiesForPreset(config: CardPresetConfig, language: 
     (config.tiles ?? []).forEach(s => {
         if (s.entity) watchedEntities.add(s.entity);
     });
+    (config.tiles ?? []).forEach(s => {
+        if (s.icon_source) watchedEntities.add(s.icon_source.split(".attributes.")[0]);
+    });
     (config.tiles ?? [])
         .filter(s => s.conditions)
         .flatMap(s => s.conditions)
