@@ -161,7 +161,7 @@
             "value": {
                 "silent": "Stil",
                 "standard": "Standaard",
-                "medium": "Medium",
+                "medium": "Gemiddeld",
                 "turbo": "Turbo",
                 "auto": "Automatisch",
                 "gentle": "Zacht"
@@ -220,8 +220,8 @@
         },
         "label": {
             "name": "Titel (optioneel)",
-            "entity": "Stofzuiger entiteit (verplicht)",
-            "camera": "Camera entiteit (verplicht)",
+            "entity": "Stofzuigerentiteit (verplicht)",
+            "camera": "Camera-entiteit (verplicht)",
             "vacuum_platform": "stofzuigerplatform (verplicht)",
             "map_locked": "Kaart vergrendelen (optioneel)",
             "two_finger_pan": "Kaart verplaatsen met twee vingers (optioneel)"
