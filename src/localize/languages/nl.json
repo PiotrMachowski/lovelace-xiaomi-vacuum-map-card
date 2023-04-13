@@ -185,11 +185,37 @@
         "cleaned_area": {
             "label": "Oppervlakte"
         },
+        "total_cleaned_area": {
+            "label": "Total cleaned area"
+        },
         "cleaning_time": {
             "label": "Schoonmaaktijd"
         },
+        "total_cleaning_time": {
+            "label": "Total cleaning time"
+        },
         "mop_left": {
             "label": "Dweil"
+        },
+        "bin_full": {
+            "label": "Bin full",
+            "value": {
+                "true": "Yes",
+                "false": "No"
+            }
+        },
+        "bin_present": {
+            "label": "Bin present",
+            "value": {
+                "true": "Yes",
+                "false": "No"
+            }
+        },
+        "water_volume": {
+            "label": "Water volume"
+        },
+        "mop_pad_humidity": {
+            "label": "Mop pad"
         }
     },
     "icon": {
@@ -224,7 +250,19 @@
             "camera": "Camera-entiteit (verplicht)",
             "vacuum_platform": "stofzuigerplatform (verplicht)",
             "map_locked": "Kaart vergrendelen (optioneel)",
-            "two_finger_pan": "Kaart verplaatsen met twee vingers (optioneel)"
+            "two_finger_pan": "Kaart verplaatsen met twee vingers (optioneel)",
+            "platforms_documentation": "Chosen platform's documentation ({0})",
+            "selection": "Selection:",
+            "copy": "Copy",
+            "copied": "Copied!",
+            "set_static_config": "Generate static config",
+            "config_set": "Config set!\nOpen config editor to adjust it.",
+            "config_set_failed": "Failed to update config.",
+            "generate_rooms_config": "Generate rooms config",
+            "copy_service_call": "Copy service call"
+        },
+        "alerts": {
+            "set_static_config": "You should use this functionality only if you want to manually adjust automatically generated configuration.\nContinue?"
         }
     }
 }
