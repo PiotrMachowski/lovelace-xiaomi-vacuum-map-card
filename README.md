@@ -641,6 +641,7 @@ Currently, this card contains translations for following languages:
 * `el` - Greek (Ελληνικά)
 * `en` - English
 * `es` - Spanish (Español)
+* `fi` - Finnish (Suomi)
 * `fr` - French (Français)
 * `he` - Hebrew (עברית)
 * `hu` - Hungarian (Magyar)
