@@ -6,7 +6,7 @@ export class ModesMenuRenderer {
     public static render(modes: MapMode[], getMode: number, setMode: (number) => void, menu?: HTMLElement): TemplateResult {
         const getCurrentMode = (): MapMode => modes[getMode];
         return html`
-            <ha-button-menu class="modes-dropdown-menu" activatable @closed="${(e: Event) => e.stopPropagation()}"
+            <ha-button-menu class="modes-dropdown-menu" fixed="true" activatable @closed="${(e: Event) => e.stopPropagation()}"
                 @click="${() => ModesMenuRenderer.updateStyles(menu, modes.length)}">
                 <div class="modes-dropdown-menu-button" slot="trigger" alt="bottom align">
                     <paper-button class="modes-dropdown-menu-button-button">
@@ -44,9 +44,13 @@ export class ModesMenuRenderer {
             const height = 50;
             const minDiff = (items - 1) * height + 32;
             if (window.innerHeight - div.getBoundingClientRect().bottom >= minDiff) {
+                div.style.marginTop = `0px`;
+                menu.style.marginTop = `0px`;
                 div.style.marginBottom = `-${height}px`;
                 menu.style.marginBottom = `${height}px`;
             } else {
+                div.style.marginTop = `-${height}px`;
+                menu.style.marginTop = `${height}px`;
                 div.style.marginBottom = "0px";
                 menu.style.marginBottom = "0px";
             }
@@ -55,9 +59,10 @@ export class ModesMenuRenderer {
                 mwcMenu.style.zIndex = "1";
                 mwcMenu.style.position = "fixed";
             }
-            menu.querySelectorAll("mwc-list-item").forEach((item)=>
+            menu.querySelectorAll("mwc-list-item").forEach((item) => {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                item.shadowRoot!.querySelector("span")!.style.flexGrow = "1");
+                item.shadowRoot!.querySelector("span")!.style.flexGrow = "1";
+            });
         }
     }
 
