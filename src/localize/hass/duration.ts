@@ -1,22 +1,36 @@
 // home-assistant/frontend/src/common/datetime/duration.ts
 
-const DAY_IN_SECONDS = 86400;
-const HOUR_IN_SECONDS = 3600;
-const MINUTE_IN_SECONDS = 60;
+const DAY_IN_MILLISECONDS = 86400000;
+const HOUR_IN_MILLISECONDS = 3600000;
+const MINUTE_IN_MILLISECONDS = 60000;
+const SECOND_IN_MILLISECONDS = 1000;
 
-export const UNIT_TO_SECOND_CONVERT = {
-    s: 1,
-    min: MINUTE_IN_SECONDS,
-    h: HOUR_IN_SECONDS,
-    d: DAY_IN_SECONDS,
+export const UNIT_TO_MILLISECOND_CONVERT = {
+    ms: 1,
+    s: SECOND_IN_MILLISECONDS,
+    min: MINUTE_IN_MILLISECONDS,
+    h: HOUR_IN_MILLISECONDS,
+    d: DAY_IN_MILLISECONDS,
 };
 
-const leftPad = (num: number) => (num < 10 ? `0${num}` : num);
+export const formatDuration = (duration: string, units: string): string =>
+    millisecondsToDuration(
+        parseFloat(duration) * UNIT_TO_MILLISECOND_CONVERT[units]
+    ) || "0";
 
-export function secondsToDuration(d: number): string | null {
-    const h = Math.floor(d / 3600);
-    const m = Math.floor((d % 3600) / 60);
-    const s = Math.floor((d % 3600) % 60);
+const leftPad = (num: number, digits = 2) => {
+    let paddedNum = "" + num;
+    for (let i = 1; i < digits; i++) {
+        paddedNum = parseInt(paddedNum) < 10 ** i ? `0${paddedNum}` : paddedNum;
+    }
+    return paddedNum;
+};
+
+export function millisecondsToDuration(d: number): string | null {
+    const h = Math.floor(d / 1000 / 3600);
+    const m = Math.floor(((d / 1000) % 3600) / 60);
+    const s = Math.floor(((d / 1000) % 3600) % 60);
+    const ms = Math.floor(d % 1000);
 
     if (h > 0) {
         return `${h}:${leftPad(m)}:${leftPad(s)}`;
@@ -24,13 +38,8 @@ export function secondsToDuration(d: number): string | null {
     if (m > 0) {
         return `${m}:${leftPad(s)}`;
     }
-    if (s > 0) {
-        return "" + s;
+    if (s > 0 || ms > 0) {
+        return `${s}${ms > 0 ? `.${leftPad(ms, 3)}` : ``}`;
     }
     return null;
 }
-
-export const formatDuration = (duration: string, units: string): string => {
-    const seconds = parseFloat(duration) * UNIT_TO_SECOND_CONVERT[units];
-    return (seconds >= 0 ? secondsToDuration(seconds) : `-${secondsToDuration(-seconds)}`) ?? "0";
-};

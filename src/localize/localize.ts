@@ -123,6 +123,5 @@ export function localizeEntity(hass: HomeAssistantFixed, config: EntityConfig, e
             entity,
             hass.locale,
             hass.entities,
-            config.unit !== undefined,
         );
 }

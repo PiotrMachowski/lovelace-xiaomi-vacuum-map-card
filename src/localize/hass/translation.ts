@@ -3,6 +3,7 @@
 import { fetchFrontendUserData } from "./frontend";
 import { HomeAssistantFixed } from "../../types/fixes";
 
+
 export enum NumberFormat {
     language = "language",
     system = "system",
@@ -46,8 +47,8 @@ declare global {
 export type TranslationCategory =
     | "title"
     | "state"
-    | "state_attributes"
     | "entity"
+    | "entity_component"
     | "config"
     | "config_panel"
     | "options"
@@ -61,7 +62,6 @@ export type TranslationCategory =
 
 export const fetchTranslationPreferences = (hass: HomeAssistantFixed) =>
     fetchFrontendUserData(hass.connection, "language");
-
 
 export const getHassTranslations = async (
     hass: HomeAssistantFixed,

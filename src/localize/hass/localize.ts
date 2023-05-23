@@ -50,11 +50,10 @@ export type FlattenObjectKeys<
         : `${Key}`
     : never;
 
-
-
 interface FormatType {
     [format: string]: any;
 }
+
 export interface FormatsType {
     number: FormatType;
     date: FormatType;

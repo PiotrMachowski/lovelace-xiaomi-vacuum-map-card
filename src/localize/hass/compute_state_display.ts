@@ -2,7 +2,7 @@
 
 import { HassEntity } from "home-assistant-js-websocket";
 import { UNAVAILABLE, UNKNOWN } from "./entity";
-import { formatDuration, UNIT_TO_SECOND_CONVERT } from "./duration";
+import { formatDuration, UNIT_TO_MILLISECOND_CONVERT } from "./duration";
 import { formatDate } from "./format_date";
 import { formatDateTime } from "./format_date_time";
 import { formatTime } from "./format_time";
@@ -15,38 +15,57 @@ import { blankBeforePercent } from "./blank_before_percent";
 import { LocalizeFunc } from "./localize"; //type
 import { computeDomain } from "./compute_domain";
 import { EntityRegistryDisplayEntry, FrontendLocaleDataFixed, HomeAssistantFixed } from "../../types/fixes";
+import { FrontendLocaleData } from "./translation";
 
-export const computeStateDisplay = (
+
+export const computeStateDisplaySingleEntity = (
     localize: LocalizeFunc,
     stateObj: HassEntity,
     locale: FrontendLocaleDataFixed,
-    entities: HomeAssistantFixed["entities"],
-    skipUnit = false,
+    entity: EntityRegistryDisplayEntry | undefined,
+    state?: string
 ): string =>
     computeStateDisplayFromEntityAttributes(
         localize,
         locale,
-        entities,
+        entity,
         stateObj.entity_id,
         stateObj.attributes,
-        stateObj.state,
-        skipUnit
+        state !== undefined ? state : stateObj.state
     );
+
+export const computeStateDisplay = (
+    localize: LocalizeFunc,
+    stateObj: HassEntity,
+    locale: FrontendLocaleData,
+    entities: HomeAssistantFixed["entities"],
+    state?: string
+): string => {
+    const entity = entities[stateObj.entity_id] as
+        | EntityRegistryDisplayEntry
+        | undefined;
+
+    return computeStateDisplayFromEntityAttributes(
+        localize,
+        locale,
+        entity,
+        stateObj.entity_id,
+        stateObj.attributes,
+        state !== undefined ? state : stateObj.state
+    );
+};
 
 export const computeStateDisplayFromEntityAttributes = (
     localize: LocalizeFunc,
-    locale: FrontendLocaleDataFixed,
-    entities: HomeAssistantFixed["entities"],
+    locale: FrontendLocaleData,
+    entity: EntityRegistryDisplayEntry | undefined,
     entityId: string,
     attributes: any,
-    state: string,
-    skipUnit = false,
+    state: string
 ): string => {
     if (state === UNKNOWN || state === UNAVAILABLE) {
         return localize(`state.default.${state}`);
     }
-
-    const entity = entities[entityId] as EntityRegistryDisplayEntry | undefined;
 
     // Entities with a `unit_of_measurement` or `state_class` are numeric values and should use `formatNumber`
     if (isNumericFromAttributes(attributes)) {
@@ -54,7 +73,7 @@ export const computeStateDisplayFromEntityAttributes = (
         if (
             attributes.device_class === "duration" &&
             attributes.unit_of_measurement &&
-            UNIT_TO_SECOND_CONVERT[attributes.unit_of_measurement]
+            UNIT_TO_MILLISECOND_CONVERT[attributes.unit_of_measurement]
         ) {
             try {
                 return formatDuration(state, attributes.unit_of_measurement);
@@ -65,7 +84,7 @@ export const computeStateDisplayFromEntityAttributes = (
         if (attributes.device_class === "monetary") {
             try {
                 return formatNumber(state, locale, {
-                    style: skipUnit ? undefined: "currency",
+                    style: "currency",
                     currency: attributes.unit_of_measurement,
                     minimumFractionDigits: 2,
                     // Override monetary options with number format
@@ -78,7 +97,7 @@ export const computeStateDisplayFromEntityAttributes = (
                 // fallback to default
             }
         }
-        const unit = !attributes.unit_of_measurement || skipUnit
+        const unit = !attributes.unit_of_measurement
             ? ""
             : attributes.unit_of_measurement === "%"
                 ? blankBeforePercent(locale) + "%"
@@ -92,7 +111,7 @@ export const computeStateDisplayFromEntityAttributes = (
 
     const domain = computeDomain(entityId);
 
-    if (domain === "input_datetime") {
+    if (["date", "input_datetime", "time"].includes(domain)) {
         if (state !== undefined) {
             // If trying to display an explicit state, need to parse the explicit state to `Date` then format.
             // Attributes aren't available, we have to use `state`.
@@ -168,11 +187,9 @@ export const computeStateDisplayFromEntityAttributes = (
         );
     }
 
-    // state of button is a timestamp
+    // state is a timestamp
     if (
-        domain === "button" ||
-        domain === "input_button" ||
-        domain === "scene" ||
+        ["button", "input_button", "scene", "stt", "tts"].includes(domain) ||
         (domain === "sensor" && attributes.device_class === "timestamp")
     ) {
         try {
@@ -190,10 +207,10 @@ export const computeStateDisplayFromEntityAttributes = (
         // Return device class translation
         (attributes.device_class &&
             localize(
-                `component.${domain}.state.${attributes.device_class}.${state}`
+                `component.${domain}.entity_component.${attributes.device_class}.state.${state}`
             )) ||
         // Return default translation
-        localize(`component.${domain}.state._.${state}`) ||
+        localize(`component.${domain}.entity_component._.state.${state}`) ||
         // We don't know! Return the raw state.
         state
     );

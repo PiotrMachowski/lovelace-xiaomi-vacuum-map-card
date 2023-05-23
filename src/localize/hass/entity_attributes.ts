@@ -1,6 +1,5 @@
 // home-assistant/frontend/src/data/entity_attributes.ts
 
-import { html, TemplateResult } from "lit";
 import checkValidDate from "./check_valid_date";
 import { formatDate } from "./format_date";
 import { formatDateTimeWithSeconds } from "./format_date_time";
@@ -14,6 +13,7 @@ import { HassEntity } from "home-assistant-js-websocket/dist/types";
 
 
 export const STATE_ATTRIBUTES = [
+    "entity_id",
     "assumed_state",
     "attribution",
     "custom_ui_more_info",
@@ -87,5 +87,5 @@ export function formatAttributeValue(
 
     return Array.isArray(value)
         ? value.join(", ")
-        : computeAttributeValueDisplay(hass.localize, stateObj, hass.entities, attribute);
+        : computeAttributeValueDisplay(hass.localize, stateObj, hass.locale, hass.entities, attribute);
 }
