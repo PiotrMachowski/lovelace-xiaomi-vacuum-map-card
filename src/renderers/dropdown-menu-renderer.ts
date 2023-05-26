@@ -16,10 +16,11 @@ export abstract class DropdownMenuRenderer {
         menu: HTMLElement | undefined,
         classPrefix: string,
         renderNameCollapsed: boolean,
+        additionalClasses: string[] = []
     ): TemplateResult {
         const currentValue = values[currentIndex];
         return html`
-            <ha-button-menu class="${classPrefix}-dropdown-menu" fixed="true" activatable @closed="${(e: Event) => e.stopPropagation()}"
+            <ha-button-menu class="${classPrefix}-dropdown-menu ${additionalClasses.join(" ")}" fixed="true" activatable @closed="${(e: Event) => e.stopPropagation()}"
                 @click="${() => DropdownMenuRenderer.updateStyles(menu, values.length)}">
                 <div class="${classPrefix}-dropdown-menu-button" slot="trigger" alt="bottom align">
                     <paper-button class="${classPrefix}-dropdown-menu-button-button">

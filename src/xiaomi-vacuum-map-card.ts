@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { css, CSSResultGroup, html, LitElement, PropertyValues, svg, SVGTemplateResult, TemplateResult } from "lit";
-import { customElement, property, state, query } from "lit/decorators";
+import { customElement, property, state, query, queryAll} from "lit/decorators";
 import { ActionHandlerEvent, forwardHaptic, LovelaceCard, LovelaceCardEditor } from "custom-card-helpers";
 
 import "./editor";
@@ -116,6 +116,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     @state() private connected = false;
     @state() public internalVariables = {};
     @query(".modes-dropdown-menu") private _modesDropdownMenu?: HTMLElement;
+    @queryAll(".icon-dropdown-menu") private _iconDropdownMenus?: NodeListOf<HTMLElement>;
     private currentPreset!: CardPresetConfig;
     private watchedEntities: string[] = [];
     private selectedManualRectangles: ManualRectangle[] = [];
@@ -131,7 +132,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     private modes: MapMode[] = [];
     private shouldHandleMouseUp!: boolean;
     private lastHassUpdate!: Date;
-    private isInEditor = false;
+    public isInEditor = false;
 
     constructor() {
         super();
@@ -265,7 +266,9 @@ export class XiaomiVacuumMapCard extends LitElement {
         this._updateCalibration(preset);
 
         const tiles = preset.tiles?.filter(tile => areConditionsMet(tile, this.internalVariables, this.hass));
-        const icons = preset.icons?.filter(icon => areConditionsMet(icon, this.internalVariables, this.hass));
+        // const icons = preset.icons?.filter(icon => areConditionsMet(icon, this.internalVariables, this.hass));
+
+        const icons = IconRenderer.preprocessIcons(preset.icons, this.internalVariables, this.hass);
         const modes = this.modes;
 
         const mapSrc = this._getMapSrc(preset);
@@ -405,7 +408,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                             () => html`
                                 <div class="vacuum-controls">
                                     <div class="vacuum-actions-list">
-                                        ${icons?.map(icon => IconRenderer.render(icon, this))}
+                                        ${icons?.map((icon ) => IconRenderer.render(icon, this, [...this._iconDropdownMenus??[]]))}
                                     </div>
                                 </div>
                             `,
@@ -421,6 +424,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                     </div>`
                 )}
                 ${ToastRenderer.render("map-card")}
+                <test-menu></test-menu>
             </ha-card>
         `;
     }
@@ -1757,6 +1761,9 @@ export class XiaomiVacuumMapCard extends LitElement {
                 overflow: hidden;
                 background-color: var(--map-card-internal-secondary-color);
                 color: var(--map-card-internal-secondary-text-color);
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
             }
 
             .tiles-wrapper {

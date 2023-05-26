@@ -27,7 +27,7 @@ export class TileRenderer {
         return html`
             <div
                 class="tile-wrapper clickable ripple ${config.tile_id ? `tile-${config.tile_id}-wrapper` : ""}"
-                .title=${config.tooltip ?? ""}
+                .title=${card.isInEditor ? `tile_id: ${config.tile_id}` : config.tooltip ?? ""}
                 @action=${handleActionWithConfig(card, config)}
                 .actionHandler=${actionHandler({
                     hasHold: hasAction(config?.hold_action),

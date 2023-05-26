@@ -176,9 +176,10 @@ export class IconListGenerator {
         const fanSpeeds = state_available ? state.attributes["fan_speed_list"] ?? [] : [];
         for (let i = 0; i < fanSpeeds.length; i++) {
             const fanSpeed = fanSpeeds[i];
-            const nextFanSpeed = fanSpeeds[(i + 1) % fanSpeeds.length];
             icons.push({
+                menu_id: "fan_speed",
                 icon: fanSpeed in this._ICON_MAPPING ? this._ICON_MAPPING[fanSpeed] : "mdi:fan-alert",
+                label: localize("tile.fan_speed.value."+fanSpeed.toLowerCase(), language, fanSpeed),
                 conditions: [
                     {
                         entity: vacuumEntity,
@@ -192,7 +193,7 @@ export class IconListGenerator {
                     service: "vacuum.set_fan_speed",
                     service_data: {
                         entity_id: vacuumEntity,
-                        fan_speed: nextFanSpeed,
+                        fan_speed: fanSpeed,
                     },
                 },
             });
@@ -212,10 +213,20 @@ export class IconListGenerator {
                 },
             });
         }
-        return icons;
+        return icons.sort(sortTiles);
     }
 
     private static isFeatureSupported(state: HassEntity, features: number) {
         return state && state.attributes && ((state.attributes["supported_features"] ?? 0) & features) === features;
     }
+}
+
+export function sortTiles(i1: IconActionConfig, i2: IconActionConfig): number {
+    if (i1.order === undefined && i2.order === undefined)
+        return 0;
+    if (i1.order === undefined)
+        return 1;
+    if (i2.order === undefined)
+        return -1;
+    return i1.order - i2.order;
 }

@@ -117,6 +117,15 @@ export interface TileFromSensorTemplate extends TileTemplate {
 export interface IconActionConfig extends ActionableObjectConfig, ConditionalObjectConfig {
     readonly icon: string;
     readonly tooltip?: string;
+    readonly order?: number;
+    readonly menu_id?: string;
+    readonly label?: string;
+}
+
+export type DropdownIconActionConfig = DropdownEntryIconActionConfig[];
+
+export interface DropdownEntryIconActionConfig extends IconActionConfig {
+    readonly isSelected: boolean;
 }
 
 export interface TileConfig extends ActionableObjectConfig, ConditionalObjectConfig {
