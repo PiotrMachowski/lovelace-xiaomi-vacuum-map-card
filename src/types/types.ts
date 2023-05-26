@@ -2,6 +2,7 @@ import { ActionConfig, LovelaceCard, LovelaceCardConfig, LovelaceCardEditor } fr
 import { ACTION_HANDLER_CUSTOM_ELEMENT_NAME, CARD_CUSTOM_ELEMENT_NAME, EDITOR_CUSTOM_ELEMENT_NAME } from "../const";
 import { XiaomiVacuumMapCardActionHandler } from "../action-handler-directive";
 import { XiaomiVacuumMapCard } from "../xiaomi-vacuum-map-card";
+import { Tile } from "../components/tile";
 
 declare global {
     interface HTMLElementTagNameMap {
@@ -9,6 +10,7 @@ declare global {
         [EDITOR_CUSTOM_ELEMENT_NAME]: LovelaceCardEditor;
         [ACTION_HANDLER_CUSTOM_ELEMENT_NAME]: XiaomiVacuumMapCardActionHandler;
         "hui-error-card": LovelaceCard;
+        "xvmc-tile": Tile;
     }
 }
 

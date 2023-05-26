@@ -52,7 +52,7 @@ import {
     conditional,
     delay,
     getMousePosition,
-    getWatchedEntities,
+    getWatchedEntities, handleActionWithConfig,
     hasConfigOrAnyEntityChanged,
     stopEvent,
 } from "./utils";
@@ -66,7 +66,6 @@ import { RepeatsType } from "./model/map_mode/repeats-type";
 import { PlatformGenerator } from "./model/generators/platform-generator";
 import { sortTiles, TilesGenerator } from "./model/generators/tiles-generator";
 import { IconListGenerator } from "./model/generators/icon-list-generator";
-import { TileRenderer } from "./renderers/tile-renderer";
 import { IconRenderer } from "./renderers/icon-renderer";
 import { ToastRenderer } from "./renderers/toast-renderer";
 import { ModesMenuRenderer } from "./renderers/modes-menu-renderer";
@@ -77,6 +76,8 @@ import { ServiceCallSchema } from "./model/map_mode/service-call-schema";
 import { HomeAssistantFixed } from "./types/fixes";
 import "./polyfills/objectEntries";
 import "./polyfills/objectFromEntries";
+
+import { Tile } from "./components/tile";
 
 const line1 = "   XIAOMI-VACUUM-MAP-CARD";
 const line2 = `   ${localize("common.version")} ${CARD_VERSION}`;
@@ -417,14 +418,21 @@ export class XiaomiVacuumMapCard extends LitElement {
                             (tiles?.length ?? 0) !== 0,
                             () => html`
                                 <div class="tiles-wrapper">
-                                    ${tiles?.map(sensor => TileRenderer.render(sensor, this.internalVariables, this))}
+                                    ${tiles?.map(tile => html`
+                                        <xvmc-tile
+                                            .hass=${this.hass}
+                                            .config=${tile}
+                                            .isInEditor=${this.isInEditor}
+                                            .handleActionWithConfig=${(c) => handleActionWithConfig(this, c)}
+                                            .internalVariables=${this.internalVariables}
+                                        ></xvmc-tile>
+                                    `)}
                                 </div>
                             `,
                         )}
                     </div>`
                 )}
                 ${ToastRenderer.render("map-card")}
-                <test-menu></test-menu>
             </ha-card>
         `;
     }
@@ -1813,7 +1821,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             ${Room.styles}
             ${ModesMenuRenderer.styles}
             ${IconRenderer.styles}
-            ${TileRenderer.styles}
+            ${Tile.styles}
             ${ToastRenderer.styles}
         `;
     }
