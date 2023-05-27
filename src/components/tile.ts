@@ -1,12 +1,18 @@
 import { css, CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators";
 import { ifDefined } from "lit/directives/if-defined";
-import { ActionHandlerEvent, computeStateDomain, hasAction } from "custom-card-helpers";
+import { computeStateDomain, hasAction } from "custom-card-helpers";
 import { HassEntity } from "home-assistant-js-websocket/dist/types";
 
 import { actionHandler } from "../action-handler-directive";
 import { conditional } from "../utils";
-import { EntityConfig, ReplacedKey, TileConfig, VariablesStorage } from "../types/types";
+import {
+    ActionHandlerFunctionCreator,
+    EntityConfig,
+    ReplacedKey,
+    TileConfig,
+    VariablesStorage,
+} from "../types/types";
 import { HomeAssistantFixed } from "../types/fixes";
 import { localizeEntity } from "../localize/localize";
 import { computeAttributeNameDisplay } from "../localize/hass/compute_attribute_display";
@@ -26,13 +32,13 @@ export class Tile extends LitElement {
     private isInEditor!: boolean;
 
     @property({attribute: false})
-    private handleActionWithConfig!: (_: TileConfig) => ((ev: ActionHandlerEvent) => void);
+    private onAction!: ActionHandlerFunctionCreator;
 
     @property({attribute: false})
     private internalVariables!: VariablesStorage;
 
     protected render(): TemplateResult | void {
-        if (!this.config || !this.hass || !this.handleActionWithConfig || !this.internalVariables) {
+        if (!this.config || !this.hass || !this.onAction || !this.internalVariables) {
             return;
         }
         this.className = `tile-wrapper clickable ripple ${this.config.tile_id ? `tile-${this.config.tile_id}-wrapper` : ""}`;
@@ -45,7 +51,7 @@ export class Tile extends LitElement {
         return html`
             <div
                 .title="${this.isInEditor ? `tile_id: ${this.config.tile_id}` : this.config.tooltip ?? ""}"
-                @action="${this.handleActionWithConfig(this.config)}"
+                @action="${this.onAction(this.config)}"
                 .actionHandler="${actionHandler({
                     hasHold: hasAction(this.config?.hold_action),
                     hasDoubleClick: hasAction(this.config?.double_tap_action),

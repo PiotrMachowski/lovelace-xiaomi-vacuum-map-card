@@ -5,6 +5,7 @@ import { ActionHandlerEvent, forwardHaptic, LovelaceCard, LovelaceCardEditor } f
 
 import "./editor";
 import type {
+    ActionableObjectConfig,
     LovelaceDomEvent,
     PredefinedPointConfig,
     ReplacedKey,
@@ -14,6 +15,7 @@ import type {
     XiaomiVacuumMapCardConfig,
 } from "./types/types";
 import {
+    ActionHandlerFunction,
     ActionType,
     CalibrationPoint,
     CardPresetConfig,
@@ -52,7 +54,8 @@ import {
     conditional,
     delay,
     getMousePosition,
-    getWatchedEntities, handleActionWithConfig,
+    getWatchedEntities,
+    createActionWithConfigHandler,
     hasConfigOrAnyEntityChanged,
     stopEvent,
 } from "./utils";
@@ -66,7 +69,6 @@ import { RepeatsType } from "./model/map_mode/repeats-type";
 import { PlatformGenerator } from "./model/generators/platform-generator";
 import { sortTiles, TilesGenerator } from "./model/generators/tiles-generator";
 import { IconListGenerator } from "./model/generators/icon-list-generator";
-import { IconRenderer } from "./renderers/icon-renderer";
 import { ToastRenderer } from "./renderers/toast-renderer";
 import { CoordinatesConverter } from "./model/map_objects/coordinates-converter";
 import { MapObject } from "./model/map_objects/map-object";
@@ -78,6 +80,7 @@ import "./polyfills/objectFromEntries";
 
 import { Tile } from "./components/tile";
 import { DropdownMenu } from "./components/dropdown-menu";
+import { Icon } from "./components/icon";
 
 const line1 = "   XIAOMI-VACUUM-MAP-CARD";
 const line2 = `   ${localize("common.version")} ${CARD_VERSION}`;
@@ -269,7 +272,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         const tiles = preset.tiles?.filter(tile => areConditionsMet(tile, this.internalVariables, this.hass));
         // const icons = preset.icons?.filter(icon => areConditionsMet(icon, this.internalVariables, this.hass));
 
-        const icons = IconRenderer.preprocessIcons(preset.icons, this.internalVariables, this.hass);
+        const icons = Icon.preprocessIcons(preset.icons, this.internalVariables, this.hass);
         const modes = this.modes;
 
         const mapSrc = this._getMapSrc(preset);
@@ -412,7 +415,12 @@ export class XiaomiVacuumMapCard extends LitElement {
                             () => html`
                                 <div class="vacuum-controls">
                                     <div class="vacuum-actions-list">
-                                        ${icons?.map((icon ) => IconRenderer.render(icon, this, [...this._iconDropdownMenus??[]]))}
+                                        ${icons?.map((icon ) => html`
+                                            <xvmc-icon
+                                                .config=${icon}
+                                                .onAction=${(c: ActionableObjectConfig, action?: string) => createActionWithConfigHandler(this, c, action)}
+                                            ></xvmc-icon>
+                                        `)}
                                     </div>
                                 </div>
                             `,
@@ -426,7 +434,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                                             .hass=${this.hass}
                                             .config=${tile}
                                             .isInEditor=${this.isInEditor}
-                                            .handleActionWithConfig=${(c) => handleActionWithConfig(this, c)}
+                                            .onAction=${(c: ActionableObjectConfig, action?: string) => createActionWithConfigHandler(this, c, action)}
                                             .internalVariables=${this.internalVariables}
                                         ></xvmc-tile>
                                     `)}
@@ -1147,9 +1155,9 @@ export class XiaomiVacuumMapCard extends LitElement {
         this.shouldHandleMouseUp = false;
     }
 
-    private _handleRunAction(): (ev: ActionHandlerEvent) => void {
-        return async (ev: ActionHandlerEvent): Promise<void> => {
-            if (this.hass && ev.detail.action) {
+    private _handleRunAction(): ActionHandlerFunction {
+        return async (ev?: ActionHandlerEvent): Promise<void> => {
+            if (this.hass && ev?.detail?.action) {
                 switch (ev.detail.action) {
                     case "tap":
                         await this._run(false);
@@ -1822,7 +1830,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             ${ManualPoint.styles}
             ${PredefinedPoint.styles}
             ${Room.styles}
-            ${IconRenderer.styles}
+            ${Icon.styles}
             ${Tile.styles}
             ${DropdownMenu.styles}
             ${ToastRenderer.styles}

@@ -3,6 +3,7 @@ import { PropertyValues } from "lit";
 
 import {
     ActionableObjectConfig,
+    ActionHandlerFunction,
     CardPresetConfig,
     ConditionalObjectConfig,
     ConditionConfig,
@@ -154,27 +155,37 @@ export function conditional<T>(condition: boolean, content: () => T): T | null {
     return condition ? content() : null;
 }
 
+export function createActionWithConfigHandler(
+    node: XiaomiVacuumMapCard,
+    config: ActionableObjectConfig | undefined,
+    action?: string,
+): ActionHandlerFunction {
+    if (action) {
+        return (): void => handleActionWithConfig(node, config, action);
+    }
+    return (ev?: ActionHandlerEvent): void => handleActionWithConfig(node, config, ev?.detail?.action ?? "tap");
+}
+
 export function handleActionWithConfig(
     node: XiaomiVacuumMapCard,
     config: ActionableObjectConfig | undefined,
-): (ev: ActionHandlerEvent) => void {
-    return (ev: ActionHandlerEvent): void => {
-        if (node.hass && config && ev.detail.action) {
-            const currentPreset = node._getCurrentPreset();
-            const currentMode = node._getCurrentMode();
-            const tileVariables = {};
-            tileVariables[TemplatableTileValue.VACUUM_ENTITY_ID] = currentPreset.entity;
-            if (config.hasOwnProperty("attribute")) {
-                tileVariables[TemplatableTileValue.ATTRIBUTE] = config["attribute"];
-            }
-            const entity_id = config.hasOwnProperty("entity") ? config["entity"]: currentPreset.entity;
-            const { selection, variables } = node._getSelection(currentMode);
-            const defaultVariables = ServiceCallSchema.getDefaultVariables(entity_id, selection, node.repeats);
-            const filled = getFilledTemplate(config as Record<string, unknown>, defaultVariables, tileVariables,
-                node.internalVariables, currentMode.variables, variables);
-            handleAction(node, node.hass as unknown as HomeAssistant, filled as ActionableObjectConfig, ev.detail.action);
+    action: string,
+): void {
+    if (node.hass && config && action) {
+        const currentPreset = node._getCurrentPreset();
+        const currentMode = node._getCurrentMode();
+        const tileVariables = {};
+        tileVariables[TemplatableTileValue.VACUUM_ENTITY_ID] = currentPreset.entity;
+        if (config.hasOwnProperty("attribute")) {
+            tileVariables[TemplatableTileValue.ATTRIBUTE] = config["attribute"];
         }
-    };
+        const entity_id = config.hasOwnProperty("entity") ? config["entity"] : currentPreset.entity;
+        const { selection, variables } = node._getSelection(currentMode);
+        const defaultVariables = ServiceCallSchema.getDefaultVariables(entity_id, selection, node.repeats);
+        const filled = getFilledTemplate(config as Record<string, unknown>, defaultVariables, tileVariables,
+            node.internalVariables, currentMode.variables, variables);
+        handleAction(node, node.hass as unknown as HomeAssistant, filled as ActionableObjectConfig, action);
+    }
 }
 
 export function getMousePosition(

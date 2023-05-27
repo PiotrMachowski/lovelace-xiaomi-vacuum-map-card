@@ -1,4 +1,10 @@
-import { ActionConfig, LovelaceCard, LovelaceCardConfig, LovelaceCardEditor } from "custom-card-helpers";
+import {
+    ActionConfig,
+    ActionHandlerEvent,
+    LovelaceCard,
+    LovelaceCardConfig,
+    LovelaceCardEditor,
+} from "custom-card-helpers";
 import { ACTION_HANDLER_CUSTOM_ELEMENT_NAME, CARD_CUSTOM_ELEMENT_NAME, EDITOR_CUSTOM_ELEMENT_NAME } from "../const";
 import { XiaomiVacuumMapCardActionHandler } from "../action-handler-directive";
 import { XiaomiVacuumMapCard } from "../xiaomi-vacuum-map-card";
@@ -27,6 +33,9 @@ export type ReplacedKey = string | Record<string, unknown> | number | unknown[];
 export type VariablesStorage = Record<string, ReplacedKey>;
 export type KeyReplacer = (key: string) => ReplacedKey;
 export type LovelaceDomEvent = CustomEvent<Record<string, never>>;
+export type DropdownIconActionConfig = DropdownEntryIconActionConfig[];
+export type ActionHandlerFunction = ((_?: ActionHandlerEvent) => void);
+export type ActionHandlerFunctionCreator = (_: ActionableObjectConfig) => ActionHandlerFunction;
 
 export type EntityRegistryEntry = {
     entity_id: string;
@@ -123,8 +132,6 @@ export interface IconActionConfig extends ActionableObjectConfig, ConditionalObj
     readonly menu_id?: string;
     readonly label?: string;
 }
-
-export type DropdownIconActionConfig = DropdownEntryIconActionConfig[];
 
 export interface DropdownEntryIconActionConfig extends IconActionConfig {
     readonly isSelected: boolean;
