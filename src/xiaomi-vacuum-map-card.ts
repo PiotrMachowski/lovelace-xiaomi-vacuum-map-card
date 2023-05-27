@@ -68,7 +68,6 @@ import { sortTiles, TilesGenerator } from "./model/generators/tiles-generator";
 import { IconListGenerator } from "./model/generators/icon-list-generator";
 import { IconRenderer } from "./renderers/icon-renderer";
 import { ToastRenderer } from "./renderers/toast-renderer";
-import { ModesMenuRenderer } from "./renderers/modes-menu-renderer";
 import { CoordinatesConverter } from "./model/map_objects/coordinates-converter";
 import { MapObject } from "./model/map_objects/map-object";
 import { MousePosition } from "./model/map_objects/mouse-position";
@@ -78,6 +77,7 @@ import "./polyfills/objectEntries";
 import "./polyfills/objectFromEntries";
 
 import { Tile } from "./components/tile";
+import { DropdownMenu } from "./components/dropdown-menu";
 
 const line1 = "   XIAOMI-VACUUM-MAP-CARD";
 const line2 = `   ${localize("common.version")} ${CARD_VERSION}`;
@@ -390,11 +390,14 @@ export class XiaomiVacuumMapCard extends LitElement {
                             () => html`
                                 <div class="map-controls-wrapper">
                                     <div class="map-controls">
-                                        ${conditional(modes.length > 1, () =>
-                                            ModesMenuRenderer.render(modes, this.selectedMode, selected =>
-                                                this._setCurrentMode(selected),
-                                                this._modesDropdownMenu
-                                            ),
+                                        ${conditional(modes.length > 1, () => html`
+                                            <xvmc-dropdown-menu
+                                                .values=${modes}
+                                                .currentIndex=${this.selectedMode}
+                                                .setValue=${selected => this._setCurrentMode(selected)}
+                                                .renderNameCollapsed=${true}>
+                                            </xvmc-dropdown-menu>
+                                            `,
                                         )}
                                         ${conditional(
                                             mapControls.length > 0,
@@ -1819,9 +1822,9 @@ export class XiaomiVacuumMapCard extends LitElement {
             ${ManualPoint.styles}
             ${PredefinedPoint.styles}
             ${Room.styles}
-            ${ModesMenuRenderer.styles}
             ${IconRenderer.styles}
             ${Tile.styles}
+            ${DropdownMenu.styles}
             ${ToastRenderer.styles}
         `;
     }
