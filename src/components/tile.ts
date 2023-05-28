@@ -1,4 +1,4 @@
-import { css, CSSResultGroup, html, LitElement, TemplateResult } from "lit";
+import { css, CSSResultGroup, html, TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators";
 import { ifDefined } from "lit/directives/if-defined";
 import { computeStateDomain, hasAction } from "custom-card-helpers";
@@ -17,10 +17,11 @@ import { HomeAssistantFixed } from "../types/fixes";
 import { localizeEntity } from "../localize/localize";
 import { computeAttributeNameDisplay } from "../localize/hass/compute_attribute_display";
 import { blankBeforePercent } from "../localize/hass/blank_before_percent";
+import { RootlessLitElement } from "./rootless-lit-element";
 
 
 @customElement("xvmc-tile")
-export class Tile extends LitElement {
+export class Tile extends RootlessLitElement {
 
     @property({attribute: false})
     private config!: TileConfig;
@@ -141,10 +142,6 @@ export class Tile extends LitElement {
             this.config.unit === "%"
                 ? blankBeforePercent(this.hass.locale) + "%"
                 : ` ${this.config.unit}`;
-    }
-
-    protected createRenderRoot(): Element | ShadowRoot {
-        return this;
     }
 
     public static get styles(): CSSResultGroup {

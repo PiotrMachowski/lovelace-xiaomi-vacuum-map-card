@@ -78,9 +78,10 @@ import { HomeAssistantFixed } from "./types/fixes";
 import "./polyfills/objectEntries";
 import "./polyfills/objectFromEntries";
 
-import { Tile } from "./components/tile";
 import { DropdownMenu } from "./components/dropdown-menu";
-import { Icon } from "./components/icon";
+import { TilesWrapper } from "./components/tiles-wrapper";
+import { IconsWrapper } from "./components/icons-wrapper";
+import { PresetSelector } from "./components/preset-selector";
 
 const line1 = "   XIAOMI-VACUUM-MAP-CARD";
 const line2 = `   ${localize("common.version")} ${CARD_VERSION}`;
@@ -255,8 +256,6 @@ export class XiaomiVacuumMapCard extends LitElement {
             return this._showInvalidEntities(invalidEntities);
         }
 
-        const rtl = getComputedStyle(this)?.getPropertyValue("direction") === "rtl";
-
         let preset = this._getCurrentPreset();
         const allPresets = this._getAllPresets();
         let availablePresets = this._getAllAvailablePresets();
@@ -270,9 +269,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         this._updateCalibration(preset);
 
         const tiles = preset.tiles?.filter(tile => areConditionsMet(tile, this.internalVariables, this.hass));
-        // const icons = preset.icons?.filter(icon => areConditionsMet(icon, this.internalVariables, this.hass));
-
-        const icons = Icon.preprocessIcons(preset.icons, this.internalVariables, this.hass);
+        const icons = IconsWrapper.preprocessIcons(preset.icons, this.internalVariables, this.hass);
         const modes = this.modes;
 
         const mapSrc = this._getMapSrc(preset);
@@ -314,39 +311,17 @@ export class XiaomiVacuumMapCard extends LitElement {
                     (this.config.title ?? "").length > 0,
                     () => html`<h1 class="card-header">${this.config.title}</h1>`,
                 )}
-                ${conditional(
-                    availablePresets.length > 1,
-                    () => html`
-                        <div class="preset-selector-wrapper">
-                            <div
-                                class="preset-selector-icon-wrapper"
-                                @click="${(): void => this._openPreviousPreset()}">
-                                <ha-icon
-                                    icon="mdi:chevron-${rtl ? "right" : "left"}"
-                                    class="preset-selector-icon ${this._getPreviousPresetIndex() === -1
-                                        ? "disabled"
-                                        : ""}">
-                                </ha-icon>
-                            </div>
-                            <div
-                                class="preset-label-wrapper ${preset.activate ? "clickable" : ""}"
-                                @click="${(): void => this._executePresetsActivation()}">
-                                <div class="preset-label">${preset.preset_name}</div>
-                                <div class="preset-indicator">
-                                    ${new Array(availablePresets.length)
-                                        .fill(0)
-                                        .map((_, i) => (i === availablePresetIndex ? "●" : "○"))}
-                                </div>
-                            </div>
-                            <div class="preset-selector-icon-wrapper" @click="${(): void => this._openNextPreset()}">
-                                <ha-icon
-                                    icon="mdi:chevron-${rtl ? "left" : "right"}"
-                                    class="preset-selector-icon ${this._getNextPresetIndex() === -1 ? "disabled" : ""}">
-                                </ha-icon>
-                            </div>
-                        </div>
-                    `,
-                )}
+                <xvmc-preset-selector
+                    .availablePresets=${availablePresets}
+                    .availablePresetIndex=${availablePresetIndex}
+                    .openPreviousPreset=${(): void => this._openPreviousPreset()}
+                    .previousPresetIndex=${this._getPreviousPresetIndex()}
+                    .presetActivable=${preset.activate !== undefined}
+                    .presetName=${preset.preset_name}
+                    .executePresetsActivation=${(): void => this._executePresetsActivation()}
+                    .openNextPreset=${(): void => this._openNextPreset()}
+                    .nextPresetIndex=${this._getNextPresetIndex()}
+                ></xvmc-preset-selector>
                 <div class="map-wrapper">
                     <pinch-zoom
                         min-scale="0.5"
@@ -410,37 +385,17 @@ export class XiaomiVacuumMapCard extends LitElement {
                                 </div>
                             `,
                         )}
-                        ${conditional(
-                            (icons?.length ?? 0) !== 0,
-                            () => html`
-                                <div class="vacuum-controls">
-                                    <div class="vacuum-actions-list">
-                                        ${icons?.map((icon ) => html`
-                                            <xvmc-icon
-                                                .config=${icon}
-                                                .onAction=${(c: ActionableObjectConfig, action?: string) => createActionWithConfigHandler(this, c, action)}
-                                            ></xvmc-icon>
-                                        `)}
-                                    </div>
-                                </div>
-                            `,
-                        )}
-                        ${conditional(
-                            (tiles?.length ?? 0) !== 0,
-                            () => html`
-                                <div class="tiles-wrapper">
-                                    ${tiles?.map(tile => html`
-                                        <xvmc-tile
-                                            .hass=${this.hass}
-                                            .config=${tile}
-                                            .isInEditor=${this.isInEditor}
-                                            .onAction=${(c: ActionableObjectConfig, action?: string) => createActionWithConfigHandler(this, c, action)}
-                                            .internalVariables=${this.internalVariables}
-                                        ></xvmc-tile>
-                                    `)}
-                                </div>
-                            `,
-                        )}
+                        <xvmc-icons-wrapper
+                            .icons=${icons}
+                            .onAction=${(c: ActionableObjectConfig, action?: string) => createActionWithConfigHandler(this, c, action)}
+                        ></xvmc-icons-wrapper>
+                        <xvmc-tiles-wrapper
+                            .hass=${this.hass}
+                            .tiles=${tiles}
+                            .isInEditor=${this.isInEditor}
+                            .onAction=${(c: ActionableObjectConfig, action?: string) => createActionWithConfigHandler(this, c, action)}
+                            .internalVariables=${this.internalVariables}
+                        ></xvmc-tiles-wrapper>
                     </div>`
                 )}
                 ${ToastRenderer.render("map-card")}
@@ -495,11 +450,11 @@ export class XiaomiVacuumMapCard extends LitElement {
         }
     }
 
-    private _getAllPresets(): Array<CardPresetConfig> {
+    private _getAllPresets(): CardPresetConfig[] {
         return [this.config, ...(this.config.additional_presets ?? [])];
     }
 
-    private _getAllAvailablePresets(): Array<CardPresetConfig> {
+    private _getAllAvailablePresets(): CardPresetConfig[] {
         const allPresets = this._getAllPresets();
         const available = allPresets.filter(
             p => (p.conditions?.length ?? 0) === 0 || areConditionsMet(p, this.internalVariables, this.hass),
@@ -1614,40 +1569,6 @@ export class XiaomiVacuumMapCard extends LitElement {
                 cursor: pointer;
             }
 
-            .preset-selector-wrapper {
-                width: 100%;
-                display: inline-flex;
-                align-content: center;
-                justify-content: space-between;
-                align-items: center;
-            }
-
-            .preset-selector-icon-wrapper {
-                height: 44px;
-                width: 44px;
-                display: grid;
-                place-items: center;
-            }
-
-            .preset-selector-icon {
-                cursor: pointer;
-            }
-
-            .preset-selector-icon.disabled {
-                color: var(--map-card-internal-disabled-text-color);
-                cursor: default;
-            }
-
-            .preset-label-wrapper {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .preset-indicator {
-                line-height: 50%;
-            }
-
             .map-wrapper {
                 position: relative;
                 height: max-content;
@@ -1728,11 +1649,9 @@ export class XiaomiVacuumMapCard extends LitElement {
 
             .controls-wrapper {
                 margin: 15px;
-            }
-
-            .controls-wrapper > * {
-                margin-top: 10px;
-                margin-bottom: 10px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
             }
 
             .map-controls {
@@ -1768,31 +1687,6 @@ export class XiaomiVacuumMapCard extends LitElement {
                 background-color: transparent;
             }
 
-            .vacuum-controls {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .vacuum-actions-list {
-                float: right;
-                border-radius: var(--map-card-internal-big-radius);
-                overflow: hidden;
-                background-color: var(--map-card-internal-secondary-color);
-                color: var(--map-card-internal-secondary-text-color);
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .tiles-wrapper {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: space-evenly;
-                align-items: stretch;
-                gap: 5px;
-            }
-
             .ripple {
                 position: relative;
                 overflow: hidden;
@@ -1823,6 +1717,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                 transition: 0s;
             }
 
+            ${PresetSelector.styles}
             ${MapObject.styles}
             ${ManualRectangle.styles}
             ${PredefinedMultiRectangle.styles}
@@ -1830,8 +1725,8 @@ export class XiaomiVacuumMapCard extends LitElement {
             ${ManualPoint.styles}
             ${PredefinedPoint.styles}
             ${Room.styles}
-            ${Icon.styles}
-            ${Tile.styles}
+            ${IconsWrapper.styles}
+            ${TilesWrapper.styles}
             ${DropdownMenu.styles}
             ${ToastRenderer.styles}
         `;

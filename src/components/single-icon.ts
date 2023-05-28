@@ -1,4 +1,4 @@
-import { css, CSSResultGroup, html, LitElement, TemplateResult } from "lit";
+import { css, CSSResultGroup, html, TemplateResult } from "lit";
 import { hasAction } from "custom-card-helpers";
 
 import { actionHandler } from "../action-handler-directive";
@@ -7,9 +7,10 @@ import {
     IconActionConfig,
 } from "../types/types";
 import { customElement, property } from "lit/decorators";
+import { RootlessLitElement } from "./rootless-lit-element";
 
 @customElement("xvmc-single-icon")
-export class SingleIcon extends LitElement {
+export class SingleIcon extends RootlessLitElement {
 
     @property({attribute: false})
     private config!: IconActionConfig;
@@ -30,10 +31,6 @@ export class SingleIcon extends LitElement {
                 <ha-icon icon="${this.config.icon}"></ha-icon>
             </paper-button>
         `;
-    }
-
-    protected createRenderRoot(): Element | ShadowRoot {
-        return this;
     }
 
     public static get styles(): CSSResultGroup {

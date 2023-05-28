@@ -1,13 +1,14 @@
-import { css, CSSResultGroup, html, LitElement, TemplateResult } from "lit";
+import { css, CSSResultGroup, html, TemplateResult } from "lit";
 
 import {
     ActionHandlerFunctionCreator,
     DropdownIconActionConfig,
 } from "../types/types";
 import { customElement, property } from "lit/decorators";
+import { RootlessLitElement } from "./rootless-lit-element";
 
 @customElement("xvmc-dropdown-icon")
-export class DropdownIcon extends LitElement {
+export class DropdownIcon extends RootlessLitElement {
 
     @property({attribute: false})
     private config!: DropdownIconActionConfig;
@@ -32,10 +33,6 @@ export class DropdownIcon extends LitElement {
                 .additionalClasses=${[itemClass, "dropdown-icon"]}>
             </xvmc-dropdown-menu>
         `
-    }
-
-    protected createRenderRoot(): Element | ShadowRoot {
-        return this;
     }
 
     public static get styles(): CSSResultGroup {

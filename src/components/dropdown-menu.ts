@@ -1,6 +1,7 @@
-import { css, CSSResultGroup, html, LitElement, TemplateResult } from "lit";
+import { css, CSSResultGroup, html, TemplateResult } from "lit";
 import { conditional } from "../utils";
 import { customElement, property, query } from "lit/decorators";
+import { RootlessLitElement } from "./rootless-lit-element";
 
 
 interface DropdownEntry {
@@ -9,7 +10,7 @@ interface DropdownEntry {
 }
 
 @customElement("xvmc-dropdown-menu")
-export class DropdownMenu<T extends DropdownEntry> extends LitElement {
+export class DropdownMenu<T extends DropdownEntry> extends RootlessLitElement {
 
     @property({ attribute: false })
     private values!: T[];
@@ -97,10 +98,6 @@ export class DropdownMenu<T extends DropdownEntry> extends LitElement {
                 item.shadowRoot!.querySelector("span")!.style.flexGrow = "1";
             });
         }
-    }
-
-    protected createRenderRoot(): Element | ShadowRoot {
-        return this;
     }
 
     public static get styles(): CSSResultGroup {
