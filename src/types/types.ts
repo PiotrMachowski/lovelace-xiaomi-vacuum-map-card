@@ -104,7 +104,7 @@ export interface MapModeConfig {
 
 export interface PlatformTemplate {
     readonly map_modes: {
-        readonly defaultTemplates: string[];
+        readonly default_templates: string[];
         readonly templates: { [templateName: string]: MapModeConfig };
     };
     readonly tiles: {

@@ -1,6 +1,6 @@
 {
     "map_modes": {
-        "defaultTemplates": [],
+        "default_templates": [],
         "templates": {
             "vacuum_clean_segment": {
                 "name": "map_mode.vacuum_clean_segment",

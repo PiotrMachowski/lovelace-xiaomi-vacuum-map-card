@@ -100,7 +100,7 @@ export class PlatformGenerator {
     }
 
     public static generateDefaultModes(platform: string): MapModeConfig[] {
-        return this.getPlatformTemplate(platform).map_modes.defaultTemplates.map(dt => ({ template: dt }));
+        return this.getPlatformTemplate(platform).map_modes.default_templates.map(dt => ({ template: dt }));
     }
 
     public static getTilesFromAttributesTemplates(platform: string): TileFromAttributeTemplate[] {
@@ -128,7 +128,7 @@ export class PlatformGenerator {
             this.TEMPLATES.get(this.XIAOMI_MIIO_PLATFORM) ??
             ({
                 templates: [],
-                defaultTemplates: {},
+                default_templates: {},
             } as unknown as PlatformTemplate)
         );
     }

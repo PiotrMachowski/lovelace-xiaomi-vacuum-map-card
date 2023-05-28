@@ -1,6 +1,6 @@
 {
     "map_modes": {
-        "defaultTemplates": ["vacuum_clean_zone", "vacuum_goto", "vacuum_follow_path"],
+        "default_templates": ["vacuum_clean_zone", "vacuum_goto", "vacuum_follow_path"],
         "templates": {
             "vacuum_clean_zone": {
                 "name": "map_mode.vacuum_clean_zone",
