@@ -35,7 +35,7 @@ export class DropdownMenu<T extends DropdownEntry> extends RootlessLitElement {
             <ha-button-menu class="dropdown-menu ${this.additionalClasses.join(" ")}" fixed="true" activatable
                             @closed="${(e: Event) => e.stopPropagation()}"
                             @click="${() => this.updateStyles(this.values.length)}">
-                <div class="dropdown-menu-button" slot="trigger" alt="bottom align">
+                <div class="dropdown-menu-button clickable" slot="trigger" alt="bottom align">
                     <paper-button class="dropdown-menu-button-button">
                         <ha-icon icon="${currentValue.icon}" class="dropdown-icon"></ha-icon>
                     </paper-button>

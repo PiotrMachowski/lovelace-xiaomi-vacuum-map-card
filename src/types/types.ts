@@ -107,7 +107,7 @@ export interface PlatformTemplate {
         readonly default_templates: string[];
         readonly templates: { [templateName: string]: MapModeConfig };
     };
-    readonly tiles: {
+    readonly tiles?: {
         readonly from_attributes?: TileFromAttributeTemplate[];
         readonly from_sensors?: TileFromSensorTemplate[];
     };

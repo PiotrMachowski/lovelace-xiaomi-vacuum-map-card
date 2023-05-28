@@ -517,7 +517,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (this.hass) this._updateCalibration(config);
         const vacuumPlatform = config.vacuum_platform ?? "default";
         this.modes = (
-            (config.map_modes?.length ?? -1) === -1
+            (config.map_modes?.length ?? -1) === -1 || vacuumPlatform.startsWith("Setup")
                 ? PlatformGenerator.generateDefaultModes(vacuumPlatform)
                 : config.map_modes ?? [EMPTY_MAP_MODE]
         ).map(m => new MapMode(vacuumPlatform, m, this.config.language));

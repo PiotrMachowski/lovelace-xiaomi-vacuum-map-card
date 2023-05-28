@@ -48,8 +48,5 @@
                 }
             }
         }
-    },
-    "tiles": {
-        "from_attributes": []
     }
 }

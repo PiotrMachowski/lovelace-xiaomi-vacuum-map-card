@@ -104,11 +104,11 @@ export class PlatformGenerator {
     }
 
     public static getTilesFromAttributesTemplates(platform: string): TileFromAttributeTemplate[] {
-        return this.getPlatformTemplate(platform).tiles.from_attributes ?? [];
+        return this.getPlatformTemplate(platform).tiles?.from_attributes ?? [];
     }
 
     public static getTilesFromSensorsTemplates(platform: string): TileFromSensorTemplate[] {
-        return this.getPlatformTemplate(platform).tiles.from_sensors ?? [];
+        return this.getPlatformTemplate(platform).tiles?.from_sensors ?? [];
     }
 
     public static getRoomsTemplate(platform: string): string | undefined {
