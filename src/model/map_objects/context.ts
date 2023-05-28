@@ -19,6 +19,7 @@ export class Context {
         public readonly selectedRooms: () => Room[],
         public readonly selectedPredefinedPoint: () => PredefinedPoint[],
         public readonly roundingEnabled: () => boolean,
+        public readonly coordinatesToMetersDivider: () => number,
         public readonly maxSelections: () => number,
         public readonly cssEvaluator: (_: string) => string,
         public readonly runImmediately: () => Promise<boolean>,

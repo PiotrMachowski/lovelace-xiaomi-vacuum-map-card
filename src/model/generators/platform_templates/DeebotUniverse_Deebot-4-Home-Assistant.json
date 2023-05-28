@@ -25,6 +25,7 @@
                 "icon": "mdi:select-drag",
                 "selection_type": "MANUAL_RECTANGLE",
                 "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 1000,
                 "repeats_type": "NONE",
                 "max_selections": 1,
                 "service_call_schema": {
@@ -44,6 +45,7 @@
                 "selection_type": "PREDEFINED_RECTANGLE",
                 "max_selections": 1,
                 "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 1000,
                 "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "xiaomi_miio.vacuum_clean_zone",

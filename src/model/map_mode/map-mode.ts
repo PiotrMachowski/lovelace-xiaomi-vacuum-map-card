@@ -27,6 +27,7 @@ export class MapMode {
     public selectionType: SelectionType;
     public maxSelections: number;
     public coordinatesRounding: boolean;
+    public coordinatesToMetersDivider: number;
     public runImmediately: boolean;
     public repeatsType: RepeatsType;
     public maxRepeats: number;
@@ -42,6 +43,7 @@ export class MapMode {
             : SelectionType.PREDEFINED_POINT;
         this.maxSelections = config.max_selections ?? 999;
         this.coordinatesRounding = config.coordinates_rounding ?? true;
+        this.coordinatesToMetersDivider = config.coordinates_to_meters_divider ?? 1000;
         this.runImmediately = config.run_immediately ?? false;
         this.repeatsType = config.repeats_type ? RepeatsType[config.repeats_type] : RepeatsType.NONE;
         this.maxRepeats = config.max_repeats ?? 1;
@@ -89,6 +91,7 @@ export class MapMode {
             icon: this.icon,
             run_immediately: this.runImmediately,
             coordinates_rounding: this.coordinatesRounding,
+            coordinates_to_meters_divider: this.coordinatesToMetersDivider,
             selection_type: SelectionType[this.selectionType],
             max_selections: this.maxSelections,
             repeats_type: RepeatsType[this.repeatsType],
@@ -111,6 +114,8 @@ export class MapMode {
         if (!config.max_selections && templateValue.max_selections) this.maxSelections = templateValue.max_selections;
         if (config.coordinates_rounding === undefined && templateValue.coordinates_rounding !== undefined)
             this.coordinatesRounding = templateValue.coordinates_rounding;
+        if (config.coordinates_to_meters_divider === undefined && templateValue.coordinates_to_meters_divider !== undefined)
+            this.coordinatesToMetersDivider = templateValue.coordinates_to_meters_divider;
         if (config.run_immediately === undefined && templateValue.run_immediately !== undefined)
             this.runImmediately = templateValue.run_immediately;
         if (!config.repeats_type && templateValue.repeats_type)

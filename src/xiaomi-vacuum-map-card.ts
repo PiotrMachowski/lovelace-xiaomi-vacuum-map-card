@@ -696,6 +696,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             () => this.selectedRooms,
             () => this.selectedPredefinedPoint,
             () => this._getCurrentMode().coordinatesRounding,
+            () => this._getCurrentMode().coordinatesToMetersDivider,
             () => this._getCurrentMode().maxSelections,
             property => this._getCssProperty(property),
             () => this._runImmediately(),

@@ -21,6 +21,7 @@
                 "icon": "mdi:select-drag",
                 "selection_type": "MANUAL_RECTANGLE",
                 "coordinates_rounding": false,
+                "coordinates_to_meters_divider": 1,
                 "max_selections": 5,
                 "repeats_type": "EXTERNAL",
                 "max_repeats": 3,
@@ -39,6 +40,7 @@
                 "selection_type": "PREDEFINED_RECTANGLE",
                 "max_selections": 5,
                 "coordinates_rounding": false,
+                "coordinates_to_meters_divider": 1,
                 "repeats_type": "EXTERNAL",
                 "max_repeats": 3,
                 "service_call_schema": {
@@ -55,6 +57,7 @@
                 "icon": "mdi:map-marker-plus",
                 "selection_type": "MANUAL_POINT",
                 "coordinates_rounding": false,
+                "coordinates_to_meters_divider": 1,
                 "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "viomi_vacuum_v8.clean_point",
@@ -69,6 +72,7 @@
                 "icon": "mdi:map-marker",
                 "selection_type": "PREDEFINED_POINT",
                 "coordinates_rounding": false,
+                "coordinates_to_meters_divider": 1,
                 "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "viomi_vacuum_v8.clean_point",

@@ -7,6 +7,7 @@
                 "icon": "mdi:select-drag",
                 "selection_type": "MANUAL_RECTANGLE",
                 "coordinates_rounding": false,
+                "coordinates_to_meters_divider": 1,
                 "max_selections": 1,
                 "repeats_type": "NONE",
                 "service_call_schema": {
@@ -21,6 +22,7 @@
                 "icon": "mdi:map-marker-plus",
                 "selection_type": "MANUAL_POINT",
                 "coordinates_rounding": false,
+                "coordinates_to_meters_divider": 1,
                 "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "persistent_notification.create",
@@ -36,6 +38,7 @@
                 "icon": "mdi:map-marker-path",
                 "selection_type": "MANUAL_PATH",
                 "coordinates_rounding": false,
+                "coordinates_to_meters_divider": 1,
                 "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "persistent_notification.create",

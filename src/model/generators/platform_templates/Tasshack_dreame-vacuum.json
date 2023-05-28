@@ -26,6 +26,7 @@
         "icon": "mdi:select-drag",
         "selection_type": "MANUAL_RECTANGLE",
         "coordinates_rounding": true,
+        "coordinates_to_meters_divider": 1000,
         "max_selections": 20,
         "repeats_type": "EXTERNAL",
         "max_repeats": 3,
@@ -44,6 +45,7 @@
         "selection_type": "PREDEFINED_RECTANGLE",
         "max_selections": 20,
         "coordinates_rounding": true,
+        "coordinates_to_meters_divider": 1000,
         "repeats_type": "EXTERNAL",
         "max_repeats": 3,
         "service_call_schema": {
@@ -60,6 +62,7 @@
         "icon": "mdi:map-marker-plus",
         "selection_type": "MANUAL_POINT",
         "coordinates_rounding": true,
+        "coordinates_to_meters_divider": 1000,
         "repeats_type": "EXTERNAL",
         "max_repeats": 3,
         "service_call_schema": {
@@ -76,6 +79,7 @@
         "icon": "mdi:map-marker",
         "selection_type": "PREDEFINED_POINT",
         "coordinates_rounding": true,
+        "coordinates_to_meters_divider": 1000,
         "repeats_type": "EXTERNAL",
         "max_selections": 20,
         "max_repeats": 3,
