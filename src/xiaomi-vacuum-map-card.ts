@@ -320,8 +320,8 @@ export class XiaomiVacuumMapCard extends LitElement {
                     .presetName=${preset.preset_name}
                     .executePresetsActivation=${(): void => this._executePresetsActivation()}
                     .openNextPreset=${(): void => this._openNextPreset()}
-                    .nextPresetIndex=${this._getNextPresetIndex()}
-                ></xvmc-preset-selector>
+                    .nextPresetIndex=${this._getNextPresetIndex()}>
+                </xvmc-preset-selector>
                 <div class="map-wrapper">
                     <pinch-zoom
                         min-scale="0.5"
@@ -387,15 +387,15 @@ export class XiaomiVacuumMapCard extends LitElement {
                         )}
                         <xvmc-icons-wrapper
                             .icons=${icons}
-                            .onAction=${(c: ActionableObjectConfig, action?: string) => createActionWithConfigHandler(this, c, action)}
-                        ></xvmc-icons-wrapper>
+                            .onAction=${(c: ActionableObjectConfig, action?: string) => createActionWithConfigHandler(this, c, action)}>
+                        </xvmc-icons-wrapper>
                         <xvmc-tiles-wrapper
                             .hass=${this.hass}
                             .tiles=${tiles}
                             .isInEditor=${this.isInEditor}
                             .onAction=${(c: ActionableObjectConfig, action?: string) => createActionWithConfigHandler(this, c, action)}
-                            .internalVariables=${this.internalVariables}
-                        ></xvmc-tiles-wrapper>
+                            .internalVariables=${this.internalVariables}>
+                        </xvmc-tiles-wrapper>
                     </div>`
                 )}
                 ${ToastRenderer.render("map-card")}
