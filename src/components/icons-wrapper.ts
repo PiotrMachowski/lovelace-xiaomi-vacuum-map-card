@@ -6,11 +6,10 @@ import {
     DropdownIconActionConfig,
     IconActionConfig, VariablesStorage,
 } from "../types/types";
-import { DropdownIcon } from "./dropdown-icon";
-import { SingleIcon } from "./single-icon";
 import { RootlessLitElement } from "./rootless-lit-element";
 import { HomeAssistantFixed } from "../types/fixes";
 import { areConditionsMet } from "../utils";
+import { Icon } from "./icon";
 
 @customElement("xvmc-icons-wrapper")
 export class IconsWrapper extends RootlessLitElement {
@@ -58,8 +57,7 @@ export class IconsWrapper extends RootlessLitElement {
             justify-content: center;
           }
           
-          ${SingleIcon.styles}
-          ${DropdownIcon.styles}
+          ${Icon.styles}
         `;
     }
 

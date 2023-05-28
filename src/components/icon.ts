@@ -4,10 +4,7 @@ import {
     ActionHandlerFunctionCreator,
     DropdownIconActionConfig,
     IconActionConfig,
-    VariablesStorage,
 } from "../types/types";
-import { HomeAssistantFixed } from "../types/fixes";
-import "./single-icon";
 import { DropdownIcon } from "./dropdown-icon";
 import { customElement, property } from "lit/decorators";
 import { SingleIcon } from "./single-icon";

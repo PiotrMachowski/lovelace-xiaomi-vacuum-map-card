@@ -3,7 +3,6 @@ import { conditional } from "../utils";
 import { customElement, property, query } from "lit/decorators";
 import { RootlessLitElement } from "./rootless-lit-element";
 
-
 interface DropdownEntry {
     icon: string;
     name: string;
