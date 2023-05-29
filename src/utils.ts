@@ -228,7 +228,6 @@ async function _getAllEntitiesFromTheSameDevice(
     hass: HomeAssistantFixed,
     entity: string,
 ): Promise<EntityRegistryEntry[]> {
-    entity = "select.speed";
     const vacuumDeviceId = (
         await hass.callWS<EntityRegistryEntry>({
             type: "config/entity_registry/get",
