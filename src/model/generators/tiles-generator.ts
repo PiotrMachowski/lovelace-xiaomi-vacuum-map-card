@@ -12,7 +12,7 @@ import {
 import { localize } from "../../localize/localize";
 import { getAllEntitiesFromTheSameDevice, getFilledTemplate } from "../../utils";
 import { PlatformGenerator } from "./platform-generator";
-import { TemplatableTileValue } from "../map_mode/templatable-value";
+import { TemplatableItemValue } from "../map_mode/templatable-value";
 import { HomeAssistantFixed } from "../../types/fixes";
 import { computeAttributeNameDisplay } from "../../localize/hass/compute_attribute_display";
 
@@ -59,7 +59,7 @@ export class TilesGenerator {
         vacuumEntity: string,
         platform: string,
         language: Language,
-        tilesToOverride: Array<TileConfig>,
+        tilesToOverride: TileConfig[],
         variables: VariablesStorage,
     ): Promise<TileConfig[]> {
         if (!hass) return new Promise<TileConfig[]>(resolve => resolve([]));
@@ -69,9 +69,9 @@ export class TilesGenerator {
             return tiles;
         }
         const context = new TilesGeneratorContext(tilesToOverride);
-        context.addTiles(this.getCommonTiles(state, vacuumEntity, language));
-        context.addTiles(await this.getTilesFromSensors(hass, vacuumEntity, platform, language, variables));
-        context.addTiles(this.getTilesFromAttributes(hass, state, vacuumEntity, platform, language, variables));
+        context.addTiles(TilesGenerator.getCommonTiles(state, vacuumEntity, language));
+        context.addTiles(await TilesGenerator.getTilesFromEntities(hass, vacuumEntity, platform, language, variables));
+        context.addTiles(TilesGenerator.getTilesFromAttributes(hass, state, vacuumEntity, platform, language, variables));
         return context.tiles;
     }
 
@@ -84,7 +84,7 @@ export class TilesGenerator {
                 label: localize("tile.status.label", language),
                 attribute: "status",
                 icon: "mdi:robot-vacuum",
-                translations: this.generateTranslationKeys(
+                translations: TilesGenerator.generateTranslationKeys(
                     [
                         "starting",
                         "charger disconnected",
@@ -137,7 +137,7 @@ export class TilesGenerator {
                 label: localize("tile.fan_speed.label", language),
                 attribute: "fan_speed",
                 icon: "mdi:fan",
-                translations: this.generateTranslationKeys(
+                translations: TilesGenerator.generateTranslationKeys(
                     ["silent", "standard", "medium", "turbo", "auto", "gentle"],
                     "fan_speed",
                     language,
@@ -156,31 +156,24 @@ export class TilesGenerator {
     ): TileConfig[] {
         return PlatformGenerator.getTilesFromAttributesTemplates(platform)
             .filter(t => t.attribute in state.attributes)
-            .map(t => this.mapAttributeToTile(hass, vacuumEntity, t, language, variables));
+            .map(t => TilesGenerator.mapAttributeToTile(hass, vacuumEntity, t, language, variables));
     }
 
-    private static async getTilesFromSensors(
+    private static async getTilesFromEntities(
         hass: HomeAssistantFixed,
         vacuumEntityId: string,
         platform: string,
         language: Language,
         variables: VariablesStorage,
     ): Promise<TileConfig[]> {
-        let entityRegistryEntries;
-        try {
-            entityRegistryEntries = (await getAllEntitiesFromTheSameDevice(hass, vacuumEntityId)).filter(
-                e => e.disabled_by === null,
-            );
-        } catch {
-            entityRegistryEntries = [];
-        }
+        const entityRegistryEntries = await getAllEntitiesFromTheSameDevice(hass, vacuumEntityId);
         if (entityRegistryEntries.length > 0) {
             return PlatformGenerator.getTilesFromSensorsTemplates(platform)
                 .map(t => ({
                     tile: t,
                     entity: entityRegistryEntries.filter(e => e.unique_id.match(t.unique_id_regex)),
                 }))
-                .flatMap(v => v.entity.map(e => this.mapEntryToTile(hass, vacuumEntityId, e, v.tile, language, variables)))
+                .flatMap(v => v.entity.map(e => TilesGenerator.mapEntryToTile(hass, vacuumEntityId, e, v.tile, language, variables)))
         }
         return [];
     }
@@ -193,7 +186,7 @@ export class TilesGenerator {
         language: Language,
         variables: VariablesStorage,
     ): TileConfig {
-        return this.mapToTile(
+        return TilesGenerator.mapToTile(
             hass,
             tile_template,
             vacuum_entity_id,
@@ -212,7 +205,7 @@ export class TilesGenerator {
         language: Language,
         variables: VariablesStorage,
     ): TileConfig {
-        return this.mapToTile(
+        return TilesGenerator.mapToTile(
             hass,
             tile_template,
             entity_id,
@@ -237,21 +230,21 @@ export class TilesGenerator {
         const tileConfig: TileConfig = {
             ...tileTemplate,
             entity: entity_id,
-            label: this.getTileLabel(hass, tileTemplate, language, entity_id, attribute),
+            label: TilesGenerator.getTileLabel(hass, tileTemplate, language, entity_id, attribute),
             attribute: attribute,
             icon: icon,
             unit: tileTemplate.unit ? localize(tileTemplate.unit, language) : undefined,
             precision: tileTemplate.precision ? tileTemplate.precision : 0,
             multiplier: tileTemplate.multiplier ? tileTemplate.multiplier : undefined,
-            translations: this.generateTranslationKeys(
+            translations: TilesGenerator.generateTranslationKeys(
                 tileTemplate.translation_keys ?? [],
                 tileTemplate.tile_id,
                 language,
             ),
         };
         return getFilledTemplate(
-            this.cleanup(tileConfig),
-            this.getDefaultVariables(vacuum_entity_id, entity_id, attribute),
+            TilesGenerator.cleanup(tileConfig),
+            TilesGenerator.getDefaultVariables(vacuum_entity_id, entity_id, attribute),
             variables,
         ) as unknown as TileConfig;
     }
@@ -301,9 +294,9 @@ export class TilesGenerator {
         attribute: string | undefined,
     ): VariablesStorage {
         const defaultVariables: VariablesStorage = {};
-        defaultVariables[TemplatableTileValue.ENTITY_ID] = entityId ?? vacuumEntity;
-        defaultVariables[TemplatableTileValue.VACUUM_ENTITY_ID] = vacuumEntity;
-        defaultVariables[TemplatableTileValue.ATTRIBUTE] = attribute ?? "";
+        defaultVariables[TemplatableItemValue.ENTITY_ID] = entityId ?? vacuumEntity;
+        defaultVariables[TemplatableItemValue.VACUUM_ENTITY_ID] = vacuumEntity;
+        defaultVariables[TemplatableItemValue.ATTRIBUTE] = attribute ?? "";
         return defaultVariables;
     }
 

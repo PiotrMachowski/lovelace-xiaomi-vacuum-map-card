@@ -5,7 +5,7 @@ import { ActionHandlerEvent, forwardHaptic, LovelaceCard, LovelaceCardEditor } f
 
 import "./editor";
 import type {
-    ActionableObjectConfig,
+    ActionableObjectConfig, IconActionConfig,
     LovelaceDomEvent,
     PredefinedPointConfig,
     ReplacedKey,
@@ -66,9 +66,10 @@ import { areAllEntitiesDefined, isOldConfig, validateConfig } from "./config-val
 import { MapMode } from "./model/map_mode/map-mode";
 import { SelectionType } from "./model/map_mode/selection-type";
 import { RepeatsType } from "./model/map_mode/repeats-type";
+import { GeneratorWrapper } from "./model/generators/generator-wrapper";
 import { PlatformGenerator } from "./model/generators/platform-generator";
 import { sortTiles, TilesGenerator } from "./model/generators/tiles-generator";
-import { IconListGenerator } from "./model/generators/icon-list-generator";
+import { IconListGenerator, sortIcons } from "./model/generators/icon-list-generator";
 import { ToastRenderer } from "./renderers/toast-renderer";
 import { CoordinatesConverter } from "./model/map_objects/coordinates-converter";
 import { MapObject } from "./model/map_objects/map-object";
@@ -524,46 +525,24 @@ export class XiaomiVacuumMapCard extends LitElement {
 
         this.presetIndex = index;
         this.currentPreset = config;
-        const icons =
-            (config.icons?.length ?? -1) === -1
-                ? IconListGenerator.generate(this.hass, config.entity, this.config.language)
-                : config.append_icons
-                ? [
-                      ...IconListGenerator.generate(this.hass, config.entity, this.config.language),
-                      ...(config.icons ?? []),
-                  ]
-                : config.icons;
-        const tilesToIgnore = (config.tiles ?? []).filter(t => t.tile_id !== undefined);
-        const tilesGenerated: Promise<TileConfig[]> =
-            (config.tiles?.length ?? -1) === -1
-                ? TilesGenerator.generate(
-                      this.hass,
-                      config.entity,
-                      vacuumPlatform,
-                      this.config.language,
-                      tilesToIgnore,
-                      this.internalVariables,
-                  )
-                : config.append_tiles
-                ? TilesGenerator.generate(
-                      this.hass,
-                      config.entity,
-                      vacuumPlatform,
-                      this.config.language,
-                      tilesToIgnore,
-                      this.internalVariables,
-                  ).then(tiles => {
-                      const tilesIds = tiles.map(t => t.tile_id ?? "");
-                      return [
-                          ...tiles,
-                          ...(config.tiles ?? []).filter(t => !t.replace_config &&
-                              (t.tile_id === undefined || !tilesIds.includes(t.tile_id))),
-                      ];
-                  })
-                : new Promise(resolve => resolve(config.tiles ?? []));
-        tilesGenerated
-            .then(t => [...t].sort(sortTiles))
-            .then(tiles => this._setPreset({ ...config, tiles: tiles, icons: icons }))
+        // const icons =
+        //     (config.icons?.length ?? -1) === -1
+        //         ? IconListGenerator.generate(this.hass, config.entity, this.config.language)
+        //         : config.append_icons
+        //         ? [
+        //               ...IconListGenerator.generate(this.hass, config.entity, this.config.language),
+        //               ...(config.icons ?? []),
+        //           ]
+        //         : config.icons;
+
+        const iconsPromise = GeneratorWrapper.generate(this.hass, config.icons, config.entity, vacuumPlatform,
+            this.internalVariables, this.config.language, config.append_icons ?? false,
+            (t: IconActionConfig) => t.icon_id, sortIcons, IconListGenerator.generate);
+        const tilesPromise = GeneratorWrapper.generate(this.hass, config.tiles, config.entity, vacuumPlatform,
+            this.internalVariables, this.config.language, config.append_tiles ?? false, (t: TileConfig) => t.tile_id,
+            sortTiles, TilesGenerator.generate);
+        Promise.all([iconsPromise, tilesPromise])
+            .then(([icons, tiles]) => this._setPreset({ ...config, tiles: tiles, icons: icons }))
             .then(() => setTimeout(() => this.requestUpdate(), 100))
             .then(() => this._setCurrentMode(0, false));
 

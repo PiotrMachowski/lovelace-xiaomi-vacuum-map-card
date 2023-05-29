@@ -67,7 +67,7 @@ function validateIconConfig(config: IconActionConfig): TranslatableString[] {
         return ["validation.preset.icons.invalid"];
     }
     const errors: TranslatableString[] = [];
-    if (!config.icon) {
+    if (!config.icon && config.type !== "menu") {
         errors.push("validation.preset.icons.icon.missing");
     }
     return errors;

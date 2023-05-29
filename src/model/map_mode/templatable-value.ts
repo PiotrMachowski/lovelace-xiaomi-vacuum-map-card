@@ -8,7 +8,7 @@ export enum TemplatableValue {
     POINT_Y = "point_y",
 }
 
-export enum TemplatableTileValue {
+export enum TemplatableItemValue {
     ENTITY_ID = "entity_id",
     VACUUM_ENTITY_ID = "vacuum_entity_id",
     ATTRIBUTE = "attribute",

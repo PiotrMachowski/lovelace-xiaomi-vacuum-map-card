@@ -14,7 +14,13 @@ import * as roborockTemplate from "./platform_templates/humbertogontijo_homeassi
 import * as simpleWyzeTemplate from "./platform_templates/romedtino_simple-wyze-vac.json";
 import * as setupDecimalTemplate from "./platform_templates/setup_decimal.json";
 import * as setupIntegerTemplate from "./platform_templates/setup_integer.json";
-import { MapModeConfig, PlatformTemplate, TileFromAttributeTemplate, TileFromSensorTemplate } from "../../types/types";
+import {
+    IconTemplate,
+    MapModeConfig,
+    PlatformTemplate,
+    TileFromAttributeTemplate,
+    TileFromSensorTemplate,
+} from "../../types/types";
 import { SelectionType } from "../map_mode/selection-type";
 
 export class PlatformGenerator {
@@ -109,6 +115,10 @@ export class PlatformGenerator {
 
     public static getTilesFromSensorsTemplates(platform: string): TileFromSensorTemplate[] {
         return this.getPlatformTemplate(platform).tiles?.from_sensors ?? [];
+    }
+
+    public static getIconsTemplates(platform: string): IconTemplate[] {
+        return this.getPlatformTemplate(platform).icons ?? [];
     }
 
     public static getRoomsTemplate(platform: string): string | undefined {

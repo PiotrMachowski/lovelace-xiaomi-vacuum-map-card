@@ -111,6 +111,7 @@ export interface PlatformTemplate {
         readonly from_attributes?: TileFromAttributeTemplate[];
         readonly from_sensors?: TileFromSensorTemplate[];
     };
+    readonly icons?: IconTemplate[];
 }
 
 export interface TileTemplate extends TileConfig {
@@ -126,12 +127,45 @@ export interface TileFromSensorTemplate extends TileTemplate {
     readonly unique_id_regex: string;
 }
 
-export interface IconActionConfig extends ActionableObjectConfig, ConditionalObjectConfig {
+export interface IconTemplate extends Omit<IconActionConfig, "icon"> {
+    readonly type: "single" | "menu";
+}
+
+export interface SingleIconTemplate extends IconTemplate {
+    readonly type: "single";
     readonly icon: string;
+}
+
+export interface MenuIconTemplate extends IconTemplate {
+    readonly type: "menu";
+    readonly menu_id: string;
+    readonly icon?: string;
+    readonly unique_id_regex: string;
+    readonly current_value_attribute?: string;
+    readonly available_values_attribute: string;
+    readonly icon_mapping?: Record<string, string>;
+    readonly value_translation_keys?: Record<string, string>;
+}
+
+export interface IconActionConfig extends ActionableObjectConfig, ConditionalObjectConfig {
+    readonly type?: "menu" | "single";
+    readonly icon_id?: string;
+    readonly icon?: string;
     readonly tooltip?: string;
     readonly order?: number;
     readonly menu_id?: string;
+    readonly replace_config?: boolean;
     readonly label?: string;
+}
+
+export interface MenuIconActionConfig extends IconActionConfig {
+    readonly type: "menu";
+    readonly menu_id: string;
+    readonly entity: string;
+    readonly current_value_attribute?: string;
+    readonly available_values_attribute: string;
+    readonly icon_mapping?: Record<string, string>;
+    readonly value_translation_keys?: Record<string, string>;
 }
 
 export interface DropdownEntryIconActionConfig extends IconActionConfig {
@@ -159,6 +193,7 @@ export interface ActionableObjectConfig {
     readonly tap_action?: ActionConfig;
     readonly hold_action?: ActionConfig;
     readonly double_tap_action?: ActionConfig;
+    readonly variables?: VariablesStorage;
 }
 
 export interface ConditionalObjectConfig {

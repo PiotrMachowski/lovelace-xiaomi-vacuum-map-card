@@ -28,6 +28,7 @@ import { HomeAssistantFixed } from "../types/fixes";
 import { HassEntity } from "home-assistant-js-websocket/dist/types";
 import { formatAttributeValue } from "./hass/entity_attributes";
 import { computeStateDisplay } from "./hass/compute_state_display";
+import { computeAttributeValueDisplay } from "./hass/compute_attribute_display";
 
 const languages: Record<string, unknown> = {
     ca: ca,
@@ -124,4 +125,25 @@ export function localizeEntity(hass: HomeAssistantFixed, config: EntityConfig, e
             hass.locale,
             hass.entities,
         );
+}
+
+export function localizeStateForValue(hass: HomeAssistantFixed, entity: HassEntity, state: string): string {
+    return computeStateDisplay(
+        hass.localize,
+        entity,
+        hass.locale,
+        hass.entities,
+        state
+    )
+}
+
+export function localizeAttributeForValue(hass: HomeAssistantFixed, entity: HassEntity, attribute: string, value: string): string {
+    return computeAttributeValueDisplay(
+        hass.localize,
+        entity,
+        hass.locale,
+        hass.entities,
+        attribute,
+        value
+    )
 }

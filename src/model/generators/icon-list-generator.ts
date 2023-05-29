@@ -1,8 +1,53 @@
 import { HassEntity } from "home-assistant-js-websocket/dist/types";
 
-import { IconActionConfig, Language } from "../../types/types";
+import {
+    EntityRegistryEntry,
+    IconActionConfig,
+    IconTemplate,
+    Language, MenuIconActionConfig, MenuIconTemplate,
+    VariablesStorage,
+} from "../../types/types";
 import { localize } from "../../localize/localize";
 import { HomeAssistantFixed } from "../../types/fixes";
+import { getAllEntitiesFromTheSameDevice } from "../../utils";
+import { PlatformGenerator } from "./platform-generator";
+
+
+class IconsGeneratorContext {
+    private readonly _icons: IconActionConfig[];
+    private readonly _userDefinedIcons: IconActionConfig[];
+
+    constructor(userDefinedIcons: IconActionConfig[]) {
+        this._userDefinedIcons = userDefinedIcons;
+        this._icons = [];
+    }
+
+    public addIcons(icons: IconActionConfig[]): void {
+        icons.forEach(t => this.addIcon(t));
+    }
+
+    public addIcon(icon: IconActionConfig): void {
+        if (icon.icon_id && this._icons.map(i => i.icon_id).includes(icon.icon_id)) {
+            return;
+        }
+        if (icon.icon_id && this._userDefinedIcons.some(i => i.icon_id === icon.icon_id)) {
+            this._userDefinedIcons.filter(i => i.icon_id === icon.icon_id).forEach(i => {
+                if (i.replace_config) {
+                    this._icons.push({ ...icon, ...i });
+                } else {
+                    this._icons.push(i);
+                }
+            });
+            return;
+        }
+        this._icons.push(icon);
+    }
+
+    public get icons(): IconActionConfig[] {
+        return this._icons;
+    }
+}
+
 
 export class IconListGenerator {
     private static _ICON_MAPPING = {
@@ -17,12 +62,26 @@ export class IconListGenerator {
         Gentle: "mdi:waves",
     };
 
-    public static generate(hass: HomeAssistantFixed, vacuumEntity: string, language: Language): IconActionConfig[] {
+    public static async generate(
+        hass: HomeAssistantFixed,
+        vacuumEntity: string,
+        platform: string,
+        language: Language,
+        iconsToOverride: IconActionConfig[],
+        variables: VariablesStorage,
+    ): Promise<IconActionConfig[]> {
         if (!hass) return [];
+        const context = new IconsGeneratorContext(iconsToOverride);
+        context.addIcons(IconListGenerator.getCommonIcons(hass, vacuumEntity, language));
+        context.addIcons(await IconListGenerator.getIconsFromEntities(hass, vacuumEntity, platform, language, variables));
+        return context.icons;
+    }
+
+    private static getCommonIcons(hass: HomeAssistantFixed, vacuumEntity: string, language: Language): IconActionConfig[] {
         const state = hass.states[vacuumEntity];
         const state_available = state && state.attributes;
         const icons: IconActionConfig[] = [];
-        if (this.isFeatureSupported(state, 8192))
+        if (IconListGenerator.isFeatureSupported(state, 8192))
             icons.push({
                 icon: "mdi:play",
                 conditions: [
@@ -48,7 +107,7 @@ export class IconListGenerator {
                     },
                 },
             });
-        if (this.isFeatureSupported(state, 4))
+        if (IconListGenerator.isFeatureSupported(state, 4))
             icons.push({
                 icon: "mdi:pause",
                 conditions: [
@@ -78,7 +137,7 @@ export class IconListGenerator {
                     },
                 },
             });
-        if (this.isFeatureSupported(state, 8))
+        if (IconListGenerator.isFeatureSupported(state, 8))
             icons.push({
                 icon: "mdi:stop",
                 conditions: [
@@ -108,7 +167,7 @@ export class IconListGenerator {
                     },
                 },
             });
-        if (this.isFeatureSupported(state, 16))
+        if (IconListGenerator.isFeatureSupported(state, 16))
             icons.push({
                 icon: "mdi:home-map-marker",
                 conditions: [
@@ -130,7 +189,7 @@ export class IconListGenerator {
                     },
                 },
             });
-        if (this.isFeatureSupported(state, 1024))
+        if (IconListGenerator.isFeatureSupported(state, 1024))
             icons.push({
                 icon: "mdi:target-variant",
                 conditions: [
@@ -160,7 +219,7 @@ export class IconListGenerator {
                     },
                 },
             });
-        if (this.isFeatureSupported(state, 512))
+        if (IconListGenerator.isFeatureSupported(state, 512))
             icons.push({
                 icon: "mdi:map-marker",
                 tooltip: localize("icon.vacuum_locate", language),
@@ -178,8 +237,8 @@ export class IconListGenerator {
             const fanSpeed = fanSpeeds[i];
             icons.push({
                 menu_id: "fan_speed",
-                icon: fanSpeed in this._ICON_MAPPING ? this._ICON_MAPPING[fanSpeed] : "mdi:fan-alert",
-                label: localize("tile.fan_speed.value."+fanSpeed.toLowerCase(), language, fanSpeed),
+                icon: fanSpeed in IconListGenerator._ICON_MAPPING ? IconListGenerator._ICON_MAPPING[fanSpeed] : "mdi:fan-alert",
+                label: localize("tile.fan_speed.value." + fanSpeed.toLowerCase(), language, fanSpeed),
                 conditions: [
                     {
                         entity: vacuumEntity,
@@ -213,15 +272,59 @@ export class IconListGenerator {
                 },
             });
         }
-        return icons.sort(sortTiles);
+        return icons;
     }
+
+    private static async getIconsFromEntities(
+        hass: HomeAssistantFixed,
+        vacuumEntityId: string,
+        platform: string,
+        language: Language,
+        _variables: VariablesStorage,
+    ): Promise<IconActionConfig[]> {
+        const entityRegistryEntries = await getAllEntitiesFromTheSameDevice(hass, vacuumEntityId);
+        return PlatformGenerator.getIconsTemplates(platform)
+            .flatMap(i => IconListGenerator.createIcon(i, hass, entityRegistryEntries, language));
+    }
+
+    private static createIcon(
+        iconTemplate: IconTemplate,
+        hass: HomeAssistantFixed,
+        entityRegistryEntries: EntityRegistryEntry[],
+        language: Language,
+    ): IconActionConfig[] {
+        // if (iconTemplate.type instanceof MenuIconTemplate){
+        return IconListGenerator.createMenuIcon(iconTemplate as MenuIconTemplate, hass, entityRegistryEntries, language);
+        // }
+        // return {} as IconActionConfig;
+    }
+
+    private static createMenuIcon(iconTemplate: MenuIconTemplate,
+                                  _hass: HomeAssistantFixed,
+                                  entityRegistryEntries: EntityRegistryEntry[],
+                                  _language: Language): MenuIconActionConfig[] {
+        const matches = entityRegistryEntries.filter(e => e.unique_id.match(iconTemplate.unique_id_regex));
+        if (matches.length !== 1)
+            return [];
+        const matched = matches[0];
+        const iconConfig: MenuIconActionConfig = {
+            ...iconTemplate,
+            "entity": matched.entity_id,
+            "icon": iconTemplate.icon ?? matched.icon ?? matched.original_icon,
+        };
+        if (iconConfig.hasOwnProperty("unique_id_regex")) {
+            delete iconConfig["unique_id_regex"];
+        }
+        return [iconConfig];
+    }
+
 
     private static isFeatureSupported(state: HassEntity, features: number) {
         return state && state.attributes && ((state.attributes["supported_features"] ?? 0) & features) === features;
     }
 }
 
-export function sortTiles(i1: IconActionConfig, i2: IconActionConfig): number {
+export function sortIcons(i1: IconActionConfig, i2: IconActionConfig): number {
     if (i1.order === undefined && i2.order === undefined)
         return 0;
     if (i1.order === undefined)

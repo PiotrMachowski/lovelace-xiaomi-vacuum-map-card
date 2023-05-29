@@ -4,12 +4,14 @@ import { customElement, property } from "lit/decorators";
 import {
     ActionHandlerFunctionCreator,
     DropdownIconActionConfig,
-    IconActionConfig, VariablesStorage,
+    IconActionConfig, MenuIconActionConfig, VariablesStorage,
 } from "../types/types";
 import { RootlessLitElement } from "./rootless-lit-element";
 import { HomeAssistantFixed } from "../types/fixes";
 import { areConditionsMet } from "../utils";
 import { Icon } from "./icon";
+import { HassEntity } from "home-assistant-js-websocket";
+import { localizeAttributeForValue, localizeStateForValue } from "../localize/localize";
 
 @customElement("xvmc-icons-wrapper")
 export class IconsWrapper extends RootlessLitElement {
@@ -71,7 +73,7 @@ export class IconsWrapper extends RootlessLitElement {
         }
         const output: (IconActionConfig | DropdownIconActionConfig)[] = [];
         const menuIndexes = new Map<string, number>();
-        icons.forEach(i => {
+        IconsWrapper.expandMenus(icons, internalVariables, hass).forEach(i => {
             const isSelected = areConditionsMet(i, internalVariables, hass);
             if (i.menu_id === undefined) {
                 if (isSelected) {
@@ -94,5 +96,50 @@ export class IconsWrapper extends RootlessLitElement {
             }
         }
         return output;
+    }
+
+    private static expandMenus(
+        icons: IconActionConfig[],
+        internalVariables: VariablesStorage,
+        hass: HomeAssistantFixed
+    ): IconActionConfig[] {
+        return icons.flatMap(
+            i => i.type === "menu"
+                ? IconsWrapper.expandMenu(i as MenuIconActionConfig, internalVariables, hass)
+                : [i],
+        );
+    }
+    private static expandMenu(
+        icon: MenuIconActionConfig,
+        _internalVariables: VariablesStorage,
+        hass: HomeAssistantFixed
+    ): IconActionConfig[] {
+        const entity = hass.states[icon.entity];
+        const values = entity.attributes[icon.available_values_attribute];
+        return values.map(v => {
+            return {
+                ...icon,
+                "label": icon.value_translation_keys?.[v] ?? IconsWrapper.getLabel(hass, entity, v, icon.current_value_attribute),
+                "icon": icon.icon_mapping?.[v] ?? icon.icon,
+                "conditions": [
+                    ...(icon.conditions ?? []),
+                    {
+                        "entity": icon.entity,
+                        "attribute": icon.current_value_attribute,
+                        "value": `${v}`,
+                    },
+                ],
+                "variables": {
+                    "value": v,
+                },
+            }
+        });
+    }
+
+    private static getLabel(hass: HomeAssistantFixed, entity: HassEntity, value: string, attribute?: string): string {
+        if (attribute) {
+            return localizeAttributeForValue(hass, entity, attribute, value);
+        }
+        return localizeStateForValue(hass, entity, value);
     }
 }

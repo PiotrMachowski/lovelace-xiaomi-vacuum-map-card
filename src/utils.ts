@@ -23,7 +23,7 @@ import { XiaomiVacuumMapCard } from "./xiaomi-vacuum-map-card";
 import { Modifier } from "./model/map_mode/modifier";
 import { HomeAssistantFixed } from "./types/fixes";
 import { ServiceCallSchema } from "./model/map_mode/service-call-schema";
-import { TemplatableTileValue } from "./model/map_mode/templatable-value";
+import { TemplatableItemValue } from "./model/map_mode/templatable-value";
 
 export function stopEvent(event: MouseEvent | TouchEvent): void {
     event.preventDefault();
@@ -74,6 +74,9 @@ export function getWatchedEntitiesForPreset(config: CardPresetConfig, language: 
         .forEach(e => {
             if (e) watchedEntities.add(e);
         });
+    (config.icons ?? []).forEach(i => {
+        if (i.hasOwnProperty("entity")) watchedEntities.add(i["entity"]);
+    });
     (config.icons ?? [])
         .filter(i => i.conditions)
         .flatMap(i => i.conditions)
@@ -174,15 +177,18 @@ export function handleActionWithConfig(
     if (node.hass && config && action) {
         const currentPreset = node._getCurrentPreset();
         const currentMode = node._getCurrentMode();
-        const tileVariables = {};
-        tileVariables[TemplatableTileValue.VACUUM_ENTITY_ID] = currentPreset.entity;
+        let itemVariables = {};
+        itemVariables[TemplatableItemValue.VACUUM_ENTITY_ID] = currentPreset.entity;
         if (config.hasOwnProperty("attribute")) {
-            tileVariables[TemplatableTileValue.ATTRIBUTE] = config["attribute"];
+            itemVariables[TemplatableItemValue.ATTRIBUTE] = config["attribute"];
+        }
+        if (config.hasOwnProperty("variables")) {
+            itemVariables = { ...itemVariables, ...config["variables"] };
         }
         const entity_id = config.hasOwnProperty("entity") ? config["entity"] : currentPreset.entity;
         const { selection, variables } = node._getSelection(currentMode);
         const defaultVariables = ServiceCallSchema.getDefaultVariables(entity_id, selection, node.repeats);
-        const filled = getFilledTemplate(config as Record<string, unknown>, defaultVariables, tileVariables,
+        const filled = getFilledTemplate(config as Record<string, unknown>, defaultVariables, itemVariables,
             node.internalVariables, currentMode.variables, variables);
         handleAction(node, node.hass as unknown as HomeAssistant, filled as ActionableObjectConfig, action);
     }
@@ -209,6 +215,20 @@ export async function getAllEntitiesFromTheSameDevice(
     hass: HomeAssistantFixed,
     entity: string,
 ): Promise<EntityRegistryEntry[]> {
+    let entityRegistryEntries;
+    try {
+        entityRegistryEntries = await _getAllEntitiesFromTheSameDevice(hass, entity);
+    } catch {
+        entityRegistryEntries = [];
+    }
+    return entityRegistryEntries;
+}
+
+async function _getAllEntitiesFromTheSameDevice(
+    hass: HomeAssistantFixed,
+    entity: string,
+): Promise<EntityRegistryEntry[]> {
+    entity = "select.speed";
     const vacuumDeviceId = (
         await hass.callWS<EntityRegistryEntry>({
             type: "config/entity_registry/get",
@@ -220,7 +240,7 @@ export async function getAllEntitiesFromTheSameDevice(
             type: "config/entity_registry/list",
         })
     ).filter(e => e.device_id === vacuumDeviceId);
-    return Promise.all(
+    const allEntities = await Promise.all(
         vacuumSensors.map(vs =>
             hass.callWS<EntityRegistryEntry>({
                 type: "config/entity_registry/get",
@@ -228,6 +248,7 @@ export async function getAllEntitiesFromTheSameDevice(
             }),
         ),
     );
+    return allEntities.filter(e => e.disabled_by == null);
 }
 
 export async function delay(ms: number): Promise<void> {
