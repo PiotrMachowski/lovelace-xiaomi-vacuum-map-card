@@ -1,4 +1,4 @@
-# Dreame Vacuum by [@Tasshack](https://github.com/Tasshack)
+# Dreame Vacuum
 
 [Integration's documentation](https://github.com/Tasshack/dreame-vacuum)
 
