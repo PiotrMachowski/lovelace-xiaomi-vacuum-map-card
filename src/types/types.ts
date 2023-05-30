@@ -134,6 +134,7 @@ export interface IconTemplate extends Omit<IconActionConfig, "icon"> {
 export interface SingleIconTemplate extends IconTemplate {
     readonly type: "single";
     readonly icon: string;
+    readonly unique_id_regex: string;
 }
 
 export interface MenuIconTemplate extends IconTemplate {

@@ -193,5 +193,46 @@
                 "multiplier": 0.016667
             }
         ]
-    }
+    },
+    "icons": [
+        {
+            "icon_id": "water_box_mode",
+            "unique_id_regex": "water_box_mode_",
+            "icon": "mdi:water",
+            "icon_mapping": {
+                "off": "mdi:water-remove",
+                "mild": "mdi:water-minus",
+                "moderate": "mdi:water",
+                "intense": "mdi:water-plus",
+                "custom": "mdi:water-sync"
+            },
+            "tap_action": {
+                "action": "call-service",
+                "service": "select.select_option",
+                "service_data": {
+                    "option": "[[value]]",
+                    "entity_id": "[[entity_id]]"
+                }
+            }
+        },
+        {
+            "icon_id": "mop_mode",
+            "unique_id_regex": "mop_mode_",
+            "icon": "mdi:water",
+            "icon_mapping": {
+                "standard": "mdi:standard-definition",
+                "deep": "mdi:high-definition",
+                "deep_plus": "mdi:ultra-high-definition",
+                "custom": "mdi:fit-to-screen-outline"
+            },
+            "tap_action": {
+                "action": "call-service",
+                "service": "select.select_option",
+                "service_data": {
+                    "option": "[[value]]",
+                    "entity_id": "[[entity_id]]"
+                }
+            }
+        }
+    ]
 }

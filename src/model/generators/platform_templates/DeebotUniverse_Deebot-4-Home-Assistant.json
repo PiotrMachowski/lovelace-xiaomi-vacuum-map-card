@@ -115,5 +115,26 @@
                 "label": "tile.cleaning_count.label"
             }
         ]
-    }
+    },
+    "icons": [
+        {
+            "icon_id": "water_amount",
+            "unique_id_regex": "_water_amount",
+            "icon": "mdi:water",
+            "icon_mapping": {
+                "low": "mdi:water-minus",
+                "medium": "mdi:water",
+                "high": "mdi:water-plus",
+                "ultrahigh": "mdi:water-alert"
+            },
+            "tap_action": {
+                "action": "call-service",
+                "service": "select.select_option",
+                "service_data": {
+                    "option": "[[value]]",
+                    "entity_id": "[[entity_id]]"
+                }
+            }
+        }
+    ]
 }

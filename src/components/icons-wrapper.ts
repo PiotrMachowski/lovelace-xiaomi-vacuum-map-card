@@ -115,12 +115,13 @@ export class IconsWrapper extends RootlessLitElement {
         hass: HomeAssistantFixed
     ): IconActionConfig[] {
         const entity = hass.states[icon.entity];
-        const values = entity.attributes[icon.available_values_attribute];
+        const values = entity.attributes[icon.available_values_attribute] ?? [];
         return values.map(v => {
             return {
                 ...icon,
                 "label": icon.value_translation_keys?.[v] ?? IconsWrapper.getLabel(hass, entity, v, icon.current_value_attribute),
                 "icon": icon.icon_mapping?.[v] ?? icon.icon,
+                "icon_id": `${icon.icon_id}_${v.replace(" ", "_").toLowerCase()}`,
                 "conditions": [
                     ...(icon.conditions ?? []),
                     {

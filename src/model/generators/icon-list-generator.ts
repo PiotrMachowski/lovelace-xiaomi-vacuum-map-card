@@ -4,7 +4,10 @@ import {
     EntityRegistryEntry,
     IconActionConfig,
     IconTemplate,
-    Language, MenuIconActionConfig, MenuIconTemplate,
+    Language,
+    MenuIconActionConfig,
+    MenuIconTemplate,
+    SingleIconTemplate,
     VariablesStorage,
 } from "../../types/types";
 import { localize } from "../../localize/localize";
@@ -293,10 +296,34 @@ export class IconListGenerator {
         entityRegistryEntries: EntityRegistryEntry[],
         language: Language,
     ): IconActionConfig[] {
-        // if (iconTemplate.type instanceof MenuIconTemplate){
-        return IconListGenerator.createMenuIcon(iconTemplate as MenuIconTemplate, hass, entityRegistryEntries, language);
-        // }
-        // return {} as IconActionConfig;
+        if (iconTemplate.type == "single") {
+            return IconListGenerator.createSingleIcon(iconTemplate as SingleIconTemplate, hass, entityRegistryEntries, language);
+        }
+        if (iconTemplate.type == "menu") {
+            return IconListGenerator.createMenuIcon(iconTemplate as MenuIconTemplate, hass, entityRegistryEntries, language);
+        }
+        return [iconTemplate];
+    }
+
+    private static createSingleIcon(iconTemplate: SingleIconTemplate,
+                                  _hass: HomeAssistantFixed,
+                                  entityRegistryEntries: EntityRegistryEntry[],
+                                  _language: Language): IconActionConfig[] {
+        const matches = entityRegistryEntries.filter(e => e.unique_id.match(iconTemplate.unique_id_regex));
+        if (matches.length !== 1)
+            return [];
+        const matched = matches[0];
+        const iconConfig: IconActionConfig = {
+            ...iconTemplate,
+            "icon": iconTemplate.icon ?? matched.icon ?? matched.original_icon,
+            "variables": {
+                "entity": matched.entity_id
+            }
+        };
+        if (iconConfig.hasOwnProperty("unique_id_regex")) {
+            delete iconConfig["unique_id_regex"];
+        }
+        return [iconConfig];
     }
 
     private static createMenuIcon(iconTemplate: MenuIconTemplate,
