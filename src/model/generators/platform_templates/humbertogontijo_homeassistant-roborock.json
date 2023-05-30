@@ -199,6 +199,8 @@
     },
     "icons": [
         {
+            "type": "menu",
+            "menu_id": "water_box_mode",
             "icon_id": "water_box_mode",
             "unique_id_regex": "water_box_mode_",
             "icon": "mdi:water",
@@ -219,6 +221,8 @@
             }
         },
         {
+            "type": "menu",
+            "menu_id": "mop_mode",
             "icon_id": "mop_mode",
             "unique_id_regex": "mop_mode_",
             "icon": "mdi:water",

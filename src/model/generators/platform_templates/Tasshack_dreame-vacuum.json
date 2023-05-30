@@ -140,6 +140,8 @@
     },
     "icons": [
         {
+            "type": "menu",
+            "menu_id": "water_volume",
             "icon_id": "water_volume",
             "unique_id_regex": "_water_volume",
             "icon": "mdi:water-off",
@@ -158,6 +160,8 @@
             }
         },
         {
+            "type": "menu",
+            "menu_id": "mop_pad_humidity",
             "icon_id": "mop_pad_humidity",
             "unique_id_regex": "_mop_pad_humidity",
             "icon": "mdi:water-off",

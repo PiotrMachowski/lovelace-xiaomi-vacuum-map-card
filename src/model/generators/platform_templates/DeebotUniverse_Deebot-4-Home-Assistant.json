@@ -120,6 +120,8 @@
     },
     "icons": [
         {
+            "type": "menu",
+            "menu_id": "water_amount",
             "icon_id": "water_amount",
             "unique_id_regex": "_water_amount",
             "icon": "mdi:water",
