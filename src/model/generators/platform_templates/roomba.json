@@ -30,14 +30,20 @@
                 "attribute": "bin_present",
                 "label": "tile.bin_present.label",
                 "icon": "mdi:delete-restore",
-                "translation_keys": ["true", "false"]
+                "translation_keys": [
+                    "true",
+                    "false"
+                ]
             },
             {
                 "tile_id": "bin_full",
                 "attribute": "bin_full",
                 "label": "tile.bin_full.label",
                 "icon": "mdi:delete",
-                "translation_keys": ["true", "false"]
+                "translation_keys": [
+                    "true",
+                    "false"
+                ]
             }
         ]
     }
