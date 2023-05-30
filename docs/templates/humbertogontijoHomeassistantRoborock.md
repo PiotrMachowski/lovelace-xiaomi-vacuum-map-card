@@ -1,8 +1,8 @@
-# Xiaomi Miio
+# Roborock
 
-[Integration's documentation](https://www.home-assistant.io/integrations/xiaomi_miio/#xiaomi-mi-robot-vacuum)
+[Integration's documentation](https://github.com/humbertogontijo/homeassistant-roborock)
 
-This platform can be used to control vacuums connected to Home Assistant using built-in Xiaomi Miio integration.
+This platform can be used to control vacuums connected to Home Assistant using custom Roborock integration created by [@humbertogontijo](https://github.com/humbertogontijo).
 
 To reset a value for a given consumable press and hold a matching tile.
 
@@ -16,7 +16,7 @@ To reset a value for a given consumable press and hold a matching tile.
 
   [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
-  Used service: `xiaomi_miio.vacuum_clean_segment`
+  Used service: `roborock.vacuum_clean_segment`
 
   <details>
   <summary>Example configuration</summary>
@@ -48,12 +48,12 @@ To reset a value for a given consumable press and hold a matching tile.
             x: 22282
             y: 26496
   ```
-  
+
   </details>
   <details>
   <summary>Example video</summary>
 
-    https://user-images.githubusercontent.com/6118709/141666925-34b01cde-82ff-447b-aecc-e9ced402b1ed.mp4
+  https://user-images.githubusercontent.com/6118709/141666925-34b01cde-82ff-447b-aecc-e9ced402b1ed.mp4
 
   </details>
 
@@ -61,35 +61,35 @@ To reset a value for a given consumable press and hold a matching tile.
 
   Uses 4 coordinates to clean rectangular zones.
 
-  Used service: `xiaomi_miio.vacuum_clean_zone`
+  Used service: `roborock.vacuum_clean_zone`
 
   <details>
   <summary>Example configuration</summary>
-  
+
   ```yaml
   map_modes:
     - template: vacuum_clean_zone
   ```
-  
+
   </details>
   <details>
   <summary>Example video</summary>
 
-    https://user-images.githubusercontent.com/6118709/141666913-d95f082d-f5bf-4ab5-a478-ba44effe6f34.mp4
+  https://user-images.githubusercontent.com/6118709/141666913-d95f082d-f5bf-4ab5-a478-ba44effe6f34.mp4
 
   </details>
 
 * ### Predefined zone cleaning (`vacuum_clean_zone_predefined`)
 
   Uses 4 coordinates to clean rectangular zones that have been defined in the configuration. Requires `predefined_selections` to be provided.
-  
+
   [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
-  Used service: `xiaomi_miio.vacuum_clean_zone`
+  Used service: `roborock.vacuum_clean_zone`
 
   <details>
   <summary>Example configuration</summary>
-  
+
   ```yaml
   map_modes:
     - template: vacuum_clean_zone_predefined
@@ -115,12 +115,12 @@ To reset a value for a given consumable press and hold a matching tile.
             x: 28760
             y: 28403
   ```
-  
+
   </details>
   <details>
   <summary>Example video</summary>
 
-    https://user-images.githubusercontent.com/6118709/141666920-492a000c-9a78-4c20-b4f5-9343928140c7.mp4
+  https://user-images.githubusercontent.com/6118709/141666920-492a000c-9a78-4c20-b4f5-9343928140c7.mp4
 
   </details>
 
@@ -128,35 +128,35 @@ To reset a value for a given consumable press and hold a matching tile.
 
   Uses a pair of coordinates for vacuum to get to a user-specified point.
 
-  Used service: `xiaomi_miio.vacuum_goto`
+  Used service: `roborock.vacuum_goto`
 
   <details>
   <summary>Example configuration</summary>
-  
+
   ```yaml
   map_modes:
     - template: vacuum_goto
   ```
-  
+
   </details>
   <details>
   <summary>Example video</summary>
 
-    https://user-images.githubusercontent.com/6118709/141666921-2f3d66da-6ffc-492a-8439-625da97651bd.mp4
+  https://user-images.githubusercontent.com/6118709/141666921-2f3d66da-6ffc-492a-8439-625da97651bd.mp4
 
   </details>
 
 * ### Going to a predefined point (`vacuum_goto_predefined`)
 
   Uses a pair of coordinates for vacuum to go to a point that has been defined in the configuration. Requires `predefined_selections` to be provided.
-  
+
   [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
-  Used service: `xiaomi_miio.vacuum_goto`
+  Used service: `roborock.vacuum_goto`
 
   <details>
   <summary>Example configuration</summary>
-  
+
   ```yaml
   map_modes:
     - template: vacuum_goto_predefined
@@ -182,12 +182,12 @@ To reset a value for a given consumable press and hold a matching tile.
             x: 32143
             y: 26284
   ```
-  
+
   </details>
   <details>
   <summary>Example video</summary>
 
-    https://user-images.githubusercontent.com/6118709/141666923-965679e9-25fb-44cd-be08-fc63e5c85ce0.mp4
+  https://user-images.githubusercontent.com/6118709/141666923-965679e9-25fb-44cd-be08-fc63e5c85ce0.mp4
 
   </details>
 
@@ -199,16 +199,16 @@ To reset a value for a given consumable press and hold a matching tile.
 
   <details>
   <summary>Example configuration</summary>
-  
+
   ```yaml
   map_modes:
     - template: vacuum_follow_path
   ```
-  
+
   </details>
   <details>
   <summary>Example video</summary>
 
-    https://user-images.githubusercontent.com/6118709/141666931-48d1717f-96d0-461d-84f4-788c071f3a78.mp4
+  https://user-images.githubusercontent.com/6118709/141666931-48d1717f-96d0-461d-84f4-788c071f3a78.mp4
 
   </details>
