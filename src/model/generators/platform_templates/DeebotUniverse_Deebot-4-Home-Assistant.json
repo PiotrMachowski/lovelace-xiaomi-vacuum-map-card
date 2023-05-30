@@ -124,6 +124,7 @@
             "menu_id": "water_amount",
             "icon_id": "water_amount",
             "unique_id_regex": "_water_amount",
+            "available_values_attribute": "options",
             "icon": "mdi:water",
             "icon_mapping": {
                 "low": "mdi:water-minus",

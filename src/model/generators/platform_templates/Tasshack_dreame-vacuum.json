@@ -144,6 +144,7 @@
             "menu_id": "water_volume",
             "icon_id": "water_volume",
             "unique_id_regex": "_water_volume",
+            "available_values_attribute": "options",
             "icon": "mdi:water-off",
             "icon_mapping": {
                 "low": "mdi:water-minus",
@@ -164,6 +165,7 @@
             "menu_id": "mop_pad_humidity",
             "icon_id": "mop_pad_humidity",
             "unique_id_regex": "_mop_pad_humidity",
+            "available_values_attribute": "options",
             "icon": "mdi:water-off",
             "icon_mapping": {
                 "slightly_dry": "mdi:water-minus",

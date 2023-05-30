@@ -71,12 +71,12 @@ export class IconListGenerator {
         platform: string,
         language: Language,
         iconsToOverride: IconActionConfig[],
-        variables: VariablesStorage,
+        _variables: VariablesStorage,
     ): Promise<IconActionConfig[]> {
         if (!hass) return [];
         const context = new IconsGeneratorContext(iconsToOverride);
         context.addIcons(IconListGenerator.getCommonIcons(hass, vacuumEntity, language));
-        context.addIcons(await IconListGenerator.getIconsFromEntities(hass, vacuumEntity, platform, language, variables));
+        context.addIcons(await IconListGenerator.getIconsFromEntities(hass, vacuumEntity, platform));
         return context.icons;
     }
 
@@ -282,33 +282,29 @@ export class IconListGenerator {
         hass: HomeAssistantFixed,
         vacuumEntityId: string,
         platform: string,
-        language: Language,
-        _variables: VariablesStorage,
     ): Promise<IconActionConfig[]> {
         const entityRegistryEntries = await getAllEntitiesFromTheSameDevice(hass, vacuumEntityId);
         return PlatformGenerator.getIconsTemplates(platform)
-            .flatMap(i => IconListGenerator.createIcon(i, hass, entityRegistryEntries, language));
+            .flatMap(i => IconListGenerator.createIcon(i, entityRegistryEntries));
     }
 
     private static createIcon(
         iconTemplate: IconTemplate,
-        hass: HomeAssistantFixed,
         entityRegistryEntries: EntityRegistryEntry[],
-        language: Language,
     ): IconActionConfig[] {
         if (iconTemplate.type == "single") {
-            return IconListGenerator.createSingleIcon(iconTemplate as SingleIconTemplate, hass, entityRegistryEntries, language);
+            return IconListGenerator.createSingleIcon(iconTemplate as SingleIconTemplate, entityRegistryEntries);
         }
         if (iconTemplate.type == "menu") {
-            return IconListGenerator.createMenuIcon(iconTemplate as MenuIconTemplate, hass, entityRegistryEntries, language);
+            return IconListGenerator.createMenuIcon(iconTemplate as MenuIconTemplate, entityRegistryEntries);
         }
         return [iconTemplate];
     }
 
-    private static createSingleIcon(iconTemplate: SingleIconTemplate,
-                                  _hass: HomeAssistantFixed,
-                                  entityRegistryEntries: EntityRegistryEntry[],
-                                  _language: Language): IconActionConfig[] {
+    private static createSingleIcon(
+        iconTemplate: SingleIconTemplate,
+        entityRegistryEntries: EntityRegistryEntry[]
+    ): IconActionConfig[] {
         const matches = entityRegistryEntries.filter(e => e.unique_id.match(iconTemplate.unique_id_regex));
         if (matches.length !== 1)
             return [];
@@ -326,10 +322,10 @@ export class IconListGenerator {
         return [iconConfig];
     }
 
-    private static createMenuIcon(iconTemplate: MenuIconTemplate,
-                                  _hass: HomeAssistantFixed,
-                                  entityRegistryEntries: EntityRegistryEntry[],
-                                  _language: Language): MenuIconActionConfig[] {
+    private static createMenuIcon(
+        iconTemplate: MenuIconTemplate,
+        entityRegistryEntries: EntityRegistryEntry[]
+    ): MenuIconActionConfig[] {
         const matches = entityRegistryEntries.filter(e => e.unique_id.match(iconTemplate.unique_id_regex));
         if (matches.length !== 1)
             return [];

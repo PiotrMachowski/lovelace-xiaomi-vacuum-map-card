@@ -203,6 +203,7 @@
             "menu_id": "water_box_mode",
             "icon_id": "water_box_mode",
             "unique_id_regex": "water_box_mode_",
+            "available_values_attribute": "options",
             "icon": "mdi:water",
             "icon_mapping": {
                 "off": "mdi:water-remove",
@@ -225,6 +226,7 @@
             "menu_id": "mop_mode",
             "icon_id": "mop_mode",
             "unique_id_regex": "mop_mode_",
+            "available_values_attribute": "options",
             "icon": "mdi:water",
             "icon_mapping": {
                 "standard": "mdi:standard-definition",
