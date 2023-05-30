@@ -20,7 +20,7 @@ jobs:
           npm install
           npm run build
 
-      - name: Upload zip to release
+      - name: Upload build result to release
         uses: svenstaro/upload-release-action@v1-release
 
         with:
