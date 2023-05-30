@@ -16,13 +16,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+
       - uses: actions/setup-node@v3
         with:
           node-version: 14
+
       - name: Build
         run: |
           npm install
           npm run build
+
       - name: Archive built file
         uses: actions/upload-artifact@v3
         with:

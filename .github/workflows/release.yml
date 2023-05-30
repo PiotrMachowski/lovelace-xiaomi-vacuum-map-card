@@ -17,7 +17,6 @@ jobs:
 
       - name: Build the file
         run: |
-          cd /home/runner/work/lovelace-xiaomi-vacuum-map-card/lovelace-xiaomi-vacuum-map-card
           npm install
           npm run build
 
@@ -26,7 +25,7 @@ jobs:
 
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: /home/runner/work/lovelace-xiaomi-vacuum-map-card/lovelace-xiaomi-vacuum-map-card/dist/xiaomi-vacuum-map-card.js
+          file: dist/xiaomi-vacuum-map-card.js
           asset_name: xiaomi-vacuum-map-card.js
           tag: ${{ github.ref }}
           overwrite: true
