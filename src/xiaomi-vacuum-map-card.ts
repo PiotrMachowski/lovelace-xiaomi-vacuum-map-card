@@ -388,6 +388,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                         )}
                         <xvmc-icons-wrapper
                             .icons=${icons}
+                            .isInEditor=${this.isInEditor}
                             .onAction=${(c: ActionableObjectConfig, action?: string) => createActionWithConfigHandler(this, c, action)}>
                         </xvmc-icons-wrapper>
                         <xvmc-tiles-wrapper

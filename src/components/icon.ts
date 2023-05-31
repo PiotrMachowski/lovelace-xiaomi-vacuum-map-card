@@ -17,6 +17,9 @@ export class Icon extends RootlessLitElement {
     private config!: IconActionConfig | DropdownIconActionConfig;
 
     @property({attribute: false})
+    private isInEditor!: boolean;
+
+    @property({attribute: false})
     private onAction!: ActionHandlerFunctionCreator;
 
     public render(): TemplateResult {
@@ -24,6 +27,7 @@ export class Icon extends RootlessLitElement {
             return html`
                 <xvmc-dropdown-icon
                     .config=${this.config}
+                    .isInEditor=${this.isInEditor}
                     .onAction=${this.onAction}>
                 </xvmc-dropdown-icon>
         `;
@@ -31,6 +35,7 @@ export class Icon extends RootlessLitElement {
         return html`
             <xvmc-single-icon
                 .config=${this.config}
+                .isInEditor=${this.isInEditor}
                 .onAction=${this.onAction}>
             </xvmc-single-icon>
         `;

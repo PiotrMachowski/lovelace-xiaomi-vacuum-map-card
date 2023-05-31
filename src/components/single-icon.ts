@@ -16,13 +16,16 @@ export class SingleIcon extends RootlessLitElement {
     private config!: IconActionConfig;
 
     @property({attribute: false})
+    private isInEditor!: boolean;
+
+    @property({attribute: false})
     private onAction!: ActionHandlerFunctionCreator;
 
     public render(): TemplateResult {
         return html`
             <paper-button
                 class="single-icon clickable ripple"
-                .title=${this.config.tooltip ?? ""}
+                .title=${this.isInEditor ? `tile_id: ${this.config.icon_id}` : this.config.tooltip ?? ""}
                 @action=${this.onAction(this.config)}
                 .actionHandler=${actionHandler({
                     hasHold: hasAction(this.config?.hold_action),
