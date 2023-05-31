@@ -81,6 +81,7 @@ export interface MapSourceConfig {
 export interface CalibrationSourceConfig {
     readonly camera?: boolean;
     readonly identity?: boolean;
+    readonly platform?: string;
     readonly entity?: string;
     readonly attribute?: string;
     readonly calibration_points?: CalibrationPoint[];
