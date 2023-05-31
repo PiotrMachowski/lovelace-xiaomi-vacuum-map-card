@@ -60,7 +60,7 @@ export interface CardPresetConfig extends ConditionalObjectConfig {
     readonly map_source: MapSourceConfig;
     readonly map_locked?: boolean;
     readonly two_finger_pan?: boolean;
-    readonly calibration_source: CalibrationSourceConfig;
+    readonly calibration_source?: CalibrationSourceConfig;
     readonly icons?: IconActionConfig[];
     readonly append_icons?: boolean;
     readonly tiles?: TileConfig[];
@@ -112,6 +112,7 @@ export interface PlatformTemplate {
         readonly from_sensors?: TileFromSensorTemplate[];
     };
     readonly icons?: IconTemplate[];
+    readonly calibration_points?: CalibrationPoint[];
 }
 
 export interface TileTemplate extends TileConfig {

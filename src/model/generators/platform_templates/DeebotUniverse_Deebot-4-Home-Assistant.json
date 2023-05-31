@@ -27,7 +27,7 @@
                 "icon": "mdi:select-drag",
                 "selection_type": "MANUAL_RECTANGLE",
                 "coordinates_rounding": true,
-                "coordinates_to_meters_divider": 1000,
+                "coordinates_to_meters_divider": -1,
                 "repeats_type": "NONE",
                 "max_selections": 1,
                 "service_call_schema": {
@@ -47,7 +47,7 @@
                 "selection_type": "PREDEFINED_RECTANGLE",
                 "max_selections": 1,
                 "coordinates_rounding": true,
-                "coordinates_to_meters_divider": 1000,
+                "coordinates_to_meters_divider": -1,
                 "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "xiaomi_miio.vacuum_clean_zone",
@@ -139,6 +139,38 @@
                     "option": "[[value]]",
                     "entity_id": "[[entity_id]]"
                 }
+            }
+        }
+    ],
+    "calibration_points": [
+        {
+            "vacuum": {
+                "x": 0,
+                "y": 0
+            },
+            "map": {
+                "x": 400,
+                "y": 400
+            }
+        },
+        {
+            "vacuum": {
+                "x": 6400,
+                "y": 0
+            },
+            "map": {
+                "x": 528,
+                "y": 400
+            }
+        },
+        {
+            "vacuum": {
+                "x": 0,
+                "y": 6400
+            },
+            "map": {
+                "x": 400,
+                "y": 528
             }
         }
     ]

@@ -6,14 +6,6 @@ This platform can be used to control vacuums connected to Home Assistant using c
 
 To reset a value for a given consumable press and hold a matching tile.
 
-## Calibration
-
-You can calibrate the map using following config:
-```yaml
-calibration_source:
-  identity: true
-```
-
 ## Available templates
 
 * ### Room cleaning (`vacuum_clean_segment`)

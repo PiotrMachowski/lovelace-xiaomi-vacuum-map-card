@@ -185,7 +185,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                 camera: true,
             },
             entity: vacuums[0],
-            vacuum_platform: "default",
+            vacuum_platform: PlatformGenerator.XIAOMI_MIIO_PLATFORM,
         };
     }
 
@@ -414,7 +414,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     }
 
     private _getCalibration(config: CardPresetConfig): CalibrationPoint[] | undefined {
-        if (config.calibration_source.identity) {
+        if (config.calibration_source?.identity) {
             return [
                 { map: { x: 0, y: 0 }, vacuum: { x: 0, y: 0 } },
                 { map: { x: 1, y: 0 }, vacuum: { x: 1, y: 0 } },
@@ -422,7 +422,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             ];
         }
         if (
-            config.calibration_source.calibration_points &&
+            config.calibration_source?.calibration_points &&
             [3, 4].includes(config.calibration_source.calibration_points.length)
         ) {
             return config.calibration_source.calibration_points;
@@ -430,14 +430,18 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (!this.hass) {
             return undefined;
         }
-        if (config.calibration_source.entity && !config.calibration_source?.attribute) {
+        if (config.calibration_source?.entity && !config.calibration_source?.attribute) {
             return JSON.parse(this.hass.states[config.calibration_source.entity]?.state);
         }
-        if (config.calibration_source.entity && config.calibration_source?.attribute) {
+        if (config.calibration_source?.entity && config.calibration_source?.attribute) {
             return this.hass.states[config.calibration_source.entity]?.attributes[config.calibration_source.attribute];
         }
-        if (config.calibration_source.camera) {
+        if (config.calibration_source?.camera) {
             return this.hass.states[config.map_source?.camera ?? ""]?.attributes["calibration_points"];
+        }
+        const platformCalibration = PlatformGenerator.getCalibration(config.vacuum_platform);
+        if (platformCalibration) {
+            return platformCalibration;
         }
         return undefined;
     }
@@ -516,7 +520,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         this.mapX = 0;
         this.mapY = 0;
         if (this.hass) this._updateCalibration(config);
-        const vacuumPlatform = config.vacuum_platform ?? "default";
+        const vacuumPlatform = PlatformGenerator.getPlatformName(config.vacuum_platform);
         this.modes = (
             (config.map_modes?.length ?? -1) === -1 || vacuumPlatform.startsWith("Setup")
                 ? PlatformGenerator.generateDefaultModes(vacuumPlatform)
@@ -525,15 +529,6 @@ export class XiaomiVacuumMapCard extends LitElement {
 
         this.presetIndex = index;
         this.currentPreset = config;
-        // const icons =
-        //     (config.icons?.length ?? -1) === -1
-        //         ? IconListGenerator.generate(this.hass, config.entity, this.config.language)
-        //         : config.append_icons
-        //         ? [
-        //               ...IconListGenerator.generate(this.hass, config.entity, this.config.language),
-        //               ...(config.icons ?? []),
-        //           ]
-        //         : config.icons;
 
         const iconsPromise = GeneratorWrapper.generate(this.hass, config.icons, config.entity, vacuumPlatform,
             this.internalVariables, this.config.language, config.append_icons ?? false,

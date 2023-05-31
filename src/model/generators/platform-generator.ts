@@ -15,6 +15,7 @@ import * as simpleWyzeTemplate from "./platform_templates/romedtino_simple-wyze-
 import * as setupDecimalTemplate from "./platform_templates/setup_decimal.json";
 import * as setupIntegerTemplate from "./platform_templates/setup_integer.json";
 import {
+    CalibrationPoint,
     IconTemplate,
     MapModeConfig,
     PlatformTemplate,
@@ -86,6 +87,10 @@ export class PlatformGenerator {
         return Array.from(PlatformGenerator.TEMPLATES.keys());
     }
 
+    public static getPlatformName(platform: string | undefined): string {
+        return platform ?? PlatformGenerator.XIAOMI_MIIO_PLATFORM;
+    }
+
     public static getPlatformsDocumentationUrl(platform: string): string {
         const file =
             PlatformGenerator.TEMPLATE_DOCUMENTATIONS_URLS.get(platform) ??
@@ -130,6 +135,10 @@ export class PlatformGenerator {
             }
         }
         return undefined;
+    }
+
+    public static getCalibration(platform: string | undefined): CalibrationPoint[] | undefined {
+        return this.getPlatformTemplate(PlatformGenerator.getPlatformName(platform)).calibration_points;
     }
 
     private static getPlatformTemplate(platform: string): PlatformTemplate {

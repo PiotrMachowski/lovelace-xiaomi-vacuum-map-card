@@ -24,6 +24,7 @@ import { Modifier } from "./model/map_mode/modifier";
 import { HomeAssistantFixed } from "./types/fixes";
 import { ServiceCallSchema } from "./model/map_mode/service-call-schema";
 import { TemplatableItemValue } from "./model/map_mode/templatable-value";
+import { PlatformGenerator } from "./model/generators/platform-generator";
 
 export function stopEvent(event: MouseEvent | TouchEvent): void {
     event.preventDefault();
@@ -66,7 +67,7 @@ export function getWatchedEntitiesForPreset(config: CardPresetConfig, language: 
     if (config.map_source.camera) {
         watchedEntities.add(config.map_source.camera);
     }
-    if (config.calibration_source.entity) {
+    if (config.calibration_source?.entity) {
         watchedEntities.add(config.calibration_source.entity);
     }
     (config.conditions ?? [])
@@ -98,7 +99,7 @@ export function getWatchedEntitiesForPreset(config: CardPresetConfig, language: 
             if (e) watchedEntities.add(e);
         });
     (config.map_modes ?? [])
-        .map(m => new MapMode(config.vacuum_platform ?? "default", m, language))
+        .map(m => new MapMode(PlatformGenerator.getPlatformName(config.vacuum_platform), m, language))
         .forEach(m => getWatchedEntitiesForMapMode(m).forEach(e => watchedEntities.add(e)));
     return watchedEntities;
 }

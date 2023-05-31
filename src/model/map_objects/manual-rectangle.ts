@@ -120,6 +120,8 @@ export class ManualRectangle extends MapObject {
         const width = Math.abs(x2 - x1);
         const height = Math.abs(y2 - y1);
         const divider = this._context.coordinatesToMetersDivider();
+        if (divider === -1)
+            return "";
         const rounder = (v: number): string => (v / divider).toFixed(1);
         return `${rounder(width)}${this.localize("unit.meter_shortcut")} x ${rounder(height)}${this.localize(
             "unit.meter_shortcut",
