@@ -216,7 +216,8 @@ full_demo.mp4).
 | `internal_variables`       | object  | no              | -               | Allows to specify default values for internal variables                                           |
 
 <sup>1</sup> If multiple presets are configured
-<sup>1</sup> Not mandatory when used with a platform that support a default calibration
+
+<sup>2</sup> Not mandatory when used with a platform that support a default calibration
 
 ### Map source options
 
