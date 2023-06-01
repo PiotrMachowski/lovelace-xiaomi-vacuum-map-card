@@ -186,13 +186,13 @@
             "label": "Area pulita"
         },
         "total_cleaned_area": {
-          "label": "Area totale pulita"
+            "label": "Area totale pulita"
         },
         "cleaning_time": {
-          "label": "Tempo di pulizia"
+            "label": "Tempo di pulizia"
         },
         "total_cleaning_time": {
-          "label": "Tempo totale di pulizia"
+            "label": "Tempo totale di pulizia"
         },
         "mop_left": {
             "label": "Panno"
@@ -251,15 +251,15 @@
             "vacuum_platform": "Piattaforma aspirapolvere (obbligatorio)",
             "map_locked": "Blocco mappa (opzionale)",
             "two_finger_pan": "Zoom a due dita (opzionale)",	    
-	   "platforms_documentation": "Documentazione della piattaforma scelta ({0})",
-	   "selection": "Selezione:",
-	   "copy": "Copia",
-	   "copied": "Copiato!",
-	   "set_static_config": "Genera configurazione statica",
-	   "config_set": "Configurazione impostata!\nApri l'editor di configurazione per modificarla.",
-	   "config_set_failed": "Impossibile aggiornare la configurazione.",
-	   "generate_rooms_config": "Genera configurazione delle stanze",
-	   "copy_service_call": "Copia chiamata di servizio"
+            "platforms_documentation": "Documentazione della piattaforma scelta ({0})",
+            "selection": "Selezione:",
+            "copy": "Copia",
+            "copied": "Copiato!",
+            "set_static_config": "Genera configurazione statica",
+            "config_set": "Configurazione impostata!\nApri l'editor di configurazione per modificarla.",
+            "config_set_failed": "Impossibile aggiornare la configurazione.",
+            "generate_rooms_config": "Genera configurazione delle stanze",
+            "copy_service_call": "Copia chiamata di servizio"
         },
         "alerts": {
             "set_static_config": "Dovresti utilizzare questa funzionalità solo se desideri regolare manualmente la configurazione generata automaticamente.\nContinuare?"
