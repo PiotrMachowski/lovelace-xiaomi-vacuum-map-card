@@ -308,29 +308,66 @@ Following vacuum platforms are supported out of the box at this moment:
 | `label`             | string  | no       | -           | Label that should be displayed in the menu                                                                                                                                |
 | `variables`         | object  | no       | -           | Variables that should be passed to to service calls                                                                                                                       |
 
-#### Menu icon options
+#### Menu icon additional options
+
+| Key                          | Type   | Required | Default | Description                                                                   |
+|------------------------------|--------|----------|---------|-------------------------------------------------------------------------------|
+| `type`                       | string | yes      | -       | Has to be set to `menu`                                                       |
+| `menu_id`                    | string | yes      | -       | A menu ID                                                                     |
+| `entity`                     | string | yes      | -       | Entity that should be used to generate the menu                               |
+| `current_value_attribute`    | string | no       | -       | Changes the source of the selected value to given attribute                   |
+| `available_values_attribute` | string | yes      | -       | Configures an attribute that contains all available values for the menu       |
+| `icon_mapping`               | object | no       | -       | A mapping of possible entity value -> icon that should be used for the value  |
+| `value_translation_keys`     | object | no       | -       | A mapping of possible entity value -> label that should be used for the value |
+| `tap_action`                 | object | no       | -       | Action that should enable a specific value                                    |
+
+Examples:
+* Menu based on the `select` entity
+  ```yaml
+  type: "menu",
+  menu_id: "water_box_mode",
+  icon_id: "water_box_mode",
+  entity: "select.water_box_mode"
+  available_values_attribute: "options",
+  icon: "mdi:water",
+  icon_mapping:
+      off: "mdi:water-remove",
+      mild: "mdi:water-minus",
+      moderate: "mdi:water",
+      intense: "mdi:water-plus",
+      custom: "mdi:water-sync"
+  tap_action:
+      action: "call-service",
+      service: "select.select_option",
+      service_data:
+          option: "[[value]]",
+          entity_id: "[[entity_id]]"
+  ```
 
 ### Tile list entry options
 
 ![tiles image](/docs/media/tiles.png)
 
-| Key                 | Type   | Required | Default     | Description                                                                                                                                                              |
-|---------------------|--------|----------|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `label`             | string | yes      | -           | Label of a tile                                                                                                                                                          |
-| `entity`            | string | no       | -           | Entity which should be shown on a tile                                                                                                                                   |
-| `internal_variable` | string | no       | -           | Internal variable which should be shown on a tile                                                                                                                        |
-| `icon`              | string | no       | -           | An icon to be displayed ([mdi](https://materialdesignicons.com/))                                                                                                        |
-| `attribute`         | string | no       | -           | Attribute that should be shown on a tile                                                                                                                                 |
-| `multiplier`        | number | no       | -           | Multiplier that should be used to calculate value shown on a tile                                                                                                        |
-| `precision`         | number | no       | -           | Precision that should be used to present value on a tile                                                                                                                 |
-| `unit`              | string | no       | -           | Unit to be used                                                                                                                                                          |
-| `tap_action`        | action | no       | _more-info_ | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is tapped. </br>**Warning:** use `service_data` instead of `data`            |
-| `hold_action`       | action | no       | -           | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is held and released. </br>**Warning:** use `service_data` instead of `data` |
-| `double_tap_action` | action | no       | -           | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is double-tapped. </br>**Warning:** use `service_data` instead of `data`     |
-| `conditions`        | list   | no       | -           | List of [conditions](#condition-options) that need to be (all of them) met for a tile to be shown                                                                        |
-| `tooltip`           | string | false    | -           | Tooltip to be displayed on hoover                                                                                                                                        |
-| `translations`      | map    | false    | -           | Translations that should be applied to tile's value                                                                                                                      |
-| `tile_id`           | string | false    | -           | ID of an autogenerated tile that should be replaced with this one                                                                                                        |
+| Key                 | Type    | Required | Default     | Description                                                                                                                                                              |
+|---------------------|---------|----------|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `label`             | string  | yes      | -           | Label of a tile                                                                                                                                                          |
+| `entity`            | string  | no       | -           | Entity which should be shown on a tile                                                                                                                                   |
+| `internal_variable` | string  | no       | -           | Internal variable which should be shown on a tile                                                                                                                        |
+| `icon`              | string  | no       | -           | An icon to be displayed ([mdi](https://materialdesignicons.com/))                                                                                                        |
+| `attribute`         | string  | no       | -           | Attribute that should be shown on a tile                                                                                                                                 |
+| `multiplier`        | number  | no       | -           | Multiplier that should be used to calculate value shown on a tile                                                                                                        |
+| `precision`         | number  | no       | -           | Precision that should be used to present value on a tile                                                                                                                 |
+| `unit`              | string  | no       | -           | Unit to be used                                                                                                                                                          |
+| `tap_action`        | action  | no       | _more-info_ | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is tapped. </br>**Warning:** use `service_data` instead of `data`            |
+| `hold_action`       | action  | no       | -           | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is held and released. </br>**Warning:** use `service_data` instead of `data` |
+| `double_tap_action` | action  | no       | -           | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is double-tapped. </br>**Warning:** use `service_data` instead of `data`     |
+| `conditions`        | list    | no       | -           | List of [conditions](#condition-options) that need to be (all of them) met for a tile to be shown                                                                        |
+| `tooltip`           | string  | false    | -           | Tooltip to be displayed on hoover                                                                                                                                        |
+| `translations`      | map     | false    | -           | Translations that should be applied to tile's value                                                                                                                      |
+| `tile_id`           | string  | false    | -           | ID of an autogenerated tile that should be replaced with this one                                                                                                        |
+| `order`             | number  | no       | -           | Used to sort the tiles                                                                                                                                                   |
+| `replace_config`    | boolean | no       | `false`     | Marks that this tile should override the config of an already existing tile with the same `tile_id`                                                                      |
+| `variables`         | object  | no       | -           | Variables that should be passed to to service calls                                                                                                                      |
 
 ### Condition options
 
@@ -475,35 +512,35 @@ Format of data depends on selected `selection_type`:
 
 * `PREDEFINED_RECTANGLE`
 
-  | Key | Type | Required | Default | Description |
-    | --- | --- | --- | --- | --- |
-  | `zones` | list | yes | - | List of lists containing zone's coordinates in `[x,y,width,height]` format (e.g. `[[25500, 25000, 26500, 26500]]`) |
-  | `icon` | object | no | - | [Icon definition](#icon-options) |
-  | `label` | object | no | - | [Label definition](#label-options) |
-  | `variables` | object | no | - | Variables that should be passed to `service_call_schema` |
+  | Key         | Type   | Required | Default | Description                                                                                                        |
+  |-------------|--------|----------|---------|--------------------------------------------------------------------------------------------------------------------|
+  | `zones`     | list   | yes      | -       | List of lists containing zone's coordinates in `[x,y,width,height]` format (e.g. `[[25500, 25000, 26500, 26500]]`) |
+  | `icon`      | object | no       | -       | [Icon definition](#icon-options)                                                                                   |
+  | `label`     | object | no       | -       | [Label definition](#label-options)                                                                                 |
+  | `variables` | object | no       | -       | Variables that should be passed to `service_call_schema`                                                           |
 
   > See [this page](/docs/templates/setup.md#getting-coordinates) to check how to easily retrieve zone coordinates.
 
 * `PREDEFINED_POINT`
 
-  | Key | Type | Required | Default | Description |
-    | --- | --- | --- | --- | --- |
-  | `position` | list | yes | - | Point's coordinates in `[x,y]` format (e.g. `[25500, 25000]`) |
-  | `icon` | object | no | - | [Icon definition](#icon-options) |
-  | `label` | object | no | - | [Label definition](#label-options) |
-  | `variables` | object | no | - | Variables that should be passed to `service_call_schema` |
+  | Key         | Type   | Required | Default | Description                                                   |
+  |-------------|--------|----------|---------|---------------------------------------------------------------|
+  | `position`  | list   | yes      | -       | Point's coordinates in `[x,y]` format (e.g. `[25500, 25000]`) |
+  | `icon`      | object | no       | -       | [Icon definition](#icon-options)                              |
+  | `label`     | object | no       | -       | [Label definition](#label-options)                            |
+  | `variables` | object | no       | -       | Variables that should be passed to `service_call_schema`      |
 
   > See [this page](/docs/templates/setup.md#getting-coordinates) to check how to easily retrieve point coordinates.
 
 * `ROOM`
 
-  | Key | Type | Required | Default | Description |
-    | --- | --- | --- | --- | --- |
-  | `id` | string or number | yes | - | Room's identifier |
-  | `outline` | list | no | - | List of points forming an outline of a room (e.g. `[[25500,25500],[26500,25500],[25500,26500]]` |
-  | `icon` | object | no | - | [Icon definition](#icon-options) |
-  | `label` | object | no | - | [Label definition](#label-options) |
-  | `variables` | object | no | - | Variables that should be passed to `service_call_schema` |
+ | Key         | Type             | Required | Default | Description                                                                                     |
+ |-------------|------------------|----------|---------|-------------------------------------------------------------------------------------------------|
+ | `id`        | string or number | yes      | -       | Room's identifier                                                                               |
+ | `outline`   | list             | no       | -       | List of points forming an outline of a room (e.g. `[[25500,25500],[26500,25500],[25500,26500]]` |
+ | `icon`      | object           | no       | -       | [Icon definition](#icon-options)                                                                |
+ | `label`     | object           | no       | -       | [Label definition](#label-options)                                                              |
+ | `variables` | object           | no       | -       | Variables that should be passed to `service_call_schema`                                        |
 
   > See [this page](/docs/templates/setup.md#getting-coordinates) to check how to easily create outline.
 
@@ -530,6 +567,15 @@ Format of data depends on selected `selection_type`:
 To enable handling actions you have to configure `action_handler_id` in [Main options](#main-options).
 This card handles following actions:
 
+- Starts cleaning
+  ```yaml
+    tap_action:
+      action: fire-dom-event
+      xiaomi_vacuum_map_card:
+        action_handler_id: xiaomi_vacuum_map_card_id_1
+        action: cleaning.start
+  ```
+
 - Set a value of internal variable
   ```yaml
     tap_action:
@@ -540,6 +586,73 @@ This card handles following actions:
         data:
           variable: variable_1
           value: "some value"
+  ```
+
+- Selects next map mode
+  ```yaml
+    tap_action:
+      action: fire-dom-event
+      xiaomi_vacuum_map_card:
+        action_handler_id: xiaomi_vacuum_map_card_id_1
+        action: map_mode.next
+  ```
+
+- Selects previous map mode
+  ```yaml
+    tap_action:
+      action: fire-dom-event
+      xiaomi_vacuum_map_card:
+        action_handler_id: xiaomi_vacuum_map_card_id_1
+        action: map_mode.previous
+  ```
+
+- Selects a specific map mode
+  ```yaml
+    tap_action:
+      action: fire-dom-event
+      xiaomi_vacuum_map_card:
+        action_handler_id: xiaomi_vacuum_map_card_id_1
+        action: map_mode.set
+        data:
+          index: 2 
+  ```
+
+- Decrements a number of repeats
+  ```yaml
+    tap_action:
+      action: fire-dom-event
+      xiaomi_vacuum_map_card:
+        action_handler_id: xiaomi_vacuum_map_card_id_1
+        action: repeats.decrement
+  ```
+
+- Increments a number of repeats
+  ```yaml
+    tap_action:
+      action: fire-dom-event
+      xiaomi_vacuum_map_card:
+        action_handler_id: xiaomi_vacuum_map_card_id_1
+        action: repeats.increment
+  ```
+
+- Set a number of repeats
+  ```yaml
+    tap_action:
+      action: fire-dom-event
+      xiaomi_vacuum_map_card:
+        action_handler_id: xiaomi_vacuum_map_card_id_1
+        action: repeats.set
+        data:
+          value: 2
+  ```
+
+- Clears current selection
+  ```yaml
+    tap_action:
+      action: fire-dom-event
+      xiaomi_vacuum_map_card:
+        action_handler_id: xiaomi_vacuum_map_card_id_1
+        action: selection.clear
   ```
 
 ## FAQ
