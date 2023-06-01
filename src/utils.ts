@@ -190,7 +190,7 @@ export function handleActionWithConfig(
         const { selection, variables } = node._getSelection(currentMode);
         const defaultVariables = ServiceCallSchema.getDefaultVariables(entity_id, selection, node.repeats);
         const filled = getFilledTemplate(config as Record<string, unknown>, defaultVariables, itemVariables,
-            node.internalVariables, currentMode.variables, variables);
+            node.internalVariables, currentMode?.variables ?? {}, variables);
         handleAction(node, node.hass as unknown as HomeAssistant, filled as ActionableObjectConfig, action);
     }
 }

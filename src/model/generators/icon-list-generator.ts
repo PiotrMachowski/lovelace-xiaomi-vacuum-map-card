@@ -313,6 +313,7 @@ export class IconListGenerator {
             ...iconTemplate,
             "icon": iconTemplate.icon ?? matched.icon ?? matched.original_icon,
             "variables": {
+                ...(iconTemplate.variables ?? {}),
                 "entity": matched.entity_id
             }
         };

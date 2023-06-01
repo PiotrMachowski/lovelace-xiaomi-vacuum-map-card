@@ -12,6 +12,7 @@ import * as deebotTemplate from "./platform_templates/DeebotUniverse_Deebot-4-Ho
 import * as tasshackDreameVacuumTemplate from "./platform_templates/Tasshack_dreame-vacuum.json";
 import * as roborockTemplate from "./platform_templates/humbertogontijo_homeassistant-roborock.json";
 import * as simpleWyzeTemplate from "./platform_templates/romedtino_simple-wyze-vac.json";
+import * as myneatoTemplate from "./platform_templates/BenjaminPaap_myneato.json";
 import * as setupDecimalTemplate from "./platform_templates/setup_decimal.json";
 import * as setupIntegerTemplate from "./platform_templates/setup_integer.json";
 import {
@@ -21,6 +22,7 @@ import {
     PlatformTemplate,
     TileFromAttributeTemplate,
     TileFromSensorTemplate,
+    VariablesStorage,
 } from "../../types/types";
 import { SelectionType } from "../map_mode/selection-type";
 
@@ -39,6 +41,7 @@ export class PlatformGenerator {
     public static DEEBOTUNIVERSE_DEEBOT_4_HOME_ASSISTANT_PLATFORM = "DeebotUniverse/Deebot-4-Home-Assistant";
     public static HUMBERTOGONTIJO_ROBOROCK_PLATFORM = "humbertogontijo/homeassistant-roborock";
     public static ROMEDTINO_SIMPLE_WAZE_PLATFORM = "romedtino/simple-wyze-vac";
+    public static BENJAMIN_PAAP_MYNEATO_PLATFORM = "BenjaminPaap/home-assistant-myneato";
     public static SETUP_INTEGER_PLATFORM = "Setup integer";
     public static SETUP_DECIMAL_PLATFORM = "Setup decimal";
 
@@ -60,6 +63,7 @@ export class PlatformGenerator {
         [PlatformGenerator.ROOMBA_PLATFORM, roombaTemplate],
         [PlatformGenerator.DEEBOTUNIVERSE_DEEBOT_4_HOME_ASSISTANT_PLATFORM, deebotTemplate as PlatformTemplate],
         [PlatformGenerator.ROMEDTINO_SIMPLE_WAZE_PLATFORM, simpleWyzeTemplate],
+        [PlatformGenerator.BENJAMIN_PAAP_MYNEATO_PLATFORM, myneatoTemplate as PlatformTemplate],
         [PlatformGenerator.SETUP_INTEGER_PLATFORM, setupIntegerTemplate],
         [PlatformGenerator.SETUP_DECIMAL_PLATFORM, setupDecimalTemplate],
     ]);
@@ -79,9 +83,20 @@ export class PlatformGenerator {
         [PlatformGenerator.ROOMBA_PLATFORM, "roomba"],
         [PlatformGenerator.DEEBOTUNIVERSE_DEEBOT_4_HOME_ASSISTANT_PLATFORM, "DeebotUniverseDeebot4homeAssistant"],
         [PlatformGenerator.ROMEDTINO_SIMPLE_WAZE_PLATFORM, "romedtinoSimpleWyze"],
+        [PlatformGenerator.BENJAMIN_PAAP_MYNEATO_PLATFORM, "BenjaminPaapMyNeato"],
         [PlatformGenerator.SETUP_INTEGER_PLATFORM, "setup"],
         [PlatformGenerator.SETUP_DECIMAL_PLATFORM, "setup"],
     ]);
+
+    public static getPlatformsWithDefaultCalibration(): string[] {
+        return [
+            PlatformGenerator.BENJAMIN_PAAP_MYNEATO_PLATFORM,
+            PlatformGenerator.DEEBOTUNIVERSE_DEEBOT_4_HOME_ASSISTANT_PLATFORM,
+            PlatformGenerator.NEATO_PLATFORM,
+            PlatformGenerator.ROMEDTINO_SIMPLE_WAZE_PLATFORM,
+            PlatformGenerator.ROOMBA_PLATFORM,
+        ];
+    }
 
     public static getPlatforms(): string[] {
         return Array.from(PlatformGenerator.TEMPLATES.keys());
@@ -139,6 +154,10 @@ export class PlatformGenerator {
 
     public static getCalibration(platform: string | undefined): CalibrationPoint[] | undefined {
         return this.getPlatformTemplate(PlatformGenerator.getPlatformName(platform)).calibration_points;
+    }
+
+    public static getVariables(platform: string | undefined): VariablesStorage | undefined {
+        return this.getPlatformTemplate(PlatformGenerator.getPlatformName(platform)).internal_variables;
     }
 
     private static getPlatformTemplate(platform: string): PlatformTemplate {

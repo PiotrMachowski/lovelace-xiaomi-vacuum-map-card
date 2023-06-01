@@ -283,6 +283,7 @@ Following vacuum platforms are supported out of the box at this moment:
 - [`Roomba`](/docs/templates/roomba.md)
 - [`DeebotUniverse/Deebot-4-Home-Assistant`](/docs/templates/DeebotUniverseDeebot4homeAssistant.md)
 - [`romedtino/simple-wyze-vac`](/docs/templates/romedtinoSimpleWyze.md)
+- [`BenjaminPaap/home-assistant-myneato`](/docs/templates/BenjaminPaapMyNeato.md)
 
 [Create a request for a new built-in platform](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/new?assignees=PiotrMachowski&labels=new+platform&template=new_platform_request.yml)
 
@@ -535,9 +536,10 @@ This card handles following actions:
       action: fire-dom-event
       xiaomi_vacuum_map_card:
         action_handler_id: xiaomi_vacuum_map_card_id_1
-        action: set_internal_variable
-        variable: variable_1
-        value: "some value"
+        action: internal_variable.set
+        data:
+          variable: variable_1
+          value: "some value"
   ```
 
 ## FAQ

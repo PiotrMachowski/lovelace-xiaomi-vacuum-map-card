@@ -239,12 +239,7 @@ function validateMapModeConfig(
 
 function validatePreset(config: CardPresetConfig, nameRequired: boolean, language: Language): TranslatableString[] {
     const errors: TranslatableString[] = [];
-    const platformsWithDefaultCalibration = [
-        PlatformGenerator.DEEBOTUNIVERSE_DEEBOT_4_HOME_ASSISTANT_PLATFORM,
-        PlatformGenerator.NEATO_PLATFORM,
-        PlatformGenerator.ROMEDTINO_SIMPLE_WAZE_PLATFORM,
-        PlatformGenerator.ROOMBA_PLATFORM,
-    ];
+    const platformsWithDefaultCalibration = PlatformGenerator.getPlatformsWithDefaultCalibration();
     const mandatoryFields = new Map<string, string>([
         ["entity", "validation.preset.entity.missing"],
         ["map_source", "validation.preset.map_source.missing"],

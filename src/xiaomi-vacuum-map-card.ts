@@ -218,9 +218,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             window.addEventListener(EVENT_SERVICE_CALL_GET, this._handleServiceCallGet)
             this.isInEditor = true;
         }
-        if (this.config.action_handler_id) {
-            document.addEventListener(EVENT_LOVELACE_DOM, this._handleLovelaceDomEvent);
-        }
+        document.addEventListener(EVENT_LOVELACE_DOM, this._handleLovelaceDomEvent);
         this.connected = true;
         this._updateElements();
         delay(100).then(() => this.requestUpdate());
@@ -544,7 +542,10 @@ export class XiaomiVacuumMapCard extends LitElement {
             .then(() => setTimeout(() => this.requestUpdate(), 100))
             .then(() => this._setCurrentMode(0, false));
 
-        this.internalVariables = { ...(config.internal_variables ?? {}) };
+        this.internalVariables = {
+            ...(PlatformGenerator.getVariables(vacuumPlatform) ?? {}),
+            ...(config.internal_variables ?? {}),
+        };
         if (user && this.currentPreset.activate_on_switch) {
             this._executePresetsActivation();
         }
@@ -672,9 +673,9 @@ export class XiaomiVacuumMapCard extends LitElement {
             () => this.selectedPredefinedRectangles,
             () => this.selectedRooms,
             () => this.selectedPredefinedPoint,
-            () => this._getCurrentMode().coordinatesRounding,
-            () => this._getCurrentMode().coordinatesToMetersDivider,
-            () => this._getCurrentMode().maxSelections,
+            () => this._getCurrentMode()?.coordinatesRounding ?? false,
+            () => this._getCurrentMode()?.coordinatesToMetersDivider ?? 1,
+            () => this._getCurrentMode()?.maxSelections ?? 0,
             property => this._getCssProperty(property),
             () => this._runImmediately(),
             string => this._localize(string),
@@ -729,11 +730,11 @@ export class XiaomiVacuumMapCard extends LitElement {
         this._selectionChanged();
     }
 
-    public _getCurrentMode(): MapMode {
+    public _getCurrentMode(): MapMode | undefined {
         return this.modes[this.selectedMode];
     }
 
-    public _getSelection(mode: MapMode): { selection: unknown[]; variables: VariablesStorage } {
+    public _getSelection(mode: MapMode | undefined): { selection: unknown[]; variables: VariablesStorage } {
         if (!mode) {
             return { selection: [], variables: {} };
         }
@@ -787,7 +788,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     }
 
     private async _runImmediately(): Promise<boolean> {
-        if (this._getCurrentMode().runImmediately) {
+        if (this._getCurrentMode()?.runImmediately ?? false) {
             await this._run(false);
             return true;
         }
@@ -834,7 +835,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         const currentPreset = this._getCurrentPreset();
         const currentMode = this._getCurrentMode();
         const { selection, variables } = this._getSelection(currentMode);
-        if ((selection as any[]).length == 0) {
+        if ((selection as any[]).length == 0 || !currentMode) {
             this._showToast("popups.no_selection", "mdi:close", false);
             forwardHaptic("failure");
         } else {
@@ -856,7 +857,8 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (
             EVENT_LOVELACE_DOM_DETAIL in lovelaceEvent.detail &&
             "action_handler_id" in lovelaceEvent.detail[EVENT_LOVELACE_DOM_DETAIL] &&
-            lovelaceEvent.detail[EVENT_LOVELACE_DOM_DETAIL]["action_handler_id"] === this.config.action_handler_id
+            lovelaceEvent.detail[EVENT_LOVELACE_DOM_DETAIL]["action_handler_id"]
+            === (this.config.action_handler_id ?? "this")
         ) {
             const details = lovelaceEvent.detail[EVENT_LOVELACE_DOM_DETAIL];
             if (details["action"] === undefined)
@@ -881,13 +883,19 @@ export class XiaomiVacuumMapCard extends LitElement {
                     this._setCurrentMode(data["index"] % this.modes.length, false);
                     break;
                 case ActionType.REPEATS_DECREMENT:
-                    this.repeats = ((this.repeats + currentMode.maxRepeats - 2) % currentMode.maxRepeats) + 1;
+                    if (currentMode) {
+                        this.repeats = ((this.repeats + currentMode.maxRepeats - 2) % currentMode.maxRepeats) + 1;
+                    }
                     break;
                 case ActionType.REPEATS_INCREMENT:
-                    this.repeats = (this.repeats % currentMode.maxRepeats) + 1;
+                    if (currentMode) {
+                        this.repeats = (this.repeats % currentMode.maxRepeats) + 1;
+                    }
                     break;
                 case ActionType.REPEATS_SET:
-                    this.repeats = ((data["value"] + currentMode.maxRepeats - 1) % currentMode.maxRepeats) + 1;
+                    if (currentMode) {
+                        this.repeats = ((data["value"] + currentMode.maxRepeats - 1) % currentMode.maxRepeats) + 1;
+                    }
                     break;
                 case ActionType.SELECTION_CLEAR:
                     this._setCurrentMode(this.selectedMode);
@@ -956,7 +964,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         const currentPreset = this._getCurrentPreset();
         const currentMode = this._getCurrentMode();
         const { selection, variables } = this._getSelection(currentMode);
-        if ((selection as any[]).length == 0) {
+        if ((selection as any[]).length == 0 || !currentMode) {
             this._showToast("popups.no_selection", "mdi:close", false);
             forwardHaptic("failure");
         } else {
@@ -1027,12 +1035,13 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _addRectangle(): void {
         const preset = this._getCurrentPreset();
+        const currentMode = this._getCurrentMode();
         const marginTop = preset.map_source.crop?.top ?? 0;
         const marginBottom = preset.map_source.crop?.bottom ?? 0;
         const marginLeft = preset.map_source.crop?.left ?? 0;
         const marginRight = preset.map_source.crop?.right ?? 0;
         this._calculateBasicScale();
-        if (this.selectedManualRectangles.length >= this._getCurrentMode().maxSelections) {
+        if (!currentMode || this.selectedManualRectangles.length >= currentMode.maxSelections) {
             forwardHaptic("failure");
             return;
         }
@@ -1066,9 +1075,10 @@ export class XiaomiVacuumMapCard extends LitElement {
     }
 
     private _mouseUp(event: PointerEvent | MouseEvent | TouchEvent): void {
-        if (!(event instanceof MouseEvent && event.button != 0) && this.shouldHandleMouseUp) {
+        const currentMode = this._getCurrentMode();
+        if (!(event instanceof MouseEvent && event.button != 0) && this.shouldHandleMouseUp && currentMode) {
             const { x, y } = getMousePosition(event, this._getSvgWrapper(), 1);
-            switch (this._getCurrentMode().selectionType) {
+            switch (currentMode.selectionType) {
                 case SelectionType.MANUAL_PATH:
                     forwardHaptic("selection");
                     this.selectedManualPath.addPoint(x, y);

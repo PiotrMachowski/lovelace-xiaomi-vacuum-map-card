@@ -114,6 +114,7 @@ export interface PlatformTemplate {
     };
     readonly icons?: IconTemplate[];
     readonly calibration_points?: CalibrationPoint[];
+    readonly internal_variables?: VariablesStorage;
 }
 
 export interface TileTemplate extends TileConfig {
