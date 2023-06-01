@@ -132,14 +132,14 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
                         label="${this._localize("editor.label.name")}"
                         .value="${this._title}"
                         .configValue="${"title"}"
-                        @input="${this._titleChanged}"></ha-textfield>
+                        @input="${this._valueChanged}"></ha-textfield>
                 </div>
                 <div class="values">
                     <ha-select
                         naturalMenuWidth
                         fixedMenuPosition
                         label="${this._localize("editor.label.entity")}"
-                        @selected="${this._entityChanged}"
+                        @selected="${this._valueChanged}"
                         @closed="${ev => ev.stopPropagation()}"
                         .configValue="${"entity"}"
                         .value="${this._entity}">
@@ -153,7 +153,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
                         naturalMenuWidth
                         fixedMenuPosition
                         label="${this._localize("editor.label.vacuum_platform")}"
-                        @selected="${this._entityChanged}"
+                        @selected="${this._platformChanged}"
                         @closed="${ev => ev.stopPropagation()}"
                         .configValue="${"vacuum_platform"}"
                         .value="${this._vacuum_platform}">
@@ -303,8 +303,29 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
         );
     }
 
-    private _entityChanged(ev): void {
-        this._valueChanged(ev);
+    private _platformChanged(ev): void{
+        if (!this._config || !this.hass) {
+            return;
+        }
+        const value = ev.target.value;
+        if (this._vacuum_platform === value) return;
+        const tmpConfig = { ...this._config };
+        tmpConfig["vacuum_platform"] = value;
+        if (PlatformGenerator.getCalibration(tmpConfig.vacuum_platform)) {
+            if (tmpConfig["calibration_source"] && tmpConfig["calibration_source"]["camera"]) {
+                delete tmpConfig["calibration_source"];
+            }
+        } else {
+            if (!tmpConfig["calibration_source"]
+                && tmpConfig["map_source"]
+                && tmpConfig["map_source"]["camera"]
+            ) {
+                tmpConfig["calibration_source"] = { camera: true };
+            }
+        }
+        this._config = tmpConfig;
+        fireEvent(this, "config-changed", { config: this._config });
+
     }
 
     private _cameraChanged(ev): void {
@@ -315,13 +336,14 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
         if (this._camera === value) return;
         const tmpConfig = { ...this._config };
         tmpConfig["map_source"] = { camera: value };
-        tmpConfig["calibration_source"] = { camera: true };
+        if (!PlatformGenerator.getCalibration(this._config.vacuum_platform)
+            && !tmpConfig["calibration_source"]
+            && "calibration_points" in this.hass.states[value].attributes
+        ) {
+            tmpConfig["calibration_source"] = { camera: true };
+        }
         this._config = tmpConfig;
         fireEvent(this, "config-changed", { config: this._config });
-    }
-
-    private _titleChanged(ev): void {
-        this._valueChanged(ev);
     }
 
     private _valueChanged(ev): void {
@@ -333,7 +355,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
             return;
         }
         if (!target.configValue) {
-            const tmpConfig = { ...this._config };
+            const tmpConfig: XiaomiVacuumMapCardConfig = { ...this._config };
             delete tmpConfig[target.configValue];
             this._config = tmpConfig;
         } else {

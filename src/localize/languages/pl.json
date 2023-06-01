@@ -2,7 +2,7 @@
     "common": {
         "version": "Wersja",
         "invalid_configuration": "Nieprawidłowa konfiguracja {0}",
-        "description": "Karta pozwalająca na kontrolowanie odkurzacza",
+        "description": "Karta pozwalająca na kontrolowanie odkurzacza przy użyciu mapy",
         "old_configuration": "Wykryto starą wersję konfiguracji. Dostosuj kartę do najnowszej wersji, albo utwórz ją od nowa.",
         "old_configuration_migration_link": "Przewodnik po migracji"
     },

@@ -99,9 +99,8 @@ const windowWithCards = window as unknown as Window & { customCards: unknown[] }
 windowWithCards.customCards = windowWithCards.customCards || [];
 windowWithCards.customCards.push({
     type: CARD_CUSTOM_ELEMENT_NAME,
-    name: "Xiaomi Vacuum Map Card",
+    name: "Vacuum Map Card",
     description: localize("common.description"),
-    preview: true,
 });
 
 @customElement(CARD_CUSTOM_ELEMENT_NAME)

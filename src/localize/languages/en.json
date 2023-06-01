@@ -2,7 +2,7 @@
     "common": {
         "version": "Version",
         "invalid_configuration": "Invalid configuration {0}",
-        "description": "A card that lets you control your vacuum",
+        "description": "A card that lets you control your vacuum using a map",
         "old_configuration": "Old configuration detected. Adjust your config to the latest schema or create a new card from the scratch.",
         "old_configuration_migration_link": "Migration guide"
     },
