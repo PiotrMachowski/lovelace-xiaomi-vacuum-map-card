@@ -1,0 +1,268 @@
+  {
+    "common": {
+        "version": "Versão",
+        "invalid_configuration": "Configuração inválida {0}",
+        "description": "Um cartão que lhe permite controlar o seu aspirador",
+        "old_configuration": "COnfiguração antiga detectada. Ajuste sua configuração para a versão mais recente ou crie um novo cartão do zero.",
+        "old_configuration_migration_link": "Guia de migração"
+    },
+    "map_mode": {
+        "invalid": "Template inválido!",
+        "vacuum_goto": "Clicar & Ir",
+        "vacuum_goto_predefined": "Pontos",
+        "vacuum_clean_segment": "Quartos",
+        "vacuum_clean_point": "Local de limpeza",
+        "vacuum_clean_point_predefined": "Pontos",
+        "vacuum_clean_zone": "Limpeza de zona",
+        "vacuum_clean_zone_predefined": "Lista de zonas",
+        "vacuum_follow_path": "Caminho"
+    },
+    "validation": {
+        "preset": {
+            "entity": {
+                "missing": "Propriedade em falta: entidade"
+            },
+            "preset_name": {
+                "missing": "Propriedade em falta: preset_name"
+            },
+            "platform": {
+                "invalid": "Plataforma de aspirador inválida: {0}"
+            },
+            "map_source": {
+                "missing": "Propriedade em falta: map_source",
+                "none_provided": "Nenhuma câmera nem imagem fornecida",
+                "ambiguous": "Apenas uma fonte de mapa permitida"
+            },
+            "calibration_source": {
+                "missing": "Propriedade em falta: calibration_source",
+                "ambiguous": "Apenas uma fonte de calibração permitida",
+                "none_provided": "Nenhuma fonte de calibração fornecida",
+                "calibration_points": {
+                    "invalid_number": "São necessários, exactamente, 3 ou 4 pontos de calibração",
+                    "missing_map": "Cada ponto de calibração deve conter coordenadas do mapa",
+                    "missing_vacuum": "Cada ponto de calibração deve conter coordenadas do aspirador",
+                    "missing_coordinate": "Os pontos de calibração do mapa e do aspirador devem conter as coordenadas x e y"
+                }
+            },
+            "icons": {
+                "invalid": "Erro na configuração: icones",
+                "icon": {
+                    "missing": "Cada entrada na lista de ícones deve conter a propriedade do ícone"
+                }
+            },
+            "tiles": {
+                "invalid": "Erro na configuração: tiles",
+                "entity": {
+                    "missing": "Cada entrada da lista deve conter uma entidade ou variável interna"
+                },
+                "label": {
+                    "missing": "Cada entrada da lista deve conter uma etiqueta"
+                }
+            },
+            "map_modes": {
+                "invalid": "Erro na configuração: map_modes",
+                "icon": {
+                    "missing": "Falta o ícone do modo de mapa"
+                },
+                "name": {
+                    "missing": "Falta o nome do modo de mapa"
+                },
+                "template": {
+                    "invalid": "Template inválido: {0}"
+                },
+                "predefined_selections": {
+                    "not_applicable": "O modo {0} não oferece suporte a seleções predefinidas",
+                    "zones": {
+                        "missing": "Configuração de zonas em falta",
+                        "invalid_parameters_number": "Cada zona deve ter 4 parâmetros"
+                    },
+                    "points": {
+                        "position": {
+                            "missing": "Configuração de locais em falta",
+                            "invalid_parameters_number": "Cada local deve ter 2 parâmetros"
+                        }
+                    },
+                    "rooms": {
+                        "id": {
+                            "missing": "Identificação do quarto em falta",
+                            "invalid_format": "Id do quarto inválido: {0}"
+                        },
+                        "outline": {
+                            "invalid_parameters_number": "Cada local do limite exterior do quarto deve ter 2 parâmetros"
+                        }
+                    },
+                    "label": {
+                        "x": {
+                            "missing": "A etiqueta deve ter a propriedade x"
+                        },
+                        "y": {
+                            "missing": "A etiqueta deve ter a propriedade y"
+                        },
+                        "text": {
+                            "missing": "A etiqueta deve ter um texto x"
+                        }
+                    },
+                    "icon": {
+                        "x": {
+                            "missing": "O ícone deve ter a propriedade x"
+                        },
+                        "y": {
+                            "missing": "O ícone deve ter a propriedade y"
+                        },
+                        "name": {
+                            "missing": "O ícone deve ter um nome"
+                        }
+                    }
+                },
+                "service_call_schema": {
+                    "missing": "Falta a chamada de serviço",
+                    "service": {
+                        "missing": "A chamada de serviço deve conter o serviço",
+                        "invalid": "serviço inválido: {0}"
+                    }
+                }
+            }
+        },
+        "invalid_entities": "Entidades inválidas:",
+        "invalid_calibration": "Calibração inválida, verifique sua configuração"
+    },
+    "tile": {
+        "status": {
+            "label": "Estado",
+            "value": {
+                "starting": "A iniciar",
+                "charger disconnected": "Carregador desligado",
+                "idle": "Em espera",
+                "remote control active": "Controlo remoto activo",
+                "cleaning": "A limpar",
+                "returning home": "A voltar á base",
+                "manual mode": "Modo manual",
+                "charging": "A carregar",
+                "charging problem": "Problema de carregamento",
+                "paused": "Em pausa",
+                "spot cleaning": "Limpeza de local",
+                "error": "Erro",
+                "shutting down": "A desligar",
+                "updating": "A actualizar",
+                "docking": "A atracar",
+                "going to target": "A caminho do alvo",
+                "zoned cleaning": "Limpeza de zona",
+                "segment cleaning": "Limpeza de segmento",
+                "emptying the bin": "A esvaziar o depósito",
+                "charging complete": "Carregamento completo",
+                "device offline": "Dispositivo offline"
+            }
+        },
+        "battery_level": {
+            "label": "Bateria"
+        },
+        "fan_speed": {
+            "label": "Velocidade da ventoinha",
+            "value": {
+                "silent": "Silenciosa",
+                "standard": "Normal",
+                "medium": "Média",
+                "turbo": "Turbo",
+                "auto": "Automática",
+                "gentle": "Gentil"
+            }
+        },
+        "sensor_dirty_left": {
+            "label": "Sensores"
+        },
+        "filter_left": {
+            "label": "Filtro"
+        },
+        "main_brush_left": {
+            "label": "Escova principal"
+        },
+        "side_brush_left": {
+            "label": "Escova lateral"
+        },
+        "cleaning_count": {
+            "label": "Contagem de limpezas"
+        },
+        "cleaned_area": {
+            "label": "Área limpa"
+        },
+        "total_cleaned_area": {
+            "label": "Área total limpa"
+        },
+        "cleaning_time": {
+            "label": "Tempo de limpeza"
+        },
+        "total_cleaning_time": {
+            "label": "Tempo total de limpeza"
+        },
+        "mop_left": {
+            "label": "Mopa"
+        },
+        "bin_full": {
+            "label": "Depósito cheio",
+            "value": {
+                "true": "Sim",
+                "false": "Não"
+            }
+        },
+        "bin_present": {
+            "label": "Depósito presente",
+            "value": {
+                "true": "Sim",
+                "false": "Não"
+            }
+        },
+        "water_volume": {
+            "label": "Volume de Água"
+        },
+        "mop_pad_humidity": {
+            "label": "Pano da mopa"
+        }
+    },
+    "icon": {
+        "vacuum_start": "Iniciar",
+        "vacuum_pause": "Pausar",
+        "vacuum_stop": "Parar",
+        "vacuum_return_to_base": "Voltar à base",
+        "vacuum_clean_spot": "Limpar local",
+        "vacuum_locate": "Localizar",
+        "vacuum_set_fan_speed": "Mudar velocidade da ventoinha"
+    },
+    "unit": {
+        "hour_shortcut": "h",
+        "meter_shortcut": "m",
+        "meter_squared_shortcut": "m²",
+        "minute_shortcut": "min"
+    },
+    "popups": {
+        "success": "Sucesso!",
+        "no_selection": "NoNenhuma seleção fornecida",
+        "failed": "Falha ao chamar o serviço"
+    },
+    "editor": {
+        "description": {
+            "before_link": "O editor visual suporta apenas uma configuração básica usando uma entidade, usando ",
+            "link_text": "Xiaomi Cloud Map Extractor",
+            "after_link": ". Para configuração avançada use o modo YAML."
+        },
+        "label": {
+            "name": "Título (opcional)",
+            "entity": "ENtidade de aspirador (necessária)",
+            "camera": "Entidade de camera (necessária)",
+            "vacuum_platform": "Plataforma dp aspirador (necessária)",
+            "map_locked": "MMapa trancado (opcional)",
+            "two_finger_pan": "Deslocamento com 2 dedos (opcional)",
+            "platforms_documentation": "Documentação da plataforma escolhida ({0})",
+            "selection": "Delecção:",
+            "copy": "Copiar",
+            "copied": "Copiado!",
+            "set_static_config": "Gerar configuração estática",
+            "config_set": "Definição de configuração set!\nAbrir o editor de configuração par ajustar.",
+            "config_set_failed": "Falha ao actualizar a configuração.",
+            "generate_rooms_config": "Gerar configuração de quartos",
+            "copy_service_call": "Copiar a chamada de serviço"
+        },
+        "alerts": {
+            "set_static_config": "Só deve usar esta funcionalidade se quiser ajustar manualmente as configurações geradas automaticamente.\nContinuar?"
+        }
+    }
+}

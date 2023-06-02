@@ -813,6 +813,7 @@ Currently, this card contains translations for following languages:
 * `nb-NO` - Norwegian Bokmål (Norsk bokmål)
 * `nl` - Dutch (Nederlands)
 * `pl` - Polish (Polski)
+* `pt` - Portuguese (Português)
 * `pt-BR` - Brazilian Portuguese (Português Brasileiro)
 * `ro` - Romanian (Română)
 * `ru` - Russian (Русский)
