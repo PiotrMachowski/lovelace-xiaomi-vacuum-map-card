@@ -12,6 +12,7 @@ import * as it from "./languages/it.json";
 import * as nbNo from "./languages/nb-NO.json";
 import * as nl from "./languages/nl.json";
 import * as pl from "./languages/pl.json";
+import * as pt from "./languages/pt.json";
 import * as ptBr from "./languages/pt-BR.json";
 import * as ru from "./languages/ru.json";
 import * as sk from "./languages/sk.json";
