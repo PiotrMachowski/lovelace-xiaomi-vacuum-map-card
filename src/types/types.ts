@@ -93,6 +93,7 @@ export interface MapModeConfig {
     readonly icon?: string;
     readonly run_immediately?: boolean;
     readonly coordinates_rounding?: boolean;
+    readonly id_type?: "number" | "string";
     readonly coordinates_to_meters_divider?: number;
     readonly selection_type?: string;
     readonly max_selections?: number;

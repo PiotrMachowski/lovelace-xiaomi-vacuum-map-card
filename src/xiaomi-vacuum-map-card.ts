@@ -758,7 +758,9 @@ export class XiaomiVacuumMapCard extends LitElement {
                 variables = variablesExtractor(this.selectedPredefinedRectangles);
                 break;
             case SelectionType.ROOM:
-                const selectedRooms = this.selectedRooms.map(r => r.toVacuum());
+                const selectedRooms = this.selectedRooms
+                    .map(r => r.toVacuum())
+                    .map(r => XiaomiVacuumMapCard.adjustRoomId(r, mode));
                 selection = [...selectedRooms, ...(repeats && selectedRooms.length > 0 ? [repeats] : [])];
                 variables = this.selectedRooms[0]?.variables ?? {};
                 variables = variablesExtractor(this.selectedRooms);
@@ -958,6 +960,13 @@ export class XiaomiVacuumMapCard extends LitElement {
             return { modeIndex: modeIndex, rooms: roomsConfig };
         }
         return undefined;
+    }
+
+    private static adjustRoomId(roomId: string | number, config: MapMode): string | number {
+        if (config.idType === "number") {
+            return +roomId;
+        }
+        return roomId;
     }
 
     private async _run(debug: boolean): Promise<void> {
