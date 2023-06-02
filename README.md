@@ -351,10 +351,11 @@ Examples:
 
 | Key                 | Type    | Required | Default     | Description                                                                                                                                                              |
 |---------------------|---------|----------|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `label`             | string  | no      | -           | Label of a tile                                                                                                                                                          |
+| `label`             | string  | no       | -           | Label of a tile                                                                                                                                                          |
 | `entity`            | string  | no       | -           | Entity which should be shown on a tile                                                                                                                                   |
 | `internal_variable` | string  | no       | -           | Internal variable which should be shown on a tile                                                                                                                        |
 | `icon`              | string  | no       | -           | An icon to be displayed ([mdi](https://materialdesignicons.com/))                                                                                                        |
+| `icon_source`       | string  | no       | -           | Source of an icon, e.g: `vacuum.xiaomi.attributes.battery_icon`                                                                                                          |
 | `attribute`         | string  | no       | -           | Attribute that should be shown on a tile                                                                                                                                 |
 | `multiplier`        | number  | no       | -           | Multiplier that should be used to calculate value shown on a tile                                                                                                        |
 | `precision`         | number  | no       | -           | Precision that should be used to present value on a tile                                                                                                                 |
