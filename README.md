@@ -64,7 +64,7 @@ https://user-images.githubusercontent.com/6118709/140251738-7fb06e81-34b0-4bf8-b
 - [Migrating from v1.x.x](#migrating-from-v1xx)
 - [Translations](#translations)
 - [Special thanks](#special-thanks)
-- [Donate](#donate)
+- [Support](#support)
 
 ## Features
 
@@ -819,7 +819,7 @@ I'd like to give special thanks to people who helped me with card's design and d
 
 <!-- piotrmachowski_support_links_start -->
 
-## Donate
+## Support
 
 If you want to support my work with a donation you can use one of the following platforms:
 
