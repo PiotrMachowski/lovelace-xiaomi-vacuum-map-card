@@ -2,7 +2,7 @@
     "common": {
         "version": "Version",
         "invalid_configuration": "Invalid configuration {0}",
-        "description": "A card that lets you control your vacuum",
+        "description": "A card that lets you control your vacuum using a map",
         "old_configuration": "Old configuration detected. Adjust your config to the latest schema or create a new card from the scratch.",
         "old_configuration_migration_link": "Migration guide"
     },
@@ -185,8 +185,14 @@
         "cleaned_area": {
             "label": "Cleaned area"
         },
+        "total_cleaned_area": {
+            "label": "Total cleaned area"
+        },
         "cleaning_time": {
             "label": "Cleaning time"
+        },
+        "total_cleaning_time": {
+            "label": "Total cleaning time"
         },
         "mop_left": {
             "label": "Mop left"
@@ -204,6 +210,12 @@
                 "true": "Yes",
                 "false": "No"
             }
+        },
+        "water_volume": {
+            "label": "Water volume"
+        },
+        "mop_pad_humidity": {
+            "label": "Mop pad"
         }
     },
     "icon": {
@@ -248,6 +260,9 @@
             "config_set_failed": "Failed to update config.",
             "generate_rooms_config": "Generate rooms config",
             "copy_service_call": "Copy service call"
+        },
+        "alerts": {
+            "set_static_config": "You should use this functionality only if you want to manually adjust automatically generated configuration.\nContinue?"
         }
     }
 }

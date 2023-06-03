@@ -1,12 +1,16 @@
 {
     "map_modes": {
-        "defaultTemplates": ["vacuum_clean_zone", "vacuum_clean_point"],
+        "default_templates": [
+            "vacuum_clean_zone",
+            "vacuum_clean_point"
+        ],
         "templates": {
             "vacuum_clean_zone": {
                 "name": "map_mode.vacuum_clean_zone",
                 "icon": "mdi:select-drag",
                 "selection_type": "MANUAL_RECTANGLE",
                 "coordinates_rounding": false,
+                "coordinates_to_meters_divider": 1,
                 "max_selections": 5,
                 "repeats_type": "EXTERNAL",
                 "max_repeats": 3,
@@ -25,6 +29,7 @@
                 "selection_type": "PREDEFINED_RECTANGLE",
                 "max_selections": 5,
                 "coordinates_rounding": false,
+                "coordinates_to_meters_divider": 1,
                 "repeats_type": "EXTERNAL",
                 "max_repeats": 3,
                 "service_call_schema": {
@@ -41,6 +46,7 @@
                 "icon": "mdi:map-marker-plus",
                 "selection_type": "MANUAL_POINT",
                 "coordinates_rounding": false,
+                "coordinates_to_meters_divider": 1,
                 "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "vacuum.xiaomi_clean_point",
@@ -55,6 +61,7 @@
                 "icon": "mdi:map-marker",
                 "selection_type": "PREDEFINED_POINT",
                 "coordinates_rounding": false,
+                "coordinates_to_meters_divider": 1,
                 "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "vacuum.xiaomi_clean_point",
@@ -68,15 +75,15 @@
                 "name": "map_mode.vacuum_clean_segment",
                 "icon": "mdi:floor-plan",
                 "selection_type": "ROOM",
-                "max_selections": 1,
-                "repeats_type": "EXTERNAL",
-                "max_repeats": 3,
+                "max_selections": 5,
+                "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "vacuum.send_command",
+                    "evaluate_data_as_template": true,
                     "service_data": {
                         "entity_id": "[[entity_id]]",
                         "command": "set_mode_withroom",
-                        "params": "[ 0, [[repeats]], 1, [[selection_unwrapped]] ]|[[jsonify]]"
+                        "params": "[ \"{{state_attr('[[entity_id]]', 'is_mop')}}\", 1, [[selection_size]], [[selection_unwrapped]] ]|[[jsonify]]"
                     }
                 }
             }

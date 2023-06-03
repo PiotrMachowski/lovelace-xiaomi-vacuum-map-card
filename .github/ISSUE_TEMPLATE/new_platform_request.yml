@@ -29,6 +29,13 @@ body:
         - label: Going to point (using 2 coordinates)
         - label: Cleaning a point (using 2 coordinates)
         - label: Others
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I have sent info about entities to `piotr.machowski.dev [at] gmail.com` ([Retrieving entities info](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/594); please provide your GitHub username in the email)
+          required: false
   - type: textarea
     validations:
       required: true

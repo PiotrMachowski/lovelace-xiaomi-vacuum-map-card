@@ -1,6 +1,9 @@
 {
     "map_modes": {
-        "defaultTemplates": ["vacuum_clean_zone", "vacuum_goto"],
+        "default_templates": [
+            "vacuum_clean_zone",
+            "vacuum_goto"
+        ],
         "templates": {
             "vacuum_clean_segment": {
                 "name": "map_mode.vacuum_clean_segment",
@@ -22,6 +25,7 @@
                 "icon": "mdi:select-drag",
                 "selection_type": "MANUAL_RECTANGLE",
                 "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 1000,
                 "max_selections": 5,
                 "repeats_type": "INTERNAL",
                 "max_repeats": 3,
@@ -40,6 +44,7 @@
                 "selection_type": "PREDEFINED_RECTANGLE",
                 "max_selections": 5,
                 "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 1000,
                 "repeats_type": "INTERNAL",
                 "max_repeats": 3,
                 "service_call_schema": {
@@ -56,6 +61,7 @@
                 "icon": "mdi:map-marker-plus",
                 "selection_type": "MANUAL_POINT",
                 "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 1000,
                 "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "vacuum.send_command",
@@ -71,6 +77,7 @@
                 "icon": "mdi:map-marker",
                 "selection_type": "PREDEFINED_POINT",
                 "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 1000,
                 "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "vacuum.send_command",
@@ -86,6 +93,7 @@
                 "icon": "mdi:map-marker-path",
                 "selection_type": "MANUAL_PATH",
                 "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 1000,
                 "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "script.vacuum_follow_path",

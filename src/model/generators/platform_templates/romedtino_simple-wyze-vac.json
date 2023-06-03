@@ -1,0 +1,81 @@
+{
+    "map_modes": {
+        "default_templates": [],
+        "templates": {
+            "vacuum_clean_segment": {
+                "name": "map_mode.vacuum_clean_segment",
+                "icon": "mdi:floor-plan",
+                "selection_type": "ROOM",
+                "repeats_type": "NONE",
+                "max_selection": "20",
+                "service_call_schema": {
+                    "service": "vacuum.send_command",
+                    "service_data": {
+                        "entity_id": "[[entity_id]]",
+                        "command": "sweep_rooms",
+                        "params": {
+                            "rooms": "[[selection]]"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tiles": {
+        "from_attributes": [
+            {
+                "tile_id": "filter_left",
+                "attribute": "filter",
+                "label": "tile.filter_left.label",
+                "icon": "mdi:air-filter",
+                "unit": "unit.hour_shortcut"
+            },
+            {
+                "tile_id": "main_brush_left",
+                "attribute": "main_brush",
+                "label": "tile.main_brush_left.label",
+                "icon": "mdi:brush",
+                "unit": "unit.hour_shortcut"
+            },
+            {
+                "tile_id": "side_brush_left",
+                "attribute": "side_brush",
+                "label": "tile.side_brush_left.label",
+                "icon": "mdi:brush",
+                "unit": "unit.hour_shortcut"
+            }
+        ]
+    },
+    "calibration_points": [
+        {
+            "vacuum": {
+                "x": 0,
+                "y": 0
+            },
+            "map": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "vacuum": {
+                "x": 1,
+                "y": 0
+            },
+            "map": {
+                "x": 1,
+                "y": 0
+            }
+        },
+        {
+            "vacuum": {
+                "x": 0,
+                "y": 1
+            },
+            "map": {
+                "x": 0,
+                "y": 1
+            }
+        }
+    ]
+}

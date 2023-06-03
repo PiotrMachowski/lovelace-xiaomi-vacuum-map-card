@@ -8,11 +8,22 @@ import * as tykarolViomiVacuumV8Template from "./platform_templates/tykarol_viom
 import * as hypferValetudoTemplate from "./platform_templates/hypfer_valetudo.json";
 import * as neatoTemplate from "./platform_templates/neato.json";
 import * as roombaTemplate from "./platform_templates/roomba.json";
+import * as deebotTemplate from "./platform_templates/DeebotUniverse_Deebot-4-Home-Assistant.json";
+import * as tasshackDreameVacuumTemplate from "./platform_templates/Tasshack_dreame-vacuum.json";
+import * as roborockTemplate from "./platform_templates/humbertogontijo_homeassistant-roborock.json";
+import * as simpleWyzeTemplate from "./platform_templates/romedtino_simple-wyze-vac.json";
+import * as myneatoTemplate from "./platform_templates/BenjaminPaap_myneato.json";
 import * as setupDecimalTemplate from "./platform_templates/setup_decimal.json";
 import * as setupIntegerTemplate from "./platform_templates/setup_integer.json";
-import { MapModeConfig, PlatformTemplate, TileFromAttributeTemplate, TileFromSensorTemplate } from "../../types/types";
-import { HomeAssistant } from "custom-card-helpers";
-import { compare } from "compare-versions";
+import {
+    CalibrationPoint,
+    IconTemplate,
+    MapModeConfig,
+    PlatformTemplate,
+    TileFromAttributeTemplate,
+    TileFromSensorTemplate,
+    VariablesStorage,
+} from "../../types/types";
 import { SelectionType } from "../map_mode/selection-type";
 
 export class PlatformGenerator {
@@ -26,6 +37,11 @@ export class PlatformGenerator {
     public static HYPFER_VALETUDO_PLATFORM = "Hypfer/Valetudo";
     public static NEATO_PLATFORM = "Neato";
     public static ROOMBA_PLATFORM = "Roomba";
+    public static TASSHACK_DREAME_VACUUM_PLATFORM = "Tasshack/dreame-vacuum";
+    public static DEEBOTUNIVERSE_DEEBOT_4_HOME_ASSISTANT_PLATFORM = "DeebotUniverse/Deebot-4-Home-Assistant";
+    public static HUMBERTOGONTIJO_ROBOROCK_PLATFORM = "humbertogontijo/homeassistant-roborock";
+    public static ROMEDTINO_SIMPLE_WAZE_PLATFORM = "romedtino/simple-wyze-vac";
+    public static BENJAMIN_PAAP_MYNEATO_PLATFORM = "BenjaminPaap/home-assistant-myneato";
     public static SETUP_INTEGER_PLATFORM = "Setup integer";
     public static SETUP_DECIMAL_PLATFORM = "Setup decimal";
 
@@ -39,10 +55,15 @@ export class PlatformGenerator {
         [PlatformGenerator.TYKAROL_VIOMI_VACUUM_V8_PLATFORM, tykarolViomiVacuumV8Template],
         [PlatformGenerator.HYPFER_VALETUDO_PLATFORM, hypferValetudoTemplate],
         [PlatformGenerator.RAND256_VALETUDO_RE_PLATFORM, rand256ValetudoReTemplate as PlatformTemplate],
+        [PlatformGenerator.TASSHACK_DREAME_VACUUM_PLATFORM, tasshackDreameVacuumTemplate as PlatformTemplate],
+        [PlatformGenerator.HUMBERTOGONTIJO_ROBOROCK_PLATFORM, roborockTemplate as PlatformTemplate],
         [PlatformGenerator.SEND_COMMAND_PLATFORM, sendCommandTemplate],
         [PlatformGenerator.ALONE_XIAOMI_MIOT_PLATFORM, alOneHassXiaomiMiotTemplate],
         [PlatformGenerator.NEATO_PLATFORM, neatoTemplate],
         [PlatformGenerator.ROOMBA_PLATFORM, roombaTemplate],
+        [PlatformGenerator.DEEBOTUNIVERSE_DEEBOT_4_HOME_ASSISTANT_PLATFORM, deebotTemplate as PlatformTemplate],
+        [PlatformGenerator.ROMEDTINO_SIMPLE_WAZE_PLATFORM, simpleWyzeTemplate],
+        [PlatformGenerator.BENJAMIN_PAAP_MYNEATO_PLATFORM, myneatoTemplate as PlatformTemplate],
         [PlatformGenerator.SETUP_INTEGER_PLATFORM, setupIntegerTemplate],
         [PlatformGenerator.SETUP_DECIMAL_PLATFORM, setupDecimalTemplate],
     ]);
@@ -51,19 +72,38 @@ export class PlatformGenerator {
         [PlatformGenerator.XIAOMI_MIIO_PLATFORM, "xiaomiMiio"],
         [PlatformGenerator.KRZYSZTOFHAJDAMOWICZ_MIIO2_PLATFORM, "krzysztofHajdamowiczMiio2"],
         [PlatformGenerator.MAROTOWEB_VIOMISE_PLATFORM, "marotowebViomise"],
-        [PlatformGenerator.RAND256_VALETUDO_RE_PLATFORM, "rand256ValetudoRe"],
-        [PlatformGenerator.SEND_COMMAND_PLATFORM, "sendCommand"],
-        [PlatformGenerator.ALONE_XIAOMI_MIOT_PLATFORM, "alOneHassXiaomiMiot"],
         [PlatformGenerator.TYKAROL_VIOMI_VACUUM_V8_PLATFORM, "tykarolViomiVacuumV8"],
         [PlatformGenerator.HYPFER_VALETUDO_PLATFORM, "hypferValetudo"],
+        [PlatformGenerator.RAND256_VALETUDO_RE_PLATFORM, "rand256ValetudoRe"],
+        [PlatformGenerator.TASSHACK_DREAME_VACUUM_PLATFORM, "tasshackDreameVacuum"],
+        [PlatformGenerator.HUMBERTOGONTIJO_ROBOROCK_PLATFORM, "humbertogontijoHomeassistantRoborock"],
+        [PlatformGenerator.SEND_COMMAND_PLATFORM, "sendCommand"],
+        [PlatformGenerator.ALONE_XIAOMI_MIOT_PLATFORM, "alOneHassXiaomiMiot"],
         [PlatformGenerator.NEATO_PLATFORM, "neato"],
         [PlatformGenerator.ROOMBA_PLATFORM, "roomba"],
+        [PlatformGenerator.DEEBOTUNIVERSE_DEEBOT_4_HOME_ASSISTANT_PLATFORM, "DeebotUniverseDeebot4homeAssistant"],
+        [PlatformGenerator.ROMEDTINO_SIMPLE_WAZE_PLATFORM, "romedtinoSimpleWyze"],
+        [PlatformGenerator.BENJAMIN_PAAP_MYNEATO_PLATFORM, "BenjaminPaapMyNeato"],
         [PlatformGenerator.SETUP_INTEGER_PLATFORM, "setup"],
         [PlatformGenerator.SETUP_DECIMAL_PLATFORM, "setup"],
     ]);
 
+    public static getPlatformsWithDefaultCalibration(): string[] {
+        return [
+            PlatformGenerator.BENJAMIN_PAAP_MYNEATO_PLATFORM,
+            PlatformGenerator.DEEBOTUNIVERSE_DEEBOT_4_HOME_ASSISTANT_PLATFORM,
+            PlatformGenerator.NEATO_PLATFORM,
+            PlatformGenerator.ROMEDTINO_SIMPLE_WAZE_PLATFORM,
+            PlatformGenerator.ROOMBA_PLATFORM,
+        ];
+    }
+
     public static getPlatforms(): string[] {
         return Array.from(PlatformGenerator.TEMPLATES.keys());
+    }
+
+    public static getPlatformName(platform: string | undefined): string {
+        return platform ?? PlatformGenerator.XIAOMI_MIIO_PLATFORM;
     }
 
     public static getPlatformsDocumentationUrl(platform: string): string {
@@ -86,23 +126,19 @@ export class PlatformGenerator {
     }
 
     public static generateDefaultModes(platform: string): MapModeConfig[] {
-        return this.getPlatformTemplate(platform).map_modes.defaultTemplates.map(dt => ({ template: dt }));
+        return this.getPlatformTemplate(platform).map_modes.default_templates.map(dt => ({ template: dt }));
     }
 
     public static getTilesFromAttributesTemplates(platform: string): TileFromAttributeTemplate[] {
-        return this.getPlatformTemplate(platform).tiles.from_attributes ?? [];
+        return this.getPlatformTemplate(platform).tiles?.from_attributes ?? [];
     }
 
     public static getTilesFromSensorsTemplates(platform: string): TileFromSensorTemplate[] {
-        return this.getPlatformTemplate(platform).tiles.from_sensors ?? [];
+        return this.getPlatformTemplate(platform).tiles?.from_sensors ?? [];
     }
 
-    public static usesSensors(hass: HomeAssistant, platform: string): boolean {
-        const sensorsFrom = this.getPlatformTemplate(platform).sensors_from;
-        if (sensorsFrom) {
-            return compare(hass.config.version.replace(/\.*[a-z].*/, ""), sensorsFrom, ">=");
-        }
-        return false;
+    public static getIconsTemplates(platform: string): IconTemplate[] {
+        return this.getPlatformTemplate(platform).icons ?? [];
     }
 
     public static getRoomsTemplate(platform: string): string | undefined {
@@ -116,13 +152,21 @@ export class PlatformGenerator {
         return undefined;
     }
 
+    public static getCalibration(platform: string | undefined): CalibrationPoint[] | undefined {
+        return this.getPlatformTemplate(PlatformGenerator.getPlatformName(platform)).calibration_points;
+    }
+
+    public static getVariables(platform: string | undefined): VariablesStorage | undefined {
+        return this.getPlatformTemplate(PlatformGenerator.getPlatformName(platform)).internal_variables;
+    }
+
     private static getPlatformTemplate(platform: string): PlatformTemplate {
         return (
             this.TEMPLATES.get(platform) ??
             this.TEMPLATES.get(this.XIAOMI_MIIO_PLATFORM) ??
             ({
                 templates: [],
-                defaultTemplates: {},
+                default_templates: {},
             } as unknown as PlatformTemplate)
         );
     }

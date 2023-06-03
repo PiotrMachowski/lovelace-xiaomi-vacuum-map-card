@@ -1,0 +1,136 @@
+{
+    "map_modes": {
+        "default_templates": [],
+        "templates": {
+            "vacuum_clean_segment": {
+                "name": "map_mode.vacuum_clean_segment",
+                "icon": "mdi:floor-plan",
+                "selection_type": "ROOM",
+                "service_call_schema": {
+                    "service": "myneato.custom_cleaning",
+                    "service_data": {
+                        "zone": "[[selection_unwrapped]]",
+                        "entity_id": "[[entity_id]]",
+                        "mode": "[[mode]]"
+                    }
+                }
+            }
+        }
+    },
+    "icons": [
+        {
+            "type": "single",
+            "menu_id": "mode_selector",
+            "icon": "mdi:fan-speed-1",
+            "label": "Eco",
+            "tap_action": {
+                "action": "fire-dom-event",
+                "xiaomi_vacuum_map_card": {
+                    "action_handler_id": "this",
+                    "action": "internal_variable.set",
+                    "data": {
+                        "variable": "mode",
+                        "value": "eco"
+                    }
+                }
+            },
+            "conditions": [
+                {
+                    "internal_variable": "mode",
+                    "value": "eco"
+                }
+            ]
+        },
+        {
+            "type": "single",
+            "menu_id": "mode_selector",
+            "icon": "mdi:fan-speed-2",
+            "label": "Turbo",
+            "tap_action": {
+                "action": "fire-dom-event",
+                "xiaomi_vacuum_map_card": {
+                    "action_handler_id": "this",
+                    "action": "internal_variable.set",
+                    "data": {
+                        "variable": "mode",
+                        "value": "turbo"
+                    }
+                }
+            },
+            "conditions": [
+                {
+                    "internal_variable": "mode",
+                    "value": "turbo"
+                }
+            ]
+        },
+        {
+            "menu_id": "mode_selector",
+            "icon": "mdi:fan-speed-3",
+            "label": "Max",
+            "tap_action": {
+                "action": "fire-dom-event",
+                "xiaomi_vacuum_map_card": {
+                    "action_handler_id": "this",
+                    "action": "internal_variable.set",
+                    "data": {
+                        "variable": "mode",
+                        "value": "max"
+                    }
+                }
+            },
+            "conditions": [
+                {
+                    "internal_variable": "mode",
+                    "value": "max"
+                }
+            ]
+        }
+    ],
+    "tiles": {
+        "from_attributes": [
+            {
+                "tile_id": "cleaned_area",
+                "attribute": "clean_area",
+                "label": "tile.cleaned_area.label",
+                "icon": "mdi:texture-box",
+                "unit": "unit.meter_squared_shortcut"
+            }
+        ]
+    },
+    "calibration_points": [
+        {
+            "vacuum": {
+                "x": 0,
+                "y": 0
+            },
+            "map": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "vacuum": {
+                "x": 1,
+                "y": 0
+            },
+            "map": {
+                "x": 1,
+                "y": 0
+            }
+        },
+        {
+            "vacuum": {
+                "x": 0,
+                "y": 1
+            },
+            "map": {
+                "x": 0,
+                "y": 1
+            }
+        }
+    ],
+    "internal_variables": {
+        "mode": "eco"
+    }
+}

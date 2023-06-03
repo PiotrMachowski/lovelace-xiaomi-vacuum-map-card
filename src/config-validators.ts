@@ -1,5 +1,3 @@
-import { HomeAssistant } from "custom-card-helpers";
-
 import {
     CalibrationPoint,
     CalibrationSourceConfig,
@@ -23,6 +21,7 @@ import { localize } from "./localize/localize";
 import { MapMode } from "./model/map_mode/map-mode";
 import { SelectionType } from "./model/map_mode/selection-type";
 import { PlatformGenerator } from "./model/generators/platform-generator";
+import { HomeAssistantFixed } from "./types/fixes";
 
 function validateMapSource(mapSource: MapSourceConfig): TranslatableString[] {
     if (!mapSource.camera && !mapSource.image) {
@@ -68,7 +67,7 @@ function validateIconConfig(config: IconActionConfig): TranslatableString[] {
         return ["validation.preset.icons.invalid"];
     }
     const errors: TranslatableString[] = [];
-    if (!config.icon) {
+    if (!config.icon && config.type !== "menu" && !config.replace_config) {
         errors.push("validation.preset.icons.icon.missing");
     }
     return errors;
@@ -79,10 +78,13 @@ function validateTileConfig(config: TileConfig): TranslatableString[] {
         return ["validation.preset.tiles.invalid"];
     }
     const errors: TranslatableString[] = [];
+    if (config.replace_config) {
+        return errors;
+    }
     if (!config.entity && !config.internal_variable) {
         errors.push("validation.preset.tiles.entity.missing");
     }
-    if (!config.label) {
+    if (!config.label && !config.entity) {
         errors.push("validation.preset.tiles.label.missing");
     }
     return errors;
@@ -237,11 +239,15 @@ function validateMapModeConfig(
 
 function validatePreset(config: CardPresetConfig, nameRequired: boolean, language: Language): TranslatableString[] {
     const errors: TranslatableString[] = [];
+    const platformsWithDefaultCalibration = PlatformGenerator.getPlatformsWithDefaultCalibration();
     const mandatoryFields = new Map<string, string>([
         ["entity", "validation.preset.entity.missing"],
         ["map_source", "validation.preset.map_source.missing"],
-        ["calibration_source", "validation.preset.calibration_source.missing"],
     ]);
+    const vacuumPlatform = PlatformGenerator.getPlatformName(config.vacuum_platform);
+    if (!platformsWithDefaultCalibration.includes(vacuumPlatform)) {
+        mandatoryFields.set("calibration_source", "validation.preset.calibration_source.missing");
+    }
     const params = Object.keys(config);
     mandatoryFields.forEach((v: string, k: string) => {
         if (!params.includes(k)) {
@@ -252,7 +258,6 @@ function validatePreset(config: CardPresetConfig, nameRequired: boolean, languag
     if (config.calibration_source) validateCalibrationSource(config.calibration_source).forEach(e => errors.push(e));
     if (config.vacuum_platform && !PlatformGenerator.getPlatforms().includes(config.vacuum_platform))
         errors.push(["validation.preset.platform.invalid", "{0}", config.vacuum_platform]);
-    const vacuumPlatform = config.vacuum_platform ?? "default";
     (config.icons ?? []).flatMap(i => validateIconConfig(i)).forEach(e => errors.push(e));
     (config.tiles ?? []).flatMap(i => validateTileConfig(i)).forEach(e => errors.push(e));
     (config.map_modes ?? [])
@@ -276,7 +281,7 @@ export function isOldConfig(config: XiaomiVacuumMapCardConfig): boolean {
     return config.map_image || config.map_camera;
 }
 
-export function areAllEntitiesDefined(usedEntities: string[], hass: HomeAssistant): string[] {
+export function areAllEntitiesDefined(usedEntities: string[], hass: HomeAssistantFixed): string[] {
     const availableEntities = Object.keys(hass.states);
     return usedEntities.filter(e => !availableEntities.includes(e));
 }

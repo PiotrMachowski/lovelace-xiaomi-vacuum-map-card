@@ -1,6 +1,6 @@
 {
     "map_modes": {
-        "defaultTemplates": [],
+        "default_templates": [],
         "templates": {
             "vacuum_clean_segment": {
                 "name": "map_mode.vacuum_clean_segment",
@@ -30,15 +30,53 @@
                 "attribute": "bin_present",
                 "label": "tile.bin_present.label",
                 "icon": "mdi:delete-restore",
-                "translation_keys": ["true", "false"]
+                "translation_keys": [
+                    "true",
+                    "false"
+                ]
             },
             {
                 "tile_id": "bin_full",
                 "attribute": "bin_full",
                 "label": "tile.bin_full.label",
                 "icon": "mdi:delete",
-                "translation_keys": ["true", "false"]
+                "translation_keys": [
+                    "true",
+                    "false"
+                ]
             }
         ]
-    }
+    },
+    "calibration_points": [
+        {
+            "vacuum": {
+                "x": 0,
+                "y": 0
+            },
+            "map": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "vacuum": {
+                "x": 1,
+                "y": 0
+            },
+            "map": {
+                "x": 1,
+                "y": 0
+            }
+        },
+        {
+            "vacuum": {
+                "x": 0,
+                "y": 1
+            },
+            "map": {
+                "x": 0,
+                "y": 1
+            }
+        }
+    ]
 }

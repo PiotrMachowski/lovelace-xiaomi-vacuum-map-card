@@ -35,7 +35,7 @@ export class ServiceCallSchema {
         );
     }
 
-    private static getDefaultVariables(entityId: string, selection: unknown[], repeats: number): VariablesStorage {
+    public static getDefaultVariables(entityId: string, selection: unknown[], repeats: number): VariablesStorage {
         const variables: VariablesStorage = {};
         variables[TemplatableValue.ENTITY_ID] = entityId;
         variables[TemplatableValue.SELECTION] = selection;

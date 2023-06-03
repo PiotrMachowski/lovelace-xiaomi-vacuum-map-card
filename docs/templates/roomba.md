@@ -4,14 +4,6 @@
 
 This platform can be used to control vacuums connected to Home Assistant using built-in Roomba integration.
 
-## Calibration
-
-You can calibrate the map using following config:
-```yaml
-calibration_source:
-  identity: true
-```
-
 ## Available templates
 
 * ### Room cleaning (`vacuum_clean_segment`)

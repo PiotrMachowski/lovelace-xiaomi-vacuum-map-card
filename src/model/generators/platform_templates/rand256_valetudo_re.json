@@ -1,6 +1,9 @@
 {
     "map_modes": {
-        "defaultTemplates": ["vacuum_clean_zone", "vacuum_goto"],
+        "default_templates": [
+            "vacuum_clean_zone",
+            "vacuum_goto"
+        ],
         "templates": {
             "vacuum_clean_segment": {
                 "name": "map_mode.vacuum_clean_segment",
@@ -22,6 +25,7 @@
                 "icon": "mdi:select-drag",
                 "selection_type": "MANUAL_RECTANGLE",
                 "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 1000,
                 "repeats_type": "EXTERNAL",
                 "max_selections": 5,
                 "max_repeats": 3,
@@ -54,6 +58,7 @@
                 "icon": "mdi:map-marker-plus",
                 "selection_type": "MANUAL_POINT",
                 "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 1000,
                 "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "mqtt.publish",
@@ -90,7 +95,7 @@
                 "hold_action": {
                     "action": "call-service",
                     "service": "mqtt.publish",
-                    "confirmation": true,
+                    "confirmation": {},
                     "service_data": {
                         "topic": "[[topic]]/custom_command",
                         "payload": "{\"command\": \"reset_consumable\",\n\"consumable\": \"filter_work_time\"}"
@@ -106,7 +111,7 @@
                 "hold_action": {
                     "action": "call-service",
                     "service": "mqtt.publish",
-                    "confirmation": true,
+                    "confirmation": {},
                     "service_data": {
                         "topic": "[[topic]]/custom_command",
                         "payload": "{\"command\": \"reset_consumable\",\n\"consumable\": \"main_brush_work_time\"}"
@@ -122,7 +127,7 @@
                 "hold_action": {
                     "action": "call-service",
                     "service": "mqtt.publish",
-                    "confirmation": true,
+                    "confirmation": {},
                     "service_data": {
                         "topic": "[[topic]]/custom_command",
                         "payload": "{\"command\": \"reset_consumable\",\n\"consumable\": \"side_brush_work_time\"}"

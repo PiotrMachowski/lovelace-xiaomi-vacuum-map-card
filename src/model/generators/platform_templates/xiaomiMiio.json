@@ -1,18 +1,28 @@
 {
     "map_modes": {
-        "defaultTemplates": ["vacuum_clean_zone", "vacuum_goto"],
+        "default_templates": [
+            "vacuum_clean_zone",
+            "vacuum_goto"
+        ],
         "templates": {
             "vacuum_clean_segment": {
                 "name": "map_mode.vacuum_clean_segment",
                 "icon": "mdi:floor-plan",
                 "selection_type": "ROOM",
-                "repeats_type": "REPEAT",
+                "repeats_type": "EXTERNAL",
                 "max_repeats": 3,
+                "id_type": "number",
                 "service_call_schema": {
-                    "service": "xiaomi_miio.vacuum_clean_segment",
+                    "service": "vacuum.send_command",
                     "service_data": {
-                        "segments": "[[selection]]",
-                        "entity_id": "[[entity_id]]"
+                        "command": "app_segment_clean",
+                        "entity_id": "[[entity_id]]",
+                        "params": [
+                            {
+                                "segments": "[[selection]]",
+                                "repeat": "[[repeats]]"
+                            }
+                        ]
                     }
                 }
             },
@@ -21,6 +31,7 @@
                 "icon": "mdi:select-drag",
                 "selection_type": "MANUAL_RECTANGLE",
                 "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 1000,
                 "max_selections": 5,
                 "repeats_type": "EXTERNAL",
                 "max_repeats": 3,
@@ -39,6 +50,7 @@
                 "selection_type": "PREDEFINED_RECTANGLE",
                 "max_selections": 5,
                 "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 1000,
                 "repeats_type": "EXTERNAL",
                 "max_repeats": 3,
                 "service_call_schema": {
@@ -55,6 +67,7 @@
                 "icon": "mdi:map-marker-plus",
                 "selection_type": "MANUAL_POINT",
                 "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 1000,
                 "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "xiaomi_miio.vacuum_goto",
@@ -70,6 +83,7 @@
                 "icon": "mdi:map-marker",
                 "selection_type": "PREDEFINED_POINT",
                 "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 1000,
                 "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "xiaomi_miio.vacuum_goto",
@@ -85,6 +99,7 @@
                 "icon": "mdi:map-marker-path",
                 "selection_type": "MANUAL_PATH",
                 "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 1000,
                 "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "script.vacuum_follow_path",
@@ -98,7 +113,6 @@
             }
         }
     },
-    "sensors_from": "2021.11.0",
     "tiles": {
         "from_attributes": [
             {
@@ -110,11 +124,11 @@
                 "hold_action": {
                     "action": "call-service",
                     "service": "vacuum.send_command",
-                    "confirmation": true,
+                    "confirmation": {},
                     "service_data": {
                         "command": "reset_consumable",
                         "params": "sensor_dirty_time",
-                        "entity_id": "[[vacuum_entity]]"
+                        "entity_id": "[[vacuum_entity_id]]"
                     }
                 }
             },
@@ -127,11 +141,11 @@
                 "hold_action": {
                     "action": "call-service",
                     "service": "vacuum.send_command",
-                    "confirmation": true,
+                    "confirmation": {},
                     "service_data": {
                         "command": "reset_consumable",
                         "params": "filter_work_time",
-                        "entity_id": "[[vacuum_entity]]"
+                        "entity_id": "[[vacuum_entity_id]]"
                     }
                 }
             },
@@ -144,11 +158,11 @@
                 "hold_action": {
                     "action": "call-service",
                     "service": "vacuum.send_command",
-                    "confirmation": true,
+                    "confirmation": {},
                     "service_data": {
                         "command": "reset_consumable",
                         "params": "main_brush_work_time",
-                        "entity_id": "[[vacuum_entity]]"
+                        "entity_id": "[[vacuum_entity_id]]"
                     }
                 }
             },
@@ -161,11 +175,11 @@
                 "hold_action": {
                     "action": "call-service",
                     "service": "vacuum.send_command",
-                    "confirmation": true,
+                    "confirmation": {},
                     "service_data": {
                         "command": "reset_consumable",
                         "params": "side_brush_work_time",
-                        "entity_id": "[[vacuum_entity]]"
+                        "entity_id": "[[vacuum_entity_id]]"
                     }
                 }
             },
@@ -186,11 +200,11 @@
                 "hold_action": {
                     "action": "call-service",
                     "service": "vacuum.send_command",
-                    "confirmation": true,
+                    "confirmation": {},
                     "service_data": {
                         "command": "reset_consumable",
                         "params": "sensor_dirty_time",
-                        "entity_id": "[[vacuum_entity]]"
+                        "entity_id": "[[vacuum_entity_id]]"
                     }
                 }
             },
@@ -203,11 +217,11 @@
                 "hold_action": {
                     "action": "call-service",
                     "service": "vacuum.send_command",
-                    "confirmation": true,
+                    "confirmation": {},
                     "service_data": {
                         "command": "reset_consumable",
                         "params": "filter_work_time",
-                        "entity_id": "[[vacuum_entity]]"
+                        "entity_id": "[[vacuum_entity_id]]"
                     }
                 }
             },
@@ -220,11 +234,11 @@
                 "hold_action": {
                     "action": "call-service",
                     "service": "vacuum.send_command",
-                    "confirmation": true,
+                    "confirmation": {},
                     "service_data": {
                         "command": "reset_consumable",
                         "params": "main_brush_work_time",
-                        "entity_id": "[[vacuum_entity]]"
+                        "entity_id": "[[vacuum_entity_id]]"
                     }
                 }
             },
@@ -237,11 +251,11 @@
                 "hold_action": {
                     "action": "call-service",
                     "service": "vacuum.send_command",
-                    "confirmation": true,
+                    "confirmation": {},
                     "service_data": {
                         "command": "reset_consumable",
                         "params": "side_brush_work_time",
-                        "entity_id": "[[vacuum_entity]]"
+                        "entity_id": "[[vacuum_entity_id]]"
                     }
                 }
             },

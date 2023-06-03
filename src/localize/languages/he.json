@@ -3,7 +3,7 @@
         "version": "גירסה",
         "invalid_configuration": "תצורה לא חוקית {0}",
         "description": "כרטיס המאפשר לך לשלוט בשואב שלך",
-        "old_configuration": "זוהתה תצורה ישנה. התאם את התצורה שלך לסכמה העדכנית ביותר או צור כרטיס חדש מההתחלה.",
+        "old_configuration": "זוהתה תצורה ישנה. יש להתאים את התצורה שלך לסכמה העדכנית ביותר או ליצור כרטיס חדש מההתחלה.",
         "old_configuration_migration_link": "מדריך להגירה"
     },
     "map_mode": {
@@ -31,7 +31,7 @@
             "map_source": {
                 "missing": "נכס חסר: map_source",
                 "none_provided": "לא סופקה אף תמונה",
-                "ambiguous": "מותר רק מקור מפה אחד"
+                "ambiguous": "ניתן להשתמש במקור מפה אחד בלבד"
             },
             "calibration_source": {
                 "missing": "חסר מאפיין: calibration_source",
@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "שגיאה בתצורה: אריחים",
                 "entity": {
-                    "missing_outdated_translation": "כל ערך של רשימת אריחים חייב להכיל ישות"
+                    "missing": "כל ערך של רשימת אריחים חייב להכיל ישות"
                 },
                 "label": {
                     "missing": "כל כניסה של רשימת אריחים חייבת להכיל תווית"
@@ -128,13 +128,44 @@
     },
     "tile": {
         "status": {
-            "label": "סטטוס"
+            "label": "סטטוס",
+            "value": {
+                "starting": "מתחיל",
+                "charger disconnected": "המטען מנותק",
+                "idle": "ממתין",
+                "remote control active": "שליטה מרוחק פעילה",
+                "cleaning": "מנקה",
+                "returning home": "חוזר הביתה",
+                "manual mode": "מצב ידני",
+                "charging": "טעינה",
+                "charging problem": "בעיית טעינה",
+                "paused": "מושהה",
+                "spot cleaning": "ניקוי נקודתי",
+                "error": "שגיאה",
+                "shutting down": "מתכבה",
+                "updating": "מתעדכן",
+                "docking": "בעגינה",
+                "going to target": "בדרך אל היעד",
+                "zoned cleaning": "ניקוי אזור",
+                "segment cleaning": "ניקוי מקטע",
+                "emptying the bin": "ריקון האשפה",
+                "charging complete": "טעינה הושלמה",
+                "device offline": "התקן לא מקוון"
+            }
         },
         "battery_level": {
             "label": "סוללה"
         },
         "fan_speed": {
-            "label": "מהירות מאוורר"
+            "label": "מהירות מאוורר",
+            "value": {
+                "silent": "שקט",
+                "standard": "סטנדרט",
+                "medium": "בינוני",
+                "turbo": "טורבו",
+                "auto": "אוטומט",
+                "gentle": "עדין"
+            }
         },
         "sensor_dirty_left": {
             "label": "נותר לחיישנים"
@@ -154,11 +185,37 @@
         "cleaned_area": {
             "label": "שטח שנוקה"
         },
+        "total_cleaned_area": {
+            "label": "סך השטח שנוקה"
+        },
         "cleaning_time": {
             "label": "זמן ניקיון"
         },
+        "total_cleaning_time": {
+            "label": "סך זמן הניקיון"
+        },
         "mop_left": {
             "label": "נותר למטלית"
+        },
+        "bin_full": {
+            "label": "פח מלא",
+            "value": {
+                "true": "כן",
+                "false": "לא"
+            }
+        },
+        "bin_present": {
+            "label": "מיכל קיים",
+            "value": {
+                "true": "כן",
+                "false": "לא"
+            }
+        },
+        "water_volume": {
+            "label": "רמת מים"
+        },
+        "mop_pad_humidity": {
+            "label": "משטח ניגוב"
         }
     },
     "icon": {
@@ -193,7 +250,19 @@
             "camera": "יישות מצלמה (נדרש)",
             "vacuum_platform": "פלטפורמת שואב (נדרש)",
             "map_locked": "נעילת מפה (אופציונלי)",
-            "two_finger_pan": "צביטת שתי אצבעות (אופציונלי)"
+            "two_finger_pan": "צביטת שתי אצבעות (אופציונלי)",
+            "platforms_documentation": "תיעוד הפלטפורמה שנבחרה ({0})",
+            "selection": "בחירה:",
+            "copy": "העתקה",
+            "copied": "הועתק!",
+            "set_static_config": "יצירת תצורה סטטית",
+            "config_set": "תצורה הוגדרה!\nיש לפתוח את עורך התצורה כדי להתאים אותו.",
+            "config_set_failed": "עדכון התצורה נכשל.",
+            "generate_rooms_config": "יצירת תצורת חדרים",
+            "copy_service_call": "העתקת קריאת שירות"
+        },
+        "alerts": {
+            "set_static_config": "עליך להשתמש בפונקציונליות זו רק אם ברצונך להתאים באופן ידני את התצורה שנוצרה באופן אוטומטי.\nלהמשיך?"
         }
     }
 }

@@ -3,6 +3,7 @@ import { PropertyValues } from "lit";
 
 import {
     ActionableObjectConfig,
+    ActionHandlerFunction,
     CardPresetConfig,
     ConditionalObjectConfig,
     ConditionConfig,
@@ -20,6 +21,10 @@ import { SelectionType } from "./model/map_mode/selection-type";
 import { MousePosition } from "./model/map_objects/mouse-position";
 import { XiaomiVacuumMapCard } from "./xiaomi-vacuum-map-card";
 import { Modifier } from "./model/map_mode/modifier";
+import { HomeAssistantFixed } from "./types/fixes";
+import { ServiceCallSchema } from "./model/map_mode/service-call-schema";
+import { TemplatableItemValue } from "./model/map_mode/templatable-value";
+import { PlatformGenerator } from "./model/generators/platform-generator";
 
 export function stopEvent(event: MouseEvent | TouchEvent): void {
     event.preventDefault();
@@ -62,7 +67,7 @@ export function getWatchedEntitiesForPreset(config: CardPresetConfig, language: 
     if (config.map_source.camera) {
         watchedEntities.add(config.map_source.camera);
     }
-    if (config.calibration_source.entity) {
+    if (config.calibration_source?.entity) {
         watchedEntities.add(config.calibration_source.entity);
     }
     (config.conditions ?? [])
@@ -70,6 +75,9 @@ export function getWatchedEntitiesForPreset(config: CardPresetConfig, language: 
         .forEach(e => {
             if (e) watchedEntities.add(e);
         });
+    (config.icons ?? []).forEach(i => {
+        if (i.hasOwnProperty("entity")) watchedEntities.add(i["entity"]);
+    });
     (config.icons ?? [])
         .filter(i => i.conditions)
         .flatMap(i => i.conditions)
@@ -80,6 +88,9 @@ export function getWatchedEntitiesForPreset(config: CardPresetConfig, language: 
     (config.tiles ?? []).forEach(s => {
         if (s.entity) watchedEntities.add(s.entity);
     });
+    (config.tiles ?? []).forEach(s => {
+        if (s.icon_source) watchedEntities.add(s.icon_source.split(".attributes.")[0]);
+    });
     (config.tiles ?? [])
         .filter(s => s.conditions)
         .flatMap(s => s.conditions)
@@ -88,7 +99,7 @@ export function getWatchedEntitiesForPreset(config: CardPresetConfig, language: 
             if (e) watchedEntities.add(e);
         });
     (config.map_modes ?? [])
-        .map(m => new MapMode(config.vacuum_platform ?? "default", m, language))
+        .map(m => new MapMode(PlatformGenerator.getPlatformName(config.vacuum_platform), m, language))
         .forEach(m => getWatchedEntitiesForMapMode(m).forEach(e => watchedEntities.add(e)));
     return watchedEntities;
 }
@@ -104,7 +115,7 @@ export function getWatchedEntities(config: XiaomiVacuumMapCardConfig): string[] 
 export function isConditionMet(
     condition: ConditionConfig,
     internalVariables: VariablesStorage,
-    hass: HomeAssistant,
+    hass: HomeAssistantFixed,
 ): boolean {
     let currentValue: ReplacedKey = "";
     if (condition.internal_variable && condition.internal_variable in internalVariables) {
@@ -126,7 +137,7 @@ export function isConditionMet(
 export function areConditionsMet(
     config: ConditionalObjectConfig,
     internalVariables: VariablesStorage,
-    hass: HomeAssistant,
+    hass: HomeAssistantFixed,
 ): boolean {
     return (config.conditions ?? []).every(condition => isConditionMet(condition, internalVariables, hass));
 }
@@ -135,12 +146,12 @@ export function hasConfigOrAnyEntityChanged(
     watchedEntities: string[],
     changedProps: PropertyValues,
     forceUpdate: boolean,
-    hass?: HomeAssistant,
+    hass?: HomeAssistantFixed,
 ): boolean {
     if (changedProps.has("config") || forceUpdate) {
         return true;
     }
-    const oldHass = changedProps.get("hass") as HomeAssistant | undefined;
+    const oldHass = changedProps.get("hass") as HomeAssistantFixed | undefined;
     return !oldHass || watchedEntities.some(entity => oldHass.states[entity] !== hass?.states[entity]);
 }
 
@@ -148,15 +159,40 @@ export function conditional<T>(condition: boolean, content: () => T): T | null {
     return condition ? content() : null;
 }
 
+export function createActionWithConfigHandler(
+    node: XiaomiVacuumMapCard,
+    config: ActionableObjectConfig | undefined,
+    action?: string,
+): ActionHandlerFunction {
+    if (action) {
+        return (): void => handleActionWithConfig(node, config, action);
+    }
+    return (ev?: ActionHandlerEvent): void => handleActionWithConfig(node, config, ev?.detail?.action ?? "tap");
+}
+
 export function handleActionWithConfig(
     node: XiaomiVacuumMapCard,
     config: ActionableObjectConfig | undefined,
-): (ev: ActionHandlerEvent) => void {
-    return (ev: ActionHandlerEvent): void => {
-        if (node.hass && config && ev.detail.action) {
-            handleAction(node, node.hass, config, ev.detail.action);
+    action: string,
+): void {
+    if (node.hass && config && action) {
+        const currentPreset = node._getCurrentPreset();
+        const currentMode = node._getCurrentMode();
+        let itemVariables = {};
+        itemVariables[TemplatableItemValue.VACUUM_ENTITY_ID] = currentPreset.entity;
+        if (config.hasOwnProperty("attribute")) {
+            itemVariables[TemplatableItemValue.ATTRIBUTE] = config["attribute"];
         }
-    };
+        if (config.hasOwnProperty("variables")) {
+            itemVariables = { ...itemVariables, ...config["variables"] };
+        }
+        const entity_id = config.hasOwnProperty("entity") ? config["entity"] : currentPreset.entity;
+        const { selection, variables } = node._getSelection(currentMode);
+        const defaultVariables = ServiceCallSchema.getDefaultVariables(entity_id, selection, node.repeats);
+        const filled = getFilledTemplate(config as Record<string, unknown>, defaultVariables, itemVariables,
+            node.internalVariables, currentMode?.variables ?? {}, variables);
+        handleAction(node, node.hass as unknown as HomeAssistant, filled as ActionableObjectConfig, action);
+    }
 }
 
 export function getMousePosition(
@@ -177,7 +213,20 @@ export function getMousePosition(
 }
 
 export async function getAllEntitiesFromTheSameDevice(
-    hass: HomeAssistant,
+    hass: HomeAssistantFixed,
+    entity: string,
+): Promise<EntityRegistryEntry[]> {
+    let entityRegistryEntries;
+    try {
+        entityRegistryEntries = await _getAllEntitiesFromTheSameDevice(hass, entity);
+    } catch {
+        entityRegistryEntries = [];
+    }
+    return entityRegistryEntries;
+}
+
+async function _getAllEntitiesFromTheSameDevice(
+    hass: HomeAssistantFixed,
     entity: string,
 ): Promise<EntityRegistryEntry[]> {
     const vacuumDeviceId = (
@@ -191,7 +240,7 @@ export async function getAllEntitiesFromTheSameDevice(
             type: "config/entity_registry/list",
         })
     ).filter(e => e.device_id === vacuumDeviceId);
-    return Promise.all(
+    const allEntities = await Promise.all(
         vacuumSensors.map(vs =>
             hass.callWS<EntityRegistryEntry>({
                 type: "config/entity_registry/get",
@@ -199,6 +248,7 @@ export async function getAllEntitiesFromTheSameDevice(
             }),
         ),
     );
+    return allEntities.filter(e => e.disabled_by == null);
 }
 
 export async function delay(ms: number): Promise<void> {
@@ -220,7 +270,7 @@ export function copyMessage(val: string): void {
 }
 
 export async function evaluateJinjaTemplate(
-    hass: HomeAssistant,
+    hass: HomeAssistantFixed,
     template: string,
 ): Promise<string | Record<string, unknown>> {
     return new Promise(resolve => {

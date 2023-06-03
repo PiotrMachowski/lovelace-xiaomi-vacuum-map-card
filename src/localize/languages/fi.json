@@ -1,0 +1,268 @@
+{
+    "common": {
+        "version": "Versio",
+        "invalid_configuration": "Virheellinen määritys {0}",
+        "description": "Kortti, jolla voit hallita imuriasi",
+        "old_configuration": "Vanha rakenne havaittu. Muokkaa rakenne viimeisimmän skeeman mukaiseksi tai luo uusi kortti.",
+        "old_configuration_migration_link": "Migraatio-ohje"
+    },
+    "map_mode": {
+        "invalid": "Virheellinen malli!",
+        "vacuum_goto": "Pin & Go",
+        "vacuum_goto_predefined": "Pisteet",
+        "vacuum_clean_segment": "Huoneet",
+        "vacuum_clean_point": "Puhdista piste",
+        "vacuum_clean_point_predefined": "Pisteet",
+        "vacuum_clean_zone": "Aluepuhdistus",
+        "vacuum_clean_zone_predefined": "Alueet",
+        "vacuum_follow_path": "Reitti"
+    },
+    "validation": {
+        "preset": {
+            "entity": {
+                "missing": "Puuttuva ominaisuus: entity"
+            },
+            "preset_name": {
+                "missing": "Puuttuva ominaisuus: preset_name"
+            },
+            "platform": {
+                "invalid": "Virheellinen imurin alusta: {0}"
+            },
+            "map_source": {
+                "missing": "Puuttuva ominaisuus: map_source",
+                "none_provided": "Ei kameraa eikä kuvaa",
+                "ambiguous": "Vain yksi karttalähde sallittu"
+            },
+            "calibration_source": {
+                "missing": "Puuttuva ominaisuus: calibration_source",
+                "ambiguous": "Vain yksi kalibrointilähde on sallittu",
+                "none_provided": "Kalibrointilähde puuttuu",
+                "calibration_points": {
+                    "invalid_number": "Tarvitaan täsmälleen 3 tai 4 kalibrointipistettä",
+                    "missing_map": "Jokaisen kalibrointipisteen tulee sisältää karttakoordinaatit",
+                    "missing_vacuum": "Jokaisen kalibrointipisteen tulee sisältää imurikoordinaatit",
+                    "missing_coordinate": "Kartta- ja imurikalibrointipisteiden tulee sisältää sekä x- että y-koordinaatit"
+                }
+            },
+            "icons": {
+                "invalid": "Virhe määrityksessä: icons",
+                "icon": {
+                    "missing": "Jokaisen kuvakeluettelon merkinnän tulee sisältää kuvakeominaisuus"
+                }
+            },
+            "tiles": {
+                "invalid": "Virhe määrityksessä: tiles",
+                "entity": {
+                    "missing": "Jokaisen ruutuluettelon merkinnän on sisällettävä entiteetti tai sisäinen muuttuja"
+                },
+                "label": {
+                    "missing": "Jokaisen ruutuluettelon merkinnän on sisällettävä tunniste"
+                }
+            },
+            "map_modes": {
+                "invalid": "Virhe määrityksessä: map_modes",
+                "icon": {
+                    "missing": "Karttatilan kuvake puuttuu"
+                },
+                "name": {
+                    "missing": "Karttatilan nimi puuttuu"
+                },
+                "template": {
+                    "invalid": "Virheellinen malli: {0}"
+                },
+                "predefined_selections": {
+                    "not_applicable": "Tila {0} ei tue ennalta määritettyjä valintoja",
+                    "zones": {
+                        "missing": "Alueiden määritys puuttuu",
+                        "invalid_parameters_number": "Jokaisella alueella on oltava 4 parametria"
+                    },
+                    "points": {
+                        "position": {
+                            "missing": "Pisteiden määritys puuttuu",
+                            "invalid_parameters_number": "Jokaisella pisteellä on oltava 2 parametria"
+                        }
+                    },
+                    "rooms": {
+                        "id": {
+                            "missing": "Huoneen id puuttuu",
+                            "invalid_format": "Virheellinen huoneen id: {0}"
+                        },
+                        "outline": {
+                            "invalid_parameters_number": "Jokaisella huoneen ääriviivan pisteellä on oltava 2 parametria"
+                        }
+                    },
+                    "label": {
+                        "x": {
+                            "missing": "Tunnisteella on oltava x-ominaisuus"
+                        },
+                        "y": {
+                            "missing": "Tunnisteella on oltava y-ominaisuus"
+                        },
+                        "text": {
+                            "missing": "Tunnisteella on oltava tekstiominaisuus"
+                        }
+                    },
+                    "icon": {
+                        "x": {
+                            "missing": "Kuvakkeella on oltava x-ominaisuus"
+                        },
+                        "y": {
+                            "missing": "Kuvakkeella on oltava y-ominaisuus"
+                        },
+                        "name": {
+                            "missing": "Kuvakkeella on oltava nimiominaisuus"
+                        }
+                    }
+                },
+                "service_call_schema": {
+                    "missing": "Puuttuva palvelukutsuskeema",
+                    "service": {
+                        "missing": "Palvelukutsuskeeman tulee sisältää palvelu",
+                        "invalid": "Virheellinen palvelu: {0}"
+                    }
+                }
+            }
+        },
+        "invalid_entities": "Virheelliset entiteetit:",
+        "invalid_calibration": "Virheellinen kalibrointi, tarkista asetukset"
+    },
+    "tile": {
+        "status": {
+            "label": "Tila",
+            "value": {
+                "starting": "Käynnistetään",
+                "charger disconnected": "Laturi irroitettu",
+                "idle": "Lepotila",
+                "remote control active": "Kaukosäädin aktiivinen",
+                "cleaning": "Puhdistetaan",
+                "returning home": "Palataan telakkaan",
+                "manual mode": "Manuaalinen tila",
+                "charging": "Ladataan",
+                "charging problem": "Latausvirhe",
+                "paused": "Tauotettu",
+                "spot cleaning": "Kohdan puhdistus",
+                "error": "Virhe",
+                "shutting down": "Sammutetaan",
+                "updating": "Päivitetään",
+                "docking": "Telakoidutaan",
+                "going to target": "Mennään kohteeseen",
+                "zoned cleaning": "Aluepuhdistus",
+                "segment cleaning": "Segmentin puhdistus",
+                "emptying the bin": "Tyhjennetään säiliötä",
+                "charging complete": "Lataus valmis",
+                "device offline": "Laite poissa päältä"
+            }
+        },
+        "battery_level": {
+            "label": "Akku"
+        },
+        "fan_speed": {
+            "label": "Tuulettimen nopeus",
+            "value": {
+                "silent": "Hiljainen",
+                "standard": "Vakio",
+                "medium": "Keskinopeus",
+                "turbo": "Turbo",
+                "auto": "Auto",
+                "gentle": "Kevyt"
+            }
+        },
+        "sensor_dirty_left": {
+            "label": "Anturit jäljellä"
+        },
+        "filter_left": {
+            "label": "Suodatin jäljellä"
+        },
+        "main_brush_left": {
+            "label": "Pääharja jäljellä"
+        },
+        "side_brush_left": {
+            "label": "Sivuharja jäljellä"
+        },
+        "cleaning_count": {
+            "label": "Puhdistusmäärä"
+        },
+        "cleaned_area": {
+            "label": "Puhdistettu alue"
+        },
+        "total_cleaned_area": {
+            "label": "Puhdistettu alue yhteensä"
+        },
+        "cleaning_time": {
+            "label": "Puhdistusaika"
+        },
+        "total_cleaning_time": {
+            "label": "Kokonaispuhdistusaika"
+        },
+        "mop_left": {
+            "label": "Moppi jäljellä"
+        },
+        "bin_full": {
+            "label": "Säiliö täynnä",
+            "value": {
+                "true": "Kyllä",
+                "false": "Ei"
+            }
+        },
+        "bin_present": {
+            "label": "Säiliö löytyy",
+            "value": {
+                "true": "Kyllä",
+                "false": "Ei"
+            }
+        },
+        "water_volume": {
+            "label": "Veden määrä"
+        },
+        "mop_pad_humidity": {
+            "label": "Moppi tyyny"
+        }
+    },
+    "icon": {
+        "vacuum_start": "Käynnistä",
+        "vacuum_pause": "Tauko",
+        "vacuum_stop": "Pysäytä",
+        "vacuum_return_to_base": "Palaa telakkaan",
+        "vacuum_clean_spot": "Siivoa kohta",
+        "vacuum_locate": "Paikanna",
+        "vacuum_set_fan_speed": "Vaihda tuulettimen nopeutta"
+    },
+    "unit": {
+        "hour_shortcut": "t",
+        "meter_shortcut": "m",
+        "meter_squared_shortcut": "m²",
+        "minute_shortcut": "min"
+    },
+    "popups": {
+        "success": "Onnistui!",
+        "no_selection": "Valintoja ei annettu",
+        "failed": "Virhe kutsuessa palvelua"
+    },
+    "editor": {
+        "description": {
+            "before_link": "Visuaalinen editori tukee vain peruskokoonpanoa, jossa kamerakokonaisuus on luotu käyttämällä ",
+            "link_text": "Xiaomi Cloud Map Extractor",
+            "after_link": ". Käytä YAML-tilaa edistyneempään asennukseen."
+        },
+        "label": {
+            "name": "Otsikko (valinnainen)",
+            "entity": "Imuri entiteetti (vaadittu)",
+            "camera": "Kamera entiteetti (vaadittu)",
+            "vacuum_platform": "Imurin alusta (vaadittu)",
+            "map_locked": "Kartta lukittu (valinnainen)",
+            "two_finger_pan": "Liikuta karttaa kahdella sormella (valinnainen)",
+            "platforms_documentation": "Valitun alustan dokumentaatio ({0})",
+            "selection": "Valinta:",
+            "copy": "Kopioi",
+            "copied": "Kopioitu!",
+            "set_static_config": "Luo staattiset asetukset",
+            "config_set": "Määritykset asetettu!\nMuokkaa sitä avaamalla asetuseditori.",
+            "config_set_failed": "Konfiguroinnin päivitys epäonnistui.",
+            "generate_rooms_config": "Luo huoneiden asetukset",
+            "copy_service_call": "Kopioi palvelukutsu"
+        },
+        "alerts": {
+            "set_static_config": "Käytä tätä toimintoa vain, jos haluat säätää automaattisesti luotuja määrityksiä manuaalisesti.\nJatketaanko?"
+        }
+    }
+}

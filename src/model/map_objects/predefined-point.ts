@@ -1,6 +1,6 @@
 // noinspection CssUnresolvedCustomProperty
 import { css, CSSResultGroup, svg, SVGTemplateResult } from "lit";
-import { forwardHaptic, HomeAssistant } from "custom-card-helpers";
+import { forwardHaptic } from "custom-card-helpers";
 
 import { Context } from "./context";
 import {
@@ -13,6 +13,7 @@ import {
 import { MapObject } from "./map-object";
 import { deleteFromArray } from "../../utils";
 import { MapMode } from "../map_mode/map-mode";
+import { HomeAssistantFixed } from "../../types/fixes";
 
 export class PredefinedPoint extends MapObject {
     private readonly _config: PredefinedPointConfig;
@@ -38,7 +39,7 @@ export class PredefinedPoint extends MapObject {
 
     public static getFromEntities(
         newMode: MapMode,
-        hass: HomeAssistant,
+        hass: HomeAssistantFixed,
         contextCreator: () => Context,
     ): PredefinedPoint[] {
         return newMode.predefinedSelections

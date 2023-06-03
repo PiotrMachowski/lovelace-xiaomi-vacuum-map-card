@@ -1,7 +1,14 @@
-import { ActionConfig, LovelaceCard, LovelaceCardConfig, LovelaceCardEditor } from "custom-card-helpers";
+import {
+    ActionConfig,
+    ActionHandlerEvent,
+    LovelaceCard,
+    LovelaceCardConfig,
+    LovelaceCardEditor,
+} from "custom-card-helpers";
 import { ACTION_HANDLER_CUSTOM_ELEMENT_NAME, CARD_CUSTOM_ELEMENT_NAME, EDITOR_CUSTOM_ELEMENT_NAME } from "../const";
 import { XiaomiVacuumMapCardActionHandler } from "../action-handler-directive";
 import { XiaomiVacuumMapCard } from "../xiaomi-vacuum-map-card";
+import { Tile } from "../components/tile";
 
 declare global {
     interface HTMLElementTagNameMap {
@@ -9,6 +16,7 @@ declare global {
         [EDITOR_CUSTOM_ELEMENT_NAME]: LovelaceCardEditor;
         [ACTION_HANDLER_CUSTOM_ELEMENT_NAME]: XiaomiVacuumMapCardActionHandler;
         "hui-error-card": LovelaceCard;
+        "xvmc-tile": Tile;
     }
 }
 
@@ -16,6 +24,7 @@ export type RectangleType = [PointType, PointType, PointType, PointType];
 export type ZoneType = [number, number, number, number];
 export type ZoneWithRepeatsType = [number, number, number, number, number];
 export type PointType = [number, number];
+export type OutlineType = PointType[];
 export type PointWithRepeatsType = [number, number, number];
 export type PredefinedSelectionConfig = PredefinedZoneConfig | PredefinedPointConfig | RoomConfig;
 export type TranslatableString = string | [string, string, string];
@@ -24,6 +33,9 @@ export type ReplacedKey = string | Record<string, unknown> | number | unknown[];
 export type VariablesStorage = Record<string, ReplacedKey>;
 export type KeyReplacer = (key: string) => ReplacedKey;
 export type LovelaceDomEvent = CustomEvent<Record<string, never>>;
+export type DropdownIconActionConfig = DropdownEntryIconActionConfig[];
+export type ActionHandlerFunction = ((_?: ActionHandlerEvent) => void);
+export type ActionHandlerFunctionCreator = (_: ActionableObjectConfig) => ActionHandlerFunction;
 
 export type EntityRegistryEntry = {
     entity_id: string;
@@ -48,7 +60,7 @@ export interface CardPresetConfig extends ConditionalObjectConfig {
     readonly map_source: MapSourceConfig;
     readonly map_locked?: boolean;
     readonly two_finger_pan?: boolean;
-    readonly calibration_source: CalibrationSourceConfig;
+    readonly calibration_source?: CalibrationSourceConfig;
     readonly icons?: IconActionConfig[];
     readonly append_icons?: boolean;
     readonly tiles?: TileConfig[];
@@ -69,6 +81,7 @@ export interface MapSourceConfig {
 export interface CalibrationSourceConfig {
     readonly camera?: boolean;
     readonly identity?: boolean;
+    readonly platform?: string;
     readonly entity?: string;
     readonly attribute?: string;
     readonly calibration_points?: CalibrationPoint[];
@@ -80,6 +93,8 @@ export interface MapModeConfig {
     readonly icon?: string;
     readonly run_immediately?: boolean;
     readonly coordinates_rounding?: boolean;
+    readonly id_type?: "number" | "string";
+    readonly coordinates_to_meters_divider?: number;
     readonly selection_type?: string;
     readonly max_selections?: number;
     readonly repeats_type?: string;
@@ -91,14 +106,16 @@ export interface MapModeConfig {
 
 export interface PlatformTemplate {
     readonly map_modes: {
-        readonly defaultTemplates: string[];
+        readonly default_templates: string[];
         readonly templates: { [templateName: string]: MapModeConfig };
     };
-    readonly sensors_from?: string;
-    readonly tiles: {
+    readonly tiles?: {
         readonly from_attributes?: TileFromAttributeTemplate[];
         readonly from_sensors?: TileFromSensorTemplate[];
     };
+    readonly icons?: IconTemplate[];
+    readonly calibration_points?: CalibrationPoint[];
+    readonly internal_variables?: VariablesStorage;
 }
 
 export interface TileTemplate extends TileConfig {
@@ -114,16 +131,58 @@ export interface TileFromSensorTemplate extends TileTemplate {
     readonly unique_id_regex: string;
 }
 
-export interface IconActionConfig extends ActionableObjectConfig, ConditionalObjectConfig {
+export interface IconTemplate extends Omit<IconActionConfig, "icon"> {
+    readonly type: "single" | "menu";
+}
+
+export interface SingleIconTemplate extends IconTemplate {
+    readonly type: "single";
     readonly icon: string;
+    readonly unique_id_regex: string;
+}
+
+export interface MenuIconTemplate extends IconTemplate {
+    readonly type: "menu";
+    readonly menu_id: string;
+    readonly icon?: string;
+    readonly unique_id_regex: string;
+    readonly current_value_attribute?: string;
+    readonly available_values_attribute: string;
+    readonly icon_mapping?: Record<string, string>;
+    readonly value_translation_keys?: Record<string, string>;
+}
+
+export interface IconActionConfig extends ActionableObjectConfig, ConditionalObjectConfig {
+    readonly type?: "menu" | "single";
+    readonly icon_id?: string;
+    readonly icon?: string;
     readonly tooltip?: string;
+    readonly order?: number;
+    readonly menu_id?: string;
+    readonly replace_config?: boolean;
+    readonly label?: string;
+}
+
+export interface MenuIconActionConfig extends IconActionConfig {
+    readonly type: "menu";
+    readonly menu_id: string;
+    readonly entity: string;
+    readonly current_value_attribute?: string;
+    readonly available_values_attribute: string;
+    readonly icon_mapping?: Record<string, string>;
+    readonly value_translation_keys?: Record<string, string>;
+}
+
+export interface DropdownEntryIconActionConfig extends IconActionConfig {
+    readonly isSelected: boolean;
 }
 
 export interface TileConfig extends ActionableObjectConfig, ConditionalObjectConfig {
     readonly tile_id?: string;
-    readonly label: string;
+    readonly label?: string;
     readonly tooltip?: string;
     readonly icon?: string;
+    readonly icon_source?: string;
     readonly internal_variable?: string;
     readonly entity?: string;
     readonly attribute?: string;
@@ -131,12 +190,15 @@ export interface TileConfig extends ActionableObjectConfig, ConditionalObjectCon
     readonly multiplier?: number;
     readonly precision?: number;
     readonly translations?: Record<string, string>;
+    readonly replace_config?: boolean;
+    readonly order?: number;
 }
 
 export interface ActionableObjectConfig {
     readonly tap_action?: ActionConfig;
     readonly hold_action?: ActionConfig;
     readonly double_tap_action?: ActionConfig;
+    readonly variables?: VariablesStorage;
 }
 
 export interface ConditionalObjectConfig {
@@ -177,7 +239,7 @@ export interface PredefinedPointConfig extends PredefinedSelectionCommonConfig {
 
 export interface RoomConfig extends PredefinedSelectionCommonConfig {
     readonly id: number | string;
-    readonly outline?: [number, number][];
+    readonly outline?: OutlineType;
 }
 
 export interface LabelConfig {
@@ -209,14 +271,36 @@ export interface MapCroppingConfig {
 }
 
 export interface MapExtractorRoom {
-    readonly x0: number;
-    readonly y0: number;
-    readonly x1: number;
-    readonly y1: number;
+    readonly x0: number | undefined;
+    readonly y0: number | undefined;
+    readonly x1: number | undefined;
+    readonly y1: number | undefined;
+    readonly outline: OutlineType | undefined;
     readonly name: string | undefined;
+    readonly icon: string | undefined;
+    readonly x: number | undefined;
+    readonly y: number | undefined;
 }
 
 export interface RoomConfigEventData {
     readonly modeIndex: number;
     readonly rooms: Array<RoomConfig>;
+}
+
+export interface EntityConfig {
+    entity: string;
+    attribute?: string;
+    unit?: string;
+}
+
+export enum ActionType {
+    CLEANING_START = "cleaning.start",
+    INTERNAL_VARIABLE_SET = "internal_variable.set",
+    MAP_MODE_NEXT = "map_mode.next",
+    MAP_MODE_PREVIOUS = "map_mode.previous",
+    MAP_MODE_SET = "map_mode.set",
+    REPEATS_DECREMENT = "repeats.decrement",
+    REPEATS_INCREMENT = "repeats.increment",
+    REPEATS_SET = "repeats.set",
+    SELECTION_CLEAR = "selection.clear",
 }

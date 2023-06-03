@@ -1,0 +1,253 @@
+{
+    "common": {
+        "version": "Versió",
+        "invalid_configuration": "Configuració no vàlida {0}",
+        "description": "Una targeta que et permet controlar l'aspiradora",
+        "old_configuration": "S'ha detectat una configuració antiga. Ajusta la teva configuració a l'últim esquema o crea una nova targeta des de zero.",
+        "old_configuration_migration_link": "Guia de migrat"
+    },
+    "map_mode": {
+        "invalid": "Plantilla no vàlida!",
+        "vacuum_goto": "Marcar i anar",
+        "vacuum_goto_predefined": "Punts",
+        "vacuum_clean_segment": "Habitacions",
+        "vacuum_clean_point": "Netejar punt",
+        "vacuum_clean_point_predefined": "Punts",
+        "vacuum_clean_zone": "Netejar zona",
+        "vacuum_clean_zone_predefined": "Llista de zones",
+        "vacuum_follow_path": "Camí"
+    },
+    "validation": {
+        "preset": {
+            "entity": {
+                "missing": "Propietat no trobada: entity"
+            },
+            "preset_name": {
+                "missing": "Propietat no trobada: preset_name"
+            },
+            "platform": {
+                "invalid": "Plataforma d'aspiradora no vàlida: {0}"
+            },
+            "map_source": {
+                "missing": "Propietat no trobada: map_source",
+                "none_provided": "Cap càmera ni imatge proporcionada",
+                "ambiguous": "Només es permet una font de mapa"
+            },
+            "calibration_source": {
+                "missing": "Propietat no trobada: calibration_source",
+                "ambiguous": "Només es permet una font de calibratge",
+                "none_provided": "No s'ha proporcionat cap font de calibratge",
+                "calibration_points": {
+                    "invalid_number": "Es requereixen exactament 3 o 4 punts de calibratge",
+                    "missing_map": "Cada punt de calibratge ha de contenir coordenades del mapa",
+                    "missing_vacuum": "Cada punt de calibratge ha de contenir les coordenades de l'aspiradora",
+                    "missing_coordinate": "Els punts de calibratge de l'aspiradora i del mapa han de contenir les coordenades x i y"
+                }
+            },
+            "icons": {
+                "invalid": "Error a la configuració: icons",
+                "icon": {
+                    "missing": "Cada entrada de la llista d'icones ha de contenir la propietat de la icona"
+                }
+            },
+            "tiles": {
+                "invalid": "Error a la configuració: tiles",
+                "entity": {
+                    "missing": "Cada entrada de la llista de mosaics ha de contenir l'entitat o la variable interna"
+                },
+                "label": {
+                    "missing": "Cada entrada de la llista de mosaics ha de contenir una etiqueta"
+                }
+            },
+            "map_modes": {
+                "invalid": "Error a la configuració: map_modes",
+                "icon": {
+                    "missing": "Falta la icona del mode de mapa"
+                },
+                "name": {
+                    "missing": "Manca el nom del mode de mapa"
+                },
+                "template": {
+                    "invalid": "Plantilla no vàlida: {0}"
+                },
+                "predefined_selections": {
+                    "not_applicable": "El mode {0} no admet seleccions predefinides",
+                    "zones": {
+                        "missing": "Manquen configuracions de zones",
+                        "invalid_parameters_number": "Cada zona ha de tenir 4 paràmetres"
+                    },
+                    "points": {
+                        "position": {
+                            "missing": "Manquen configuracions de punts",
+                            "invalid_parameters_number": "Cada punt ha de tenir 2 paràmetres"
+                        }
+                    },
+                    "rooms": {
+                        "id": {
+                            "missing": "Falta l'identificador de l'habitació",
+                            "invalid_format": "Identificador de l'habitació no vàlid: {0}"
+                        },
+                        "outline": {
+                            "invalid_parameters_number": "Cada punt del contorn de l'habitació ha de tenir 2 paràmetres"
+                        }
+                    },
+                    "label": {
+                        "x": {
+                            "missing": "L'etiqueta ha de tenir la propietat x"
+                        },
+                        "y": {
+                            "missing": "L'etiqueta ha de tenir la propietat y"
+                        },
+                        "text": {
+                            "missing": "L'etiqueta ha de tenir propietat text"
+                        }
+                    },
+                    "icon": {
+                        "x": {
+                            "missing": "La icona ha de tenir la propietat x"
+                        },
+                        "y": {
+                            "missing": "La icona ha de tenir la propietat y"
+                        },
+                        "name": {
+                            "missing": "La icona ha de tenir una propietat name"
+                        }
+                    }
+                },
+                "service_call_schema": {
+                    "missing": "Falta l'esquema de trucada de servei",
+                    "service": {
+                        "missing": "L'esquema de trucada de servei ha de contenir service",
+                        "invalid": "Servei no vàlid: {0}"
+                    }
+                }
+            }
+        },
+        "invalid_entities": "Entitats no vàlides:",
+        "invalid_calibration": "Calibració no vàlida, comproveu la vostra configuració"
+    },
+    "tile": {
+        "status": {
+            "label": "Estat",
+            "value": {
+                "starting": "Començant",
+                "charger disconnected": "Carregador desconnectat",
+                "idle": "Inactiu",
+                "remote control active": "Comandament a distància actiu",
+                "cleaning": "Netejant",
+                "returning home": "Tornant a casa",
+                "manual mode": "Mode manual",
+                "charging": "Carregant",
+                "charging problem": "Problema de càrrega",
+                "paused": "En pausa",
+                "spot cleaning": "Neteja per punts",
+                "error": "Error",
+                "shutting down": "Apagant",
+                "updating": "Actualitzant",
+                "docking": "Acoblament",
+                "going to target": "Anant a l'objectiu",
+                "zoned cleaning": "Neteja per zones",
+                "segment cleaning": "Neteja per segments",
+                "emptying the bin": "Buidant el dipòsit",
+                "charging complete": "Càrrega completa",
+                "device offline": "Dispositiu desconnectat"
+            }
+        },
+        "battery_level": {
+            "label": "Bateria"
+        },
+        "fan_speed": {
+            "label": "Velocitat del ventilador",
+            "value": {
+                "silent": "Silenciós",
+                "standard": "Normal",
+                "medium": "Mitjà",
+                "turbo": "Turbo",
+                "auto": "Automàtic",
+                "gentle": "Suau"
+            }
+        },
+        "sensor_dirty_left": {
+            "label": "Sensors"
+        },
+        "filter_left": {
+            "label": "Filtre"
+        },
+        "main_brush_left": {
+            "label": "Raspall principal"
+        },
+        "side_brush_left": {
+            "label": "Raspall lateral"
+        },
+        "cleaning_count": {
+            "label": "Recompte de neteja"
+        },
+        "cleaned_area": {
+            "label": "Zona netejada"
+        },
+        "cleaning_time": {
+            "label": "Temps de neteja"
+        },
+        "mop_left": {
+            "label": "Fregona"
+        },
+        "bin_full": {
+            "label": "Dipòsit ple",
+            "value": {
+                "true": "Sí",
+                "false": "No"
+            }
+        },
+        "bin_present": {
+            "label": "Dipòsit introduït",
+            "value": {
+                "true": "Sí",
+                "false": "No"
+            }
+        }
+    },
+    "icon": {
+        "vacuum_start": "Començar",
+        "vacuum_pause": "Pausa",
+        "vacuum_stop": "Atura",
+        "vacuum_return_to_base": "Tornar a la base",
+        "vacuum_clean_spot": "Netejar punt",
+        "vacuum_locate": "Localitzar",
+        "vacuum_set_fan_speed": "Canvia la velocitat del ventilador"
+    },
+    "unit": {
+        "hour_shortcut": "h",
+        "meter_shortcut": "m",
+        "meter_squared_shortcut": "m²",
+        "minute_shortcut": "min"
+    },
+    "popups": {
+        "success": "Fet!",
+        "no_selection": "No s'ha proporcionat cap selecció",
+        "failed": "No s'ha pogut trucar al servei"
+    },
+    "editor": {
+        "description": {
+            "before_link": "Aquest editor visual només admet una configuració bàsica amb una entitat de càmera creada amb ",
+            "link_text": "Xiaomi Cloud Map Extractor",
+            "after_link": ". Per a una configuració més avançada, utilitzeu el mode YAML."
+        },
+        "label": {
+            "name": "Títol (opcional)",
+            "entity": "Entitat de l'aspiradora (obligatori)",
+            "camera": "Entitat de la càmera (obligatori)",
+            "vacuum_platform": "Plataforma de la aspiradora (obligatori)",
+            "map_locked": "Mapa bloquejat(opcional)",
+            "two_finger_pan": "Moure amb dos dits (opcional)",
+            "platforms_documentation": "Documentació de la plataforma seleccionadan ({0})",
+            "selection": "Selecció:",
+            "copy": "Copiar",
+            "copied": "Copiat!",
+            "set_static_config": "Genera una configuració estàtica",
+            "config_set": "Configuració realitzada!\nObriu l'editor de configuració per ajustar-lo.",
+            "config_set_failed": "No s'ha pogut actualitzar la configuració.",
+            "generate_rooms_config": "Genera la configuració de les habitacions",
+            "copy_service_call": "Trucada de servei de còpia"
+        }
+    }
+}
