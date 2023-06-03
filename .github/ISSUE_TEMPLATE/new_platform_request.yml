@@ -34,7 +34,7 @@ body:
     attributes:
       label: Checklist
       options:
-        - label: Info about entities to `piotr.machowski.dev [at] gmail.com` ([Retrieving entities info](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/594); please provide your GitHub username in the email)
+        - label: I have sent info about entities to `piotr.machowski.dev [at] gmail.com` ([Retrieving entities info](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/594); please provide your GitHub username in the email)
           required: false
   - type: textarea
     validations:
