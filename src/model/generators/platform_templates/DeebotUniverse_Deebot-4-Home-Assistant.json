@@ -50,7 +50,7 @@
                 "coordinates_to_meters_divider": -1,
                 "repeats_type": "NONE",
                 "service_call_schema": {
-                    "service": "xiaomi_miio.vacuum_clean_zone",
+                    "service": "vacuum.send_command",
                     "service_data": {
                         "entity_id": "[[entity_id]]",
                         "command": "custom_area",
