@@ -94,6 +94,7 @@ export class Tile extends RootlessLitElement {
         stateObject?: HassEntity,
     ) {
         let value: ReplacedKey = "";
+        const unit = this.getUnit();
         const processNumber = this.config.multiplier !== undefined || this.config.precision !== undefined;
         if (this.config.entity && stateObject) {
             if (processNumber) {
@@ -101,7 +102,11 @@ export class Tile extends RootlessLitElement {
                     ? stateObject.attributes[this.config.attribute]
                     : stateObject.state;
             } else {
-                value = localizeEntity(this.hass, this.config as EntityConfig, this.hass.states[this.config.entity]);
+                value = localizeEntity(this.hass, this.config as EntityConfig, stateObject);
+                const originalUnit = stateObject.attributes.unit_of_measurement;
+                if (unit !== "" && originalUnit && value.endsWith(originalUnit)) {
+                    value = value.substring(0, value.length - originalUnit.length).trimEnd();
+                }
             }
         } else if (this.config.internal_variable && this.config.internal_variable in this.internalVariables) {
             value = this.internalVariables[this.config.internal_variable];
@@ -116,7 +121,6 @@ export class Tile extends RootlessLitElement {
         if (`${value}`.toLowerCase() in translations) {
             value = translations[`${value}`.toLowerCase()];
         }
-        const unit = this.getUnit();
         return `${value}${unit}`;
     }
 
