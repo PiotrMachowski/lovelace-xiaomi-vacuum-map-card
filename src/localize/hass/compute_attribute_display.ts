@@ -87,7 +87,7 @@ export const computeAttributeValueDisplay = (
     const entityId = stateObj.entity_id;
     const domain = computeDomain(entityId);
     const deviceClass = stateObj.attributes.device_class;
-    const registryEntry = entities[entityId] as
+    const registryEntry = entities?.[entityId] as
         | EntityRegistryDisplayEntry
         | undefined;
     const translationKey = registryEntry?.translation_key;
