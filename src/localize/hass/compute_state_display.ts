@@ -41,7 +41,7 @@ export const computeStateDisplay = (
     entities: HomeAssistantFixed["entities"],
     state?: string
 ): string => {
-    const entity = entities[stateObj.entity_id] as
+    const entity = entities?.[stateObj.entity_id] as
         | EntityRegistryDisplayEntry
         | undefined;
 
