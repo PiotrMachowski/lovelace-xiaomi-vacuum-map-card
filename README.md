@@ -307,24 +307,101 @@ Following vacuum platforms are supported out of the box at this moment:
 Examples:
 * Menu based on the `select` entity
   ```yaml
-  type: "menu",
-  menu_id: "water_box_mode",
-  icon_id: "water_box_mode",
-  entity: "select.water_box_mode"
-  available_values_attribute: "options",
-  icon: "mdi:water",
-  icon_mapping:
-      off: "mdi:water-remove",
-      mild: "mdi:water-minus",
-      moderate: "mdi:water",
-      intense: "mdi:water-plus",
-      custom: "mdi:water-sync"
-  tap_action:
-      action: "call-service",
-      service: "select.select_option",
+  - menu_id: robot_city_wisch_intensitat
+    icon_id: robot_city_wisch_intensitat
+    label: 'off'
+    entity: select.robot_city_wisch_intensitat
+    available_values_attribute: options
+    icon: mdi:water
+    icon_mapping:
+      'off': mdi:water-remove
+      mild: mdi:water-minus
+      moderate: mdi:water
+      intense: mdi:water-plus
+      custom: mdi:water-sync
+    tap_action:
+      action: call-service
+      service: vacuum.send_command
       service_data:
-          option: "[[value]]",
-          entity_id: "[[entity_id]]"
+        command: set_water_box_custom_mode
+        params: 200
+        entity_id: vacuum.robot_city
+  - menu_id: robot_city_wisch_intensitat
+    icon_id: robot_city_wisch_intensitat
+    label: mild
+    entity: select.robot_city_wisch_intensitat
+    available_values_attribute: options
+    icon: mdi:water
+    icon_mapping:
+      'off': mdi:water-remove
+      mild: mdi:water-minus
+      moderate: mdi:water
+      intense: mdi:water-plus
+      custom: mdi:water-sync
+    tap_action:
+      action: call-service
+      service: vacuum.send_command
+      service_data:
+        command: set_water_box_custom_mode
+        params: 201
+        entity_id: vacuum.robot_city
+  - menu_id: robot_city_wisch_intensitat
+    icon_id: robot_city_wisch_intensitat
+    label: moderate
+    entity: select.robot_city_wisch_intensitat
+    available_values_attribute: options
+    icon: mdi:water
+    icon_mapping:
+      'off': mdi:water-remove
+      mild: mdi:water-minus
+      moderate: mdi:water
+      intense: mdi:water-plus
+      custom: mdi:water-sync
+    tap_action:
+      action: call-service
+      service: vacuum.send_command
+      service_data:
+        command: set_water_box_custom_mode
+        params: 202
+        entity_id: vacuum.robot_city
+  - menu_id: robot_city_wisch_intensitat
+    icon_id: robot_city_wisch_intensitat
+    label: intense
+    entity: select.robot_city_wisch_intensitat
+    available_values_attribute: options
+    icon: mdi:water
+    icon_mapping:
+      'off': mdi:water-remove
+      mild: mdi:water-minus
+      moderate: mdi:water
+      intense: mdi:water-plus
+      custom: mdi:water-sync
+    tap_action:
+      action: call-service
+      service: vacuum.send_command
+      service_data:
+        command: set_water_box_custom_mode
+        params: 203
+        entity_id: vacuum.robot_city
+  - menu_id: robot_city_wisch_intensitat
+    icon_id: robot_city_wisch_intensitat
+    label: custom
+    entity: select.robot_city_wisch_intensitat
+    available_values_attribute: options
+    icon: mdi:water
+    icon_mapping:
+      'off': mdi:water-remove
+      mild: mdi:water-minus
+      moderate: mdi:water
+      intense: mdi:water-plus
+      custom: mdi:water-sync
+    tap_action:
+      action: call-service
+      service: vacuum.send_command
+      service_data:
+        command: set_water_box_custom_mode
+        params: 204
+        entity_id: vacuum.robot_city
   ```
 
 ### Tile list entry options
