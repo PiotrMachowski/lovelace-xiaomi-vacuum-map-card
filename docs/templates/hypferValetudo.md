@@ -12,7 +12,7 @@ calibration_source:
   identity: true
 ```
 
-In other cases you have to manually calibrate the map and provide calibration points.
+In other cases you have to manually calibrate the map and provide calibration points, see [here](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card#calibration-points-options). To get the vacuum-coordinates, open the web interface of your Valetudo, switch to the Zones map mode, add a zone, click and hold the Clean-1-Zones-button. The point pA refers to the top-left corner of the drawn rectangle. pB is top-right, pC is bottom-right and pD is bottom-left.
 
 ## Requirements
 
