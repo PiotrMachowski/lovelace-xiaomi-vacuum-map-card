@@ -50,7 +50,7 @@ internal_variables:
 
 ## Retrieving map image
 
-To retrieve map image you have to use [I can't believe it's not Valetudo](https://github.com/Hypfer/Icantbelieveitsnotvaletudo).
+To retrieve map image you have to use [Valetudo Vacuum Camera](https://github.com/sca075/valetudo_vacuum_camera/) custom integration made by [@sca075](https://github.com/sca075) (recommended; supports auto-calibration) or [I can't believe it's not Valetudo](https://github.com/Hypfer/Icantbelieveitsnotvaletudo) (not recommended; manual calibration required).
 
 ## Available templates
 
