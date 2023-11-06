@@ -11,6 +11,7 @@
                 "selection_type": "ROOM",
                 "repeats_type": "EXTERNAL",
                 "max_repeats": 3,
+                "id_type": "number"
                 "service_call_schema": {
                     "service": "mqtt.publish",
                     "evaluate_data_as_template": true,
