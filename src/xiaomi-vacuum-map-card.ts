@@ -994,7 +994,8 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private static adjustRoomId(roomId: string | number, config: MapMode): string | number {
         if (config.idType === "number") {
-            return +roomId;
+            const roomIdAsNumber = +roomId;
+            return isNaN(roomIdAsNumber) ? roomId : roomIdAsNumber;
         }
         return roomId;
     }
