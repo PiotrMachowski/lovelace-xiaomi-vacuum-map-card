@@ -6,9 +6,22 @@ This platform can be used to control vacuums flashed with Valetudo RE created by
 
 To reset a value for a given consumable press and hold a matching tile.
 
-## Calibration
+## Easey setup and compatible mode. 
+To render the vacuum maps, there is the [Valetudo Vacuum Camera](https://github.com/sca075/valetudo_vacuum_camera) from [@sca075](https://github.com/sca075), this camera offer the calibration points required from the card automatically, as well the rooms configuration when the vacuum offer it. Using this integration the configuration of the card will have:
 
-To retrieve calibration points from the vacuum use following config:
+```yaml
+map_source:
+  camera: true
+entity: vacuum.vacuum_rockrobo
+vacuum_platform: rand256/ValetudoRE
+internal_variables:
+  topic: valetudo/rockrobo
+```
+
+
+## Else Calibration using the vacuum add-on
+
+To retrieve calibration points from the vacuum using the available [valetudo-mapper](https://github.com/rand256/valetudo-mapper) please use the following config:
 ```yaml
 mqtt:
   sensor:
