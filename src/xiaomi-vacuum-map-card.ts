@@ -170,23 +170,47 @@ export class XiaomiVacuumMapCard extends LitElement {
     public static getStubConfig(hass: HomeAssistantFixed): XiaomiVacuumMapCardConfig | undefined {
         const entities = Object.keys(hass.states);
         const cameras = entities
-            .filter(e => e.substr(0, e.indexOf(".")) === "camera")
+            .filter(e => e.substring(0, e.indexOf(".")) === "camera")
             .filter(e => hass?.states[e].attributes["calibration_points"]);
-        const vacuums = entities.filter(e => e.substr(0, e.indexOf(".")) === "vacuum");
+        const mqtt_cam = entities
+            .filter(e => e.substring(0, e.indexOf(".")) === "camera")
+            .filter(e => hass?.states[e].attributes["vacuum_topic"]);
+        const vacuums = entities.filter(e => e.substring(0, e.indexOf(".")) === "vacuum");
         if (cameras.length === 0 || vacuums.length === 0) {
             return undefined;
         }
-        return {
-            type: "custom:" + CARD_CUSTOM_ELEMENT_NAME,
-            map_source: {
-                camera: cameras[0],
-            },
-            calibration_source: {
-                camera: true,
-            },
-            entity: vacuums[0],
-            vacuum_platform: PlatformGenerator.XIAOMI_MIIO_PLATFORM,
-        };
+        console.log("cameras:", cameras);
+        console.log("mqtt_cam:", mqtt_cam);
+        if (mqtt_cam.length > 0){  
+            const topicValue = mqtt_cam.map(cameraId => hass?.states[cameraId]?.attributes["vacuum_topic"]);
+            console.log("Topic Value:", topicValue);
+            return {
+                type: "custom:" + CARD_CUSTOM_ELEMENT_NAME,
+                map_source: {
+                    camera: cameras[0],
+                },
+                calibration_source: {
+                    camera: true,
+                },
+                entity: vacuums[0],
+                vacuum_platform: PlatformGenerator.XIAOMI_MIIO_PLATFORM,
+                internal_variables: {
+                    topic: topicValue[0]
+                }
+            };
+        } else {
+            return {
+                type: "custom:" + CARD_CUSTOM_ELEMENT_NAME,
+                map_source: {
+                    camera: cameras[0],
+                },
+                calibration_source: {
+                    camera: true,
+                },
+                entity: vacuums[0],
+                vacuum_platform: PlatformGenerator.XIAOMI_MIIO_PLATFORM,
+            };
+        }
     }
 
     public setConfig(config: XiaomiVacuumMapCardConfig): void {
@@ -463,6 +487,7 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _getAllAvailablePresets(): CardPresetConfig[] {
         const allPresets = this._getAllPresets();
+        console.log(allPresets)
         const available = allPresets.filter(
             p => (p.conditions?.length ?? 0) === 0 || areConditionsMet(p, this.internalVariables, this.hass),
         );
@@ -995,6 +1020,8 @@ export class XiaomiVacuumMapCard extends LitElement {
     private static adjustRoomId(roomId: string | number, config: MapMode): string | number {
         if (config.idType === "number") {
             return +roomId;
+            const roomIdAsNumber = +roomId;
+            return isNaN(roomIdAsNumber) ? roomId : roomIdAsNumber;
         }
         return roomId;
     }
