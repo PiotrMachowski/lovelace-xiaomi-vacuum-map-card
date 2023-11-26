@@ -1,6 +1,6 @@
 {
     "name": "xiaomi-vacuum-map-card",
-    "version": "v2.2.2",
+    "version": "2.2.3.beta.5",
     "description": "Xiaomi Vacuum Map Card",
     "keywords": [
         "home-assistant",
@@ -15,12 +15,13 @@
     "author": "Piotr Machowski <piotr.machowski.dev@gmail.com>",
     "license": "MIT",
     "dependencies": {
+        "change-perspective": "^1.0.1",
         "custom-card-helpers": "^1.9.0",
         "home-assistant-js-websocket": "^8.0.1",
         "lit": "^2.0.0",
         "pointer-tracker": "^2.4.0",
         "transformation-matrix": "^2.8.0",
-        "change-perspective": "^1.0.1"
+        "tslib": "^2.6.2"
     },
     "devDependencies": {
         "@babel/core": "^7.15.0",
@@ -43,8 +44,8 @@
         "rollup-plugin-node-resolve": "^5.2.0",
         "rollup-plugin-serve": "^1.1.0",
         "rollup-plugin-terser": "^7.0.2",
-        "rollup-plugin-typescript2": "^0.30.0",
-        "typescript": "^4.4.3"
+        "rollup-plugin-typescript2": "^0.31.0",
+        "typescript": "^4.9.5"
     },
     "scripts": {
         "start": "rollup -c rollup.config.dev.js --watch",
