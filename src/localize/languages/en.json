@@ -259,6 +259,7 @@
             "config_set": "Config set!\nOpen config editor to adjust it.",
             "config_set_failed": "Failed to update config.",
             "generate_rooms_config": "Generate rooms config",
+            "generate_zones_config": "Generate zones config",
             "copy_service_call": "Copy service call"
         },
         "alerts": {
