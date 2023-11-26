@@ -152,6 +152,18 @@ export class PlatformGenerator {
         return undefined;
     }
 
+    public static getPedefinedZonesTemplate(platform: string): string | undefined {
+        const platformTemplate = this.getPlatformTemplate(platform);
+        for (const templateName in platformTemplate.map_modes.templates) {
+            const template = platformTemplate.map_modes.templates[templateName];
+            if (template.selection_type === SelectionType[SelectionType.PREDEFINED_RECTANGLE]) {
+                console.log("got template:", templateName);
+                return templateName;
+            }
+        }
+        return undefined;
+    }
+
     public static getCalibration(platform: string | undefined): CalibrationPoint[] | undefined {
         return this.getPlatformTemplate(PlatformGenerator.getPlatformName(platform)).calibration_points;
     }
@@ -170,4 +182,5 @@ export class PlatformGenerator {
             } as unknown as PlatformTemplate)
         );
     }
+
 }
