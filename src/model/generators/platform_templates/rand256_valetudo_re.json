@@ -1,4 +1,7 @@
 {
+    "internal_variables": {
+        "topic": "topic"
+    },
     "map_modes": {
         "default_templates": [
             "vacuum_clean_zone",
@@ -8,6 +11,7 @@
             "vacuum_clean_segment": {
                 "name": "map_mode.vacuum_clean_segment",
                 "icon": "mdi:floor-plan",
+                "id_type": "number",
                 "selection_type": "ROOM",
                 "repeats_type": "EXTERNAL",
                 "max_repeats": 3,
@@ -41,7 +45,7 @@
             "vacuum_clean_zone_predefined": {
                 "name": "map_mode.vacuum_clean_zone_predefined",
                 "icon": "mdi:floor-plan",
-                "selection_type": "ROOM",
+                "selection_type": "PREDEFINED_RECTANGLE",
                 "repeats_type": "EXTERNAL",
                 "max_repeats": 3,
                 "service_call_schema": {
@@ -49,7 +53,7 @@
                     "evaluate_data_as_template": true,
                     "service_data": {
                         "topic": "[[topic]]/custom_command",
-                        "payload": "{\"command\": \"zoned_cleanup\",\"zone_ids\": [{%for s in ('[[selection]]')|from_json %}{ \"id\": \"{{s}}\", \"repeats\": [[repeats]]}{%if not loop.last%},{%endif%}{%endfor%}],\"afterCleaning\": \"{{ 'Base' if 'afterCleaning' in '[[afterCleaning]]' else '[[afterCleaning]]'}}\"}"
+                        "payload": "{\"command\": \"zoned_cleanup\",\"zone_coordinates\": [{%for s in ('[[selection]]')|from_json %}{ \"x1\": {{s[0]}}, \"y1\": {{s[1]}}, \"x2\": {{s[2]}}, \"y2\": {{s[3]}}, \"repeats\": [[repeats]]}{%if not loop.last%},{%endif%}{%endfor%}],\"afterCleaning\": \"{{ 'Base' if 'afterCleaning' in '[[afterCleaning]]' else '[[afterCleaning]]'}}\"}"
                     }
                 }
             },
@@ -72,7 +76,7 @@
                 "name": "map_mode.vacuum_goto_predefined",
                 "icon": "mdi:map-marker",
                 "max_selections": 1,
-                "selection_type": "ROOM",
+                "selection_type": "PREDEFINED_POINT",
                 "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "mqtt.publish",

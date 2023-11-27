@@ -1,4 +1,7 @@
 {
+    "internal_variables": {
+        "topic": "[[topic]]"
+    },
     "map_modes": {
         "default_templates": [
             "vacuum_clean_zone",
@@ -40,7 +43,7 @@
             "vacuum_clean_zone_predefined": {
                 "name": "map_mode.vacuum_clean_zone_predefined",
                 "icon": "mdi:floor-plan",
-                "selection_type": "ROOM",
+                "selection_type": "PREDEFINED_RECTANGLE",
                 "repeats_type": "EXTERNAL",
                 "max_repeats": 3,
                 "service_call_schema": {
@@ -71,7 +74,7 @@
                 "name": "map_mode.vacuum_goto_predefined",
                 "icon": "mdi:map-marker",
                 "max_selections": 1,
-                "selection_type": "ROOM",
+                "selection_type": "PREDEFINED_POINT",
                 "repeats_type": "NONE",
                 "service_call_schema": {
                     "service": "mqtt.publish",

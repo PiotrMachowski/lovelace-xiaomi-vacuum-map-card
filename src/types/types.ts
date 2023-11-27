@@ -211,6 +211,7 @@ export interface ConditionConfig {
     readonly attribute?: string;
     readonly value?: string;
     readonly value_not?: string;
+    readonly topic?: string;
 }
 
 export interface CalibrationPoint {
@@ -282,9 +283,22 @@ export interface MapExtractorRoom {
     readonly y: number | undefined;
 }
 
+export interface MapExtractorZone {
+    readonly zones: string | undefined;
+    readonly name: string | undefined;
+    readonly icon: string | undefined;
+    readonly x: number | undefined;
+    readonly y: number | undefined;
+}
+
 export interface RoomConfigEventData {
     readonly modeIndex: number;
     readonly rooms: Array<RoomConfig>;
+}
+
+export interface PredefinedZoneConfigEventData {
+    readonly modeIndex: number;
+    readonly zones: Array<PredefinedZoneConfig>;
 }
 
 export interface EntityConfig {
