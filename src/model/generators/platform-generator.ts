@@ -157,7 +157,6 @@ export class PlatformGenerator {
         for (const templateName in platformTemplate.map_modes.templates) {
             const template = platformTemplate.map_modes.templates[templateName];
             if (template.selection_type === SelectionType[SelectionType.PREDEFINED_RECTANGLE]) {
-                console.log("got template:", templateName);
                 return templateName;
             }
         }
@@ -182,5 +181,3 @@ export class PlatformGenerator {
             } as unknown as PlatformTemplate)
         );
     }
-
-}
