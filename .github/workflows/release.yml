@@ -10,14 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      
+
       - uses: actions/setup-node@v3
         with:
           node-version: 14
 
       - name: Build the file
         run: |
-          npm install
+          npm ci
           npm run build
 
       - name: Upload build result to release
