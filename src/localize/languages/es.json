@@ -250,7 +250,7 @@
             "camera": "Entidad de la cámara (requerido)",
             "vacuum_platform": "Plataforma de la aspiradora (requerido)",
             "map_locked": "Bloquear mapa (opcional)",
-            "two_finger_pan": "Mover con dos dedos (opcional)"
+            "two_finger_pan": "Mover con dos dedos (opcional)",
             "platforms_documentation": "Plataforma de documentación elegida ({0})",
             "selection": "Selección:",
             "copy": "Copiar",
