@@ -162,7 +162,8 @@
                 "silent": "安静",
                 "standard": "标准",
                 "medium": "强力",
-                "turbo": "MAX",
+                "Strong": "强力",
+                "turbo": "超强",
                 "auto": "自动",
                 "gentle": "轻柔"
             }
