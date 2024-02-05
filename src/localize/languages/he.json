@@ -164,7 +164,11 @@
                 "medium": "בינוני",
                 "turbo": "טורבו",
                 "auto": "אוטומט",
-                "gentle": "עדין"
+                "gentle": "עדין",
+                "quiet": "שקט",
+                "balanced": "מאוזן",
+                "max": "מקסימום",
+                "custom": "מותאם"
             }
         },
         "sensor_dirty_left": {
