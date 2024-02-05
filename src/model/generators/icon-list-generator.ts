@@ -56,13 +56,17 @@ export class IconListGenerator {
     private static _ICON_MAPPING = {
         Silent: "mdi:fan-remove",
         Basic: "mdi:fan-speed-1",
+        Balanced: "mdi:fan-speed-1",
         Standard: "mdi:fan-speed-1",
         Strong: "mdi:fan-speed-2",
         Medium: "mdi:fan-speed-2",
         "Full Speed": "mdi:fan-speed-3",
         Turbo: "mdi:fan-speed-3",
+        Max: "mdi:fan-speed-3",
         Auto: "mdi:fan-auto",
         Gentle: "mdi:waves",
+        Quiet: "mdi:waves",
+        Custom: "mdi:waves",
     };
 
     public static async generate(
