@@ -209,3 +209,93 @@ This platform can be used to control vacuums connected to Home Assistant using D
   https://user-images.githubusercontent.com/6118709/141666923-965679e9-25fb-44cd-be08-fc63e5c85ce0.mp4
 
   </details>
+
+
+* ### Going to a specified point (`vacuum_goto`)
+
+  Uses a pair of coordinates for vacuum to get to a user-specified point.
+
+  Used service: `dreame_vacuum.vacuum_goto`
+
+  <details>
+  <summary>Example configuration</summary>
+  
+  ```yaml
+  map_modes:
+    - template: vacuum_goto
+  ```
+  
+  </details>
+  <details>
+  <summary>Example video</summary>
+
+    https://user-images.githubusercontent.com/6118709/141666921-2f3d66da-6ffc-492a-8439-625da97651bd.mp4
+
+  </details>
+
+* ### Going to a predefined point (`vacuum_goto_predefined`)
+
+  Uses a pair of coordinates for vacuum to go to a point that has been defined in the configuration. Requires `predefined_selections` to be provided.
+  
+  [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
+
+  Used service: `dreame_vacuum.vacuum_goto`
+
+  <details>
+  <summary>Example configuration</summary>
+  
+  ```yaml
+  map_modes:
+    - template: vacuum_goto_predefined
+      predefined_selections:
+        - position: [ 2800, 2036 ]
+          label:
+            text: "Emptying"
+            x: 2800
+            y: 2803
+            offset_y: 35
+          icon:
+            name: "mdi:broom"
+            x: 2800
+            y: 2803
+        - position: [ 3214, 2628 ]
+          label:
+            text: "Sofa"
+            x: 3214
+            y: 2628
+            offset_y: 35
+          icon:
+            name: "mdi:sofa"
+            x: 3214
+            y: 2628
+  ```
+  
+  </details>
+  <details>
+  <summary>Example video</summary>
+
+    https://user-images.githubusercontent.com/6118709/141666923-965679e9-25fb-44cd-be08-fc63e5c85ce0.mp4
+
+  </details>
+
+* ### Following a specified path (`vacuum_follow_path`)
+
+  Uses a list of points to make a vacuum follow a user-defined path. 
+
+  Used service: `dreame_vacuum.vacuum_follow_path`
+
+  <details>
+  <summary>Example configuration</summary>
+  
+  ```yaml
+  map_modes:
+    - template: vacuum_follow_path
+  ```
+  
+  </details>
+  <details>
+  <summary>Example video</summary>
+
+    https://user-images.githubusercontent.com/6118709/141666931-48d1717f-96d0-461d-84f4-788c071f3a78.mp4
+
+  </details>
