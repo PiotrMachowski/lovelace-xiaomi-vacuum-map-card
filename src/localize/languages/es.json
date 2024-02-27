@@ -7,7 +7,7 @@
         "old_configuration_migration_link": "Guía de migrado."
     },
     "map_mode": {
-        "invalid": "Plantilla no válida!",
+        "invalid": "¡Plantilla no válida!",
         "vacuum_goto": "Marcar e ir",
         "vacuum_goto_predefined": "Puntos",
         "vacuum_clean_segment": "Habitaciones",
@@ -185,10 +185,36 @@
         "cleaned_area": {
             "label": "Área limpiada"
         },
+        "total_cleaned_area": {
+            "label": "Área total limpiada"
+        },
         "cleaning_time": {
             "label": "Tiempo de limpieza"
         },
+        "total_cleaning_time": {
+            "label": "Tiempo de limpieza total"
+        },
         "mop_left": {
+            "label": "Mopa"
+        },
+        "bin_full": {
+            "label": "Contenedor lleno",
+            "value": {
+                "true": "Si",
+                "false": "No"
+            }
+        },
+        "bin_present": {
+            "label": "Contenedor presente",
+            "value": {
+                "true": "Si",
+                "false": "No"
+            }
+        },
+        "water_volume": {
+            "label": "Volúmen de agua"
+        },
+        "mop_pad_humidity": {
             "label": "Mopa"
         }
     },
@@ -224,7 +250,19 @@
             "camera": "Entidad de la cámara (requerido)",
             "vacuum_platform": "Plataforma de la aspiradora (requerido)",
             "map_locked": "Bloquear mapa (opcional)",
-            "two_finger_pan": "Mover con dos dedos (opcional)"
+            "two_finger_pan": "Mover con dos dedos (opcional)",
+            "platforms_documentation": "Plataforma de documentación elegida ({0})",
+            "selection": "Selección:",
+            "copy": "Copiar",
+            "copied": "¡Copiado!",
+            "set_static_config": "Generar configuración estática",
+            "config_set": "¡Configuración establecida!\nAbre el editor de configuración para ajustarla.",
+            "config_set_failed": "Error al actualizar la configuración.",
+            "generate_rooms_config": "Generar la configuración de habitaciones",
+            "copy_service_call": "Copiar la llamada al servicio"
+        },
+        "alerts": {
+            "set_static_config": "Sólo se debe utilizar esta función si desea ajustar la configuración generada automáticamente..\n¿Continuar?"
         }
     }
 }
