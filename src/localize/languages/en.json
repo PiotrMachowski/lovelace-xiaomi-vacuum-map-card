@@ -160,11 +160,15 @@
             "label": "Fan speed",
             "value": {
                 "silent": "Silent",
+                "quiet": "Quiet",
+                "gentle": "Gentle",
                 "standard": "Standard",
+                "balanced": "Balanced",
                 "medium": "Medium",
                 "turbo": "Turbo",
+                "max": "Max",
                 "auto": "Auto",
-                "gentle": "Gentle"
+                "custom": "Custom"
             }
         },
         "sensor_dirty_left": {

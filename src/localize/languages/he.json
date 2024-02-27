@@ -159,12 +159,16 @@
         "fan_speed": {
             "label": "מהירות מאוורר",
             "value": {
-                "silent": "שקט",
+                "silent": "חרישי",
+                "quiet": "שקט",
+                "gentle": "עדין",
                 "standard": "סטנדרט",
+                "balanced": "מאוזן",
                 "medium": "בינוני",
                 "turbo": "טורבו",
+                "max": "מקסימום",
                 "auto": "אוטומט",
-                "gentle": "עדין"
+                "custom": "מותאם"
             }
         },
         "sensor_dirty_left": {
