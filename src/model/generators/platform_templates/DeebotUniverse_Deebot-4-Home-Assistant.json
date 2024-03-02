@@ -173,5 +173,8 @@
                 "y": 1
             }
         }
-    ]
+    ],
+    "internal_variables": {
+        "svgmap": "true"
+    }
 }

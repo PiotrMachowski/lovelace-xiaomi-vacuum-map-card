@@ -285,13 +285,16 @@ export class XiaomiVacuumMapCard extends LitElement {
                  margin-bottom: ${(preset.map_source.crop?.bottom ?? 0) * -1}px;
                  margin-left: ${(preset.map_source.crop?.left ?? 0) * -1}px;
                  margin-right: ${(preset.map_source.crop?.right ?? 0) * -1}px;">
-                <object id="map-object" data="${mapSrc}" style="display: none;" @load="${() => this._updateImageSize()}"></object>
+                ${conditional(
+                    this._isSvgMapImage(),
+                    () => html`<object id="map-object" data="${mapSrc}" width="0" height="0" type="image/svg+xml" @load="${() => this._updateImageSizeAndScale()}"></object>`
+                )}
                 <img 
                     id="map-image"
                     alt="camera_image"
                     class="${this.mapScale * this.realScale > 1 ? "zoomed" : ""}"
                     src="${mapSrc}"
-                    @load="${() => this._updateImageSize()}"
+                    @load="${() => this._updateImageSizeAndScale()}"
                     />
                 <div id="map-image-overlay">
                     <svg
@@ -1219,6 +1222,10 @@ export class XiaomiVacuumMapCard extends LitElement {
         return true;
     }
 
+    private _isSvgMapImage(): boolean {
+        return !!this.internalVariables['svgmap'];
+    }
+
     private _updateSvgImageSize(): void {
         const mapObject = this._getMapObject();
 
@@ -1237,6 +1244,15 @@ export class XiaomiVacuumMapCard extends LitElement {
         this.realImageWidth = viewBoxRect.width;
     }
 
+    private _updateSimpleImageSize(): void {
+        const mapImage = this._getMapImage();
+
+        if (mapImage && mapImage.naturalWidth > 0) {
+            this.realImageWidth = mapImage.naturalWidth;
+            this.realImageHeight = mapImage.naturalHeight;
+        }
+    }
+
     private _getOffset(): Point | undefined {
         if (this.mapViewBox === undefined || (this.mapViewBox.x === 0 && this.mapViewBox.y === 0)) {
             return undefined;
@@ -1244,14 +1260,11 @@ export class XiaomiVacuumMapCard extends LitElement {
         return {x: -this.mapViewBox.x, y: -this.mapViewBox.y}
     }
 
-    private _updateImageSize(): void {
-        const mapImage = this._getMapImage();
-
-        if (mapImage.naturalWidth > 0) {
-            this.realImageWidth = mapImage.naturalWidth;
-            this.realImageHeight = mapImage.naturalHeight;
-        } else {
+    private _updateImageSizeAndScale(): void {
+        if (this._isSvgMapImage()) {
             this._updateSvgImageSize();
+        } else {
+            this._updateSimpleImageSize();
         }
 
         this._calculateBasicScale();
@@ -1260,7 +1273,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     private _calculateBasicScale(): void {
         const mapImage = this._getMapImage();
 
-        if (mapImage.offsetWidth && this.realImageWidth) {
+        if (mapImage && mapImage.offsetWidth && this.realImageWidth) {
             this.realScale = mapImage.offsetWidth / this.realImageWidth;
         } else {
             this.realScale = 1;
