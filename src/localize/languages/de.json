@@ -197,7 +197,7 @@
             "label": "Gesamte Reinigungszeit"
         },
         "mop_left": {
-            "label": "Wischblatt links"
+            "label": "Wischblatt verbleibend"
         },
         "bin_full": {
             "label": "Behälter voll",
