@@ -827,7 +827,7 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _isInEditor(): boolean {
         function isInEditor(e: Element): boolean {
-            return e.parentElement?.tagName?.toLowerCase() === "hui-card-preview"
+            return (e.parentElement?.tagName?.toLowerCase() === "hui-card" && "preview" in (e.parentElement?.attributes ?? []))
                 || e.parentElement != null && isInEditor(e.parentElement)
                 || e.parentNode?.toString() == "[object ShadowRoot]" && isInEditor((e.getRootNode() as ShadowRoot).host);
         }
