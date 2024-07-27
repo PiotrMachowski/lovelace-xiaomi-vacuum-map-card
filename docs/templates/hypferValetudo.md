@@ -139,6 +139,7 @@ To retrieve map image you have to use [MQTT Vacuum Camera](https://github.com/sc
   ```yaml
   map_modes:
     - template: vacuum_clean_zone_predefined
+      selection_type: PREDEFINED_RECTANGLE
       predefined_selections:
         - zones: [[ 21485, 28767, 24236, 32131 ], [ 23217, 27379, 24216, 28737 ]]
           label:
