@@ -212,10 +212,10 @@
             }
         },
         "water_volume": {
-            "label": "Množství vody vody"
+            "label": "Množství vody"
         },
         "mop_pad_humidity": {
-            "label": "Mop pad"
+            "label": "Vlhkost mopu"
         }
     },
     "icon": {
@@ -242,7 +242,7 @@
         "description": {
             "before_link": "Tento editor podporuje pouze základní konfiguraci s použitím entity kamera vytvořené pomocí ",
             "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": ". Pro pokročilá nastavení použijte YAML editor kódu."
+            "after_link": ". Pro pokročilá nastavení použijte editor kódu."
         },
         "label": {
             "name": "Titulek (volitelná položka)",
