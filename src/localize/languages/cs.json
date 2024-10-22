@@ -205,7 +205,7 @@
             }
         },
         "bin_present": {
-            "label": "Odpadní nádoba přítomna",
+            "label": "Odpadní nádoba vložena",
             "value": {
                 "true": "Ano",
                 "false": "Ne"
