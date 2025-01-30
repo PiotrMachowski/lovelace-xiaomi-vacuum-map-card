@@ -311,19 +311,19 @@ Examples:
   menu_id: "water_box_mode",
   icon_id: "water_box_mode",
   entity: "select.water_box_mode"
-  available_values_attribute: "options",
+  available_values_attribute: "options"
   icon: "mdi:water",
   icon_mapping:
-      off: "mdi:water-remove",
-      mild: "mdi:water-minus",
-      moderate: "mdi:water",
-      intense: "mdi:water-plus",
+      off: "mdi:water-remove"
+      mild: "mdi:water-minus"
+      moderate: "mdi:water"
+      intense: "mdi:water-plus"
       custom: "mdi:water-sync"
   tap_action:
-      action: "call-service",
-      service: "select.select_option",
+      action: "call-service"
+      service: "select.select_option"
       service_data:
-          option: "[[value]]",
+          option: "[[value]]"
           entity_id: "[[entity_id]]"
   ```
 
