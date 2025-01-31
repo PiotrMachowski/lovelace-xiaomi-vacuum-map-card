@@ -33,7 +33,7 @@
                     "evaluate_data_as_template": true,
                     "service_data": {
                         "topic": "[[topic]]/ZoneCleaningCapability/start/set",
-                        "payload": "{\"zones\": [{%for s in ('[[selection]]')|from_json %}{ \"points\": {\"pA\": { \"x\": {{s[0]}}, \"y\": {{s[1]}} }, \"pB\": { \"x\": {{s[2]}}, \"y\": {{s[1]}} }, \"pC\": { \"x\": {{s[2]}}, \"y\": {{s[3]}} }, \"pD\": { \"x\": {{s[0]}}, \"y\": {{s[3]}} } }, \"iterations\": [[repeats]]}{%if not loop.last%},{%endif%}{%endfor%}]}"
+                        "payload": "{\"zones\": [{%for s in ('[[selection]]')|from_json %}{ \"points\": {\"pA\": { \"x\": {{s[0]}}, \"y\": {{s[1]}} }, \"pB\": { \"x\": {{s[2]}}, \"y\": {{s[1]}} }, \"pC\": { \"x\": {{s[2]}}, \"y\": {{s[3]}} }, \"pD\": { \"x\": {{s[0]}}, \"y\": {{s[3]}} } } }{%if not loop.last%},{%endif%}{%endfor%}], \"iterations\": [[repeats]]}"
                     }
                 }
             },
@@ -48,7 +48,7 @@
                     "evaluate_data_as_template": true,
                     "service_data": {
                         "topic": "[[topic]]/ZoneCleaningCapability/start/set",
-                        "payload": "{\"zones\": [{%for s in ('[[selection]]')|from_json %}{ \"points\": {\"pA\": { \"x\": {{s[0]}}, \"y\": {{s[1]}} }, \"pB\": { \"x\": {{s[2]}}, \"y\": {{s[1]}} }, \"pC\": { \"x\": {{s[2]}}, \"y\": {{s[3]}} }, \"pD\": { \"x\": {{s[0]}}, \"y\": {{s[3]}} } }, \"iterations\": [[repeats]]}{%if not loop.last%},{%endif%}{%endfor%}]}"
+                        "payload": "{\"zones\": [{%for s in ('[[selection]]')|from_json %}{ \"points\": {\"pA\": { \"x\": {{s[0]}}, \"y\": {{s[1]}} }, \"pB\": { \"x\": {{s[2]}}, \"y\": {{s[1]}} }, \"pC\": { \"x\": {{s[2]}}, \"y\": {{s[3]}} }, \"pD\": { \"x\": {{s[0]}}, \"y\": {{s[3]}} } } }{%if not loop.last%},{%endif%}{%endfor%}], \"iterations\": [[repeats]]}"
                     }
                 }
             },
