@@ -1,0 +1,268 @@
+{
+  "common": {
+      "version": "Versija",
+      "invalid_configuration": "Nederīga konfigurācija {0}",
+      "description": "Karte, ar kuras palīdzību jūs varat kontrolēt vakuumu, izmantojot karti",
+      "old_configuration": "Konstatēta veca konfigurācija. Pielāgojiet savu konfigurāciju jaunākajai shēmai vai izveidojiet jaunu karti no nulles.",
+      "old_configuration_migration_link": "Migrācijas ceļvedis"
+  },
+  "map_mode": {
+      "invalid": "Nederīga veidne!",
+      "vacuum_goto": "Pin & Go",
+      "vacuum_goto_predefined": "Punkti",
+      "vacuum_clean_segment": "Istabas",
+      "vacuum_clean_point": "Tīrīšanas punkts",
+      "vacuum_clean_point_predefined": "Punkti",
+      "vacuum_clean_zone": "Zonas tīrīšana",
+      "vacuum_clean_zone_predefined": "Zonu saraksts",
+      "vacuum_follow_path": "Ceļš"
+  },
+  "validation": {
+      "preset": {
+          "entity": {
+              "missing": "Trūkst īpašības: entity"
+          },
+          "preset_name": {
+              "missing": "Trūkst īpašības: preset_name"
+          },
+          "platform": {
+              "invalid": "Nederīga vakuuma platforma: {0}"
+          },
+          "map_source": {
+              "missing": "Trūkst īpašības: map_source",
+              "none_provided": "Nav nodrošināta ne kamera, ne attēls",
+              "ambiguous": "Atļauts tikai viens kartes avots"
+          },
+          "calibration_source": {
+              "missing": "Trūkst īpašības: calibration_source",
+              "ambiguous": "Atļauts tikai viens kalibrēšanas avots",
+              "none_provided": "Nav nodrošināts kalibrēšanas avots",
+              "calibration_points": {
+                  "invalid_number": "Nepieciešami tieši 3 vai 4 kalibrēšanas punkti",
+                  "missing_map": "Katram kalibrēšanas punktam jāietver kartes koordinātas",
+                  "missing_vacuum": "Katram kalibrēšanas punktam jāietver vakuuma koordinātas",
+                  "missing_coordinate": "Kartes un vakuuma kalibrēšanas punktiem jāietver gan x, gan y koordinātas"
+              }
+          },
+          "icons": {
+              "invalid": "Konfigurācijas kļūda: ikonas",
+              "icon": {
+                  "missing": "Katram ikonu saraksta ierakstam jāietver ikonas īpašība"
+              }
+          },
+          "tiles": {
+              "invalid": "Konfigurācijas kļūda: flīzes",
+              "entity": {
+                  "missing": "Katram flīžu saraksta ierakstam jāietver entity vai iekšējais mainīgais"
+              },
+              "label": {
+                  "missing": "Katram flīžu saraksta ierakstam jāietver etiķete"
+              }
+          },
+          "map_modes": {
+              "invalid": "Konfigurācijas kļūda: kartes režīmi",
+              "icon": {
+                  "missing": "Trūkst kartes režīma ikonas"
+              },
+              "name": {
+                  "missing": "Trūkst kartes režīma nosaukuma"
+              },
+              "template": {
+                  "invalid": "Nederīga veidne: {0}"
+              },
+              "predefined_selections": {
+                  "not_applicable": "Režīms {0} neatbalsta iepriekš definētas atlases",
+                  "zones": {
+                      "missing": "Trūkst zonu konfigurācijas",
+                      "invalid_parameters_number": "Katrai zonai jābūt 4 parametriem"
+                  },
+                  "points": {
+                      "position": {
+                          "missing": "Trūkst punktu konfigurācijas",
+                          "invalid_parameters_number": "Katram punktam jābūt 2 parametriem"
+                      }
+                  },
+                  "rooms": {
+                      "id": {
+                          "missing": "Trūkst istabas ID",
+                          "invalid_format": "Nederīgs istabas ID: {0}"
+                      },
+                      "outline": {
+                          "invalid_parameters_number": "Katram istabas kontūras punktam jābūt 2 parametriem"
+                      }
+                  },
+                  "label": {
+                      "x": {
+                          "missing": "Etiķetei jābūt x īpašībai"
+                      },
+                      "y": {
+                          "missing": "Etiķetei jābūt y īpašībai"
+                      },
+                      "text": {
+                          "missing": "Etiķetei jābūt tekstam"
+                      }
+                  },
+                  "icon": {
+                      "x": {
+                          "missing": "Ikonai jābūt x īpašībai"
+                      },
+                      "y": {
+                          "missing": "Ikonai jābūt y īpašībai"
+                      },
+                      "name": {
+                          "missing": "Ikonai jābūt nosaukumam"
+                      }
+                  }
+              },
+              "service_call_schema": {
+                  "missing": "Trūkst pakalpojuma izsaukuma shēmas",
+                  "service": {
+                      "missing": "Pakalpojuma izsaukuma shēmai jāietver pakalpojums",
+                      "invalid": "Nederīgs pakalpojums: {0}"
+                  }
+              }
+          }
+      },
+      "invalid_entities": "Nederīgas vienības:",
+      "invalid_calibration": "Nederīga kalibrēšana, lūdzu, pārbaudiet savu konfigurāciju"
+  },
+  "tile": {
+      "status": {
+          "label": "Statuss",
+          "value": {
+              "starting": "Sākums",
+              "charger disconnected": "Lādētājs atvienots",
+              "idle": "Gaida",
+              "remote control active": "Tālvadība aktīva",
+              "cleaning": "Tīrīšana",
+              "returning home": "Atgriežas mājās",
+              "manual mode": "Manuālais režīms",
+              "charging": "Uzlāde",
+              "charging problem": "Uzlādes problēma",
+              "paused": "Pauzēts",
+              "spot cleaning": "Vietas tīrīšana",
+              "error": "Kļūda",
+              "shutting down": "Izslēgšana",
+              "updating": "Atjaunināšana",
+              "docking": "Dokēšana",
+              "going to target": "Dodoties uz mērķi",
+              "zoned cleaning": "Zonu tīrīšana",
+              "segment cleaning": "Segmentu tīrīšana",
+              "emptying the bin": "Tvertnes iztukšošana",
+              "charging complete": "Uzlāde pabeigta",
+              "device offline": "Ierīce bezsaistē"
+          }
+      },
+      "battery_level": {
+          "label": "Akumulators"
+      },
+      "fan_speed": {
+          "label": "Ventilatora ātrums",
+          "value": {
+              "silent": "Kluss",
+              "standard": "Standarts",
+              "medium": "Vidējs",
+              "turbo": "Turbo",
+              "auto": "Automātisks",
+              "gentle": "Maigs"
+          }
+      },
+      "sensor_dirty_left": {
+          "label": "Sensori pa kreisi"
+      },
+      "filter_left": {
+          "label": "Filtrs pa kreisi"
+      },
+      "main_brush_left": {
+          "label": "Galvenā birste pa kreisi"
+      },
+      "side_brush_left": {
+          "label": "Sānu birste pa kreisi"
+      },
+      "cleaning_count": {
+          "label": "Tīrīšanas skaits"
+      },
+      "cleaned_area": {
+          "label": "Tīrītā platība"
+      },
+      "total_cleaned_area": {
+          "label": "Kopējā tīrītā platība"
+      },
+      "cleaning_time": {
+          "label": "Tīrīšanas laiks"
+      },
+      "total_cleaning_time": {
+          "label": "Kopējais tīrīšanas laiks"
+      },
+      "mop_left": {
+          "label": "Mops pa kreisi"
+      },
+      "bin_full": {
+          "label": "Tvertne pilna",
+          "value": {
+              "true": "Jā",
+              "false": "Nē"
+          }
+      },
+      "bin_present": {
+          "label": "Tvertne klāt",
+          "value": {
+              "true": "Jā",
+              "false": "Nē"
+          }
+      },
+      "water_volume": {
+          "label": "Ūdens tilpums"
+      },
+      "mop_pad_humidity": {
+          "label": "Mopa spilventiņa mitrums"
+      }
+  },
+  "icon": {
+      "vacuum_start": "Sākt",
+      "vacuum_pause": "Pauze",
+      "vacuum_stop": "Apturēt",
+      "vacuum_return_to_base": "Atgriezties bāzē",
+      "vacuum_clean_spot": "Tīrīt vietu",
+      "vacuum_locate": "Atrast",
+      "vacuum_set_fan_speed": "Mainīt ventilatora ātrumu"
+  },
+  "unit": {
+      "hour_shortcut": "st",
+      "meter_shortcut": "m",
+      "meter_squared_shortcut": "m²",
+      "minute_shortcut": "min"
+  },
+  "popups": {
+      "success": "Veiksmīgi!",
+      "no_selection": "Nav izvēlēts",
+      "failed": "Neizdevās izsaukt pakalpojumu"
+  },
+  "editor": {
+      "description": {
+          "before_link": "Šis vizuālais redaktors atbalsta tikai pamata konfigurāciju ar kameru, kas izveidota, izmantojot ",
+          "link_text": "Xiaomi Cloud Map Extractor",
+          "after_link": ". Lai veiktu sarežģītāku iestatīšanu, izmantojiet YAML režīmu."
+      },
+      "label": {
+          "name": "Nosaukums (pēc izvēles)",
+          "entity": "Vakuuma vienība (obligāti)",
+          "camera": "Kameras vienība (obligāti)",
+          "vacuum_platform": "Vakuuma platforma (obligāti)",
+          "map_locked": "Karte bloķēta (pēc izvēles)",
+          "two_finger_pan": "Divu pirkstu panoramēšana (pēc izvēles)",
+          "platforms_documentation": "Izvēlētās platformas dokumentācija ({0})",
+          "selection": "Izvēle:",
+          "copy": "Kopēt",
+          "copied": "Nokopēts!",
+          "set_static_config": "Ģenerēt statisko konfigurāciju",
+          "config_set": "Konfigurācija iestatīta!\nAtveriet konfigurācijas redaktoru, lai to pielāgotu.",
+          "config_set_failed": "Neizdevās atjaunināt konfigurāciju.",
+          "generate_rooms_config": "Ģenerēt istabu konfigurāciju",
+          "copy_service_call": "Kopēt pakalpojuma izsaukumu"
+      },
+      "alerts": {
+          "set_static_config": "Šo funkcionalitāti vajadzētu izmantot tikai tad, ja vēlaties manuāli pielāgot automātiski ģenerēto konfigurāciju.\nTurpināt?"
+      }
+  }
+}

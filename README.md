@@ -792,6 +792,7 @@ Currently, this card contains translations for following languages:
 * `hu` - Hungarian (Magyar)
 * `is` - Icelandic (Íslenska)
 * `it` - Italian (Italiano)
+* `lv` - Latvian (Latviešu)
 * `nb-NO` - Norwegian Bokmål (Norsk bokmål)
 * `nl` - Dutch (Nederlands)
 * `pl` - Polish (Polski)
