@@ -1,3 +1,4 @@
+import * as bg from "./languages/bg.json";
 import * as ca from "./languages/ca.json";
 import * as cs from "./languages/cs.json";
 import * as da from "./languages/da.json";
@@ -32,6 +33,7 @@ import { computeStateDisplay } from "./hass/compute_state_display";
 import { computeAttributeValueDisplay } from "./hass/compute_attribute_display";
 
 const languages: Record<string, unknown> = {
+    bg: bg,
     ca: ca,
     cs: cs,
     da: da,

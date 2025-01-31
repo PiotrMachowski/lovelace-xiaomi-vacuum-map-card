@@ -1,0 +1,268 @@
+{
+    "common": {
+        "version": "Версия",
+        "invalid_configuration": "Невалидна конфигурация {0}",
+        "description": "Контролирайте робота си от карта",
+        "old_configuration": "Намерена е стара конфигурация. Променете конфигурацията с последните промени или започнете с нова карта.",
+        "old_configuration_migration_link": "Инструкции за миграция"
+    },
+    "map_mode": {
+        "invalid": "Невалиден шаблон!",
+        "vacuum_goto": "Точка & старт",
+        "vacuum_goto_predefined": "Точки",
+        "vacuum_clean_segment": "Стаи",
+        "vacuum_clean_point": "Почистване на точка",
+        "vacuum_clean_point_predefined": "Точки",
+        "vacuum_clean_zone": "Почистване на зона",
+        "vacuum_clean_zone_predefined": "Списък зони",
+        "vacuum_follow_path": "Път"
+    },
+    "validation": {
+        "preset": {
+            "entity": {
+                "missing": "Липсващо свойство: entity"
+            },
+            "preset_name": {
+                "missing": "Липсващо свойство: preset_name"
+            },
+            "platform": {
+                "invalid": "Невалидна платформа (vacuum platform): {0}"
+            },
+            "map_source": {
+                "missing": "Липсващо свойство: map_source",
+                "none_provided": "Не е предоставена камера или снимка",
+                "ambiguous": "Позволен е само един източник на карта"
+            },
+            "calibration_source": {
+                "missing": "Липсващо свойство: calibration_source",
+                "ambiguous": "Позволен е само един източник на калибриране",
+                "none_provided": "Не е намерен източник на калибриране",
+                "calibration_points": {
+                    "invalid_number": "Необходими са точно 3 или 4 източника на калибриране",
+                    "missing_map": "Всяка точка за калибриране трябва да притежава координати от картата",
+                    "missing_vacuum": "Всяка точка за калибриране трябва да притежава координати от робота",
+                    "missing_coordinate": "Точките за калибриране на карта и робот трябва да имат x и y координата"
+                }
+            },
+            "icons": {
+                "invalid": "Грешка в конфигурацията: icons",
+                "icon": {
+                    "missing": "Всеки запис от лист icons трябва да има свойство icon"
+                }
+            },
+            "tiles": {
+                "invalid": "Грешка в конфигурацията: tiles",
+                "entity": {
+                    "missing": "Всеки запис от лист tiles трябва да има свойство entity или internal variable"
+                },
+                "label": {
+                    "missing": "Всеки запис от лист tiles трябва да има свойство label"
+                }
+            },
+            "map_modes": {
+                "invalid": "Грешка в конфигурацията: map_modes",
+                "icon": {
+                    "missing": "Липсва икона за map mode"
+                },
+                "name": {
+                    "missing": "Липсва name за map mode"
+                },
+                "template": {
+                    "invalid": "Невалиден шаблон: {0}"
+                },
+                "predefined_selections": {
+                    "not_applicable": "Режим {0} не подържа предварително зададени селекции",
+                    "zones": {
+                        "missing": "Липсва конфигурация за зони",
+                        "invalid_parameters_number": "Всяка зона трябва да има 4 параметъра"
+                    },
+                    "points": {
+                        "position": {
+                            "missing": "Липсва конфигурация за точки",
+                            "invalid_parameters_number": "Всяка точка трябва да има 2 параметъра"
+                        }
+                    },
+                    "rooms": {
+                        "id": {
+                            "missing": "Липсва id на стая",
+                            "invalid_format": "Невалидно room id: {0}"
+                        },
+                        "outline": {
+                            "invalid_parameters_number": "Всяка точка от контура на стаята трябва да има 2 параметъра"
+                        }
+                    },
+                    "label": {
+                        "x": {
+                            "missing": "Label трябва да има свойство x"
+                        },
+                        "y": {
+                            "missing": "Label трябва да има свойство y"
+                        },
+                        "text": {
+                            "missing": "Label трябва да има свойство text"
+                        }
+                    },
+                    "icon": {
+                        "x": {
+                            "missing": "Icon трябва да има свойство x"
+                        },
+                        "y": {
+                            "missing": "Icon трябва да има свойство y"
+                        },
+                        "name": {
+                            "missing": "Icon трябва да има свойство name"
+                        }
+                    }
+                },
+                "service_call_schema": {
+                    "missing": "Липсва схема за service call",
+                    "service": {
+                        "missing": "Service call трябва да съдържа service",
+                        "invalid": "Невалиден service: {0}"
+                    }
+                }
+            }
+        },
+        "invalid_entities": "Невалидни обекти:",
+        "invalid_calibration": "Невалидно калибриране, проверете конфигурацията"
+    },
+    "tile": {
+        "status": {
+            "label": "Статус",
+            "value": {
+                "starting": "Стартиране",
+                "charger disconnected": "Изключен от зарядно",
+                "idle": "Неактивен",
+                "remote control active": "Дистанционното управление е активно",
+                "cleaning": "Почистване",
+                "returning home": "Прибиране",
+                "manual mode": "Ръчен режим",
+                "charging": "Зареждане",
+                "charging problem": "Проблем със зареждане",
+                "paused": "Прекъснат",
+                "spot cleaning": "Почистване на точка",
+                "error": "Грешка",
+                "shutting down": "Изключване",
+                "updating": "В процес на ъпдейт",
+                "docking": "Прибиране",
+                "going to target": "Отиване до цел",
+                "zoned cleaning": "Зоново почистване",
+                "segment cleaning": "Почистване на стая",
+                "emptying the bin": "Изпразване на кош",
+                "charging complete": "Зареждането приключи",
+                "device offline": "Устройство неактивно"
+            }
+        },
+        "battery_level": {
+            "label": "Батерия"
+        },
+        "fan_speed": {
+            "label": "Режим",
+            "value": {
+                "silent": "Тих",
+                "standard": "Стандартен",
+                "medium": "Среден",
+                "turbo": "Turbo",
+                "auto": "Автоматичен",
+                "gentle": "Нежен"
+            }
+        },
+        "sensor_dirty_left": {
+            "label": "Оставащ живот на сензор"
+        },
+        "filter_left": {
+            "label": "Оставащ живот на филтър"
+        },
+        "main_brush_left": {
+            "label": "Оставащ живот на основна четка"
+        },
+        "side_brush_left": {
+            "label": "Оставащ живот на странична четка"
+        },
+        "cleaning_count": {
+            "label": "Брой почиствания"
+        },
+        "cleaned_area": {
+            "label": "Почистена площ"
+        },
+        "total_cleaned_area": {
+            "label": "Общо почистена площ"
+        },
+        "cleaning_time": {
+            "label": "Време за почистване"
+        },
+        "total_cleaning_time": {
+            "label": "Общо време за почистване"
+        },
+        "mop_left": {
+            "label": "Оставащ живот на парцал"
+        },
+        "bin_full": {
+            "label": "Пълен кош",
+            "value": {
+                "true": "Да",
+                "false": "Не"
+            }
+        },
+        "bin_present": {
+            "label": "Кош наличен",
+            "value": {
+                "true": "Да",
+                "false": "Не"
+            }
+        },
+        "water_volume": {
+            "label": "Количество вода"
+        },
+        "mop_pad_humidity": {
+            "label": "Подложка с парцал"
+        }
+    },
+    "icon": {
+        "vacuum_start": "Старт",
+        "vacuum_pause": "Пауза",
+        "vacuum_stop": "Стоп",
+        "vacuum_return_to_base": "Връшане",
+        "vacuum_clean_spot": "Изчистване на точка",
+        "vacuum_locate": "Намиране",
+        "vacuum_set_fan_speed": "Проняна на скоростта"
+    },
+    "unit": {
+        "hour_shortcut": "h",
+        "meter_shortcut": "m",
+        "meter_squared_shortcut": "m²",
+        "minute_shortcut": "min"
+    },
+    "popups": {
+        "success": "Успех!",
+        "no_selection": "Не е предоставена селекция",
+        "failed": "Неуспех при повикване на service"
+    },
+    "editor": {
+        "description": {
+            "before_link": "Този визуален редактор поддържа само основна конфигурация с обект камера, създаден с помощта на ",
+            "link_text": "Xiaomi Cloud Map Extractor",
+            "after_link": ". За подробни настройки използвайте режима YAML."
+        },
+        "label": {
+            "name": "Заглавие (по избор)",
+            "entity": "Vacuum обект (задължително)",
+            "camera": "Camera обект (задължително)",
+            "vacuum_platform": "Vacuum платформа (задължително)",
+            "map_locked": "Заключване на карта (по избор)",
+            "two_finger_pan": "Навигация с два пръста (по избор)",
+            "platforms_documentation": "Документация за избраната платформа ({0})",
+            "selection": "Селекция:",
+            "copy": "Копиране",
+            "copied": "Копирано!",
+            "set_static_config": "Генериране на статична конфигурация",
+            "config_set": "Конфигурирано!\nОтворете редактора на конфигурация за промяна.",
+            "config_set_failed": "Грешка при създаване на конфигурация.",
+            "generate_rooms_config": "Генериране на конфигурация за стаи",
+            "copy_service_call": "Копиране на service call"
+        },
+        "alerts": {
+            "set_static_config": "Използвайте тази функция асмо ако искате ръчно да промените автоматично генерираната конфигурация.\nНапред?"
+        }
+    }
+}
