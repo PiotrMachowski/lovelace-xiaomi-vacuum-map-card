@@ -23,7 +23,7 @@
                 "missing": "Fehlende Eigenschaft: entity"
             },
             "preset_name": {
-                "missing": "Fehlende Eigenschaft: preset_name,"
+                "missing": "Fehlende Eigenschaft: preset_name"
             },
             "platform": {
                 "invalid": "Ungültige Staubsauger-Plattform: {0}"
@@ -142,6 +142,7 @@
                 "paused": "Pause",
                 "spot cleaning": "Spot-Reinigung",
                 "error": "Fehler",
+                "sleeping": "Schlafend",
                 "shutting down": "Herunterfahren",
                 "updating": "Aktualisiere",
                 "docking": "Andocken",
@@ -164,7 +165,8 @@
                 "medium": "Medium",
                 "turbo": "Turbo",
                 "auto": "Auto",
-                "gentle": "Sanft"
+                "gentle": "Sanft",
+                "strong": "Stark"
             }
         },
         "sensor_dirty_left": {
@@ -185,8 +187,37 @@
         "cleaned_area": {
             "label": "Gereinigte Fläche"
         },
+        "total_cleaned_area": {
+            "label": "Gesamte gereinigte Fläche"
+        },
         "cleaning_time": {
             "label": "Zeit der Reinigung"
+        },
+        "total_cleaning_time": {
+            "label": "Gesamte Reinigungszeit"
+        },
+        "mop_left": {
+            "label": "Wischblatt verbleibend"
+        },
+        "bin_full": {
+            "label": "Behälter voll",
+            "value": {
+                "true": "Ja",
+                "false": "Nein"
+            }
+        },
+        "bin_present": {
+            "label": "Behälter vorhanden",
+            "value": {
+                "true": "Ja",
+                "false": "Nein"
+            }
+        },
+        "water_volume": {
+            "label": "Wasservolumen"
+        },
+        "mop_pad_humidity": {
+            "label": "Wischblatt"
         }
     },
     "icon": {
@@ -221,7 +252,19 @@
             "camera": "Kamera Entität (required)",
             "vacuum_platform": "Staubsauger-Plattform (required)",
             "map_locked": "Karte gesperrt (optional)",
-            "two_finger_pan": "Zwei-Finger-Pan (optional)"
+            "two_finger_pan": "Zwei-Finger-Pan (optional)",
+            "platforms_documentation": "Ausgewählte Plattform Dokumentation ({0})",
+            "selection": "Auswahl:",
+            "copy": "Kopieren",
+            "copied": "Kopiert!",
+            "set_static_config": "Erstelle statische Konfiguration",
+            "config_set": "Konfiguration abgespeichert!\nÖffne Konfigurationseditor zum Ändern.",
+            "config_set_failed": "Update der Konfiguration fehlgeschlagen.",
+            "generate_rooms_config": "Erstelle Raumkonfiguration",
+            "copy_service_call": "Kopiere Service-Aufruf"
+        },
+        "alerts": {
+            "set_static_config": "Die Funktion nur nutzen, um manuell die automatische erstellte Konfiguration zu ändern.\nWeiter?"
         }
     }
 }

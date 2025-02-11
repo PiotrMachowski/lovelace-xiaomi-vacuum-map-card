@@ -142,6 +142,7 @@
                 "paused": "Paused",
                 "spot cleaning": "Spot cleaning",
                 "error": "Error",
+                "sleeping": "Sleeping",
                 "shutting down": "Shutting down",
                 "updating": "Updating",
                 "docking": "Docking",
@@ -164,7 +165,8 @@
                 "medium": "Medium",
                 "turbo": "Turbo",
                 "auto": "Auto",
-                "gentle": "Gentle"
+                "gentle": "Gentle",
+                "strong": "Strong"
             }
         },
         "sensor_dirty_left": {
