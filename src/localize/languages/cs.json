@@ -53,7 +53,7 @@
             "tiles": {
                 "invalid": "Neplatná konfigurace pro položku \"tiles\"",
                 "entity": {
-                    "missing_outdated_translation": "Každý záznam v seznamu dlaždic musí vždy obsahovat položku \"entity\""
+                    "missing": "Každý záznam v seznamu dlaždic musí vždy obsahovat položku \"entity\""
                 },
                 "label": {
                     "missing": "Každý záznam v seznamu dlaždic musí vždy obsahovat položku \"label\""
@@ -185,11 +185,37 @@
         "cleaned_area": {
             "label": "Uklizená plocha"
         },
+        "total_cleaned_area": {
+            "label": "Celková uklizená plocha"
+        },
         "cleaning_time": {
             "label": "Doba uklízení"
         },
+        "total_cleaning_time": {
+            "label": "Celková doba uklízení"
+        },   
         "mop_left": {
             "label": "Životnost mopu"
+        },
+        "bin_full": {
+            "label": "Odpadní nádoba plná",
+            "value": {
+                "true": "Ano",
+                "false": "Ne"
+            }
+        },
+        "bin_present": {
+            "label": "Odpadní nádoba vložena",
+            "value": {
+                "true": "Ano",
+                "false": "Ne"
+            }
+        },
+        "water_volume": {
+            "label": "Množství vody"
+        },
+        "mop_pad_humidity": {
+            "label": "Vlhkost mopu"
         }
     },
     "icon": {
@@ -199,7 +225,7 @@
         "vacuum_return_to_base": "Návrat do základny",
         "vacuum_clean_spot": "Uklidit bod",
         "vacuum_locate": "Najít",
-        "vacuum_set_fan_speed": "Nastavit stupeň vysávání"
+        "vacuum_set_fan_speed": "Nastavit stupeň sání"
     },
     "unit": {
         "hour_shortcut": "h",
@@ -224,7 +250,19 @@
             "camera": "Entita kamery (povinná položka)",
             "vacuum_platform": "Platforma vysavače (povinná položka)",
             "map_locked": "Uzamčení mapy",
-            "two_finger_pan": "Posuv mapy dvěma prsty"
+            "two_finger_pan": "Posuv mapy dvěma prsty",
+            "platforms_documentation": "Dokumentace vybrané platformy ({0})",
+            "selection": "Výběr:",
+            "copy": "Kopírovat",
+            "copied": "Zkopírováno!",
+            "set_static_config": "Generovat statickou konfiguraci",
+            "config_set": "Konfigurace nastavena!\nPro úpravu otevři editor kódu.",
+            "config_set_failed": "Aktualizace nastavení selhala.",
+            "generate_rooms_config": "Generovat konfiguraci místností",
+            "copy_service_call": "Kopírovat volání služby"
+        },
+        "alerts": {
+            "set_static_config": "Toto nastavení se používá pouze pokud chcete manuálně upravit automaticky generovanou konfiguraci. \nPokračovat?"
         }
     }
 }
