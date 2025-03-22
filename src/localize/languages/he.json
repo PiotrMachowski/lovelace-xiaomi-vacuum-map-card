@@ -219,7 +219,7 @@
         }
     },
     "icon": {
-        "vacuum_start": "השתחלה",
+        "vacuum_start": "התחלה",
         "vacuum_pause": "השהייה",
         "vacuum_stop": "עצירה",
         "vacuum_return_to_base": "חוזר לתחנת עגינה",
