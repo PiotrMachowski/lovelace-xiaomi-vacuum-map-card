@@ -1,0 +1,222 @@
+{
+    "map_modes": {
+        "default_templates": ["vacuum_clean_zone", "vacuum_goto"],
+        "templates": {
+            "vacuum_clean_segment": {
+                "name": "map_mode.vacuum_clean_segment",
+                "icon": "mdi:floor-plan",
+                "selection_type": "ROOM",
+                "repeats_type": "EXTERNAL",
+                "max_repeats": 3,
+                "id_type": "number",
+                "service_call_schema": {
+                    "service": "vacuum.send_command",
+                    "service_data": {
+                        "command": "app_segment_clean",
+                        "params": [{
+                            "segments": "[[selection]]",
+                            "repeats": "[[repeats]]"
+                        }],
+                        "entity_id": "[[entity_id]]"
+                    }
+                }
+            },
+            "vacuum_clean_zone": {
+                "name": "map_mode.vacuum_clean_zone",
+                "icon": "mdi:select-drag",
+                "selection_type": "MANUAL_RECTANGLE",
+                "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 1000,
+                "max_selections": 5,
+                "repeats_type": "EXTERNAL",
+                "max_repeats": 3,
+                "service_call_schema": {
+                    "service": "vacuum.send_command",
+                    "service_data": {
+                        "command": "app_zoned_clean",
+                        "params": [{
+                            "zone": "[[selection]]",
+                            "repeats": "[[repeats]]"
+                        }],
+                        "entity_id": "[[entity_id]]"
+                    }
+                }
+            },
+            "vacuum_clean_zone_predefined": {
+                "name": "map_mode.vacuum_clean_zone_predefined",
+                "icon": "mdi:floor-plan",
+                "selection_type": "PREDEFINED_RECTANGLE",
+                "max_selections": 5,
+                "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 1000,
+                "repeats_type": "EXTERNAL",
+                "max_repeats": 3,
+                "service_call_schema": {
+                    "service": "vacuum.send_command",
+                    "service_data": {
+                        "command": "app_zoned_clean",
+                        "params": [{
+                            "zone": "[[selection]]",
+                            "repeats": "[[repeats]]"
+                        }],
+                        "entity_id": "[[entity_id]]"
+                    }
+                }
+            },
+            "vacuum_goto": {
+                "name": "map_mode.vacuum_goto",
+                "icon": "mdi:map-marker-plus",
+                "selection_type": "MANUAL_POINT",
+                "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 1000,
+                "repeats_type": "NONE",
+                "service_call_schema": {
+                    "service": "roborock.set_vacuum_goto_position",
+                    "service_data": {
+                        "x": "[[point_x]]",
+                        "y": "[[point_y]]",
+                        "entity_id": "[[entity_id]]"
+                    }
+                }
+            },
+            "vacuum_goto_predefined": {
+                "name": "map_mode.vacuum_goto_predefined",
+                "icon": "mdi:map-marker",
+                "selection_type": "PREDEFINED_POINT",
+                "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 1000,
+                "repeats_type": "NONE",
+                "service_call_schema": {
+                    "service": "roborock.set_vacuum_goto_position",
+                    "service_data": {
+                        "x": "[[point_x]]",
+                        "y": "[[point_y]]",
+                        "entity_id": "[[entity_id]]"
+                    }
+                }
+            },
+            "vacuum_follow_path": {
+                "name": "map_mode.vacuum_follow_path",
+                "icon": "mdi:map-marker-path",
+                "selection_type": "MANUAL_PATH",
+                "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 1000,
+                "repeats_type": "NONE",
+                "service_call_schema": {
+                    "service": "script.vacuum_follow_path",
+                    "service_data": {
+                        "service": "roborock.vacuum_goto",
+                        "mode": "individual",
+                        "path": "[[selection]]",
+                        "entity_id": "[[entity_id]]"
+                    }
+                }
+            }
+        }
+    },
+    "tiles": {
+        "from_sensors": [
+            {
+                "tile_id": "main_brush_left",
+                "icon": "mdi:brush",
+                "unique_id_regex": "main_brush_time_left_",
+                "label": "tile.main_brush_left.label",
+                "unit": "unit.hour_shortcut",
+                "multiplier": 0.0002777777777777778
+            },
+            {
+                "tile_id": "sensor_dirty_left",
+                "icon": "mdi:eye-outline",
+                "unique_id_regex": "sensor_time_left_",
+                "label": "tile.sensor_dirty_left.label",
+                "unit": "unit.hour_shortcut",
+                "multiplier": 0.0002777777777777778
+            },
+            {
+                "tile_id": "filter_left",
+                "icon": "mdi:air-filter",
+                "unique_id_regex": "filter_time_left_",
+                "label": "tile.filter_left.label",
+                "unit": "unit.hour_shortcut",
+                "multiplier": 0.0002777777777777778
+            },
+            {
+                "tile_id": "side_brush_left",
+                "unique_id_regex": "side_brush_time_left_",
+                "icon": "mdi:brush",
+                "label": "tile.side_brush_left.label",
+                "unit": "unit.hour_shortcut",
+                "multiplier": 0.0002777777777777778
+            },
+            {
+                "tile_id": "cleaning_count",
+                "icon": "mdi:counter",
+                "unique_id_regex": "total_cleaning_count_",
+                "label": "tile.cleaning_count.label"
+            },
+            {
+                "tile_id": "cleaned_area",
+                "icon": "mdi:texture-box",
+                "unique_id_regex": "cleaning_area_",
+                "label": "tile.cleaned_area.label",
+                "unit": "unit.meter_squared_shortcut",
+                "precision": 2
+            },
+            {
+                "tile_id": "cleaning_time",
+                "icon": "mdi:history",
+                "unique_id_regex": "cleaning_time_",
+                "label": "tile.cleaning_time.label",
+                "unit": "unit.minute_shortcut",
+                "multiplier": 0.016667
+            }
+        ]
+    },
+    "icons": [
+        {
+            "type": "menu",
+            "menu_id": "water_box_mode",
+            "icon_id": "water_box_mode",
+            "unique_id_regex": "water_box_mode_",
+            "available_values_attribute": "options",
+            "icon": "mdi:water",
+            "icon_mapping": {
+                "off": "mdi:water-remove",
+                "mild": "mdi:water-minus",
+                "moderate": "mdi:water",
+                "intense": "mdi:water-plus",
+                "custom": "mdi:water-sync"
+            },
+            "tap_action": {
+                "action": "call-service",
+                "service": "select.select_option",
+                "service_data": {
+                    "option": "[[value]]",
+                    "entity_id": "[[entity_id]]"
+                }
+            }
+        },
+        {
+            "type": "menu",
+            "menu_id": "mop_mode",
+            "icon_id": "mop_mode",
+            "unique_id_regex": "mop_mode_",
+            "available_values_attribute": "options",
+            "icon": "mdi:water",
+            "icon_mapping": {
+                "standard": "mdi:standard-definition",
+                "deep": "mdi:high-definition",
+                "deep_plus": "mdi:ultra-high-definition",
+                "custom": "mdi:fit-to-screen-outline"
+            },
+            "tap_action": {
+                "action": "call-service",
+                "service": "select.select_option",
+                "service_data": {
+                    "option": "[[value]]",
+                    "entity_id": "[[entity_id]]"
+                }
+            }
+        }
+    ]
+}

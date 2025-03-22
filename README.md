@@ -253,6 +253,7 @@ map: # coordinates of a point in a map coordinate system (can be read using e.g.
 Following vacuum platforms are supported out of the box at this moment:
 
 - [`default` (Xiaomi Miio)](/docs/templates/xiaomiMiio.md)
+- [`roborock`](/docs/templates/roborock.md)
 - [`humbertogontijo/homeassistant-roborock`](/docs/templates/humbertogontijoHomeassistantRoborock.md)
 - [`Tasshack/dreame-vacuum`](/docs/templates/tasshackDreameVacuum.md)
 - [`rand256/ValetudoRE`](/docs/templates/rand256ValetudoRe.md)
