@@ -30,6 +30,10 @@ calibration_source:
 6. You can hit Generate Room Configs to allow for cleaning of rooms. It might generate extra keys, so check the yaml and make sure there are no extra 'predefined_sections'
 7. There might be problems with instance that you have multiple maps. Calibration points may be missing for non-selected maps. Once you change to that map being the one selected, it should fix the calibration problems.
 
+## Optional (Remove the custom integration)
+
+If you would like, you can hit generate static config. Then, you can set the map_source to the core roborock image instead. Note: If your map changes significantly or if your rooms change, it will not updated, so this really shouldn't be needed.
+
 ## Available templates
 
 * ### Room cleaning (`vacuum_clean_segment`)
