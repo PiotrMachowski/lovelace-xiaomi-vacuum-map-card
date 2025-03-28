@@ -779,7 +779,7 @@ map_modes:
 ## Translations
 
 Currently, this card contains translations for following languages:
-
+* `bg` - Bulgarian (Български)
 * `ca` - Catalan (Català)
 * `cs` - Czech (Čeština)
 * `da` - Danish (Dansk)
