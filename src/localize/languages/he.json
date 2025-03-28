@@ -1,6 +1,6 @@
 {
     "common": {
-        "version": "גירסה",
+        "version": "גרסה",
         "invalid_configuration": "תצורה לא חוקית {0}",
         "description": "כרטיס המאפשר לך לשלוט בשואב שלך",
         "old_configuration": "זוהתה תצורה ישנה. יש להתאים את התצורה שלך לסכמה העדכנית ביותר או ליצור כרטיס חדש מההתחלה.",
@@ -11,7 +11,7 @@
         "vacuum_goto": "נעץ וסע",
         "vacuum_goto_predefined": "נקודות",
         "vacuum_clean_segment": "חדרים",
-        "vacuum_clean_point": "נקה נקודה",
+        "vacuum_clean_point": "ניקוי נקודה",
         "vacuum_clean_point_predefined": "נקודות",
         "vacuum_clean_zone": "ניקוי אזור",
         "vacuum_clean_zone_predefined": "רשימת אזורים",
@@ -20,7 +20,7 @@
     "validation": {
         "preset": {
             "entity": {
-                "missing": "נכס חסר: ישות"
+                "missing": "חסר מאפיין: ישות"
             },
             "preset_name": {
                 "missing": "חסר מאפיין: preset_name"
@@ -29,13 +29,13 @@
                 "invalid": "פלטפורמת שואב לא חוקית: {0}"
             },
             "map_source": {
-                "missing": "נכס חסר: map_source",
+                "missing": "חסר מאפיין: map_source",
                 "none_provided": "לא סופקה אף תמונה",
                 "ambiguous": "ניתן להשתמש במקור מפה אחד בלבד"
             },
             "calibration_source": {
                 "missing": "חסר מאפיין: calibration_source",
-                "ambiguous": "מותר רק מקור כיול אחד",
+                "ambiguous": "מותר מקור כיול אחד בלבד",
                 "none_provided": "לא סופק מקור כיול",
                 "calibration_points": {
                     "invalid_number": "דרושות בדיוק 3 או 4 נקודות כיול",
@@ -45,13 +45,13 @@
                 }
             },
             "icons": {
-                "invalid": "שגיאה בתצורה: סמלילים",
+                "invalid": "שגיאת תצורה: סמלילים",
                 "icon": {
                     "missing": "כל כניסה של רשימת הסמלילים חייבת להכיל מאפיין סמליל"
                 }
             },
             "tiles": {
-                "invalid": "שגיאה בתצורה: אריחים",
+                "invalid": "שגיאת תצורה: אריחים",
                 "entity": {
                     "missing": "כל ערך של רשימת אריחים חייב להכיל ישות"
                 },
@@ -60,7 +60,7 @@
                 }
             },
             "map_modes": {
-                "invalid": "שגיאה בתצורה: map_modes",
+                "invalid": "שגיאת תצורה: map_modes",
                 "icon": {
                     "missing": "חסר סמליל של מצב מפה"
                 },
@@ -219,18 +219,18 @@
         }
     },
     "icon": {
-        "vacuum_start": "התחל",
-        "vacuum_pause": "השהה",
-        "vacuum_stop": "עצור",
+        "vacuum_start": "התחלה",
+        "vacuum_pause": "השהייה",
+        "vacuum_stop": "עצירה",
         "vacuum_return_to_base": "חוזר לתחנת עגינה",
         "vacuum_clean_spot": "ניקוי נקודה",
         "vacuum_locate": "איתור",
-        "vacuum_set_fan_speed": "שנה מהירות מאוורר"
+        "vacuum_set_fan_speed": "שינוי מהירות מאוורר"
     },
     "unit": {
         "hour_shortcut": "ש",
         "meter_shortcut": "מ",
-        "meter_squared_shortcut": "m²",
+        "meter_squared_shortcut": "מ\"ר",
         "minute_shortcut": "דק"
     },
     "popups": {
@@ -242,7 +242,7 @@
         "description": {
             "before_link": "עורך חזותי זה תומך רק בתצורה בסיסית עם ישות מצלמה שנוצרה באמצעות ",
             "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": ". להגדרה מתקדמת יותר השתמש במצב YAML."
+            "after_link": "להגדרה מתקדמת יותר יש להשתמש במצב YAML."
         },
         "label": {
             "name": "כותרת (אופציונלי)",
