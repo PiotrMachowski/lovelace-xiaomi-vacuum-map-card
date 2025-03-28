@@ -11,6 +11,7 @@ import * as he from "./languages/he.json";
 import * as hu from "./languages/hu.json";
 import * as is from "./languages/is.json";
 import * as it from "./languages/it.json";
+import * as lv from "./languages/lv.json";
 import * as nbNo from "./languages/nb-NO.json";
 import * as nl from "./languages/nl.json";
 import * as pl from "./languages/pl.json";
