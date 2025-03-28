@@ -827,7 +827,9 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _isInEditor(): boolean {
         function isInEditor(e: Element): boolean {
-            return e.parentElement?.tagName?.toLowerCase() === "hui-card-preview"
+            return (e.parentElement?.tagName?.toLowerCase() === "hui-card" && "preview" in (e.parentElement?.attributes ?? []))
+                || (e.parentElement?.tagName?.toLowerCase() === "hui-section" && "preview" in (e.parentElement?.attributes ?? []))
+                || e.parentElement?.tagName?.toLowerCase() === "hui-card-preview"
                 || e.parentElement != null && isInEditor(e.parentElement)
                 || e.parentNode?.toString() == "[object ShadowRoot]" && isInEditor((e.getRootNode() as ShadowRoot).host);
         }
@@ -994,7 +996,8 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private static adjustRoomId(roomId: string | number, config: MapMode): string | number {
         if (config.idType === "number") {
-            return +roomId;
+            const roomIdAsNumber = +roomId;
+            return isNaN(roomIdAsNumber) ? roomId : roomIdAsNumber;
         }
         return roomId;
     }

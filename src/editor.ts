@@ -111,7 +111,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
         this._helpers.importMoreInfoControl("climate");
 
         const entityIds = Object.keys(this.hass.states);
-        const cameras = entityIds.filter(e => e.substr(0, e.indexOf(".")) === "camera");
+        const cameras = entityIds.filter(e => ["camera", "image"].includes(e.substr(0, e.indexOf("."))));
         const vacuums = entityIds.filter(e => e.substr(0, e.indexOf(".")) === "vacuum");
         const platforms = PlatformGenerator.getPlatforms();
         const roomsUnavailable =

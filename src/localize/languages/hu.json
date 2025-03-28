@@ -2,18 +2,20 @@
     "common": {
         "version": "Verzió",
         "invalid_configuration": "Érvénytelen konfiguráció {0}",
-        "description": "Egy kártya, amely lehetővé teszi a vákuum szabályozását",
-        "old_configuration": "Régi konfiguráció észlelve. Állítsa be a konfigurációt a legújabb sémához, vagy hozzon létre egy új kártyát.",
-        "old_configuration_migration_link": "Migrációs útmutató"
+        "description": "Egy kártya, amely segítségével térképet használva irányíthatja a porszívóját",
+        "old_configuration": "Régi konfiguráció észlelve. Módosítsa a konfigurációt a legfrissebb séma szerint, vagy hozzon létre egy új kártyát.",
+        "old_configuration_migration_link": "Áttelepítési útmutató"
     },
     "map_mode": {
         "invalid": "Érvénytelen sablon!",
-        "vacuum_goto": "Pin & Go",
+        "vacuum_goto": "Jelölj & menj",
         "vacuum_goto_predefined": "Pontok",
         "vacuum_clean_segment": "Szobák",
+        "vacuum_clean_point": "Tisztítási pont",
+        "vacuum_clean_point_predefined": "Pontok",
         "vacuum_clean_zone": "Zóna takarítás",
         "vacuum_clean_zone_predefined": "Zónák listája",
-        "vacuum_follow_path": "Pálya"
+        "vacuum_follow_path": "Útvonal"
     },
     "validation": {
         "preset": {
@@ -24,46 +26,46 @@
                 "missing": "Hiányzó tulajdonság: preset_name"
             },
             "platform": {
-                "invalid": "Érvénytelen vákuumplatform: {0}"
+                "invalid": "Érvénytelen porszívó platform: {0}"
             },
             "map_source": {
                 "missing": "Hiányzó tulajdonság: map_source",
-                "none_provided": "Nincs kamera és kép sem biztosított",
+                "none_provided": "Nem áll rendelkezésre kamera vagy kép",
                 "ambiguous": "Csak egy térképforrás engedélyezett"
             },
             "calibration_source": {
                 "missing": "Hiányzó tulajdonság: calibration_source",
-                "ambiguous": "Csak egy kalibrációs forrás engedélyezett",
-                "none_provided": "Nincs megadva kalibrációs forrás",
+                "ambiguous": "Csak egy kalibrálási forrás engedélyezett",
+                "none_provided": "Nincs kalibrálási forrás megadva",
                 "calibration_points": {
-                    "invalid_number": "Pontosan 3 vagy 4 kalibrációs pont szükséges",
-                    "missing_map": "Minden kalibrációs pontnak tartalmaznia kell a térkép koordinátáit",
-                    "missing_vacuum": "Minden kalibrációs pontnak vákuumkoordinátákat kell tartalmaznia",
-                    "missing_coordinate": "A térképi és vákuumkalibrációs pontoknak x és y koordinátát is tartalmazniuk kell"
+                    "invalid_number": "Pontosan 3 vagy 4 kalibrálási pont szükséges",
+                    "missing_map": "Minden kalibrálási pontnak tartalmaznia kell térkép koordinátákat",
+                    "missing_vacuum": "Minden kalibrálási pontnak tartalmaznia kell porszívó koordinátákat",
+                    "missing_coordinate": "A térkép- és porszívó kalibrálási pontoknak mindkét x és y koordinátát tartalmazniuk kell"
                 }
             },
             "icons": {
                 "invalid": "Hiba a konfigurációban: icons",
                 "icon": {
-                    "missing": "Az ikonlista minden bejegyzésének tartalmaznia kell az ikon tulajdonságot"
+                    "missing": "Az ikonok listájának minden bejegyzésének tartalmaznia kell ikon tulajdonságot"
                 }
             },
             "tiles": {
                 "invalid": "Hiba a konfigurációban: tiles",
                 "entity": {
-                    "missing_outdated_translation": "A csempelista minden bejegyzésének tartalmaznia kell entitást"
+                    "missing": "A csempék listájának minden bejegyzésének tartalmaznia kell entitást vagy belső változót"
                 },
                 "label": {
-                    "missing": "A csempelista minden bejegyzésének tartalmaznia kell egy címkét"
+                    "missing": "A csempék listájának minden bejegyzésének tartalmaznia kell címkét"
                 }
             },
             "map_modes": {
                 "invalid": "Hiba a konfigurációban: map_modes",
                 "icon": {
-                    "missing": "Hiányzik a térkép mód ikonja"
+                    "missing": "Hiányzó térképmód ikon"
                 },
                 "name": {
-                    "missing": "A térképmód neve hiányzik"
+                    "missing": "Hiányzó térképmód név"
                 },
                 "template": {
                     "invalid": "Érvénytelen sablon: {0}"
@@ -82,8 +84,8 @@
                     },
                     "rooms": {
                         "id": {
-                            "missing": "Hiányzó szoba id",
-                            "invalid_format": "Érvénytelen szoba id: {0}"
+                            "missing": "Hiányzó szoba azonosító",
+                            "invalid_format": "Érvénytelen szoba azonosító: {0}"
                         },
                         "outline": {
                             "invalid_parameters_number": "A helyiség körvonalának minden pontján 2 paraméterrel kell rendelkeznie"
@@ -91,24 +93,24 @@
                     },
                     "label": {
                         "x": {
-                            "missing": "A címkének x tulajdonsággal kell rendelkeznie"
+                            "missing": "A címkének tartalmaznia kell az x tulajdonságot"
                         },
                         "y": {
-                            "missing": "A címkének y tulajdonsággal kell rendelkeznie"
+                            "missing": "A címkének tartalmaznia kell az y tulajdonságot"
                         },
                         "text": {
-                            "missing": "A címkének szövegtulajdonsággal kell rendelkeznie"
+                            "missing": "A címkének tartalmaznia kell szöveg tulajdonságot"
                         }
                     },
                     "icon": {
                         "x": {
-                            "missing": "Az ikonnak x tulajdonsággal kell rendelkeznie"
+                            "missing": "Az ikonnak tartalmaznia kell at x tulajdonságot"
                         },
                         "y": {
-                            "missing": "Az ikonnak y tulajdonsággal kell rendelkeznie"
+                            "missing": "Az ikonnak tartalmaznia kell az y tulajdonságot"
                         },
                         "name": {
-                            "missing": "Az ikonnak név tulajdonsággal kell rendelkeznie"
+                            "missing": "Az ikonnak tartalmaznia kell név tulajdonságot"
                         }
                     }
                 },
@@ -122,54 +124,114 @@
             }
         },
         "invalid_entities": "Érvénytelen entitások:",
-        "invalid_calibration": "Érvénytelen kalibráció, ellenőrizze a konfigurációt"
+        "invalid_calibration": "Érvénytelen kalibrálás, kérjük, ellenőrizze a konfigurációját"
     },
     "tile": {
         "status": {
-            "label": "Státusz"
+            "label": "Állapot",
+            "value": {
+                "starting": "Indítás",
+                "charger disconnected": "Töltő leválasztva",
+                "idle": "Tétlen",
+                "remote control active": "Távirányítás aktív",
+                "cleaning": "Takarítás",
+                "returning home": "Hazatérés",
+                "manual mode": "Kézi üzemmód",
+                "charging": "Töltés",
+                "charging problem": "Töltési probléma",
+                "paused": "Szüneteltetve",
+                "spot cleaning": "Célzott takarítás",
+                "error": "Hiba",
+                "shutting down": "Kikapcsolás",
+                "updating": "Frissítés",
+                "docking": "Dokkolás",
+                "going to target": "Cél felé halad",
+                "zoned cleaning": "Zóna takarítás",
+                "segment cleaning": "Szegmens takarítás",
+                "emptying the bin": "Kosár ürítés",
+                "charging complete": "Töltés befejezve",
+                "device offline": "Eszköz nem elérhető"
+            }
         },
         "battery_level": {
             "label": "Akkumulátor"
         },
         "fan_speed": {
-            "label": "Ventilátor üzemmód"
+            "label": "Ventilátor sebessége",
+            "value": {
+                "silent": "Csendes",
+                "standard": "Normál",
+                "medium": "Közepes",
+                "turbo": "Turbó",
+                "auto": "Automatikus",
+                "gentle": "Gyengéd"
+            }
         },
         "sensor_dirty_left": {
-            "label": "Szenzorok"
+            "label": "Érzékelők"
         },
         "filter_left": {
             "label": "Szűrő"
         },
         "main_brush_left": {
-            "label": "Fő kefe"
+            "label": "Főkefe"
         },
         "side_brush_left": {
             "label": "Oldalkefe"
         },
         "cleaning_count": {
-            "label": "Takarítás számláló"
+            "label": "Takarítások száma"
         },
         "cleaned_area": {
-            "label": "Tisztított terület"
+            "label": "Takarított terület"
+        },
+        "total_cleaned_area": {
+            "label": "Összesen takarított terület"
         },
         "cleaning_time": {
             "label": "Takarítási idő"
+        },
+        "total_cleaning_time": {
+            "label": "Összes takarítási idő"
+        },
+        "mop_left": {
+            "label": "Felmosó"
+        },
+        "bin_full": {
+            "label": "Kosár megtelt",
+            "value": {
+                "true": "Igen",
+                "false": "Nem"
+            }
+        },
+        "bin_present": {
+            "label": "Kosár behlyezve",
+            "value": {
+                "true": "Igen",
+                "false": "Nem"
+            }
+        },
+        "water_volume": {
+            "label": "Víz mennyisége"
+        },
+        "mop_pad_humidity": {
+            "label": "Felmosópárna"
         }
     },
     "icon": {
         "vacuum_start": "Indítás",
         "vacuum_pause": "Szünet",
-        "vacuum_stop": "Álljon meg",
-        "vacuum_return_to_base": "Vissza a bázisra",
-        "vacuum_clean_spot": "Clean spot",
-        "vacuum_locate": "Robot megkeresése",
-        "vacuum_set_fan_speed": "Ventilátor üzemmódjának módosítása"
+        "vacuum_stop": "Leállítás",
+        "vacuum_return_to_base": "Visszatérés a dokkolóhoz",
+        "vacuum_clean_spot": "Célzott takarítás",
+        "vacuum_locate": "Porszívó megkeresése",
+        "vacuum_set_fan_speed": "Ventilátor sebesség módosítása"
     },
     "unit": {
-        "hour_shortcut": "h",
+        "hour_shortcut": "ó",
         "meter_shortcut": "m",
         "meter_squared_shortcut": "m²",
-        "minute_shortcut": "min"
+        "minute_shortcut": "p"
     },
     "popups": {
         "success": "Siker!",
@@ -178,17 +240,29 @@
     },
     "editor": {
         "description": {
-            "before_link": "Ez a vizuális szerkesztő csak az alapkonfigurációt támogatja a segítségével létrehozott kameraentitással ",
+            "before_link": "Ez a vizuális szerkesztő csak egy alap konfigurációt támogat, egy kamera entitással, amelyet a ",
             "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": ". A fejlettebb beállításhoz használja a YAML módot."
+            "after_link": " segítségével hoztak létre. Továbbfejlesztett beállításhoz használja a YAML módot."
         },
         "label": {
-            "name": "Cím (nem kötelező)",
-            "entity": "Vákuum entitás (kötelező)",
+            "name": "Cím (opcionális)",
+            "entity": "Porszívó entitás (kötelező)",
             "camera": "Kamera entitás (kötelező)",
-            "vacuum_platform": "Vákuumos platform (szükséges)",
+            "vacuum_platform": "Porszívó platform (kötelező)",
             "map_locked": "Térkép zárolva (opcionális)",
-            "two_finger_pan": "Kétujjas pásztázás (opcionális)"
+            "two_finger_pan": "Kétujjas pásztázás (opcionális)",
+            "platforms_documentation": "Kiválasztott platform dokumentációja ({0})",
+            "selection": "Kiválasztás:",
+            "copy": "Másolás",
+            "copied": "Másolva!",
+            "set_static_config": "Statikus konfiguráció generálása",
+            "config_set": "Konfiguráció beállítva!\nNyissa meg a konfiguráció szerkesztőt a beállítások módosításához.",
+            "config_set_failed": "Nem sikerült a konfigurációt frissíteni.",
+            "generate_rooms_config": "Szobák konfigurációjának generálása",
+            "copy_service_call": "Szolgáltatáshívás másolása"
+        },
+        "alerts": {
+            "set_static_config": "Ezt a funkcionalitást csak akkor kell használni, ha manuálisan szeretné módosítani az automatikusan generált konfigurációt.\nFolytatja?"
         }
     }
 }

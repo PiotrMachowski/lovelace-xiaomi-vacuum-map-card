@@ -1,66 +1,50 @@
-# Valetudo by [@Hypfer](https://github.com/Hypfer) over MQTT
+# Roborock
 
-[Integration's documentation](https://valetudo.cloud)
+[Integration's documentation](https://www.home-assistant.io/integrations/roborock/)
 
-This platform can be used to control vacuums flashed with Valetudo created by [@Hypfer](https://github.com/Hypfer) connected to Home Assistant using [MQTT](https://www.home-assistant.io/integrations/mqtt/).
+You MUST be on 2025.4 or later for this to work.
 
-## Calibration
+This platform can be used to control vacuums connected to Home Assistant using the [core Roborock integration](https://www.home-assistant.io/integrations/roborock/)
 
-If you want to use **just** room cleaning you can calibrate the map using following config:
-```yaml
-calibration_source:
-  identity: true
-```
 
-In other cases you have to manually calibrate the map and provide calibration points.
+This works by using the core integration to send any needed commands, and a custom integration for passing information to the card.
 
-## Requirements
+If you need to setup this card using the custom component, you should use The "humbertogontijo/homeassistant-roborock" platform instead
 
-To use this card with a Valetudo vacuum you have to define `topic` internal variable in your preset:
+## Installation
 
+1. Install the [Roborock Core Integration](https://my.home-assistant.io/redirect/config_flow_start?domain=roborock) and set it up
+2. It is recommended that you first disable the Image entities within the core integration. Open each image entity, hit the gear icon, then trigger the toggle by enabled.
+3. Install the [Roborock Custom Map Integration](https://github.com/Lash-L/RoborockCustomMap#roborock-custom-map)
+4. This integration works by piggybacking off of the Core integration, so the Core integration will do all the data updating to help prevent rate-limits. But that means that the core integration must be setup and loaded first. If you run into any issues, make sure the Roborock integration is loaded first, and then reload this one.
+5. Setup this card like normal! You should select a image with the suffix _custom. An example configuration would look like
 ```yaml
 type: custom:xiaomi-vacuum-map-card
+vacuum_platform: roborock
+entity: vacuum.s7
 map_source:
-  camera: camera.valetudo
+  camera: image.s7_downstairs_full_custom
 calibration_source:
-  calibration_points:
-    - vacuum:
-        x: 25500
-        y: 25500
-      map:
-        x: 466
-        y: 1889
-    - vacuum:
-        x: 26500
-        y: 26500
-      map:
-        x: 730
-        y: 1625
-    - vacuum:
-        x: 25500
-        y: 26500
-      map:
-        x: 466
-        y: 1625
-entity: vacuum.valetudo
-vacuum_platform: Hypfer/Valetudo
-internal_variables:
-  topic: valetudo/rockrobo
+  camera: true
 ```
+6. You can hit Generate Room Configs to allow for cleaning of rooms. It might generate extra keys, so check the yaml and make sure there are no extra 'predefined_sections'
+7. There might be problems with instance that you have multiple maps. Calibration points may be missing for non-selected maps. Once you change to that map being the one selected, it should fix the calibration problems.
 
-## Retrieving map image
+## Optional (Remove the custom integration)
 
-To retrieve map image you have to use [MQTT Vacuum Camera](https://github.com/sca075/mqtt_vacuum_camera/) custom integration made by [@sca075](https://github.com/sca075) (recommended; supports auto-calibration) or [I can't believe it's not Valetudo](https://github.com/Hypfer/Icantbelieveitsnotvaletudo) (not recommended; manual calibration required).
+If you would like, you can hit generate static config. Then, you can set the map_source to the core roborock image instead. Note: If your map changes significantly or if your rooms change, it will not updated, so this really shouldn't be needed.
 
 ## Available templates
 
 * ### Room cleaning (`vacuum_clean_segment`)
 
-  Uses IDs to clean specific rooms. Requires `topic` variable and `predefined_selections` to be provided.
+  Uses IDs to clean specific rooms. Requires `predefined_selections` to be provided.
+
+  [Configuration generator](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/317)
 
   [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
-  Used service: `mqtt.publish`
+  Used service: `vacuum.send_command`
 
   <details>
   <summary>Example configuration</summary>
@@ -68,10 +52,8 @@ To retrieve map image you have to use [MQTT Vacuum Camera](https://github.com/sc
   ```yaml
   map_modes:
     - template: vacuum_clean_segment
-      variables:
-        topic: valetudo/robot
       predefined_selections:
-        - id: "12"
+        - id: 14
           outline: [[ 21458, 32131 ], [ 24235, 32152 ], [ 24194, 27409 ], [ 23181, 27409 ]]
           label:
             text: "Bedroom"
@@ -82,7 +64,7 @@ To retrieve map image you have to use [MQTT Vacuum Camera](https://github.com/sc
             name: "mdi:bed"
             x: 22932
             y: 30339
-        - id: "9"
+        - id: 19
           outline: [[ 21478, 27237 ], [ 23048, 27250 ], [ 23061, 25655 ], [ 21478, 25680 ]]
           label:
             text: "Bathroom"
@@ -105,9 +87,9 @@ To retrieve map image you have to use [MQTT Vacuum Camera](https://github.com/sc
 
 * ### Zone cleaning (`vacuum_clean_zone`)
 
-  Uses 4 points to clean rectangular zones.
+  Uses 4 coordinates to clean rectangular zones.
 
-  Used service: `mqtt.publish`
+  Used service: `vacuum.send_command`
 
   <details>
   <summary>Example configuration</summary>
@@ -121,7 +103,7 @@ To retrieve map image you have to use [MQTT Vacuum Camera](https://github.com/sc
   <details>
   <summary>Example video</summary>
 
-    https://user-images.githubusercontent.com/6118709/141666913-d95f082d-f5bf-4ab5-a478-ba44effe6f34.mp4
+  https://user-images.githubusercontent.com/6118709/141666913-d95f082d-f5bf-4ab5-a478-ba44effe6f34.mp4
 
   </details>
 
@@ -131,7 +113,7 @@ To retrieve map image you have to use [MQTT Vacuum Camera](https://github.com/sc
 
   [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
-  Used service: `mqtt.publish`
+  Used service: `roborock.send_command`
 
   <details>
   <summary>Example configuration</summary>
@@ -166,7 +148,7 @@ To retrieve map image you have to use [MQTT Vacuum Camera](https://github.com/sc
   <details>
   <summary>Example video</summary>
 
-    https://user-images.githubusercontent.com/6118709/141666920-492a000c-9a78-4c20-b4f5-9343928140c7.mp4
+  https://user-images.githubusercontent.com/6118709/141666920-492a000c-9a78-4c20-b4f5-9343928140c7.mp4
 
   </details>
 
@@ -174,7 +156,7 @@ To retrieve map image you have to use [MQTT Vacuum Camera](https://github.com/sc
 
   Uses a pair of coordinates for vacuum to get to a user-specified point.
 
-  Used service: `mqtt.publish`
+  Used service: `roborock.roborock.set_vacuum_goto_position`
 
   <details>
   <summary>Example configuration</summary>
@@ -188,7 +170,7 @@ To retrieve map image you have to use [MQTT Vacuum Camera](https://github.com/sc
   <details>
   <summary>Example video</summary>
 
-    https://user-images.githubusercontent.com/6118709/141666921-2f3d66da-6ffc-492a-8439-625da97651bd.mp4
+  https://user-images.githubusercontent.com/6118709/141666921-2f3d66da-6ffc-492a-8439-625da97651bd.mp4
 
   </details>
 
@@ -198,7 +180,7 @@ To retrieve map image you have to use [MQTT Vacuum Camera](https://github.com/sc
 
   [Getting coordinates](/docs/templates/setup.md#getting-coordinates)
 
-  Used service: `mqtt.publish`
+  Used service: `roborock.set_vacuum_goto_position`
 
   <details>
   <summary>Example configuration</summary>
@@ -233,6 +215,28 @@ To retrieve map image you have to use [MQTT Vacuum Camera](https://github.com/sc
   <details>
   <summary>Example video</summary>
 
-    https://user-images.githubusercontent.com/6118709/141666923-965679e9-25fb-44cd-be08-fc63e5c85ce0.mp4
+  https://user-images.githubusercontent.com/6118709/141666923-965679e9-25fb-44cd-be08-fc63e5c85ce0.mp4
+
+  </details>
+
+* ### Following a specified path (`vacuum_follow_path`)
+
+  Uses a list of points to make a vacuum follow a user-defined path. Requires [`follow_path`](/docs/follow_path.yaml) script to be installed.
+
+  Used service: `script.vacuum_follow_path`
+
+  <details>
+  <summary>Example configuration</summary>
+
+  ```yaml
+  map_modes:
+    - template: vacuum_follow_path
+  ```
+
+  </details>
+  <details>
+  <summary>Example video</summary>
+
+  https://user-images.githubusercontent.com/6118709/141666931-48d1717f-96d0-461d-84f4-788c071f3a78.mp4
 
   </details>

@@ -2,7 +2,8 @@
     "map_modes": {
         "default_templates": [
             "vacuum_clean_zone",
-            "vacuum_clean_point"
+            "vacuum_clean_point",
+            "vacuum_goto"
         ],
         "templates": {
             "vacuum_clean_segment": {
@@ -88,6 +89,59 @@
                     "service_data": {
                         "points": "[[selection]]",
                         "repeats": "[[repeats]]",
+                        "entity_id": "[[entity_id]]"
+                    }
+                }
+            },
+            "vacuum_goto": {
+                "name": "map_mode.vacuum_goto",
+                "icon": "mdi:map-marker-radius",
+                "selection_type": "MANUAL_POINT",
+                "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 1000,
+                "repeats_type": "NONE",
+                "max_repeats": 0,
+                "max_selections": 1,
+                "service_call_schema": {
+                    "service": "dreame_vacuum.vacuum_goto",
+                    "service_data": {
+                        "x": "[[point_x]]",
+                        "y": "[[point_y]]",
+                        "entity_id": "[[entity_id]]"
+                    }
+                }
+            },
+            "vacuum_goto_predefined": {
+                "name": "map_mode.vacuum_goto_predefined",
+                "icon": "mdi:map-marker-multiple",
+                "selection_type": "PREDEFINED_POINT",
+                "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 1000,
+                "repeats_type": "NONE",
+                "max_repeats": 0,
+                "max_selections": 1,
+                "service_call_schema": {
+                    "service": "dreame_vacuum.vacuum_goto",
+                    "service_data": {
+                        "x": "[[point_x]]",
+                        "y": "[[point_y]]",
+                        "entity_id": "[[entity_id]]"
+                    }
+                }
+            },
+            "vacuum_follow_path": {
+                "name": "map_mode.vacuum_follow_path",
+                "icon": "mdi:map-marker-path",
+                "selection_type": "MANUAL_PATH",
+                "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 1000,
+                "repeats_type": "NONE",
+                "max_repeats": 0,
+                "max_selections": 20,
+                "service_call_schema": {
+                    "service": "dreame_vacuum.vacuum_follow_path",
+                    "service_data": {
+                        "points": "[[selection]]",
                         "entity_id": "[[entity_id]]"
                     }
                 }
