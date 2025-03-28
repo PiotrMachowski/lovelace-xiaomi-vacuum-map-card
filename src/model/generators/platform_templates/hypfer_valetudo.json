@@ -40,7 +40,7 @@
             "vacuum_clean_zone_predefined": {
                 "name": "map_mode.vacuum_clean_zone_predefined",
                 "icon": "mdi:floor-plan",
-                "selection_type": "ROOM",
+                "selection_type": "PREDEFINED_RECTANGLE",
                 "repeats_type": "EXTERNAL",
                 "max_repeats": 3,
                 "service_call_schema": {
