@@ -27,7 +27,7 @@ jobs:
           npm run build
 
       - name: Archive built file
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: xiaomi-vacuum-map-card
           path: dist/xiaomi-vacuum-map-card.js
