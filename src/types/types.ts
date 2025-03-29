@@ -227,6 +227,8 @@ export interface PredefinedSelectionCommonConfig {
     readonly label?: LabelConfig;
     readonly icon?: IconConfig;
     readonly variables?: VariablesStorage;
+    readonly default_state?: SelectionState;
+    readonly state_entity?: string;
 }
 
 export interface PredefinedZoneConfig extends PredefinedSelectionCommonConfig {
@@ -303,4 +305,9 @@ export enum ActionType {
     REPEATS_INCREMENT = "repeats.increment",
     REPEATS_SET = "repeats.set",
     SELECTION_CLEAR = "selection.clear",
+}
+
+export enum SelectionState {
+    SELECTED = "selected",
+    UNSELECTED = "unselected",
 }

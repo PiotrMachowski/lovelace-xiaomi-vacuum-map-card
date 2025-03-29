@@ -52,6 +52,7 @@ import { ManualPoint } from "./model/map_objects/manual-point";
 import { ManualPath } from "./model/map_objects/manual-path";
 import {
     areConditionsMet,
+    checkIfEntitiesChanged,
     conditional,
     createActionWithConfigHandler,
     delay,
@@ -130,11 +131,12 @@ export class XiaomiVacuumMapCard extends LitElement {
     private selectedManualPath: ManualPath = new ManualPath([], this._getContext());
     private selectedPredefinedRectangles: PredefinedMultiRectangle[] = [];
     private selectedRooms: Room[] = [];
-    private selectedPredefinedPoint: PredefinedPoint[] = [];
+    private selectedPredefinedPoints: PredefinedPoint[] = [];
     private selectablePredefinedRectangles: PredefinedMultiRectangle[] = [];
     private selectableRooms: Room[] = [];
     private selectablePredefinedPoints: PredefinedPoint[] = [];
     private coordinatesConverter?: CoordinatesConverter;
+    private entitiesToManuallyUpdate: string[] = [];
     private modes: MapMode[] = [];
     private shouldHandleMouseUp!: boolean;
     private lastHassUpdate!: Date;
@@ -170,9 +172,9 @@ export class XiaomiVacuumMapCard extends LitElement {
     public static getStubConfig(hass: HomeAssistantFixed): XiaomiVacuumMapCardConfig | undefined {
         const entities = Object.keys(hass.states);
         const cameras = entities
-            .filter(e => e.substr(0, e.indexOf(".")) === "camera")
+            .filter(e => ["camera", "image"].includes(e.substring(0, e.indexOf("."))))
             .filter(e => hass?.states[e].attributes["calibration_points"]);
-        const vacuums = entities.filter(e => e.substr(0, e.indexOf(".")) === "vacuum");
+        const vacuums = entities.filter(e => e.substring(0, e.indexOf(".")) === "vacuum");
         if (cameras.length === 0 || vacuums.length === 0) {
             return undefined;
         }
@@ -404,8 +406,10 @@ export class XiaomiVacuumMapCard extends LitElement {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    protected updated(_changedProperties: PropertyValues): void {
-        this._updateElements();
+    protected updated(changedProperties: PropertyValues): void {
+        const oldHass = changedProperties.get("_hass") as HomeAssistantFixed | undefined;
+        const changed = oldHass && this.hass && checkIfEntitiesChanged(this.entitiesToManuallyUpdate, oldHass, this.hass);
+        this._updateElements(changed);
     }
 
     public _getCurrentPreset(): CardPresetConfig {
@@ -689,13 +693,15 @@ export class XiaomiVacuumMapCard extends LitElement {
             () => this.selectedManualRectangles,
             () => this.selectedPredefinedRectangles,
             () => this.selectedRooms,
-            () => this.selectedPredefinedPoint,
+            () => this.selectedPredefinedPoints,
             () => this._getCurrentMode()?.coordinatesRounding ?? false,
             () => this._getCurrentMode()?.coordinatesToMetersDivider ?? 1,
             () => this._getCurrentMode()?.maxSelections ?? 0,
             property => this._getCssProperty(property),
             () => this._runImmediately(),
             string => this._localize(string),
+            entity => this._hass.states[entity].state,
+            entity => this._hass.callService("homeassistant", "toggle", {"entity_id": entity}),
         );
     }
 
@@ -710,7 +716,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         this.selectedManualPath.clear();
         this.selectedPredefinedRectangles = [];
         this.selectedRooms = [];
-        this.selectedPredefinedPoint = [];
+        this.selectedPredefinedPoints = [];
         this.selectablePredefinedRectangles = [];
         this.selectableRooms = [];
         this.selectablePredefinedPoints = [];
@@ -725,11 +731,19 @@ export class XiaomiVacuumMapCard extends LitElement {
                     .filter(pzc => typeof pzc.zones !== "string")
                     .map(pzc => new PredefinedMultiRectangle(pzc, this._getContext()));
                 this.selectablePredefinedRectangles = zonesFromEntities.concat(manualZones);
+                this.selectedPredefinedRectangles = this.selectablePredefinedRectangles.filter(s => s.selected);
+                this.entitiesToManuallyUpdate = newMode.predefinedSelections
+                    .filter(s => s.state_entity)
+                    .map(s => s.state_entity as string);
                 break;
             case SelectionType.ROOM:
                 this.selectableRooms = newMode.predefinedSelections.map(
                     ps => new Room(ps as RoomConfig, this._getContext()),
                 );
+                this.selectedRooms = this.selectableRooms.filter(s => s.selected);
+                this.entitiesToManuallyUpdate = newMode.predefinedSelections
+                    .filter(s => s.state_entity)
+                    .map(s => s.state_entity as string);
                 break;
             case SelectionType.PREDEFINED_POINT:
                 const pointsFromEntities = PredefinedPoint.getFromEntities(newMode, this.hass, () =>
@@ -740,6 +754,10 @@ export class XiaomiVacuumMapCard extends LitElement {
                     .filter(ppc => typeof ppc.position !== "string")
                     .map(ppc => new PredefinedPoint(ppc, this._getContext()));
                 this.selectablePredefinedPoints = pointsFromEntities.concat(manualPoints);
+                this.selectedPredefinedPoints = this.selectablePredefinedPoints.filter(s => s.selected);
+                this.entitiesToManuallyUpdate = newMode.predefinedSelections
+                    .filter(s => s.state_entity)
+                    .map(s => s.state_entity as string);
                 break;
         }
         if (this.selectedMode != newModeIndex && manual) forwardHaptic("selection");
@@ -792,10 +810,10 @@ export class XiaomiVacuumMapCard extends LitElement {
                 variables = variablesExtractor([this.selectedManualPoint]);
                 break;
             case SelectionType.PREDEFINED_POINT:
-                selection = this.selectedPredefinedPoint
+                selection = this.selectedPredefinedPoints
                     .map(p => p.toVacuum(repeats))
                     .reduce((a, v) => a.concat(v), [] as unknown[]);
-                variables = variablesExtractor(this.selectedPredefinedPoint);
+                variables = variablesExtractor(this.selectedPredefinedPoints);
                 break;
         }
         if (mode.repeatsType === RepeatsType.REPEAT) {
@@ -1042,12 +1060,33 @@ export class XiaomiVacuumMapCard extends LitElement {
         this._selectionChanged();
     }
 
-    private _updateElements(): void {
+    private _updateElements(somethingChanged = false): void {
         const s = this._modesDropdownMenu?.shadowRoot?.querySelector(".dropdown-content") as HTMLElement;
         if (s) {
             s.style.borderRadius = this._getCssProperty("--map-card-internal-big-radius");
         }
         delay(100).then(() => this._calculateBasicScale());
+
+        if (!somethingChanged) {
+            return;
+        }
+
+        const update = () => {
+            this._setCurrentMode(this.selectedMode);
+            this.requestUpdate();
+        };
+
+        switch (this._getCurrentMode()?.selectionType) {
+            case SelectionType.PREDEFINED_RECTANGLE:
+                this.selectablePredefinedRectangles.filter(p => p.isDynamic()).length > 0 && update();
+                break;
+            case SelectionType.ROOM:
+                this.selectedRooms.filter(p => p.isDynamic()).length > 0 && update();
+                break;
+            case SelectionType.PREDEFINED_POINT:
+                this.selectablePredefinedPoints.filter(p => p.isDynamic()).length > 0 && update();
+                break;
+        }
     }
 
     private _drawSelection(): SVGTemplateResult | null {
@@ -1244,13 +1283,21 @@ export class XiaomiVacuumMapCard extends LitElement {
     private _showConfigErrors(errors: string[]): TemplateResult {
         errors.forEach(e => console.error(e));
         const errorCard = document.createElement("hui-error-card") as LovelaceCard;
-        errorCard.setConfig({
-            type: "error",
-            error: errors[0],
-            origConfig: this.config,
-        });
+        try {
 
-        return html` ${errorCard} `;
+            errorCard.setConfig({
+                type: "error",
+                error: errors[0],
+                origConfig: this.config,
+            });
+            return html` ${errorCard} `;
+        }
+        catch {
+            return html`
+                <pre style="padding: 10px; background-color: red;">${errors[0]}</pre>
+            `;
+        }
+
     }
 
     private _showOldConfig(): TemplateResult {

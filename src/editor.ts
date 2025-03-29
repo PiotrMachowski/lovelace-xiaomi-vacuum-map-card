@@ -46,7 +46,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
     }
 
     get _vacuum_platform(): string {
-        return this._config?.vacuum_platform || "";
+        return PlatformGenerator.getPlatformName(this._config?.vacuum_platform);
     }
 
     get _camera(): string {
