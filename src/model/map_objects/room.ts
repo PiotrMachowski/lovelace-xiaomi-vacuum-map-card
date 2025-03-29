@@ -19,7 +19,7 @@ export class Room extends PredefinedMapObject {
         const poly = (this._config?.outline ?? []).map(p => this.vacuumToScaledMap(p[0], p[1]));
         return svg`
             <g class="room-wrapper ${this._selected ? "selected" : ""} 
-            room-${`${this._config.id}`.replace(" ", "_")}-wrapper">
+            room-${`${this._config.id}`.replace(/[^a-zA-Z0-9_\-]/gm, "_")}-wrapper">
                 <polygon class="room-outline clickable"
                          points="${poly.map(p => p.join(", ")).join(" ")}"
                          @click="${async (): Promise<void> => this._click()}">
