@@ -121,11 +121,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
         return html`
             <div class="card-config">
                 <div class="description">
-                    ${this._localize("editor.description.before_link")}<a
-                        target="_blank"
-                        href="https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor"
-                        >${this._localize("editor.description.link_text")}</a
-                    >${this._localize("editor.description.after_link")}
+                    ${this._localize("editor.description.text")}
                 </div>
                 <div class="values">
                     <ha-textfield

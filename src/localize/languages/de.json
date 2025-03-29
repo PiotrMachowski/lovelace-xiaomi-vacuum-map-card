@@ -242,9 +242,7 @@
     },
     "editor": {
         "description": {
-            "before_link": "Dieser visuelle Editor unterstützt nur eine einfache Konfiguration mit einer Kameraeinheit, die mit ",
-            "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": ". Für erweiterte Einstellungen verwenden Sie den YAML-Modus."
+            "text": "Dieser visuelle Editor unterstützt nur eine einfache Konfiguration. Für erweiterte Einstellungen verwenden Sie den YAML-Modus."
         },
         "label": {
             "name": "Titel (optional)",

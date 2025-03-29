@@ -216,9 +216,7 @@
     },
     "editor": {
         "description": {
-            "before_link": "该可视化编辑器仅支持一些基本配置，且必须使用以下集成创建的摄像机实体：",
-            "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": "。想要使用高级设置，请使用YAML模式"
+            "text": "该可视化编辑器仅支持一些基本配置。想要使用高级设置，请使用YAML模式"
         },
         "label": {
             "name": "标题（可选）",

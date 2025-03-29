@@ -240,9 +240,7 @@
   },
   "editor": {
       "description": {
-          "before_link": "Šis vizuālais redaktors atbalsta tikai pamata konfigurāciju ar kameru, kas izveidota, izmantojot ",
-          "link_text": "Xiaomi Cloud Map Extractor",
-          "after_link": ". Lai veiktu sarežģītāku iestatīšanu, izmantojiet YAML režīmu."
+          "text": "Šis vizuālais redaktors atbalsta tikai pamata konfigurāciju. Lai veiktu sarežģītāku iestatīšanu, izmantojiet YAML režīmu."
       },
       "label": {
           "name": "Nosaukums (pēc izvēles)",

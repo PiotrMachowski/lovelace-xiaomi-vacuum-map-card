@@ -245,9 +245,7 @@
     },
     "editor": {
         "description": {
-            "before_link": "This visual editor supports only a basic configuration with a camera entity created using ",
-            "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": ". For more advanced setup use YAML mode."
+            "text": "This visual editor supports only a basic configuration. For more advanced setup use YAML mode."
         },
         "label": {
             "name": "Title (optional)",

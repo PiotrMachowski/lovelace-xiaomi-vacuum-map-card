@@ -240,9 +240,7 @@
     },
     "editor": {
         "description": {
-            "before_link": "Visuaalinen editori tukee vain peruskokoonpanoa, jossa kamerakokonaisuus on luotu käyttämällä ",
-            "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": ". Käytä YAML-tilaa edistyneempään asennukseen."
+            "text": "Visuaalinen editori tukee vain peruskokoonpanoa. Käytä YAML-tilaa edistyneempään asennukseen."
         },
         "label": {
             "name": "Otsikko (valinnainen)",

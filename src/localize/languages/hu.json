@@ -240,9 +240,7 @@
     },
     "editor": {
         "description": {
-            "before_link": "Ez a vizuális szerkesztő csak egy alap konfigurációt támogat, egy kamera entitással, amelyet a ",
-            "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": " segítségével hoztak létre. Továbbfejlesztett beállításhoz használja a YAML módot."
+            "text": "Ez a vizuális szerkesztő csak egy alap konfigurációt támogat. Továbbfejlesztett beállításhoz használja a YAML módot."
         },
         "label": {
             "name": "Cím (opcionális)",

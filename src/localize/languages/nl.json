@@ -240,9 +240,7 @@
     },
     "editor": {
         "description": {
-            "before_link": "Deze grafische editor ondersteunt slechts een basis-configuratie met een camera-entiteit die gemaakt is met ",
-            "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": ". Gebruik de YAML-modus voor een meer uitgebreide configuratie."
+            "text": "Deze grafische editor ondersteunt slechts een basis-configuratie. Gebruik de YAML-modus voor een meer uitgebreide configuratie."
         },
         "label": {
             "name": "Titel (optioneel)",

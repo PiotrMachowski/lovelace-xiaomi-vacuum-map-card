@@ -214,9 +214,7 @@
     },
     "editor": {
         "description": {
-            "before_link": "Sjónrænn ritill styður aðeins grunn stillingar með \"camera\" einingunni sem notar ",
-            "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": ". Fyrir ítarstillingar, notaðu YAML ham."
+            "text": "Sjónrænn ritill styður aðeins grunn stillingar. Fyrir ítarstillingar, notaðu YAML ham."
         },
         "label": {
             "name": "Titill (valkvætt)",
