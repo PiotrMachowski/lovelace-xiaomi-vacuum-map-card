@@ -18,6 +18,7 @@ jobs:
       - name: Build the file
         run: |
           npm ci
+          npm version --git-tag-version=false --commit-hooks=false "${{ github.event.release.tag_name }}"
           npm run build
 
       - name: Upload build result to release
