@@ -37,7 +37,7 @@
         "eslint-plugin-prettier": "^4.0.0",
         "prettier": "^2.4.1",
         "replace-in-file": "^6.3.5",
-        "rollup": "^2.58.0",
+        "rollup": "^2.79.2",
         "rollup-plugin-babel": "^4.4.0",
         "rollup-plugin-commonjs": "^10.1.0",
         "rollup-plugin-node-resolve": "^5.2.0",
