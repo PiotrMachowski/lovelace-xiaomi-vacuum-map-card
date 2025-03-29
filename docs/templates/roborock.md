@@ -2,7 +2,8 @@
 
 [Integration's documentation](https://www.home-assistant.io/integrations/roborock/)
 
-You MUST be on 2025.4 or later for this to work.
+> [!WARNING]
+> You MUST use HA 2025.4 or later for this to work.
 
 This platform can be used to control vacuums connected to Home Assistant using the [core Roborock integration](https://www.home-assistant.io/integrations/roborock/)
 
