@@ -15,7 +15,10 @@
         "vacuum_clean_point_predefined": "Points",
         "vacuum_clean_zone": "Zone cleanup",
         "vacuum_clean_zone_predefined": "Zones list",
-        "vacuum_follow_path": "Path"
+        "vacuum_follow_path": "Path",
+        "setup_zone": "Zone coordinates",
+        "setup_point": "Point coordinates",
+        "setup_outline": "Outline coordinates"
     },
     "validation": {
         "preset": {
