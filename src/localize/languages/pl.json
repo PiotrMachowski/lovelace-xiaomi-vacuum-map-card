@@ -240,9 +240,7 @@
     },
     "editor": {
         "description": {
-            "before_link": "Ten edytor interfejsu wspiera jedynie podstawową konfigurację dla kamery utworzonej przy użyciu ",
-            "link_text": "Xiaomi Cloud Map Extractora",
-            "after_link": ". W celu bardziej zaawansowanej konfiguracji użyj trybu YAML."
+            "text": "Ten edytor wizualny pozwala tylko na podstawową konfigurację. Bardziej zaawansowane funkcje są dostępne jedynie w trybie YAML."
         },
         "label": {
             "name": "Tytuł (opcjonalny)",

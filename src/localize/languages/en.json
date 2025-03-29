@@ -15,7 +15,10 @@
         "vacuum_clean_point_predefined": "Points",
         "vacuum_clean_zone": "Zone cleanup",
         "vacuum_clean_zone_predefined": "Zones list",
-        "vacuum_follow_path": "Path"
+        "vacuum_follow_path": "Path",
+        "setup_zone": "Zone coordinates",
+        "setup_point": "Point coordinates",
+        "setup_outline": "Outline coordinates"
     },
     "validation": {
         "preset": {
@@ -142,6 +145,7 @@
                 "paused": "Paused",
                 "spot cleaning": "Spot cleaning",
                 "error": "Error",
+                "sleeping": "Sleeping",
                 "shutting down": "Shutting down",
                 "updating": "Updating",
                 "docking": "Docking",
@@ -164,7 +168,8 @@
                 "medium": "Medium",
                 "turbo": "Turbo",
                 "auto": "Auto",
-                "gentle": "Gentle"
+                "gentle": "Gentle",
+                "strong": "Strong"
             }
         },
         "sensor_dirty_left": {
@@ -240,9 +245,7 @@
     },
     "editor": {
         "description": {
-            "before_link": "This visual editor supports only a basic configuration with a camera entity created using ",
-            "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": ". For more advanced setup use YAML mode."
+            "text": "This visual editor supports only a basic configuration. For more advanced setup use YAML mode."
         },
         "label": {
             "name": "Title (optional)",

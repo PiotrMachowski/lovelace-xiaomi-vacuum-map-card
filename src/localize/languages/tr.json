@@ -214,9 +214,7 @@
     },
     "editor": {
         "description": {
-            "before_link": "Bu görsel düzenleyici, kullanılarak oluşturulan bir kamera varlığı ile yalnızca temel bir yapılandırmayı destekler.",
-            "link_text": "Xiaomi Bulut Haritası Çıkarıcı",
-            "after_link": ". Daha gelişmiş kurulum için YAML modunu kullanın."
+            "text": "Bu görsel düzenleyici yalnızca temel yapılandırmayı destekler. Daha gelişmiş kurulum için YAML modunu kullanın."
         },
         "label": {
             "name": "Başlık (isteğe bağlı)",

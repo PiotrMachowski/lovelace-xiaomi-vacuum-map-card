@@ -214,9 +214,7 @@
     },
     "editor": {
         "description": {
-            "before_link": "Denne visuelle editoren støtter bare en grunnleggende konfigurasjon med en kameraenhet opprettet ved hjelp av ",
-            "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": ". For mer avansert oppsett bruk YAML-modus."
+            "text": "Denne visuelle editoren støtter bare en grunnleggende konfigurasjon. For mer avansert oppsett bruk YAML-modus."
         },
         "label": {
             "name": "Tittel (valgfritt)",

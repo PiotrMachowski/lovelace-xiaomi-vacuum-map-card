@@ -240,9 +240,7 @@
     },
     "editor": {
         "description": {
-            "before_link": "Questo editor visivo supporta solo una configurazione di base con un'entità telecamera creata utilizzando ",
-            "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": ". Per una configurazione più avanzata usa la modalità YAML."
+            "text": "Questo editor visivo supporta solo una configurazione di base. Per una configurazione più avanzata usa la modalità YAML."
         },
         "label": {
             "name": "Titolo (opzionale)",

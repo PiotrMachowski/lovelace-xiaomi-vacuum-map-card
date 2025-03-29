@@ -11,6 +11,8 @@ import * as roombaTemplate from "./platform_templates/roomba.json";
 import * as deebotTemplate from "./platform_templates/DeebotUniverse_Deebot-4-Home-Assistant.json";
 import * as tasshackDreameVacuumTemplate from "./platform_templates/Tasshack_dreame-vacuum.json";
 import * as roborockTemplate from "./platform_templates/humbertogontijo_homeassistant-roborock.json";
+import * as roborockCoreTemplate from "./platform_templates/roborock.json";
+
 import * as simpleWyzeTemplate from "./platform_templates/romedtino_simple-wyze-vac.json";
 import * as myneatoTemplate from "./platform_templates/BenjaminPaap_myneato.json";
 import * as setupDecimalTemplate from "./platform_templates/setup_decimal.json";
@@ -27,7 +29,8 @@ import {
 import { SelectionType } from "../map_mode/selection-type";
 
 export class PlatformGenerator {
-    public static XIAOMI_MIIO_PLATFORM = "default";
+    public static DEFAULT_PLATFORM = "default";
+    public static XIAOMI_MIIO_PLATFORM = "Xiaomi Miio";
     public static KRZYSZTOFHAJDAMOWICZ_MIIO2_PLATFORM = "KrzysztofHajdamowicz/miio2";
     public static MAROTOWEB_VIOMISE_PLATFORM = "marotoweb/viomise";
     public static RAND256_VALETUDO_RE_PLATFORM = "rand256/ValetudoRE";
@@ -39,6 +42,7 @@ export class PlatformGenerator {
     public static ROOMBA_PLATFORM = "Roomba";
     public static TASSHACK_DREAME_VACUUM_PLATFORM = "Tasshack/dreame-vacuum";
     public static DEEBOTUNIVERSE_DEEBOT_4_HOME_ASSISTANT_PLATFORM = "DeebotUniverse/Deebot-4-Home-Assistant";
+    public static ROBOROCK_PLATFORM = "Roborock";
     public static HUMBERTOGONTIJO_ROBOROCK_PLATFORM = "humbertogontijo/homeassistant-roborock";
     public static ROMEDTINO_SIMPLE_WAZE_PLATFORM = "romedtino/simple-wyze-vac";
     public static BENJAMIN_PAAP_MYNEATO_PLATFORM = "BenjaminPaap/home-assistant-myneato";
@@ -50,6 +54,7 @@ export class PlatformGenerator {
 
     private static TEMPLATES = new Map<string, PlatformTemplate>([
         [PlatformGenerator.XIAOMI_MIIO_PLATFORM, xiaomiMiioTemplate as PlatformTemplate],
+        [PlatformGenerator.ROBOROCK_PLATFORM, roborockCoreTemplate as PlatformTemplate],
         [PlatformGenerator.KRZYSZTOFHAJDAMOWICZ_MIIO2_PLATFORM, krzysztofHajdamowiczMiio2Template],
         [PlatformGenerator.MAROTOWEB_VIOMISE_PLATFORM, marotowebViomiseTemplate],
         [PlatformGenerator.TYKAROL_VIOMI_VACUUM_V8_PLATFORM, tykarolViomiVacuumV8Template],
@@ -77,6 +82,7 @@ export class PlatformGenerator {
         [PlatformGenerator.RAND256_VALETUDO_RE_PLATFORM, "rand256ValetudoRe"],
         [PlatformGenerator.TASSHACK_DREAME_VACUUM_PLATFORM, "tasshackDreameVacuum"],
         [PlatformGenerator.HUMBERTOGONTIJO_ROBOROCK_PLATFORM, "humbertogontijoHomeassistantRoborock"],
+        [PlatformGenerator.ROBOROCK_PLATFORM, "Roborock"],
         [PlatformGenerator.SEND_COMMAND_PLATFORM, "sendCommand"],
         [PlatformGenerator.ALONE_XIAOMI_MIOT_PLATFORM, "alOneHassXiaomiMiot"],
         [PlatformGenerator.NEATO_PLATFORM, "neato"],
@@ -103,7 +109,8 @@ export class PlatformGenerator {
     }
 
     public static getPlatformName(platform: string | undefined): string {
-        return platform ?? PlatformGenerator.XIAOMI_MIIO_PLATFORM;
+        return (platform ?? PlatformGenerator.XIAOMI_MIIO_PLATFORM)
+            .replace(PlatformGenerator.DEFAULT_PLATFORM, PlatformGenerator.XIAOMI_MIIO_PLATFORM);
     }
 
     public static getPlatformsDocumentationUrl(platform: string): string {

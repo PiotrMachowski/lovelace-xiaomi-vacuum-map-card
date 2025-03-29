@@ -8,22 +8,19 @@ import {
     PointType,
     PointWithRepeatsType,
     PredefinedPointConfig,
-    VariablesStorage,
 } from "../../types/types";
-import { MapObject } from "./map-object";
 import { deleteFromArray } from "../../utils";
 import { MapMode } from "../map_mode/map-mode";
 import { HomeAssistantFixed } from "../../types/fixes";
+import { PredefinedMapObject } from "./predefined-map-object";
 
-export class PredefinedPoint extends MapObject {
+export class PredefinedPoint extends PredefinedMapObject {
     private readonly _config: PredefinedPointConfig;
     private readonly _iconConfig: IconConfig;
-    private _selected: boolean;
 
     constructor(config: PredefinedPointConfig, context: Context) {
-        super(context);
+        super(config, context);
         this._config = config;
-        this._selected = false;
         this._iconConfig =
             this._config.icon ??
             ({
@@ -31,10 +28,6 @@ export class PredefinedPoint extends MapObject {
                 y: this._config.position[1],
                 name: "mdi:map-marker",
             } as IconConfig);
-    }
-
-    public get variables(): VariablesStorage {
-        return this._config.variables ?? super.variables;
     }
 
     public static getFromEntities(
@@ -94,7 +87,7 @@ export class PredefinedPoint extends MapObject {
     }
 
     private async _click(): Promise<void> {
-        this._selected = !this._selected;
+        this._toggleSelected();
         forwardHaptic("selection");
         if (this._selected) {
             const previous = this._context.selectedPredefinedPoint().pop();

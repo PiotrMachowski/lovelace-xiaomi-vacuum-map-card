@@ -46,7 +46,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
     }
 
     get _vacuum_platform(): string {
-        return this._config?.vacuum_platform || "";
+        return PlatformGenerator.getPlatformName(this._config?.vacuum_platform);
     }
 
     get _camera(): string {
@@ -111,7 +111,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
         this._helpers.importMoreInfoControl("climate");
 
         const entityIds = Object.keys(this.hass.states);
-        const cameras = entityIds.filter(e => e.substr(0, e.indexOf(".")) === "camera");
+        const cameras = entityIds.filter(e => ["camera", "image"].includes(e.substr(0, e.indexOf("."))));
         const vacuums = entityIds.filter(e => e.substr(0, e.indexOf(".")) === "vacuum");
         const platforms = PlatformGenerator.getPlatforms();
         const roomsUnavailable =
@@ -121,11 +121,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
         return html`
             <div class="card-config">
                 <div class="description">
-                    ${this._localize("editor.description.before_link")}<a
-                        target="_blank"
-                        href="https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor"
-                        >${this._localize("editor.description.link_text")}</a
-                    >${this._localize("editor.description.after_link")}
+                    ${this._localize("editor.description.text")}
                 </div>
                 <div class="values">
                     <ha-textfield

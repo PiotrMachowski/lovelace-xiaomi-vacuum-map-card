@@ -3,22 +3,16 @@ import { css, CSSResultGroup, svg, SVGTemplateResult } from "lit";
 import { forwardHaptic } from "custom-card-helpers";
 
 import { Context } from "./context";
-import { MapObject } from "./map-object";
 import { deleteFromArray } from "../../utils";
-import { RoomConfig, VariablesStorage } from "../../types/types";
+import { RoomConfig } from "../../types/types";
+import {PredefinedMapObject} from "./predefined-map-object";
 
-export class Room extends MapObject {
-    private _selected: boolean;
+export class Room extends PredefinedMapObject {
     private readonly _config: RoomConfig;
 
     constructor(config: RoomConfig, context: Context) {
-        super(context);
+        super(config, context);
         this._config = config;
-        this._selected = false;
-    }
-
-    public get variables(): VariablesStorage {
-        return this._config.variables ?? super.variables;
     }
 
     public render(): SVGTemplateResult {
@@ -45,7 +39,7 @@ export class Room extends MapObject {
             forwardHaptic("failure");
             return;
         }
-        this._selected = !this._selected;
+        this._toggleSelected();
         if (this._selected) {
             this._context.selectedRooms().push(this);
         } else {

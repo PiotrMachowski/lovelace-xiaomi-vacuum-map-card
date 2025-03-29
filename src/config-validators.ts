@@ -256,13 +256,18 @@ function validatePreset(config: CardPresetConfig, nameRequired: boolean, languag
     });
     if (config.map_source) validateMapSource(config.map_source).forEach(e => errors.push(e));
     if (config.calibration_source) validateCalibrationSource(config.calibration_source).forEach(e => errors.push(e));
-    if (config.vacuum_platform && !PlatformGenerator.getPlatforms().includes(config.vacuum_platform))
+    if (config.vacuum_platform
+        && !PlatformGenerator.getPlatforms().includes(PlatformGenerator.getPlatformName(config.vacuum_platform))
+    )
         errors.push(["validation.preset.platform.invalid", "{0}", config.vacuum_platform]);
     (config.icons ?? []).flatMap(i => validateIconConfig(i)).forEach(e => errors.push(e));
     (config.tiles ?? []).flatMap(i => validateTileConfig(i)).forEach(e => errors.push(e));
-    (config.map_modes ?? [])
-        .flatMap(i => validateMapModeConfig(vacuumPlatform, i, language))
-        .forEach(e => errors.push(e));
+    if (![PlatformGenerator.SETUP_INTEGER_PLATFORM, PlatformGenerator.SETUP_DECIMAL_PLATFORM]
+        .includes(PlatformGenerator.getPlatformName(config.vacuum_platform))) {
+        (config.map_modes ?? [])
+            .flatMap(i => validateMapModeConfig(vacuumPlatform, i, language))
+            .forEach(e => errors.push(e));
+    }
     if (!config.preset_name && nameRequired) errors.push("validation.preset.preset_name.missing");
     return errors;
 }

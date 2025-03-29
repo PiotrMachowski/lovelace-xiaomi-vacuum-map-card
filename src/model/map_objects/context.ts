@@ -24,6 +24,8 @@ export class Context {
         public readonly cssEvaluator: (_: string) => string,
         public readonly runImmediately: () => Promise<boolean>,
         public readonly localize: (_: TranslatableString) => string,
+        public readonly getState: (_: string) => string,
+        public readonly toggleEntity: (_: string) => void,
     ) {}
 
     public roundMap([x, y]: PointArrayNotation): PointArrayNotation {

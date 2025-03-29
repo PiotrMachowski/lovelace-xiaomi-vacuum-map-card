@@ -214,9 +214,7 @@
     },
     "editor": {
         "description": {
-            "before_link": "Tento editor podporuje iba základnú konfiguráciu s použitím entity kamera vytvorené pomocou ",
-            "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": ". Pre pokročilé nastavenia použite editor kódu."
+            "text": "Tento editor podporuje iba základnú konfiguráciu. Pre pokročilé nastavenia použite editor kódu."
         },
         "label": {
             "name": "Titulok (voliteľná položka)",

@@ -228,9 +228,7 @@
     },
     "editor": {
         "description": {
-            "before_link": "Acest editor vizual acceptă doar o configurație de bază cu o entitate de cameră creată folosind ",
-            "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": ". Pentru o configurare mai avansată, utilizați modul YAML."
+            "text": "Acest editor vizual acceptă doar o configurație de bază. Pentru o configurare mai avansată, utilizați modul YAML."
         },
         "label": {
             "name": "Titlu (opțional)",

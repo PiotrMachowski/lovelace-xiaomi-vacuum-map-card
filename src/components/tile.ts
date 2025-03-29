@@ -44,7 +44,6 @@ export class Tile extends RootlessLitElement {
         }
         this.className = `tile-wrapper clickable ripple ${this.config.tile_id ? `tile-${this.config.tile_id}-wrapper` : ""}`;
         const stateObj = this.config.entity ? this.hass.states[this.config.entity] : undefined;
-        if (!stateObj) return;
         const title = this.getTileLabel(stateObj);
         const value = this.getTileValue(stateObj);
         const icon = this.getIcon(stateObj);

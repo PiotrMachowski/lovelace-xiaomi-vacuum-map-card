@@ -1,9 +1,6 @@
 {
     "map_modes": {
-        "default_templates": [
-            "vacuum_clean_zone",
-            "vacuum_goto"
-        ],
+        "default_templates": ["vacuum_clean_zone", "vacuum_goto"],
         "templates": {
             "vacuum_clean_segment": {
                 "name": "map_mode.vacuum_clean_segment",
@@ -13,11 +10,14 @@
                 "max_repeats": 3,
                 "id_type": "number",
                 "service_call_schema": {
-                    "service": "roborock.vacuum_clean_segment",
+                    "service": "vacuum.send_command",
                     "service_data": {
-                        "segments": "[[selection]]",
-                        "entity_id": "[[entity_id]]",
-                        "repeats": "[[repeats]]"
+                        "command": "app_segment_clean",
+                        "params": [{
+                            "segments": "[[selection]]",
+                            "repeats": "[[repeats]]"
+                        }],
+                        "entity_id": "[[entity_id]]"
                     }
                 }
             },
@@ -31,10 +31,13 @@
                 "repeats_type": "EXTERNAL",
                 "max_repeats": 3,
                 "service_call_schema": {
-                    "service": "roborock.vacuum_clean_zone",
+                    "service": "vacuum.send_command",
                     "service_data": {
-                        "zone": "[[selection]]",
-                        "repeats": "[[repeats]]",
+                        "command": "app_zoned_clean",
+                        "params": [{
+                            "zone": "[[selection]]",
+                            "repeats": "[[repeats]]"
+                        }],
                         "entity_id": "[[entity_id]]"
                     }
                 }
@@ -49,10 +52,13 @@
                 "repeats_type": "EXTERNAL",
                 "max_repeats": 3,
                 "service_call_schema": {
-                    "service": "roborock.vacuum_clean_zone",
+                    "service": "vacuum.send_command",
                     "service_data": {
-                        "zone": "[[selection]]",
-                        "repeats": "[[repeats]]",
+                        "command": "app_zoned_clean",
+                        "params": [{
+                            "zone": "[[selection]]",
+                            "repeats": "[[repeats]]"
+                        }],
                         "entity_id": "[[entity_id]]"
                     }
                 }
@@ -65,10 +71,10 @@
                 "coordinates_to_meters_divider": 1000,
                 "repeats_type": "NONE",
                 "service_call_schema": {
-                    "service": "roborock.vacuum_goto",
+                    "service": "roborock.set_vacuum_goto_position",
                     "service_data": {
-                        "x_coord": "[[point_x]]",
-                        "y_coord": "[[point_y]]",
+                        "x": "[[point_x]]",
+                        "y": "[[point_y]]",
                         "entity_id": "[[entity_id]]"
                     }
                 }
@@ -81,10 +87,10 @@
                 "coordinates_to_meters_divider": 1000,
                 "repeats_type": "NONE",
                 "service_call_schema": {
-                    "service": "roborock.vacuum_goto",
+                    "service": "roborock.set_vacuum_goto_position",
                     "service_data": {
-                        "x_coord": "[[point_x]]",
-                        "y_coord": "[[point_y]]",
+                        "x": "[[point_x]]",
+                        "y": "[[point_y]]",
                         "entity_id": "[[entity_id]]"
                     }
                 }
@@ -111,88 +117,55 @@
     "tiles": {
         "from_sensors": [
             {
+                "tile_id": "main_brush_left",
+                "icon": "mdi:brush",
+                "unique_id_regex": "main_brush_time_left_",
+                "label": "tile.main_brush_left.label",
+                "unit": "unit.hour_shortcut",
+                "multiplier": 0.0002777777777777778
+            },
+            {
                 "tile_id": "sensor_dirty_left",
-                "unique_id_regex": "consumable_sensor_dirty_left_",
+                "icon": "mdi:eye-outline",
+                "unique_id_regex": "sensor_time_left_",
                 "label": "tile.sensor_dirty_left.label",
                 "unit": "unit.hour_shortcut",
-                "multiplier": 0.0002777777777777778,
-                "hold_action": {
-                    "action": "call-service",
-                    "service": "vacuum.send_command",
-                    "confirmation": {},
-                    "service_data": {
-                        "command": "reset_consumable",
-                        "params": "sensor_dirty_time",
-                        "entity_id": "[[vacuum_entity_id]]"
-                    }
-                }
+                "multiplier": 0.0002777777777777778
             },
             {
                 "tile_id": "filter_left",
-                "unique_id_regex": "consumable_filter_left_",
+                "icon": "mdi:air-filter",
+                "unique_id_regex": "filter_time_left_",
                 "label": "tile.filter_left.label",
                 "unit": "unit.hour_shortcut",
-                "multiplier": 0.0002777777777777778,
-                "hold_action": {
-                    "action": "call-service",
-                    "service": "vacuum.send_command",
-                    "confirmation": {},
-                    "service_data": {
-                        "command": "reset_consumable",
-                        "params": "filter_work_time",
-                        "entity_id": "[[vacuum_entity_id]]"
-                    }
-                }
-            },
-            {
-                "tile_id": "main_brush_left",
-                "unique_id_regex": "consumable_main_brush_left_",
-                "label": "tile.main_brush_left.label",
-                "unit": "unit.hour_shortcut",
-                "multiplier": 0.0002777777777777778,
-                "hold_action": {
-                    "action": "call-service",
-                    "service": "vacuum.send_command",
-                    "confirmation": {},
-                    "service_data": {
-                        "command": "reset_consumable",
-                        "params": "main_brush_work_time",
-                        "entity_id": "[[vacuum_entity_id]]"
-                    }
-                }
+                "multiplier": 0.0002777777777777778
             },
             {
                 "tile_id": "side_brush_left",
-                "unique_id_regex": "consumable_side_brush_left_",
+                "unique_id_regex": "side_brush_time_left_",
+                "icon": "mdi:brush",
                 "label": "tile.side_brush_left.label",
                 "unit": "unit.hour_shortcut",
-                "multiplier": 0.0002777777777777778,
-                "hold_action": {
-                    "action": "call-service",
-                    "service": "vacuum.send_command",
-                    "confirmation": {},
-                    "service_data": {
-                        "command": "reset_consumable",
-                        "params": "side_brush_work_time",
-                        "entity_id": "[[vacuum_entity_id]]"
-                    }
-                }
+                "multiplier": 0.0002777777777777778
             },
             {
                 "tile_id": "cleaning_count",
-                "unique_id_regex": "clean_history_count_",
+                "icon": "mdi:counter",
+                "unique_id_regex": "total_cleaning_count_",
                 "label": "tile.cleaning_count.label"
             },
             {
                 "tile_id": "cleaned_area",
-                "unique_id_regex": "current_clean_area_",
+                "icon": "mdi:texture-box",
+                "unique_id_regex": "cleaning_area_",
                 "label": "tile.cleaned_area.label",
                 "unit": "unit.meter_squared_shortcut",
                 "precision": 2
             },
             {
                 "tile_id": "cleaning_time",
-                "unique_id_regex": "current_clean_time_",
+                "icon": "mdi:history",
+                "unique_id_regex": "cleaning_time_",
                 "label": "tile.cleaning_time.label",
                 "unit": "unit.minute_shortcut",
                 "multiplier": 0.016667

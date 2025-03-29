@@ -214,9 +214,7 @@
     },
     "editor": {
         "description": {
-            "before_link": "此面板僅支援基本的設定，並且只能使用以下的附加元件新增攝影機實體: ",
-            "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": "。如需更豐富的進階設定，請使用 YAML 編輯"
+            "text": "此面板僅支援基本的設定。如需更豐富的進階設定，請使用 YAML 編輯"
         },
         "label": {
             "name": "標題（選填）",

@@ -1,13 +1,13 @@
 {
     "map_modes": {
         "default_templates": [
-            "vacuum_clean_zone",
-            "vacuum_goto",
-            "vacuum_follow_path"
+            "setup_zone",
+            "setup_point",
+            "setup_outline"
         ],
         "templates": {
-            "vacuum_clean_zone": {
-                "name": "map_mode.vacuum_clean_zone",
+            "setup_zone": {
+                "name": "map_mode.setup_zone",
                 "icon": "mdi:select-drag",
                 "selection_type": "MANUAL_RECTANGLE",
                 "coordinates_rounding": true,
@@ -21,8 +21,8 @@
                     }
                 }
             },
-            "vacuum_goto": {
-                "name": "map_mode.vacuum_goto",
+            "setup_point": {
+                "name": "map_mode.setup_point",
                 "icon": "mdi:map-marker-plus",
                 "selection_type": "MANUAL_POINT",
                 "coordinates_rounding": true,
@@ -37,8 +37,8 @@
                     }
                 }
             },
-            "vacuum_follow_path": {
-                "name": "map_mode.vacuum_follow_path",
+            "setup_outline": {
+                "name": "map_mode.setup_outline",
                 "icon": "mdi:map-marker-path",
                 "selection_type": "MANUAL_PATH",
                 "coordinates_rounding": true,

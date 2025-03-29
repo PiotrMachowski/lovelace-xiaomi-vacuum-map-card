@@ -56,6 +56,9 @@ export function getWatchedEntitiesForMapMode(mapMode: MapMode): Set<string> {
                 .forEach(p => watchedEntities.add((p.position as string).split(".attributes.")[0]));
             break;
     }
+    mapMode.predefinedSelections
+        .filter(p => p.state_entity)
+        .forEach(p => watchedEntities.add(p.state_entity as string));
     return watchedEntities;
 }
 
@@ -151,8 +154,21 @@ export function hasConfigOrAnyEntityChanged(
     if (changedProps.has("config") || forceUpdate) {
         return true;
     }
-    const oldHass = changedProps.get("hass") as HomeAssistantFixed | undefined;
-    return !oldHass || watchedEntities.some(entity => oldHass.states[entity] !== hass?.states[entity]);
+    const oldHass = changedProps.get("_hass") as HomeAssistantFixed | undefined;
+    const entitesChanged = !oldHass || watchedEntities.some(entity => oldHass.states[entity] !== hass?.states[entity]);
+    if (entitesChanged)
+        return true;
+    const changedKeys = Array.from(changedProps.keys());
+    return changedKeys.length > 1 || changedKeys.length == 1 && changedKeys[0] != "_hass";
+}
+
+export function checkIfEntitiesChanged(
+    entities: string[],
+    oldHass: HomeAssistantFixed,
+    newHass: HomeAssistantFixed
+): boolean {
+    const changedEntities = entities.filter(entity => oldHass.states[entity] !== newHass.states[entity]);
+    return changedEntities.length > 0;
 }
 
 export function conditional<T>(condition: boolean, content: () => T): T | null {

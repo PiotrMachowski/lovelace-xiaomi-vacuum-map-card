@@ -209,9 +209,7 @@
     },
     "editor": {
         "description": {
-            "before_link": "Den visuelle editor understøtter kun kun en konfiguration med en kamera entitet lavet med ",
-            "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": ". For en mere advanceret konfiguration, brug YAML mode."
+            "text": "Den visuelle editor understøtter kun en grundlæggende konfiguration. For en mere advanceret konfiguration, brug YAML mode."
         },
         "label": {
             "name": "Titel (valgfrit)",

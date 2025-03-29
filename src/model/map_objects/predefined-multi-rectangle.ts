@@ -4,24 +4,18 @@ import { css, CSSResultGroup, svg, SVGTemplateResult } from "lit";
 import { forwardHaptic } from "custom-card-helpers";
 
 import { Context } from "./context";
-import { MapObject } from "./map-object";
-import { PredefinedZoneConfig, VariablesStorage, ZoneType, ZoneWithRepeatsType } from "../../types/types";
+import { PredefinedZoneConfig, ZoneType, ZoneWithRepeatsType } from "../../types/types";
 import { deleteFromArray } from "../../utils";
 import { MapMode } from "../map_mode/map-mode";
 import { HomeAssistantFixed } from "../../types/fixes";
+import { PredefinedMapObject } from "./predefined-map-object";
 
-export class PredefinedMultiRectangle extends MapObject {
+export class PredefinedMultiRectangle extends PredefinedMapObject {
     private readonly _config: PredefinedZoneConfig;
-    private _selected: boolean;
 
     constructor(config: PredefinedZoneConfig, context: Context) {
-        super(context);
+        super(config, context);
         this._config = config;
-        this._selected = false;
-    }
-
-    public get variables(): VariablesStorage {
-        return this._config.variables ?? super.variables;
     }
 
     public static getFromEntities(
@@ -108,7 +102,7 @@ export class PredefinedMultiRectangle extends MapObject {
             forwardHaptic("failure");
             return;
         }
-        this._selected = !this._selected;
+        this._toggleSelected();
         if (this._selected) {
             this._context.selectedPredefinedRectangles().push(this);
         } else {

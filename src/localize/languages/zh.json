@@ -133,6 +133,7 @@
                 "starting": "开始清扫",
                 "charger disconnected": "与充电座断开",
                 "idle": "空闲",
+                "sleeping": "休眠",
                 "remote control active": "开始遥控模式",
                 "cleaning": "清扫中",
                 "returning home": "正在回充",
@@ -162,7 +163,8 @@
                 "silent": "安静",
                 "standard": "标准",
                 "medium": "强力",
-                "turbo": "MAX",
+                "strong": "强力",
+                "turbo": "超强",
                 "auto": "自动",
                 "gentle": "轻柔"
             }
@@ -214,9 +216,7 @@
     },
     "editor": {
         "description": {
-            "before_link": "该可视化编辑器仅支持一些基本配置，且必须使用以下集成创建的摄像机实体：",
-            "link_text": "Xiaomi Cloud Map Extractor",
-            "after_link": "。想要使用高级设置，请使用YAML模式"
+            "text": "该可视化编辑器仅支持一些基本配置。想要使用高级设置，请使用YAML模式"
         },
         "label": {
             "name": "标题（可选）",
