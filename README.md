@@ -252,8 +252,8 @@ map: # coordinates of a point in a map coordinate system (can be read using e.g.
 
 Following vacuum platforms are supported out of the box at this moment:
 
-- [`default` (Xiaomi Miio)](/docs/templates/xiaomiMiio.md)
-- [`roborock`](/docs/templates/roborock.md)
+- [`Xiaomi Miio`](/docs/templates/xiaomiMiio.md)
+- [`Roborock`](/docs/templates/roborock.md)
 - [`humbertogontijo/homeassistant-roborock`](/docs/templates/humbertogontijoHomeassistantRoborock.md)
 - [`Tasshack/dreame-vacuum`](/docs/templates/tasshackDreameVacuum.md)
 - [`rand256/ValetudoRE`](/docs/templates/rand256ValetudoRe.md)
@@ -497,35 +497,41 @@ Format of data depends on selected `selection_type`:
 
 * `PREDEFINED_RECTANGLE`
 
-  | Key         | Type   | Required | Default | Description                                                                                                        |
-  |-------------|--------|----------|---------|--------------------------------------------------------------------------------------------------------------------|
-  | `zones`     | list   | yes      | -       | List of lists containing zone's coordinates in `[x,y,width,height]` format (e.g. `[[25500, 25000, 26500, 26500]]`) |
-  | `icon`      | object | no       | -       | [Icon definition](#icon-options)                                                                                   |
-  | `label`     | object | no       | -       | [Label definition](#label-options)                                                                                 |
-  | `variables` | object | no       | -       | Variables that should be passed to `service_call_schema`                                                           |
+  | Key             | Type                    | Required | Default      | Description                                                                                                        |
+  |-----------------|-------------------------|----------|--------------|--------------------------------------------------------------------------------------------------------------------|
+  | `zones`         | list                    | yes      | -            | List of lists containing zone's coordinates in `[x,y,width,height]` format (e.g. `[[25500, 25000, 26500, 26500]]`) |
+  | `icon`          | object                  | no       | -            | [Icon definition](#icon-options)                                                                                   |
+  | `label`         | object                  | no       | -            | [Label definition](#label-options)                                                                                 |
+  | `variables`     | object                  | no       | -            | Variables that should be passed to `service_call_schema`                                                           |
+  | `default_state` | `selected`/`unselected` | no       | `unselected` | Default state of selection                                                                                         |
+  | `state_entity`  | entity id               | no       | -            | Entity that should be used to store the state of selection                                                         |
 
   > See [this page](/docs/templates/setup.md#getting-coordinates) to check how to easily retrieve zone coordinates.
 
 * `PREDEFINED_POINT`
 
-  | Key         | Type   | Required | Default | Description                                                   |
-  |-------------|--------|----------|---------|---------------------------------------------------------------|
-  | `position`  | list   | yes      | -       | Point's coordinates in `[x,y]` format (e.g. `[25500, 25000]`) |
-  | `icon`      | object | no       | -       | [Icon definition](#icon-options)                              |
-  | `label`     | object | no       | -       | [Label definition](#label-options)                            |
-  | `variables` | object | no       | -       | Variables that should be passed to `service_call_schema`      |
+  | Key             | Type                    | Required | Default      | Description                                                       |
+  |-----------------|-------------------------|----------|--------------|-------------------------------------------------------------------|
+  | `position`      | list                    | yes      | -            | Point's coordinates in `[x,y]` format (e.g. `[25500, 25000]`)     |
+  | `icon`          | object                  | no       | -            | [Icon definition](#icon-options)                                  |
+  | `label`         | object                  | no       | -            | [Label definition](#label-options)                                |
+  | `variables`     | object                  | no       | -            | Variables that should be passed to `service_call_schema`          |
+  | `default_state` | `selected`/`unselected` | no       | `unselected` | Default state of selection                                        |
+  | `state_entity`  | entity id               | no       | -            | Entity that should be used to store the state of selection        |
 
   > See [this page](/docs/templates/setup.md#getting-coordinates) to check how to easily retrieve point coordinates.
 
 * `ROOM`
 
- | Key         | Type             | Required | Default | Description                                                                                     |
- |-------------|------------------|----------|---------|-------------------------------------------------------------------------------------------------|
- | `id`        | string or number | yes      | -       | Room's identifier                                                                               |
- | `outline`   | list             | no       | -       | List of points forming an outline of a room (e.g. `[[25500,25500],[26500,25500],[25500,26500]]` |
- | `icon`      | object           | no       | -       | [Icon definition](#icon-options)                                                                |
- | `label`     | object           | no       | -       | [Label definition](#label-options)                                                              |
- | `variables` | object           | no       | -       | Variables that should be passed to `service_call_schema`                                        |
+ | Key             | Type                    | Required | Default      | Description                                                                                     |
+ |-----------------|-------------------------|----------|--------------|-------------------------------------------------------------------------------------------------|
+ | `id`            | string or number        | yes      | -            | Room's identifier                                                                               |
+ | `outline`       | list                    | no       | -            | List of points forming an outline of a room (e.g. `[[25500,25500],[26500,25500],[25500,26500]]` |
+ | `icon`          | object                  | no       | -            | [Icon definition](#icon-options)                                                                |
+ | `label`         | object                  | no       | -            | [Label definition](#label-options)                                                              |
+ | `variables`     | object                  | no       | -            | Variables that should be passed to `service_call_schema`                                        |
+ | `default_state` | `selected`/`unselected` | no       | `unselected` | Default state of selection                                                                      |
+ | `state_entity`  | entity id               | no       | -            | Entity that should be used to store the state of selection (e.g. `switch.bathroom`)             |
 
   > See [this page](/docs/templates/setup.md#getting-coordinates) to check how to easily create outline.
 

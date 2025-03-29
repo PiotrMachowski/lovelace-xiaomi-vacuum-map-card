@@ -22,6 +22,7 @@ To get coordinates of zone, point or outline you have to:
          <td valign="top">
            <ul>
              <li>Xiaomi Miio (default)</li>
+             <li>Roborock</li>
              <li>al-one/hass-xiaomi-miot</li>
              <li>rand256/ValetudoRE</li>
              <li>Hypfer/Valetudo</li>
@@ -41,10 +42,7 @@ To get coordinates of zone, point or outline you have to:
        </tr>
      </tbody>
    </table>
-4. Choose appropriate mode from dropdown according to desired shape
-   * Zone -> "Zone cleanup"
-   * Point -> "Pin & Go"
-   * Outline -> "Path"
+4. Choose the appropriate map mode from dropdown according to the desired shape
 
    ![image](media/mode_picker.png)
 5. Mark a selection on a map
