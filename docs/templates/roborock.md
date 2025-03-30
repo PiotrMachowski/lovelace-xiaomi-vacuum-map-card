@@ -21,7 +21,7 @@ If you need to setup this card using the custom component, you should use The "h
 5. Setup this card like normal! You should select a image with the suffix _custom. An example configuration would look like
 ```yaml
 type: custom:xiaomi-vacuum-map-card
-vacuum_platform: roborock
+vacuum_platform: Roborock
 entity: vacuum.s7
 map_source:
   camera: image.s7_downstairs_full_custom
