@@ -1,7 +1,7 @@
-import { applyToPoint, fromTriangles, Matrix } from "transformation-matrix";
+import { applyToPoint, compose, fromTriangles, inverse, Matrix, translate } from "transformation-matrix";
 import { default as transformer, QuadPoints } from "change-perspective";
 
-import { CalibrationPoint, PointType } from "../../types/types";
+import { CalibrationPoint, Point, PointType } from "../../types/types";
 
 enum TransformMode {
     AFFINE,
@@ -16,14 +16,17 @@ export class CoordinatesConverter {
     private readonly mapToVacuumTransformer: ((x: number, y: number) => [number, number]) | undefined;
     private readonly vacuumToMapTransformer: ((x: number, y: number) => [number, number]) | undefined;
 
-    constructor(calibrationPoints: CalibrationPoint[] | undefined) {
+    constructor(calibrationPoints: CalibrationPoint[] | undefined, offset?: Point) {
         const mapPoints = calibrationPoints?.map(cp => cp.map);
         const vacuumPoints = calibrationPoints?.map(cp => cp.vacuum);
         if (mapPoints && vacuumPoints) {
             if (mapPoints.length === 3) {
                 this.transformMode = TransformMode.AFFINE;
-                this.mapToVacuumMatrix = fromTriangles(mapPoints, vacuumPoints);
                 this.vacuumToMapMatrix = fromTriangles(vacuumPoints, mapPoints);
+                if (offset) {
+                    this.vacuumToMapMatrix = compose(translate(offset.x, offset.y), this.vacuumToMapMatrix)
+                }
+                this.mapToVacuumMatrix = inverse(this.vacuumToMapMatrix)
                 this.calibrated = !!(this.mapToVacuumMatrix && this.vacuumToMapMatrix);
             } else {
                 this.transformMode = TransformMode.PERSPECTIVE;
