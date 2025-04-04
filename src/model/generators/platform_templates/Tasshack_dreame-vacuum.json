@@ -203,18 +203,6 @@
                 ]
             },
             {
-                "tile_id": "suction_level",
-                "attribute": "suction_level",
-                "label": "tile.suction_level.label",
-                "icon": "mdi:mdi:fan",
-                "translation_keys": [
-                    "quiet",
-                    "standard",
-                    "strong",
-                    "turbo"
-                ]
-            }, 
-            {
                 "tile_id": "tight_mopping",
                 "attribute": "tight_mopping",
                 "label": "tile.tight_mopping.label",
@@ -223,13 +211,13 @@
                     "true",
                     "false"
                 ]
-            }, 
+            },
             {
                 "tile_id": "wetness_level",
                 "attribute": "wetness_level",
                 "label": "tile.wetness_level.label",
                 "icon": "mdi:water-opacity"
-            }, 
+            },
             {
                 "tile_id": "mop_wash_level",
                 "attribute": "mop_wash_level",
@@ -240,7 +228,7 @@
                     "daily",
                     "water saving"
                 ]
-            }, 
+            },
             {
                 "tile_id": "auto_empty_mode",
                 "attribute": "auto_empty_mode",
@@ -252,7 +240,7 @@
                     "high frequency",
                     "low frequency"
                 ]
-            }, 
+            },
             {
                 "tile_id": "cleaning_route",
                 "attribute": "cleaning_route",
@@ -309,28 +297,6 @@
                 "slightly_dry": "mdi:water-minus",
                 "moist": "mdi:water",
                 "wet": "mdi:water-plus"
-            },
-            "tap_action": {
-                "action": "call-service",
-                "service": "select.select_option",
-                "service_data": {
-                    "option": "[[value]]",
-                    "entity_id": "[[entity_id]]"
-                }
-            }
-        },
-        {
-            "type": "menu",
-            "menu_id": "suction_level",
-            "icon_id": "suction_level",
-            "unique_id_regex": "suction_level",
-            "available_values_attribute": "options",
-            "icon": "mdi:water-off",
-            "icon_mapping": {
-                "quiet": "mdi:fan-speed-1",
-                "standard": "mdi:fan-speed-2",
-                "strong": "mdi:fan-speed-3",
-                "turbo": "mdi:weather-windy"
             },
             "tap_action": {
                 "action": "call-service",
