@@ -2,8 +2,8 @@
     "common": {
         "version": "Verzia",
         "invalid_configuration": "Neplatná konfigurácia {0}",
-        "description": "Karta pomocou ktorej môžete ovládať váš vysávač",
-        "old_configuration": "Detekovaná zastaralá konfigurácia. Upravte prosím konfiguráciu alebo kartu vytvorte znovu od začiatku.",
+        "description": "Karta, pomocou ktorej môžete ovládať váš vysávač",
+        "old_configuration": "Zistená zastaralá konfigurácia. Upravte prosím konfiguráciu alebo vytvorte kartu od začiatku.",
         "old_configuration_migration_link": "Návod na úpravu konfigurácie"
     },
     "map_mode": {
@@ -124,14 +124,14 @@
             }
         },
         "invalid_entities": "Neplatné entity:",
-        "invalid_calibration": "Neplatná kalibrácia, prosím skontrolujte konfiguráciu"
+        "invalid_calibration": "Neplatná kalibrácia, skontrolujte konfiguráciu"
     },
     "tile": {
         "status": {
             "label": "Stav",
             "value": {
                 "starting": "Zapínanie",
-                "charger disconnected": "Nabíječka odpojena",
+                "charger disconnected": "Nabíjačka odpojená",
                 "idle": "Nečinný",
                 "remote control active": "Diaľkové ovládanie aktívne",
                 "cleaning": "Upratovanie",
@@ -177,7 +177,7 @@
             "label": "Životnosť hlavnej kefy"
         },
         "side_brush_left": {
-            "label": "Životnosť bočej kefy"
+            "label": "Životnosť bočnej kefy"
         },
         "cleaning_count": {
             "label": "Počet upratovaní"
