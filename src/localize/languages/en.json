@@ -172,6 +172,12 @@
                 "strong": "Strong"
             }
         },
+        "cleaning_mode": {
+            "label": "Cleaning mode"
+        },
+        "tight_mopping": {
+            "label": "Tight mopping"
+        },
         "sensor_dirty_left": {
             "label": "Sensors left"
         },
