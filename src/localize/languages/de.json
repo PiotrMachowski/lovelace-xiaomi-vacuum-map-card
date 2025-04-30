@@ -169,6 +169,27 @@
                 "strong": "Stark"
             }
         },
+        "cleaning_mode": {
+            "label": "Reinigungsmodus"
+        },
+        "tight_mopping": {
+            "label": "Intensives wischen"
+        },          
+        "wetness_level": {
+            "label": "Feuchtigkeitsstufe"
+        },     
+        "mop_wash_level": {
+            "label": "Wischablatt Reinigungsfrequenz"
+        },       
+        "auto_empty_mode": {
+            "label": "Automatische Entleerung"
+        },      
+        "cleaning_route": {
+            "label": "Reinigungsroute"
+        }, 
+        "cleangenius": {
+            "label": "Cleangenius"
+        },                                              
         "sensor_dirty_left": {
             "label": "Sensoren verbleibend"
         },
@@ -180,7 +201,7 @@
         },
         "side_brush_left": {
             "label": "Seitenbürste verbleibend"
-        },
+        },      
         "cleaning_count": {
             "label": "Anzahl der Reinigungen"
         },

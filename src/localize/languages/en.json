@@ -172,6 +172,27 @@
                 "strong": "Strong"
             }
         },
+        "cleaning_mode": {
+            "label": "Cleaning mode"
+        },
+        "tight_mopping": {
+            "label": "Tight mopping"
+        },          
+        "wetness_level": {
+            "label": "Wetness level"
+        },     
+        "mop_wash_level": {
+            "label": "Mop wash level"
+        },       
+        "auto_empty_mode": {
+            "label": "Auto empty mode"
+        },      
+        "cleaning_route": {
+            "label": "Cleaning route"
+        }, 
+        "cleangenius": {
+            "label": "Cleangenius"
+        },            
         "sensor_dirty_left": {
             "label": "Sensors left"
         },
