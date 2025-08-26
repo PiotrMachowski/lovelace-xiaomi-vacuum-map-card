@@ -12,7 +12,7 @@ calibration_source:
   identity: true
 ```
 
-In other cases you have to manually calibrate the map and provide calibration points.
+In other cases you have to manually calibrate the map and provide calibration points. If you use MQTT Vacuum Camera to retrieve map image (recommended), see [Retrieving map image](/docs/templates/hypferValetudo.md#retrieving-map-image).
 
 ## Requirements
 
@@ -21,7 +21,7 @@ To use this card with a Valetudo vacuum you have to define `topic` internal vari
 ```yaml
 type: custom:xiaomi-vacuum-map-card
 map_source:
-  camera: camera.valetudo
+  camera: camera.<your_camera_entity>
 calibration_source:
   calibration_points:
     - vacuum:
@@ -45,12 +45,18 @@ calibration_source:
 entity: vacuum.valetudo
 vacuum_platform: Hypfer/Valetudo
 internal_variables:
-  topic: valetudo/rockrobo
+  topic: valetudo/<your_topic> # See valetudo.cloud/pages/integrations/mqtt.html for more details
 ```
 
 ## Retrieving map image
 
 To retrieve map image you have to use [MQTT Vacuum Camera](https://github.com/sca075/mqtt_vacuum_camera/) custom integration made by [@sca075](https://github.com/sca075) (recommended; supports auto-calibration) or [I can't believe it's not Valetudo](https://github.com/Hypfer/Icantbelieveitsnotvaletudo) (not recommended; manual calibration required).
+
+At this point, you should change calibration source as follows:
+```yaml
+calibration_source:
+  camera: true
+```
 
 ## Available templates
 
