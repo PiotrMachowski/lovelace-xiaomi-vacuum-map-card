@@ -35,6 +35,7 @@
                     "service_data": {
                         "command": "app_zoned_clean",
                         "params": "[[selection]]",
+                        "repeat": "[[repeats]]",
                         "entity_id": "[[entity_id]]"
                     }
                 }
@@ -53,6 +54,7 @@
                     "service_data": {
                         "command": "app_zoned_clean",
                         "params": "[[selection]]",
+                        "repeat": "[[repeats]]",
                         "entity_id": "[[entity_id]]"
                     }
                 }
