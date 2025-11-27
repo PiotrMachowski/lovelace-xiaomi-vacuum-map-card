@@ -361,7 +361,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                 </div>
                 ${conditional(!validCalibration, () => this._showInvalidCalibrationWarning())}
                 ${conditional(
-                    modes.length > 1 || mapControls.length > 0 || (icons?.length??0) !== 0 || (tiles?.length ?? 0) !== 0,
+                    modes.length > 1 || mapControls.length > 0 || (icons?.length ?? 0) !== 0 || (tiles?.length ?? 0) !== 0,
                     () => html`
                     <div class="controls-wrapper">
                         ${conditional(
@@ -585,7 +585,7 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _setPreset(config: CardPresetConfig): void {
         this.currentPreset = config;
-        this.watchedEntities = getWatchedEntities({type: "", ...config});
+        this.watchedEntities = getWatchedEntities({ type: "", ...config });
     }
 
     private _updateCalibration(config: CardPresetConfig): void {
@@ -630,21 +630,21 @@ export class XiaomiVacuumMapCard extends LitElement {
                 <paper-button
                     class="map-actions-item clickable ripple"
                     @click="${(): void => {
-                        this.selectedManualPath.removeLast();
-                        forwardHaptic("selection");
-                        this._selectionChanged();
-                        this.requestUpdate();
-                    }}">
+                    this.selectedManualPath.removeLast();
+                    forwardHaptic("selection");
+                    this._selectionChanged();
+                    this.requestUpdate();
+                }}">
                     <ha-icon icon="mdi:undo-variant"></ha-icon>
                 </paper-button>
                 <paper-button
                     class="map-actions-item clickable ripple"
                     @click="${(): void => {
-                        this.selectedManualPath.clear();
-                        forwardHaptic("selection");
-                        this._selectionChanged();
-                        this.requestUpdate();
-                    }}">
+                    this.selectedManualPath.clear();
+                    forwardHaptic("selection");
+                    this._selectionChanged();
+                    this.requestUpdate();
+                }}">
                     <ha-icon icon="mdi:delete-empty"></ha-icon>
                 </paper-button>
             `);
@@ -654,10 +654,10 @@ export class XiaomiVacuumMapCard extends LitElement {
                 <paper-button
                     class="map-actions-item clickable ripple"
                     @click="${(): void => {
-                        this.repeats = (this.repeats % currentMode.maxRepeats) + 1;
-                        this._selectionChanged();
-                        forwardHaptic("selection");
-                    }}">
+                    this.repeats = (this.repeats % currentMode.maxRepeats) + 1;
+                    this._selectionChanged();
+                    forwardHaptic("selection");
+                }}">
                     <div>×${this.repeats}</div>
                 </paper-button>
             `);
@@ -668,9 +668,9 @@ export class XiaomiVacuumMapCard extends LitElement {
                     class="map-actions-item main clickable ripple"
                     @action="${this._handleRunAction()}"
                     .actionHandler="${actionHandler({
-                        hasHold: true,
-                        hasDoubleClick: true,
-                    })}">
+                    hasHold: true,
+                    hasDoubleClick: true,
+                })}">
                     <ha-icon icon="mdi:play"></ha-icon>
                     <ha-icon
                         icon="${currentMode.icon}"
@@ -701,7 +701,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             () => this._runImmediately(),
             string => this._localize(string),
             entity => this._hass.states[entity].state,
-            entity => this._hass.callService("homeassistant", "toggle", {"entity_id": entity}),
+            entity => this._hass.callService("homeassistant", "toggle", { "entity_id": entity }),
         );
     }
 
@@ -976,7 +976,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             for (const room_id in rooms) {
                 if (!rooms.hasOwnProperty(room_id)) continue;
                 const room = rooms[room_id];
-                if(!room.outline && !room.x0 && !room.y0 && !room.x1 && !room.y1)
+                if (!room.outline && !room.x0 && !room.y0 && !room.x1 && !room.y1)
                     continue;
                 const outline = room.outline ?? [
                     [room.x0, room.y0],
@@ -1213,8 +1213,24 @@ export class XiaomiVacuumMapCard extends LitElement {
     private _restoreMap(): void {
         const zoomerContent = this._getMapZoomerContent();
         zoomerContent.style.transitionDuration = this._getCssProperty("--map-card-internal-transitions-duration");
-        this._getPinchZoom().setTransform({ scale: 1, x: 0, y: 0, allowChangeEvent: true });
-        this.mapScale = 1;
+        const defaultScale = this.config.default_zoom || 1;
+        const zoomer = this._getPinchZoom();
+        
+        if (zoomer) {
+            const rect = zoomer.getBoundingClientRect();
+            if (rect.width > 0 && rect.height > 0) {
+                zoomer.scaleTo(defaultScale, {
+                    originX: rect.left + rect.width / 2,
+                    originY: rect.top + rect.height / 2,
+                    relativeTo: "container",
+                    allowChangeEvent: true,
+                });
+            } else {
+                zoomer.setTransform({ scale: defaultScale, x: 0, y: 0, allowChangeEvent: true });
+            }
+        }
+
+        this.mapScale = defaultScale;
         forwardHaptic("selection");
         delay(300).then(() => (zoomerContent.style.transitionDuration = "0s"));
     }
@@ -1248,20 +1264,43 @@ export class XiaomiVacuumMapCard extends LitElement {
         delay(300).then(() => (zoomerContent.style.transitionDuration = "0s"));
     }
 
-    private _calculateBasicScale(): void {
+    private _calculateBasicScale() {
         const mapImage = this._getMapImage();
         if (mapImage && mapImage.naturalWidth > 0) {
             this.realImageWidth = mapImage.naturalWidth;
             this.realImageHeight = mapImage.naturalHeight;
             this.realScale = mapImage.width / mapImage.naturalWidth;
         }
+
+        if (this.config.default_zoom && this.mapScale === 1) {
+            const defaultScale = this.config.default_zoom;
+            const zoomer = this._getPinchZoom();
+
+            if (zoomer) {
+                const rect = zoomer.getBoundingClientRect();
+
+                if (rect.width > 0 && rect.height > 0) {
+                    zoomer.scaleTo(defaultScale, {
+                        originX: rect.left + rect.width / 2,
+                        originY: rect.top + rect.height / 2,
+                        relativeTo: 'container',
+                        allowChangeEvent: true
+                    });
+
+                    this.mapScale = defaultScale;
+                }
+            }
+        }
+
     }
 
     private _calculateScale(): void {
         const pinchZoom = this._getPinchZoom();
-        this.mapScale = pinchZoom.scale;
-        this.mapX = pinchZoom.x;
-        this.mapY = pinchZoom.y;
+        if (pinchZoom) {
+            this.mapScale = pinchZoom.scale;
+            this.mapX = pinchZoom.x;
+            this.mapY = pinchZoom.y;
+        }
     }
 
     private _getPinchZoom(): PinchZoom {
@@ -1725,10 +1764,10 @@ export class XiaomiVacuumMapCard extends LitElement {
             }
 
             .controls-wrapper {
-                margin: 15px;
+                margin: 4px;
                 display: flex;
                 flex-direction: column;
-                gap: 10px;
+                gap: 0px;
             }
 
             .map-controls {
