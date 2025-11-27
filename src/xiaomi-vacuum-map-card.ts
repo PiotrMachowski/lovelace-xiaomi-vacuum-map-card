@@ -1213,14 +1213,11 @@ export class XiaomiVacuumMapCard extends LitElement {
     private _restoreMap(): void {
         const zoomerContent = this._getMapZoomerContent();
         zoomerContent.style.transitionDuration = this._getCssProperty("--map-card-internal-transitions-duration");
-        
-        // --- GÜNCELLENMİŞ KOD: Config'den değeri alıp merkeze zoomla ---
         const defaultScale = this.config.default_zoom || 1;
         const zoomer = this._getPinchZoom();
         
         if (zoomer) {
             const rect = zoomer.getBoundingClientRect();
-            // Kart boyutları mevcutsa merkeze odaklı zoom yap
             if (rect.width > 0 && rect.height > 0) {
                 zoomer.scaleTo(defaultScale, {
                     originX: rect.left + rect.width / 2,
@@ -1229,11 +1226,9 @@ export class XiaomiVacuumMapCard extends LitElement {
                     allowChangeEvent: true,
                 });
             } else {
-                // Fallback: Düz zoom yap
                 zoomer.setTransform({ scale: defaultScale, x: 0, y: 0, allowChangeEvent: true });
             }
         }
-        // --------------------------------------------------------------
 
         this.mapScale = defaultScale;
         forwardHaptic("selection");
@@ -1277,7 +1272,6 @@ export class XiaomiVacuumMapCard extends LitElement {
             this.realScale = mapImage.width / mapImage.naturalWidth;
         }
 
-        // --- GÜNCELLENMİŞ KOD: Başlangıç Zoom Ayarı (Merkeze Odaklı) ---
         if (this.config.default_zoom && this.mapScale === 1) {
             const defaultScale = this.config.default_zoom;
             const zoomer = this._getPinchZoom();
@@ -1297,10 +1291,9 @@ export class XiaomiVacuumMapCard extends LitElement {
                 }
             }
         }
-        // --------------------------------------------------------------
+
     }
 
-    // --- EKSİK OLAN FONKSİYON EKLENDİ ---
     private _calculateScale(): void {
         const pinchZoom = this._getPinchZoom();
         if (pinchZoom) {
@@ -1309,7 +1302,6 @@ export class XiaomiVacuumMapCard extends LitElement {
             this.mapY = pinchZoom.y;
         }
     }
-    // -------------------------------------
 
     private _getPinchZoom(): PinchZoom {
         return this.shadowRoot?.getElementById("map-zoomer") as PinchZoom;
