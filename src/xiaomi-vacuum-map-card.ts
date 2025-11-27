@@ -1772,10 +1772,10 @@ export class XiaomiVacuumMapCard extends LitElement {
             }
 
             .controls-wrapper {
-                margin: 15px;
+                margin: 4px;
                 display: flex;
                 flex-direction: column;
-                gap: 10px;
+                gap: 0px;
             }
 
             .map-controls {
