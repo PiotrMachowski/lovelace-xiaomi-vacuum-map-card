@@ -86,6 +86,14 @@
     "tiles": {
         "from_sensors": [
             {
+                "tile_id": "battery_level",
+                "unique_id_regex": "_sensor_battery_level",
+                "label": "tile.battery_level.label",
+                "attribute": "battery_level",
+                "icon_source": "[[entity_id]].attributes.icon",
+                "unit": "%"
+            },
+            {
                 "tile_id": "filter_left",
                 "unique_id_regex": "_sensor_ConsumableMonitoringCapability_filter_main",
                 "label": "tile.filter_left.label",
