@@ -89,8 +89,6 @@
                 "tile_id": "battery_level",
                 "unique_id_regex": "_sensor_battery_level",
                 "label": "tile.battery_level.label",
-                "attribute": "battery_level",
-                "icon_source": "[[entity_id]].attributes.icon",
                 "unit": "%"
             },
             {
