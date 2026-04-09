@@ -18,6 +18,7 @@ import type {
 import {
     ActionHandlerFunction,
     ActionType,
+    BackgroundImageCalibrationPoint,
     CalibrationPoint,
     CardPresetConfig,
     MapExtractorRoom,
@@ -96,6 +97,65 @@ console.info(
     "color: orange; font-weight: bold; background: black",
     "color: white; font-weight: bold; background: dimgray",
 );
+
+function computeBackgroundMatrix(
+    calibration: BackgroundImageCalibrationPoint[],
+    realScale: number,
+): [number, number, number, number, number, number] {
+    if (calibration.length === 1) {
+        const tx = calibration[0].vacuum_point[0] * realScale - calibration[0].background_point[0];
+        const ty = calibration[0].vacuum_point[1] * realScale - calibration[0].background_point[1];
+        return [1, 0, 0, 1, tx, ty];
+    }
+    if (calibration.length === 2) {
+        // Similarity transform: uniform scale + rotation + translation
+        const vd1x = calibration[0].vacuum_point[0] * realScale;
+        const vd1y = calibration[0].vacuum_point[1] * realScale;
+        const vd2x = calibration[1].vacuum_point[0] * realScale;
+        const vd2y = calibration[1].vacuum_point[1] * realScale;
+        const b1x = calibration[0].background_point[0];
+        const b1y = calibration[0].background_point[1];
+        const b2x = calibration[1].background_point[0];
+        const b2y = calibration[1].background_point[1];
+        const dx = b2x - b1x, dy = b2y - b1y;
+        const ex = vd2x - vd1x, ey = vd2y - vd1y;
+        const denom = dx * dx + dy * dy;
+        if (denom < 1e-10) return [1, 0, 0, 1, 0, 0];
+        const a = (ex * dx + ey * dy) / denom;
+        const b = (ey * dx - ex * dy) / denom;
+        const tx = vd1x - a * b1x + b * b1y;
+        const ty = vd1y - b * b1x - a * b1y;
+        // CSS matrix(scaleX, skewY, skewX, scaleY, tx, ty)
+        return [a, b, -b, a, tx, ty];
+    }
+    // 3+ points: full affine transform using first 3 points
+    const bx1 = calibration[0].background_point[0], by1 = calibration[0].background_point[1];
+    const bx2 = calibration[1].background_point[0], by2 = calibration[1].background_point[1];
+    const bx3 = calibration[2].background_point[0], by3 = calibration[2].background_point[1];
+    const vx1 = calibration[0].vacuum_point[0] * realScale;
+    const vy1 = calibration[0].vacuum_point[1] * realScale;
+    const vx2 = calibration[1].vacuum_point[0] * realScale;
+    const vy2 = calibration[1].vacuum_point[1] * realScale;
+    const vx3 = calibration[2].vacuum_point[0] * realScale;
+    const vy3 = calibration[2].vacuum_point[1] * realScale;
+    // Cofactors of B = [[bx1,bx2,bx3],[by1,by2,by3],[1,1,1]]
+    const C11 = by2 - by3, C12 = by3 - by1, C13 = by1 - by2;
+    const C21 = bx3 - bx2, C22 = bx1 - bx3, C23 = bx2 - bx1;
+    const C31 = bx2 * by3 - bx3 * by2;
+    const C32 = bx3 * by1 - bx1 * by3;
+    const C33 = bx1 * by2 - bx2 * by1;
+    const det = bx1 * C11 + bx2 * C12 + bx3 * C13;
+    if (Math.abs(det) < 1e-10) return [1, 0, 0, 1, 0, 0];
+    // M = V_screen * B^-1; Row0=[a,c,tx], Row1=[b,d,ty]
+    const a  = (vx1 * C11 + vx2 * C12 + vx3 * C13) / det;
+    const sc = (vx1 * C21 + vx2 * C22 + vx3 * C23) / det;
+    const tx = (vx1 * C31 + vx2 * C32 + vx3 * C33) / det;
+    const sb = (vy1 * C11 + vy2 * C12 + vy3 * C13) / det;
+    const d  = (vy1 * C21 + vy2 * C22 + vy3 * C23) / det;
+    const ty = (vy1 * C31 + vy2 * C32 + vy3 * C33) / det;
+    // CSS matrix(scaleX, skewY, skewX, scaleY, tx, ty)
+    return [a, sb, sc, d, tx, ty];
+}
 
 const windowWithCards = window as unknown as Window & { customCards: unknown[] };
 windowWithCards.customCards = windowWithCards.customCards || [];
@@ -285,10 +345,17 @@ export class XiaomiVacuumMapCard extends LitElement {
                  margin-bottom: ${(preset.map_source.crop?.bottom ?? 0) * -1}px;
                  margin-left: ${(preset.map_source.crop?.left ?? 0) * -1}px;
                  margin-right: ${(preset.map_source.crop?.right ?? 0) * -1}px;">
+                ${preset.map_source.background_image ? html`
+                    <img
+                        id="background-image"
+                        alt="background_image"
+                        src="${preset.map_source.background_image}"
+                        @load="${() => this._updateBackgroundImageTransform()}" />` : null}
                 <img
                     id="map-image"
                     alt="camera_image"
                     class="${this.mapScale * this.realScale > 1 ? "zoomed" : ""}"
+                    style="opacity: ${preset.map_source.map_image_opacity ?? 1};"
                     src="${mapSrc}"
                     @load="${() => this._calculateBasicScale()}" />
                 <div id="map-image-overlay">
@@ -312,7 +379,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                     (this.config.title ?? "").length > 0,
                     () => html`<h1 class="card-header">${this.config.title}</h1>`,
                 )}
-                <xvmc-preset-selector
+                <xvmc-custom-preset-selector
                     .availablePresets=${availablePresets}
                     .availablePresetIndex=${availablePresetIndex}
                     .openPreviousPreset=${(): void => this._openPreviousPreset()}
@@ -322,9 +389,9 @@ export class XiaomiVacuumMapCard extends LitElement {
                     .executePresetsActivation=${(): void => this._executePresetsActivation()}
                     .openNextPreset=${(): void => this._openNextPreset()}
                     .nextPresetIndex=${this._getNextPresetIndex()}>
-                </xvmc-preset-selector>
+                </xvmc-custom-preset-selector>
                 <div class="map-wrapper">
-                    <pinch-zoom
+                    <pinch-zoom-custom
                         min-scale="0.5"
                         id="map-zoomer"
                         @change="${this._calculateScale}"
@@ -333,7 +400,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                         no-default-pan="${this.mapLocked || preset.two_finger_pan}"
                         style="touch-action: none;">
                         ${mapZoomerContent}
-                    </pinch-zoom>
+                    </pinch-zoom-custom>
                     <div id="map-zoomer-overlay">
                         <div style="right: 0; top: 0; position: absolute;">
                             <ha-icon
@@ -370,12 +437,12 @@ export class XiaomiVacuumMapCard extends LitElement {
                                 <div class="map-controls-wrapper">
                                     <div class="map-controls">
                                         ${conditional(modes.length > 1, () => html`
-                                            <xvmc-dropdown-menu
+                                            <xvmc-custom-dropdown-menu
                                                 .values=${modes}
                                                 .currentIndex=${this.selectedMode}
                                                 .setValue=${selected => this._setCurrentMode(selected)}
                                                 .renderNameCollapsed=${true}>
-                                            </xvmc-dropdown-menu>
+                                            </xvmc-custom-dropdown-menu>
                                             `,
                                         )}
                                         ${conditional(
@@ -386,18 +453,18 @@ export class XiaomiVacuumMapCard extends LitElement {
                                 </div>
                             `,
                         )}
-                        <xvmc-icons-wrapper
+                        <xvmc-custom-icons-wrapper
                             .icons=${icons}
                             .isInEditor=${this.isInEditor}
                             .onAction=${(c: ActionableObjectConfig, action?: string) => createActionWithConfigHandler(this, c, action)}>
-                        </xvmc-icons-wrapper>
-                        <xvmc-tiles-wrapper
+                        </xvmc-custom-icons-wrapper>
+                        <xvmc-custom-tiles-wrapper
                             .hass=${this.hass}
                             .tiles=${tiles}
                             .isInEditor=${this.isInEditor}
                             .onAction=${(c: ActionableObjectConfig, action?: string) => createActionWithConfigHandler(this, c, action)}
                             .internalVariables=${this.internalVariables}>
-                        </xvmc-tiles-wrapper>
+                        </xvmc-custom-tiles-wrapper>
                     </div>`
                 )}
                 ${ToastRenderer.render("map-card")}
@@ -1258,6 +1325,30 @@ export class XiaomiVacuumMapCard extends LitElement {
             this.realImageHeight = mapImage.naturalHeight;
             this.realScale = mapImage.width / mapImage.naturalWidth;
         }
+        this._updateBackgroundImageTransform();
+    }
+
+    private _updateBackgroundImageTransform(): void {
+        const preset = this._getCurrentPreset();
+        const bgImage = this.shadowRoot?.getElementById("background-image") as HTMLImageElement | null;
+        if (!bgImage || !preset.map_source.background_image) return;
+
+        const calibration = preset.map_source.background_image_calibration;
+        if (!calibration || calibration.length === 0) {
+            bgImage.style.width = "100%";
+            bgImage.style.height = "100%";
+            bgImage.style.objectFit = "contain";
+            bgImage.style.transform = "";
+            return;
+        }
+
+        if (!this.realScale || this.realScale === 0 || bgImage.naturalWidth === 0) return;
+
+        const matrix = computeBackgroundMatrix(calibration, this.realScale);
+        bgImage.style.width = "";
+        bgImage.style.height = "";
+        bgImage.style.objectFit = "";
+        bgImage.style.transform = `matrix(${matrix.join(",")})`;
     }
 
     private _calculateScale(): void {
@@ -1667,6 +1758,14 @@ export class XiaomiVacuumMapCard extends LitElement {
                 transform: translate(var(--x), var(--y)) scale(var(--scale));
                 transform-origin: 0 0;
                 position: relative;
+            }
+
+            #background-image {
+                position: absolute;
+                top: 0;
+                left: 0;
+                transform-origin: 0 0;
+                z-index: -1;
             }
 
             #map-image {

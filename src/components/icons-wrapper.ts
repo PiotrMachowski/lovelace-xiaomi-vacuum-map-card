@@ -13,7 +13,7 @@ import { Icon } from "./icon";
 import { HassEntity } from "home-assistant-js-websocket";
 import { localizeAttributeForValue, localizeStateForValue } from "../localize/localize";
 
-@customElement("xvmc-icons-wrapper")
+@customElement("xvmc-custom-icons-wrapper")
 export class IconsWrapper extends RootlessLitElement {
 
     @property({attribute: false})
@@ -33,11 +33,11 @@ export class IconsWrapper extends RootlessLitElement {
             <div class="icons-wrapper">
                 <div class="icons-list">
                     ${this.icons?.map((icon ) => html`
-                                            <xvmc-icon
+                                            <xvmc-custom-icon
                                                 .config=${icon}
                                                 .isInEditor=${this.isInEditor}
                                                 .onAction=${this.onAction}
-                                            ></xvmc-icon>
+                                            ></xvmc-custom-icon>
                                         `)}
                 </div>
             </div>

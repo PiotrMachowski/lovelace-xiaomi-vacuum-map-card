@@ -10,7 +10,7 @@ interface DropdownEntry {
     tooltip?: string;
 }
 
-@customElement("xvmc-dropdown-menu")
+@customElement("xvmc-custom-dropdown-menu")
 export class DropdownMenu<T extends DropdownEntry> extends RootlessLitElement {
 
     @property({ attribute: false })
