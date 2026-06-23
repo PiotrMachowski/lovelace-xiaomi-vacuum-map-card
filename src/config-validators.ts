@@ -42,7 +42,9 @@ function validateCalibrationPoint(calibrationPoint: CalibrationPoint): Translata
         errors.push("validation.preset.calibration_source.calibration_points.missing_vacuum");
     }
     if (
-        [calibrationPoint?.map, calibrationPoint?.vacuum].filter(p => p.x === undefined || p.y === undefined).length > 0
+        [calibrationPoint?.map, calibrationPoint?.vacuum]
+            .filter(p => p !== undefined)
+            .some(p => p.x === undefined || p.y === undefined)
     ) {
         errors.push("validation.preset.calibration_source.calibration_points.missing_coordinate");
     }
