@@ -5,7 +5,7 @@ import { forwardHaptic } from "custom-card-helpers";
 
 import { Context } from "./context";
 import { PredefinedZoneConfig, ZoneType, ZoneWithRepeatsType } from "../../types/types";
-import { deleteFromArray } from "../../utils";
+import { deleteFromArray, getDynamicPredefinedSelectionItems } from "../../utils";
 import { MapMode } from "../map_mode/map-mode";
 import { HomeAssistantFixed } from "../../types/fixes";
 import { PredefinedMapObject } from "./predefined-map-object";
@@ -27,17 +27,7 @@ export class PredefinedMultiRectangle extends PredefinedMapObject {
             .map(ps => ps as PredefinedZoneConfig)
             .filter(pzc => typeof pzc.zones === "string")
             .map(pzc => (pzc.zones as string).split(".attributes."))
-            .flatMap(z => {
-                const entity = hass.states[z[0]];
-                const value = z.length === 2 ? entity.attributes[z[1]] : entity.state;
-                let parsed;
-                try {
-                    parsed = JSON.parse(value) as ZoneType[];
-                } catch {
-                    parsed = value as ZoneType[];
-                }
-                return parsed;
-            })
+            .flatMap(z => getDynamicPredefinedSelectionItems(hass, z) as ZoneType[])
             .map(
                 z =>
                     new PredefinedMultiRectangle(
