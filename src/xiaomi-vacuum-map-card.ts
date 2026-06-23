@@ -57,7 +57,7 @@ import {
     createActionWithConfigHandler,
     delay,
     getMousePosition,
-    getWatchedEntities,
+    getWatchedEntities, getWatchedEntitiesForPreset,
     hasConfigOrAnyEntityChanged,
     stopEvent,
 } from "./utils";
@@ -601,7 +601,12 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _setPreset(config: CardPresetConfig): void {
         this.currentPreset = config;
-        this.watchedEntities = getWatchedEntities({type: "", ...config});
+        this.watchedEntities = [
+            ...new Set([
+                ...getWatchedEntities(this.config),
+                ...getWatchedEntitiesForPreset(config, this.config.language),
+            ]),
+        ];
     }
 
     private _updateCalibration(config: CardPresetConfig): void {
