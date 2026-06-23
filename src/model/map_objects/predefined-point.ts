@@ -9,7 +9,7 @@ import {
     PointWithRepeatsType,
     PredefinedPointConfig,
 } from "../../types/types";
-import { deleteFromArray } from "../../utils";
+import { deleteFromArray, getDynamicPredefinedSelectionItems } from "../../utils";
 import { MapMode } from "../map_mode/map-mode";
 import { HomeAssistantFixed } from "../../types/fixes";
 import { PredefinedMapObject } from "./predefined-map-object";
@@ -39,17 +39,7 @@ export class PredefinedPoint extends PredefinedMapObject {
             .map(ps => ps as PredefinedPointConfig)
             .filter(pzc => typeof pzc.position === "string")
             .map(pzc => (pzc.position as string).split(".attributes."))
-            .flatMap(z => {
-                const entity = hass.states[z[0]];
-                const value = z.length === 2 ? entity.attributes[z[1]] : entity.state;
-                let parsed;
-                try {
-                    parsed = JSON.parse(value) as PointType[];
-                } catch {
-                    parsed = value as PointType[];
-                }
-                return parsed;
-            })
+            .flatMap(p => getDynamicPredefinedSelectionItems(hass, p) as PointType[])
             .map(
                 p =>
                     new PredefinedPoint(
