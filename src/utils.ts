@@ -346,3 +346,23 @@ export function getFilledTemplate(
     replaceInTarget(target, keyReplacer);
     return target;
 }
+
+export function getDynamicPredefinedSelectionItems(hass: HomeAssistant, source: string[]): unknown[] {
+    const entity = hass.states[source[0]];
+    if (!entity) {
+        return [];
+    }
+
+    const value = source.length === 2 ? entity.attributes[source[1]] : entity.state;
+
+    if (value === undefined || value === null) {
+        return [];
+    }
+
+    try {
+        const parsed = typeof value === "string" ? JSON.parse(value) : value;
+        return Array.isArray(parsed) ? parsed : [];
+    } catch {
+        return [];
+    }
+}
