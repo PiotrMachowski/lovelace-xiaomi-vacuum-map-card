@@ -9,7 +9,7 @@ import {
 import { customElement, property } from "lit/decorators";
 import { RootlessLitElement } from "./rootless-lit-element";
 
-@customElement("xvmc-single-icon")
+@customElement("xvmc-custom-single-icon")
 export class SingleIcon extends RootlessLitElement {
 
     @property({attribute: false})

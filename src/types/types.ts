@@ -16,7 +16,7 @@ declare global {
         [EDITOR_CUSTOM_ELEMENT_NAME]: LovelaceCardEditor;
         [ACTION_HANDLER_CUSTOM_ELEMENT_NAME]: XiaomiVacuumMapCardActionHandler;
         "hui-error-card": LovelaceCard;
-        "xvmc-tile": Tile;
+        "xvmc-custom-tile": Tile;
     }
 }
 
@@ -72,9 +72,17 @@ export interface CardPresetConfig extends ConditionalObjectConfig {
     readonly internal_variables?: VariablesStorage;
 }
 
+export interface BackgroundImageCalibrationPoint {
+    readonly vacuum_point: [number, number];
+    readonly background_point: [number, number];
+}
+
 export interface MapSourceConfig {
     readonly camera?: string;
     readonly image?: string;
+    readonly map_image_opacity?: number;
+    readonly background_image?: string;
+    readonly background_image_calibration?: BackgroundImageCalibrationPoint[];
     readonly crop?: MapCroppingConfig;
 }
 

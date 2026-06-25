@@ -9,7 +9,7 @@ import { HomeAssistantFixed } from "../types/fixes";
 import { RootlessLitElement } from "./rootless-lit-element";
 import { Tile } from "./tile";
 
-@customElement("xvmc-tiles-wrapper")
+@customElement("xvmc-custom-tiles-wrapper")
 export class TilesWrapper extends RootlessLitElement {
 
     @property({attribute: false})
@@ -34,13 +34,13 @@ export class TilesWrapper extends RootlessLitElement {
         return html`
                 <div class="tiles-wrapper">
                     ${this.tiles?.map(tile => html`
-                        <xvmc-tile
+                        <xvmc-custom-tile
                             .hass=${this.hass}
                             .config=${tile}
                             .isInEditor=${this.isInEditor}
                             .onAction=${this.onAction}
                             .internalVariables=${this.internalVariables}
-                        ></xvmc-tile>
+                        ></xvmc-custom-tile>
                     `)}
         `;
     }
