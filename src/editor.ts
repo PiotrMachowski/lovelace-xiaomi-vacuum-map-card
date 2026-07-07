@@ -83,8 +83,12 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
         }
     }
 
-    private static _generateRoomsConfig(): void {
-        window.dispatchEvent(new Event(EVENT_ROOM_CONFIG_GET));
+    private static _generateRoomsConfig(entity: string | undefined): void {
+        // Attach the entity being edited so every mounted card can tell whether this request is
+        // actually for it; see RoomConfigEventData and _handleRoomsConfigGet.
+        const event = new Event(EVENT_ROOM_CONFIG_GET);
+        (event as any).entity = entity;
+        window.dispatchEvent(event);
     }
 
     public setConfig(config: XiaomiVacuumMapCardConfig): void {
@@ -247,7 +251,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
                         ${this._localize("editor.label.set_static_config")}
                     </ha-button>
                     <ha-button size="small" variant="brand" appearance="filled"
-                               @click="${() => XiaomiVacuumMapCardEditor._generateRoomsConfig()}"
+                               @click="${() => XiaomiVacuumMapCardEditor._generateRoomsConfig(this._entity)}"
                         .disabled=${roomsUnavailable}>
                         ${this._localize("editor.label.generate_rooms_config")}
                     </ha-button>
@@ -294,6 +298,12 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
         const roomConfig = (e as any).roomConfig as RoomConfigEventData;
         if (!roomConfig) {
             this._showToast("editor.label.config_set_failed", "mdi:close", false);
+            return;
+        }
+        // The response's entity must match what this editor is actually configuring. Without this
+        // check a reply from a different mounted card would overwrite this card's selections with
+        // the wrong robot's rooms; see RoomConfigEventData.
+        if (roomConfig.entity !== undefined && roomConfig.entity !== this._entity) {
             return;
         }
         const map_modes = [...(this._config?.map_modes ?? [])];
