@@ -10,7 +10,6 @@
                 "icon": "mdi:floor-plan",
                 "selection_type": "ROOM",
                 "repeats_type": "NONE",
-                "max_selections": 5,
                 "service_call_schema": {
                     "service": "roomba_plus.clean_room",
                     "service_data": {
@@ -25,7 +24,6 @@
                 "icon": "mdi:floor-plan",
                 "selection_type": "ROOM",
                 "repeats_type": "NONE",
-                "max_selections": 5,
                 "service_call_schema": {
                     "service": "roomba_plus.clean_room",
                     "service_data": {
@@ -41,7 +39,6 @@
                 "icon": "mdi:door-closed",
                 "selection_type": "ROOM",
                 "repeats_type": "NONE",
-                "max_selections": 5,
                 "service_call_schema": {
                     "service": "roomba_plus.smart_start",
                     "service_data": {

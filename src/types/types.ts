@@ -283,11 +283,28 @@ export interface MapExtractorRoom {
     readonly icon: string | undefined;
     readonly x: number | undefined;
     readonly y: number | undefined;
+    // Optional ASCII-safe id, distinct from the object's own key (which may
+    // be a display name containing characters this card's id validation
+    // rejects, e.g. non-ASCII accents/umlauts). Platforms that supply one
+    // (e.g. ha_roomba_plus) have it preferred over the raw key when
+    // generating predefined_selections — see _getRoomsConfig().
+    readonly room_id: string | undefined;
 }
 
 export interface RoomConfigEventData {
     readonly modeIndex: number;
     readonly rooms: Array<RoomConfig>;
+    // v3.4.1 MULTI-CARD-ROOM-SCOPE: identifies which card's entity this
+    // response belongs to. EVENT_ROOM_CONFIG_GET/EVENT_ROOM_CONFIG are
+    // dispatched on `window` with no built-in scoping — with more than
+    // one xiaomi-vacuum-map-card instance mounted at once (e.g. one card
+    // per vacuum on the same dashboard view), every mounted card
+    // receives the same broadcast "generate rooms" request and every
+    // one of them replies, in unpredictable order. Without this field,
+    // the editor has no way to tell which reply belongs to the entity
+    // it's actually editing and may apply another card's rooms instead
+    // of its own. See _handleRoomsConfigGet/_handleRoomConfig.
+    readonly entity: string | undefined;
 }
 
 export interface EntityConfig {

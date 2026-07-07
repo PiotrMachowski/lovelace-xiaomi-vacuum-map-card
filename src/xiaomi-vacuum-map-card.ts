@@ -893,7 +893,23 @@ export class XiaomiVacuumMapCard extends LitElement {
         };
     }
 
-    private _handleRoomsConfigGet(): void {
+    private _handleRoomsConfigGet(e: Event): void {
+        // v3.4.1 MULTI-CARD-ROOM-SCOPE: EVENT_ROOM_CONFIG_GET is a plain
+        // window broadcast — every mounted xiaomi-vacuum-map-card
+        // instance receives it, regardless of which card's editor
+        // actually asked. Without this check, clicking "Generate Room
+        // Configs" for one vacuum would make every other mounted card
+        // (e.g. a second vacuum's card on the same dashboard view) also
+        // reply, and the editor could end up applying the wrong card's
+        // rooms. `entity === undefined` keeps old callers (pre this
+        // fix, no entity attached) working exactly as before, matching
+        // the previous unscoped behavior rather than silently going
+        // quiet for them.
+        const requestedEntity = (e as any).entity;
+        const ownEntity = this._getCurrentPreset()?.entity;
+        if (requestedEntity !== undefined && requestedEntity !== ownEntity) {
+            return;
+        }
         const event = new Event(EVENT_ROOM_CONFIG);
         (event as any).roomConfig = this._getRoomsConfig();
         window.dispatchEvent(event);
@@ -1007,7 +1023,12 @@ export class XiaomiVacuumMapCard extends LitElement {
                 const y = outline.reduce((a, v) => a + (v[1] ?? 0), 0);
 
                 const roomConfig = {
-                    id: room_id,
+                    // Prefer the platform-supplied ASCII-safe room_id over
+                    // the raw object key. The key is a display name for
+                    // some platforms (e.g. ha_roomba_plus) and may contain
+                    // characters this card's id validation rejects
+                    // (non-ASCII accents/umlauts) — see MapExtractorRoom.
+                    id: room.room_id ?? room_id,
                     icon: {
                         name: room.icon ?? "mdi:broom",
                         x: room.x ?? formatCoord(x, outline.length),
@@ -1023,7 +1044,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                 } as RoomConfig;
                 roomsConfig.push(roomConfig);
             }
-            return { modeIndex: modeIndex, rooms: roomsConfig };
+            return { modeIndex: modeIndex, rooms: roomsConfig, entity: config.entity };
         }
         return undefined;
     }
