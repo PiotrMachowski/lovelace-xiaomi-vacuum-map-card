@@ -974,7 +974,15 @@ export class XiaomiVacuumMapCard extends LitElement {
         };
     }
 
-    private _handleRoomsConfigGet(): void {
+    private _handleRoomsConfigGet(e: Event): void {
+        // EVENT_ROOM_CONFIG_GET is a plain window broadcast, so every mounted card receives it.
+        // Only answer when the request names this card's entity; `undefined` keeps legacy callers
+        // that dispatch the bare event working as before.
+        const requestedEntity = (e as any).entity;
+        const ownEntity = this._getCurrentPreset()?.entity;
+        if (requestedEntity !== undefined && requestedEntity !== ownEntity) {
+            return;
+        }
         const event = new Event(EVENT_ROOM_CONFIG);
         (event as any).roomConfig = this._getRoomsConfig();
         window.dispatchEvent(event);
@@ -1108,7 +1116,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                 } as RoomConfig;
                 roomsConfig.push(roomConfig);
             }
-            return { modeIndex: modeIndex, rooms: roomsConfig };
+            return { modeIndex: modeIndex, rooms: roomsConfig, entity: config.entity };
         }
         return undefined;
     }
