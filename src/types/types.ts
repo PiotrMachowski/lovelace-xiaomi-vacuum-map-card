@@ -294,6 +294,11 @@ export interface MapExtractorRoom {
 export interface RoomConfigEventData {
     readonly modeIndex: number;
     readonly rooms: Array<RoomConfig>;
+    // Identifies which card's entity this response belongs to. EVENT_ROOM_CONFIG_GET and
+    // EVENT_ROOM_CONFIG are dispatched on `window` with no built-in scoping: with more than one
+    // card mounted every card receives the broadcast request and every one replies. This field lets
+    // the editor reject another card's answer. See _handleRoomsConfigGet/_handleRoomConfig.
+    readonly entity: string | undefined;
 }
 
 export interface EntityConfig {
