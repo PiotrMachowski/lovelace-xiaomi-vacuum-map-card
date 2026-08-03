@@ -42,7 +42,10 @@ import {
     EVENT_SELECTION_CHANGED,
     EVENT_SERVICE_CALL,
     EVENT_SERVICE_CALL_GET,
+    MAP_VIEW_ID_ATTRIBUTES,
+    MAP_VIEW_SAVE_DEBOUNCE,
 } from "./const";
+import { getMapView, hashString, MapView, setMapView } from "./model/map-view-store";
 import { localize, localizeWithHass } from "./localize/localize";
 import PinchZoom from "./pinch-zoom";
 import "./pinch-zoom";
@@ -151,6 +154,11 @@ export class XiaomiVacuumMapCard extends LitElement {
     private shouldHandleMouseUp!: boolean;
     private lastHassUpdate!: Date;
     public isInEditor = false;
+    private mapViewCardKey?: string;
+    private restoredMapViewKey?: string;
+    private pendingMapViewKey?: string;
+    private pendingMapView?: MapView;
+    private mapViewSaveTimer?: number;
 
     constructor() {
         super();
@@ -158,6 +166,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         this._handleRoomsConfigGet = this._handleRoomsConfigGet.bind(this);
         this._handleServiceCallGet = this._handleServiceCallGet.bind(this);
         this._handleLovelaceDomEvent = this._handleLovelaceDomEvent.bind(this);
+        this._flushMapView = this._flushMapView.bind(this);
     }
 
     @property({ attribute: false }) public _hass!: HomeAssistantFixed;
@@ -212,6 +221,8 @@ export class XiaomiVacuumMapCard extends LitElement {
             throw new Error(this._localize("common.invalid_configuration"));
         }
         this.config = config;
+        this.mapViewCardKey = undefined;
+        this.restoredMapViewKey = undefined;
         if (isOldConfig(config)) {
             this.oldConfig = true;
             return;
@@ -238,6 +249,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             this.isInEditor = true;
         }
         document.addEventListener(EVENT_LOVELACE_DOM, this._handleLovelaceDomEvent);
+        window.addEventListener("pagehide", this._flushMapView);
         this.connected = true;
         this._updateElements();
         delay(100).then(() => this.requestUpdate());
@@ -251,6 +263,8 @@ export class XiaomiVacuumMapCard extends LitElement {
             window.removeEventListener(EVENT_SERVICE_CALL_GET, this._handleServiceCallGet);
         }
         document.removeEventListener(EVENT_LOVELACE_DOM, this._handleLovelaceDomEvent);
+        window.removeEventListener("pagehide", this._flushMapView);
+        this._flushMapView();
         this.connected = false;
     }
 
@@ -306,7 +320,10 @@ export class XiaomiVacuumMapCard extends LitElement {
                     alt="camera_image"
                     class="${this.mapScale * this.realScale > 1 ? "zoomed" : ""}"
                     src="${mapSrc}"
-                    @load="${() => this._calculateBasicScale()}" />
+                    @load="${() => {
+                        this._calculateBasicScale();
+                        this._restoreMapView();
+                    }}" />
                 <div id="map-image-overlay">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -531,6 +548,8 @@ export class XiaomiVacuumMapCard extends LitElement {
             return;
         }
         const config = index === 0 ? this.config : (this.config.additional_presets ?? [])[index - 1];
+        // must happen before the reset below, so that the reset is not persisted for the preset we are leaving
+        this.restoredMapViewKey = undefined;
         if (!this.mapLocked) this._getPinchZoom()?.setTransform({ scale: 1, x: 0, y: 0, allowChangeEvent: true });
         if (user) {
             forwardHaptic("selection");
@@ -1081,7 +1100,10 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (s) {
             s.style.borderRadius = this._getCssProperty("--map-card-internal-big-radius");
         }
-        delay(100).then(() => this._calculateBasicScale());
+        delay(100).then(() => {
+            this._calculateBasicScale();
+            this._restoreMapView();
+        });
 
         if (!somethingChanged) {
             return;
@@ -1127,6 +1149,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     private _toggleLock(): void {
         this.mapLocked = !this.mapLocked;
         forwardHaptic("selection");
+        this._persistMapView();
         delay(500).then(() => this.requestUpdate());
     }
 
@@ -1281,6 +1304,160 @@ export class XiaomiVacuumMapCard extends LitElement {
         this.mapScale = pinchZoom.scale;
         this.mapX = pinchZoom.x;
         this.mapY = pinchZoom.y;
+        this._persistMapView();
+    }
+
+    private _isMapViewPersistenceEnabled(): boolean {
+        return this.config?.persist_map_view !== false && !this.isInEditor;
+    }
+
+    private _isMapLockPersistenceEnabled(): boolean {
+        return this.config?.persist_map_lock !== false;
+    }
+
+    private _getMapViewCardKey(): string {
+        if (this.mapViewCardKey) {
+            return this.mapViewCardKey;
+        }
+        const config = this.config ?? ({} as XiaomiVacuumMapCardConfig);
+        if (config.map_view_storage_key) {
+            this.mapViewCardKey = String(config.map_view_storage_key);
+            return this.mapViewCardKey;
+        }
+        const signature = JSON.stringify([
+            config.title ?? "",
+            config.entity ?? "",
+            this._getAllPresets().map(preset => [
+                preset?.preset_name ?? "",
+                preset?.map_source?.camera ?? "",
+                preset?.map_source?.image ?? "",
+                preset?.entity ?? "",
+            ]),
+        ]);
+        this.mapViewCardKey = hashString(signature);
+        return this.mapViewCardKey;
+    }
+
+    private _getMapViewMapId(camera: string): string {
+        if (!camera || !this.hass) {
+            return "";
+        }
+        const state = this.hass.states[camera];
+        if (!state) {
+            return "";
+        }
+        const attributes = state.attributes ?? {};
+        for (const attribute of MAP_VIEW_ID_ATTRIBUTES) {
+            const value = attributes[attribute];
+            if (value !== null && value !== undefined && ["string", "number", "boolean"].includes(typeof value)) {
+                const asString = String(value);
+                if (asString.length > 0) {
+                    return `${attribute}=${asString.length > 32 ? hashString(asString) : asString}`;
+                }
+            }
+        }
+        const calibrationPoints = attributes.calibration_points;
+        if (Array.isArray(calibrationPoints) && calibrationPoints.length > 0) {
+            const normalized = calibrationPoints.map((point: CalibrationPoint) => [
+                Math.round(Number(point?.map?.x)) || 0,
+                Math.round(Number(point?.map?.y)) || 0,
+                Math.round(Number(point?.vacuum?.x)) || 0,
+                Math.round(Number(point?.vacuum?.y)) || 0,
+            ]);
+            return `cal=${hashString(JSON.stringify(normalized))}`;
+        }
+        return "";
+    }
+
+    private _getMapViewKey(): string {
+        const preset = this._getCurrentPreset() ?? ({} as CardPresetConfig);
+        const camera = preset.map_source?.camera ?? "";
+        const image = preset.map_source?.image ?? "";
+        return [this._getMapViewCardKey(), this.presetIndex ?? 0, camera || image, this._getMapViewMapId(camera)].join(
+            "|",
+        );
+    }
+
+    private _restoreMapView(): void {
+        if (!this._isMapViewPersistenceEnabled()) {
+            return;
+        }
+        const pinchZoom = this._getPinchZoom();
+        if (!pinchZoom) {
+            return;
+        }
+        const key = this._getMapViewKey();
+        if (this.restoredMapViewKey === key) {
+            return;
+        }
+        const zoomerRect = pinchZoom.getBoundingClientRect();
+        if (!zoomerRect.width || !zoomerRect.height) {
+            return;
+        }
+        const mapImage = this._getMapImage();
+        if (!mapImage || !mapImage.complete || !mapImage.naturalWidth) {
+            return;
+        }
+        const zoomerContent = this._getMapZoomerContent();
+        if (!zoomerContent) {
+            return;
+        }
+        const contentRect = zoomerContent.getBoundingClientRect();
+        if (!contentRect.width || !contentRect.height) {
+            return;
+        }
+        this.restoredMapViewKey = key;
+        const view = getMapView(key);
+        if (!view) {
+            return;
+        }
+        if (this._isMapLockPersistenceEnabled() && typeof view.locked === "boolean") {
+            this.mapLocked = view.locked;
+        }
+        pinchZoom.setTransform({ scale: view.scale, x: view.x, y: view.y, allowChangeEvent: false });
+        this.mapScale = pinchZoom.scale;
+        this.mapX = pinchZoom.x;
+        this.mapY = pinchZoom.y;
+        this.requestUpdate();
+    }
+
+    private _persistMapView(): void {
+        if (!this._isMapViewPersistenceEnabled()) {
+            return;
+        }
+        const pinchZoom = this._getPinchZoom();
+        if (!pinchZoom) {
+            return;
+        }
+        const key = this._getMapViewKey();
+        if (this.restoredMapViewKey !== key) {
+            return;
+        }
+        this.pendingMapViewKey = key;
+        this.pendingMapView = {
+            scale: pinchZoom.scale,
+            x: pinchZoom.x,
+            y: pinchZoom.y,
+            locked: this._isMapLockPersistenceEnabled() ? this.mapLocked : undefined,
+        };
+        if (this.mapViewSaveTimer) {
+            clearTimeout(this.mapViewSaveTimer);
+        }
+        this.mapViewSaveTimer = window.setTimeout(this._flushMapView, MAP_VIEW_SAVE_DEBOUNCE);
+    }
+
+    private _flushMapView(): void {
+        if (this.mapViewSaveTimer) {
+            clearTimeout(this.mapViewSaveTimer);
+            this.mapViewSaveTimer = undefined;
+        }
+        const key = this.pendingMapViewKey;
+        const view = this.pendingMapView;
+        this.pendingMapViewKey = undefined;
+        this.pendingMapView = undefined;
+        if (key && view) {
+            setMapView(key, view);
+        }
     }
 
     private _getPinchZoom(): PinchZoom {

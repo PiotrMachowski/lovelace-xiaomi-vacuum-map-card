@@ -61,6 +61,18 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
         return this._config?.two_finger_pan || false;
     }
 
+    get _persist_map_view(): boolean {
+        return this._config?.persist_map_view ?? true;
+    }
+
+    get _persist_map_lock(): boolean {
+        return this._config?.persist_map_lock ?? true;
+    }
+
+    get _map_view_storage_key(): string {
+        return this._config?.map_view_storage_key || "";
+    }
+
     private static _copyServiceCall(): void {
         window.dispatchEvent(new Event(EVENT_SERVICE_CALL_GET));
     }
@@ -193,6 +205,36 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
                             @change="${this._valueChanged}"></ha-switch>
                     </ha-formfield>
                 </div>
+                <div class="values">
+                    <ha-formfield class="switch-wrapper" .label="${this._localize("editor.label.persist_map_view")}">
+                        <ha-switch
+                            .checked="${this._persist_map_view}"
+                            .configValue="${"persist_map_view"}"
+                            @change="${this._valueChanged}"></ha-switch>
+                    </ha-formfield>
+                </div>
+                ${conditional(
+                    this._persist_map_view,
+                    () => html`
+                        <div class="values">
+                            <ha-formfield
+                                class="switch-wrapper"
+                                .label="${this._localize("editor.label.persist_map_lock")}">
+                                <ha-switch
+                                    .checked="${this._persist_map_lock}"
+                                    .configValue="${"persist_map_lock"}"
+                                    @change="${this._valueChanged}"></ha-switch>
+                            </ha-formfield>
+                        </div>
+                        <div class="values">
+                            <ha-textfield
+                                label="${this._localize("editor.label.map_view_storage_key")}"
+                                .value="${this._map_view_storage_key}"
+                                .configValue="${"map_view_storage_key"}"
+                                @input="${this._valueChanged}"></ha-textfield>
+                        </div>
+                    `,
+                )}
                 <div class="values separated selection-controls-wrapper">
                     <p>${this._localize("editor.label.selection")}</p>
                     <code class="selection-text">${this._lastSelection ?? "[]"}</code>

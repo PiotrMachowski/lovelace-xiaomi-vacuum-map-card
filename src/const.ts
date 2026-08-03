@@ -24,3 +24,17 @@ export const EMPTY_MAP_MODE: MapModeConfig = {
     selection_type: SelectionType[SelectionType.ROOM],
     repeats_type: RepeatsType[RepeatsType.NONE]
 }
+
+export const MAP_VIEW_STORE_KEY = "xiaomi-vacuum-map-card.map-view";
+export const MAP_VIEW_STORE_LIMIT = 300;
+export const MAP_VIEW_SAVE_DEBOUNCE = 350;
+export const MAP_VIEW_ID_ATTRIBUTES = [
+    "map_id",
+    "mapId",
+    "selected_map",
+    "current_map",
+    "map_slot",
+    "map_index",
+    "map_name",
+    "pmap_id",
+];
