@@ -51,6 +51,9 @@ export interface XiaomiVacuumMapCardConfig extends LovelaceCardConfig, CardPrese
     readonly language?: Language;
     readonly debug?: boolean;
     readonly action_handler_id?: string;
+    readonly persist_map_view?: boolean;
+    readonly persist_map_lock?: boolean;
+    readonly map_view_storage_key?: string;
 }
 
 export interface CardPresetConfig extends ConditionalObjectConfig {
