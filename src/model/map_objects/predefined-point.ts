@@ -123,7 +123,8 @@ export class PredefinedPoint extends PredefinedMapObject {
                         calc(var(--map-card-internal-predefined-point-icon-wrapper-size) / -2),
                         calc(var(--map-card-internal-predefined-point-icon-wrapper-size) / -2)
                     )
-                    scale(calc(1 / var(--map-scale)));
+                    scale(calc(1 / var(--map-scale)))
+                    rotate(calc(-1 * var(--map-rotation, 0deg)));
                 background: var(--map-card-internal-predefined-point-icon-background-color);
                 color: var(--map-card-internal-predefined-point-icon-color);
                 --mdc-icon-size: var(--map-card-internal-predefined-point-icon-size);
@@ -135,6 +136,10 @@ export class PredefinedPoint extends PredefinedMapObject {
                 text-anchor: middle;
                 dominant-baseline: middle;
                 pointer-events: none;
+                /* keep the text upright and anchored while the map turns underneath it */
+                transform-box: fill-box;
+                transform-origin: center;
+                transform: rotate(calc(-1 * var(--map-rotation, 0deg)));
                 font-size: calc(var(--map-card-internal-predefined-point-label-font-size) / var(--map-scale));
                 fill: var(--map-card-internal-predefined-point-label-color);
                 transition: color var(--map-card-internal-transitions-duration) ease,
