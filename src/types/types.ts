@@ -63,6 +63,8 @@ export interface CardPresetConfig extends ConditionalObjectConfig {
     readonly map_source: MapSourceConfig;
     readonly map_locked?: boolean;
     readonly two_finger_pan?: boolean;
+    readonly map_rotation?: number;
+    readonly map_rotation_gesture?: boolean;
     readonly calibration_source?: CalibrationSourceConfig;
     readonly icons?: IconActionConfig[];
     readonly append_icons?: boolean;
