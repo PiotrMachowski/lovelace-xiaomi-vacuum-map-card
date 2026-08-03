@@ -37,6 +37,21 @@ const maxScaleAttr = "max-scale";
 const lockedAttr = "locked";
 const noDefaultPanAttr = "no-default-pan";
 const twoFingerPanAttr = "two-finger-pan";
+const rotatableAttr = "rotatable";
+
+/**
+ * Emitted while two fingers twist, with the change in degrees since the last move.
+ * Kept in sync by hand with the literal `@pinch-rotate` listener in the card template.
+ */
+export const ROTATE_EVENT = "pinch-rotate";
+/** Emitted once the twisting stops, so listeners can snap to a round angle. */
+export const ROTATE_END_EVENT = "pinch-rotate-end";
+/** A two finger pinch always wobbles - only report a rotation once it clearly is one. */
+const ROTATION_DEADZONE = 8;
+
+export interface RotateEventDetail {
+    angleDiff: number;
+}
 
 export interface ScaleToOpts extends ChangeOptions {
     /** Transform origin. Can be a number, or string percent, eg "50%" */
@@ -50,6 +65,16 @@ export interface ScaleToOpts extends ChangeOptions {
 function getDistance(a: Point, b?: Point): number {
     if (!b) return 0;
     return Math.sqrt((b.clientX - a.clientX) ** 2 + (b.clientY - a.clientY) ** 2);
+}
+
+function getAngle(a: Point, b?: Point): number {
+    if (!b) return 0;
+    return (Math.atan2(b.clientY - a.clientY, b.clientX - a.clientX) * 180) / Math.PI;
+}
+
+/** Shortest signed distance between two angles, in degrees. */
+function getAngleDiff(from: number, to: number): number {
+    return (((to - from + 180) % 360) + 360) % 360 - 180;
 }
 
 function getMidpoint(a: Point, b?: Point): Point {
@@ -101,9 +126,13 @@ export default class PinchZoom extends HTMLElement {
     private _enablePan = true;
     private _locked = false;
     private _twoFingerPan = false;
+    private _rotatable = false;
+    // how far the current two finger gesture has twisted, used to clear the deadzone
+    private _pendingRotation = 0;
+    private _rotating = false;
 
     static get observedAttributes() {
-        return [minScaleAttr, maxScaleAttr, noDefaultPanAttr, twoFingerPanAttr, lockedAttr];
+        return [minScaleAttr, maxScaleAttr, noDefaultPanAttr, twoFingerPanAttr, lockedAttr, rotatableAttr];
     }
 
     constructor() {
@@ -145,6 +174,10 @@ export default class PinchZoom extends HTMLElement {
                 if (this.twoFingerPan && pointerTracker.currentPointers.length == 1) {
                     this.enablePan = false;
                 }
+                // a rotation needs two fingers, so it is over as soon as one leaves
+                if (pointerTracker.currentPointers.length < 2) {
+                    this._endRotation();
+                }
                 stopEvent(event);
                 return false;
             },
@@ -178,6 +211,9 @@ export default class PinchZoom extends HTMLElement {
         }
         if (name === lockedAttr) {
             this.locked = newValue == "1" || newValue == "true";
+        }
+        if (name === rotatableAttr) {
+            this.rotatable = newValue == "1" || newValue == "true";
         }
     }
 
@@ -237,6 +273,15 @@ export default class PinchZoom extends HTMLElement {
 
     get twoFingerPan() {
         return this._twoFingerPan;
+    }
+
+    set rotatable(value: boolean) {
+        this._rotatable = value;
+        if (!value) this._endRotation();
+    }
+
+    get rotatable() {
+        return this._rotatable;
     }
 
     connectedCallback() {
@@ -445,6 +490,15 @@ export default class PinchZoom extends HTMLElement {
         const newDistance = getDistance(currentPointers[0], currentPointers[1]);
         const scaleDiff = prevDistance ? newDistance / prevDistance : 1;
 
+        if (this.rotatable && previousPointers[1] && currentPointers[1]) {
+            this._trackRotation(
+                getAngleDiff(
+                    getAngle(previousPointers[0], previousPointers[1]),
+                    getAngle(currentPointers[0], currentPointers[1]),
+                ),
+            );
+        }
+
         this._applyChange({
             originX,
             originY,
@@ -453,6 +507,30 @@ export default class PinchZoom extends HTMLElement {
             panY: newMidpoint.clientY - prevMidpoint.clientY,
             allowChangeEvent: true,
         });
+    }
+
+    /**
+     * Reports a two finger twist, but only once it has passed the deadzone - otherwise every
+     * ordinary pinch would nudge the map a degree or two.
+     */
+    private _trackRotation(angleDiff: number) {
+        if (!Number.isFinite(angleDiff) || angleDiff === 0) return;
+        if (!this._rotating) {
+            this._pendingRotation += angleDiff;
+            if (Math.abs(this._pendingRotation) < ROTATION_DEADZONE) return;
+            this._rotating = true;
+            angleDiff = this._pendingRotation;
+        }
+        this.dispatchEvent(
+            new CustomEvent<RotateEventDetail>(ROTATE_EVENT, { bubbles: true, detail: { angleDiff } }),
+        );
+    }
+
+    private _endRotation() {
+        this._pendingRotation = 0;
+        if (!this._rotating) return;
+        this._rotating = false;
+        this.dispatchEvent(new Event(ROTATE_END_EVENT, { bubbles: true }));
     }
 
     /** Transform the view & fire a change event */
