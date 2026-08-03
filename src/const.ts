@@ -28,6 +28,11 @@ export const EMPTY_MAP_MODE: MapModeConfig = {
 export const MAP_VIEW_STORE_KEY = "xiaomi-vacuum-map-card.map-view";
 export const MAP_VIEW_STORE_LIMIT = 300;
 export const MAP_VIEW_SAVE_DEBOUNCE = 350;
+export const MAP_ROTATION_STEP = 90;
+// a two finger pinch always wobbles a little - only treat it as a rotation past this
+export const MAP_ROTATION_GESTURE_DEADZONE = 8;
+// when a gesture ends this close to a right angle, assume that is what was meant
+export const MAP_ROTATION_SNAP_THRESHOLD = 7;
 export const MAP_VIEW_ID_ATTRIBUTES = [
     "map_id",
     "mapId",
