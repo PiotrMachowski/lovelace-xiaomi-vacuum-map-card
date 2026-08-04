@@ -296,7 +296,7 @@ export class ManualRectangle extends MapObject {
                                 var(--map-scale)
                         )
                     )
-                    rotate(var(--angle-description));
+                    rotate(var(--angle-description)) rotate(calc(-1 * var(--map-rotation, 0deg)));
                 font-size: calc(var(--map-card-internal-manual-rectangle-description-font-size) / var(--map-scale));
                 fill: var(--map-card-internal-manual-rectangle-description-color);
                 background: transparent;
@@ -315,10 +315,10 @@ export class ManualRectangle extends MapObject {
 
             .manual-rectangle-delete-icon {
                 fill: var(--map-card-internal-manual-rectangle-delete-icon-color);
-                transform: translate(
-                        calc(var(--x-delete) - 8.5px / var(--map-scale)),
-                        calc(var(--y-delete) - 8.5px / var(--map-scale))
-                    )
+                /* move to the circle first, then unturn, so the glyph stays upright on top of it */
+                transform: translate(var(--x-delete), var(--y-delete))
+                    rotate(calc(-1 * var(--map-rotation, 0deg)))
+                    translate(calc(-8.5px / var(--map-scale)), calc(-8.5px / var(--map-scale)))
                     scale(calc(0.71 / var(--map-scale)));
                 pointer-events: none;
             }
@@ -347,10 +347,9 @@ export class ManualRectangle extends MapObject {
 
             .manual-rectangle-resize-icon {
                 fill: var(--map-card-internal-manual-rectangle-resize-icon-color);
-                transform: translate(
-                        calc(var(--x-resize) - 8.5px / var(--map-scale)),
-                        calc(var(--y-resize) - 8.5px / var(--map-scale))
-                    )
+                transform: translate(var(--x-resize), var(--y-resize))
+                    rotate(calc(-1 * var(--map-rotation, 0deg)))
+                    translate(calc(-8.5px / var(--map-scale)), calc(-8.5px / var(--map-scale)))
                     scale(calc(0.71 / var(--map-scale)));
                 pointer-events: none;
             }

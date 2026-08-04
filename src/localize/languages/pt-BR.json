@@ -186,7 +186,10 @@
             "camera": "Entidade da camera (Obrigatório)",
             "vacuum_platform": "Plataforma do aspirador (Obrigatório)",
             "map_locked": "Mapa travado (Opicional)",
-            "two_finger_pan": "Movimente com dois dedos (Opicional)"
+            "two_finger_pan": "Movimente com dois dedos (Opicional)",
+            "persist_map_view": "Lembrar zoom e posição (opcional)",
+            "persist_map_lock": "Lembrar estado do bloqueio (opcional)",
+            "map_view_storage_key": "Chave de armazenamento da visualização do mapa (opcional)"
         }
     }
 }

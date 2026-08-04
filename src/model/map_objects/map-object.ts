@@ -130,14 +130,31 @@ export abstract class MapObject {
         )}`;
     }
 
-    protected renderLabel(config: LabelConfig | undefined, htmlClass: string): SVGTemplateResult {
+    /**
+     * `anchor` is the icon this label belongs to, when there is one. The label is then hung off the
+     * icon and everything separating the two - the gap between their configured positions as well as
+     * offset_x/offset_y - is applied after the counter-rotation, so it is measured on screen. A label
+     * sitting below its icon stays below it however far the map is turned, instead of swinging around
+     * and landing on top of it. At 0deg the result is identical to placing the label outright.
+     */
+    protected renderLabel(
+        config: LabelConfig | undefined,
+        htmlClass: string,
+        anchor?: IconConfig,
+    ): SVGTemplateResult {
         const mapped = config ? this.vacuumToScaledMap(config.x, config.y) : [];
+        const anchored = anchor ? this.vacuumToScaledMap(anchor.x, anchor.y) : undefined;
+        const origin = anchored ?? mapped;
+        const offsetX = (mapped[0] ?? 0) - (origin[0] ?? 0) + this.scaled(config?.offset_x ?? 0);
+        const offsetY = (mapped[1] ?? 0) - (origin[1] ?? 0) + this.scaled(config?.offset_y ?? 0);
         return svg`${conditional(
             config != null && mapped.length > 0,
             () => svg`
                 <text class="label-text ${htmlClass}"
-                      x="${mapped[0] + this.scaled(config?.offset_x ?? 0)}px"
-                      y="${mapped[1] + this.scaled(config?.offset_y ?? 0)}px">
+                      style="--label-anchor-x: ${origin[0]}px; --label-anchor-y: ${origin[1]}px;
+                             --label-offset-x: ${offsetX}px; --label-offset-y: ${offsetY}px;"
+                      x="${origin[0]}px"
+                      y="${origin[1]}px">
                     ${config?.text}
                 </text>
             `,
@@ -185,6 +202,18 @@ export abstract class MapObject {
                 align-items: center;
                 justify-content: center;
                 pointer-events: auto;
+            }
+
+            .label-text {
+                /* Unturn first, then step away from the anchor: the offset ends up measured on
+                   screen, so a label configured to sit below its icon stays below it at any angle.
+                   At 0deg this is exactly the old plain offset.
+                   The origin has to be the anchor itself, not the middle of the glyphs, or the
+                   text drifts by however far the two differ - doubled at 180deg. */
+                transform-box: view-box;
+                transform-origin: var(--label-anchor-x, 0px) var(--label-anchor-y, 0px);
+                transform: rotate(calc(-1 * var(--map-rotation, 0deg)))
+                    translate(var(--label-offset-x, 0px), var(--label-offset-y, 0px));
             }
         `;
     }

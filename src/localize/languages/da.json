@@ -217,7 +217,10 @@
             "camera": "Kamera entitet (påkrævet)",
             "vacuum_platform": "Støvsuger platform (påkrævet)",
             "map_locked": "Kort låst (valgfrit)",
-            "two_finger_pan": "To-finger panorering (valgfrit)"
+            "two_finger_pan": "To-finger panorering (valgfrit)",
+            "persist_map_view": "Husk zoom og position (valgfrit)",
+            "persist_map_lock": "Husk låsetilstand (valgfrit)",
+            "map_view_storage_key": "Lagringsnøgle til kortvisning (valgfrit)"
         }
     }
 }

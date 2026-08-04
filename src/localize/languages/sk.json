@@ -222,7 +222,10 @@
             "camera": "Entita kamery (povinná položka)",
             "vacuum_platform": "Platforma vysávača (povinná položka)",
             "map_locked": "Uzamknutie mapy",
-            "two_finger_pan": "Posuv mapy dvoma prstami"
+            "two_finger_pan": "Posuv mapy dvoma prstami",
+            "persist_map_view": "Zapamätať priblíženie a pozíciu (voliteľná položka)",
+            "persist_map_lock": "Zapamätať stav uzamknutia (voliteľná položka)",
+            "map_view_storage_key": "Kľúč úložiska zobrazenia mapy (voliteľná položka)"
         }
     }
 }

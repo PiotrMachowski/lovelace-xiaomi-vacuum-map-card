@@ -25,7 +25,7 @@ export class Room extends PredefinedMapObject {
                          @click="${async (): Promise<void> => this._click()}">
                 </polygon>
                 ${this.renderIcon(this._config.icon, () => this._click(), "room-icon-wrapper")}
-                ${this.renderLabel(this._config.label, "room-label")}
+                ${this.renderLabel(this._config.label, "room-label", this._config.icon)}
             </g>
         `;
     }
@@ -84,7 +84,8 @@ export class Room extends PredefinedMapObject {
                         calc(var(--map-card-internal-room-icon-wrapper-size) / -2),
                         calc(var(--map-card-internal-room-icon-wrapper-size) / -2)
                     )
-                    scale(calc(1 / var(--map-scale)));
+                    scale(calc(1 / var(--map-scale)))
+                    rotate(calc(-1 * var(--map-rotation, 0deg)));
                 background: var(--map-card-internal-room-icon-background-color);
                 color: var(--map-card-internal-room-icon-color);
                 --mdc-icon-size: var(--map-card-internal-room-icon-size);
