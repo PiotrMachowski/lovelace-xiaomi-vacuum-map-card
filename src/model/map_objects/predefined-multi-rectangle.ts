@@ -72,7 +72,7 @@ export class PredefinedMultiRectangle extends PredefinedMapObject {
                 `,
                 )}
                 ${this.renderIcon(this._config.icon, () => this._click(), "predefined-rectangle-icon-wrapper")}
-                ${this.renderLabel(this._config.label, "predefined-rectangle-label")}
+                ${this.renderLabel(this._config.label, "predefined-rectangle-label", this._config.icon)}
             </g>
         `;
     }
@@ -166,10 +166,6 @@ export class PredefinedMultiRectangle extends PredefinedMapObject {
                 text-anchor: middle;
                 dominant-baseline: middle;
                 pointer-events: none;
-                /* keep the text upright and anchored while the map turns underneath it */
-                transform-box: fill-box;
-                transform-origin: center;
-                transform: rotate(calc(-1 * var(--map-rotation, 0deg)));
                 font-size: calc(var(--map-card-internal-predefined-rectangle-label-font-size) / var(--map-scale));
                 fill: var(--map-card-internal-predefined-rectangle-label-color);
                 transition: color var(--map-card-internal-transitions-duration) ease,

@@ -25,7 +25,7 @@ export class Room extends PredefinedMapObject {
                          @click="${async (): Promise<void> => this._click()}">
                 </polygon>
                 ${this.renderIcon(this._config.icon, () => this._click(), "room-icon-wrapper")}
-                ${this.renderLabel(this._config.label, "room-label")}
+                ${this.renderLabel(this._config.label, "room-label", this._config.icon)}
             </g>
         `;
     }
@@ -97,10 +97,6 @@ export class Room extends PredefinedMapObject {
                 text-anchor: middle;
                 dominant-baseline: middle;
                 pointer-events: none;
-                /* keep the text upright and anchored while the map turns underneath it */
-                transform-box: fill-box;
-                transform-origin: center;
-                transform: rotate(calc(-1 * var(--map-rotation, 0deg)));
                 font-size: calc(var(--map-card-internal-room-label-font-size) / var(--map-scale));
                 fill: var(--map-card-internal-room-label-color);
                 transition: color var(--map-card-internal-transitions-duration) ease,
