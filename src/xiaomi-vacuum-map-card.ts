@@ -65,6 +65,7 @@ import { PredefinedPoint } from "./model/map_objects/predefined-point";
 import { PredefinedMultiRectangle } from "./model/map_objects/predefined-multi-rectangle";
 import { Room } from "./model/map_objects/room";
 import { areAllEntitiesDefined, isOldConfig, validateConfig } from "./config-validators";
+import { normalizeConfig } from "./config-normalizer";
 import { MapMode } from "./model/map_mode/map-mode";
 import { SelectionType } from "./model/map_mode/selection-type";
 import { RepeatsType } from "./model/map_mode/repeats-type";
@@ -211,7 +212,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (!config) {
             throw new Error(this._localize("common.invalid_configuration"));
         }
-        this.config = config;
+        this.config = normalizeConfig(config);
         if (isOldConfig(config)) {
             this.oldConfig = true;
             return;
