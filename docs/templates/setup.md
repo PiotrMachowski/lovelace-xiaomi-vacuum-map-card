@@ -2,16 +2,17 @@
 
 The purpose of setup platforms is to make it easier to retrieve coordinates for other platforms.
 
+Prerequisites: [install this card](/README.md#installation)
+
 ### Getting coordinates
 
 To get coordinates of zone, point or outline you have to:
 1. Open dashboard in edit mode
 
    ![image](media/dashboard_editor.png)
-2. Open card editor
+2. Add card and in the "By card" tab look for "Vacuum Map Card" Open card editor
 
-   ![image](media/card_editor.png)
-3. Choose appropriate setup platform according to platform you use in card
+3. Select the entity of the vacuum cleaner, and choose appropriate setup platform according to platform you use in card
    <table>
      <tbody>
        <tr>
