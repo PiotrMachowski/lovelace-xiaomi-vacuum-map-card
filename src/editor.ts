@@ -254,7 +254,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
             this._showToast("editor.label.config_set_failed", "mdi:close", false);
             return;
         }
-        const map_modes = this._config?.map_modes ?? [];
+        const map_modes = [...(this._config?.map_modes ?? [])];
         if (map_modes.length !== 0 && (roomConfig.modeIndex ?? -1) >= 0) {
             map_modes[roomConfig.modeIndex ?? -1] = {
                 ...map_modes[roomConfig.modeIndex ?? -1],
