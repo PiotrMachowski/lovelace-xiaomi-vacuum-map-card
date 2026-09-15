@@ -10,6 +10,7 @@ import {
     VariablesStorage,
 } from "../../types/types";
 import { localize } from "../../localize/localize";
+import { computeEntityName } from "../../entity-name";
 import { getAllEntitiesFromTheSameDevice, getFilledTemplate } from "../../utils";
 import { PlatformGenerator } from "./platform-generator";
 import { TemplatableItemValue } from "../map_mode/templatable-value";
@@ -259,7 +260,7 @@ export class TilesGenerator {
             return localize(tile.label, language);
         if (attribute !== undefined)
             return computeAttributeNameDisplay(hass.localize, hass.states[entity_id], hass.entities, attribute);
-        return hass.states[entity_id].attributes.friendly_name ?? entity_id;
+        return computeEntityName(hass, hass.states[entity_id]) ?? entity_id;
     }
 
     private static generateTranslationKeys(
