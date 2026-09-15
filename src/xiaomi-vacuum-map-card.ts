@@ -48,6 +48,7 @@ import PinchZoom from "./pinch-zoom";
 import "./pinch-zoom";
 import { ManualRectangle } from "./model/map_objects/manual-rectangle";
 import { Context } from "./model/map_objects/context";
+import { entityNamesChanged } from "./entity-name";
 import { ManualPoint } from "./model/map_objects/manual-point";
 import { ManualPath } from "./model/map_objects/manual-path";
 import {
@@ -257,6 +258,9 @@ export class XiaomiVacuumMapCard extends LitElement {
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         if (!this.config) {
             return false;
+        }
+        if (entityNamesChanged(changedProps.get("hass") as HomeAssistantFixed | undefined, this.hass)) {
+            return true;
         }
         return hasConfigOrAnyEntityChanged(this.watchedEntities, changedProps, false, this.hass);
     }
