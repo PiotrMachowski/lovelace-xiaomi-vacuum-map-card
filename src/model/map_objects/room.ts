@@ -1,5 +1,5 @@
 // noinspection CssUnresolvedCustomProperty
-import { css, CSSResultGroup, svg, SVGTemplateResult } from "lit";
+import { css, CSSResultGroup, html, svg, SVGTemplateResult } from "lit";
 import { forwardHaptic } from "custom-card-helpers";
 
 import { Context } from "./context";
@@ -27,6 +27,9 @@ export class Room extends PredefinedMapObject {
         const poly = this._imageOutline
             ? this._imageOutline.map(p => this.realScaled2Point(p))
             : (this._config?.outline ?? []).map(p => this.vacuumToScaledMap(p[0], p[1]));
+        // Rooms are sent in click order, so a selected room shows its position in that order.
+        const order = this._selected ? this._context.selectedRooms().indexOf(this) + 1 : 0;
+        const iconContent = order > 0 ? html`<span class="room-order">${order}</span>` : undefined;
         return svg`
             <g class="room-wrapper ${this._selected ? "selected" : ""} 
             room-${`${this._config.id}`.replace(/[^a-zA-Z0-9_\-]/gm, "_")}-wrapper">
@@ -34,7 +37,7 @@ export class Room extends PredefinedMapObject {
                          points="${poly.map(p => p.join(", ")).join(" ")}"
                          @click="${this._imageOutline ? undefined : async (): Promise<void> => this.click()}">
                 </polygon>
-                ${this.renderIcon(this._config.icon, () => this.click(), "room-icon-wrapper")}
+                ${this.renderIcon(this._config.icon, () => this.click(), "room-icon-wrapper", iconContent)}
                 ${this.renderLabel(this._config.label, "room-label", this._config.icon)}
             </g>
         `;
@@ -101,6 +104,12 @@ export class Room extends PredefinedMapObject {
                 --mdc-icon-size: var(--map-card-internal-room-icon-size);
                 transition: color var(--map-card-internal-transitions-duration) ease,
                     background var(--map-card-internal-transitions-duration) ease;
+            }
+
+            .room-order {
+                font-size: calc(var(--map-card-internal-room-icon-size) * 0.75);
+                font-weight: bold;
+                line-height: 1;
             }
 
             .room-label {
