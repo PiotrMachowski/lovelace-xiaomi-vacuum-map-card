@@ -18,6 +18,7 @@
         "custom-card-helpers": "^1.9.0",
         "home-assistant-js-websocket": "^8.0.1",
         "lit": "^2.0.0",
+        "pako": "^3.0.2",
         "pointer-tracker": "^2.4.0",
         "transformation-matrix": "^2.8.0",
         "change-perspective": "^1.0.1"

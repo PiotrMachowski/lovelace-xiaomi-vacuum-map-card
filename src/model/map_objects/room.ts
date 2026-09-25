@@ -98,6 +98,10 @@ export class Room extends PredefinedMapObject {
                 pointer-events: none;
                 font-size: calc(var(--map-card-internal-room-label-font-size) / var(--map-scale));
                 fill: var(--map-card-internal-room-label-color);
+                paint-order: stroke;
+                stroke: var(--map-card-internal-room-label-outline-color);
+                stroke-width: calc(var(--map-card-internal-room-label-outline-width) / var(--map-scale));
+                stroke-linejoin: round;
                 transition: color var(--map-card-internal-transitions-duration) ease,
                     background var(--map-card-internal-transitions-duration) ease;
             }

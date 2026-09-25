@@ -48,9 +48,31 @@ internal_variables:
   topic: valetudo/rockrobo
 ```
 
+## Rendering the map from Valetudo's map data
+
+Valetudo publishes its map over MQTT; Home Assistant exposes it as a camera (e.g. `camera.valetudo_robot_map_data`) whose image embeds the raw map data. With `map_source.valetudo_json` the card decodes and renders that map itself, so no additional integration is needed and calibration is automatic:
+
+```yaml
+type: custom:xiaomi-vacuum-map-card
+entity: vacuum.valetudo_robot
+vacuum_platform: Hypfer/Valetudo
+map_source:
+  valetudo_json: camera.valetudo_robot_map_data
+internal_variables:
+  topic: valetudo/robot
+```
+
+In this mode:
+* room cleaning (`vacuum_clean_segment`) is added to the default map modes, with rooms taken live from the map; a `vacuum_clean_segment` mode configured without `predefined_selections` is filled the same way,
+* the robot, dock and go-to target are drawn as icons (see `--map-card-valetudo-*` [CSS variables](/docs/css_variables.md)),
+* no-go areas, no-mop areas, virtual walls and the zone being cleaned are drawn by default; carpets can be added, and any of them removed, with `map_source.valetudo_json_layers`,
+* the map is refreshed every 3 s while cleaning or returning, 15 s while paused and 2 min otherwise.
+
+The visual editor configures it too: with the Hypfer/Valetudo platform selected, pick the map camera (the "Render map from Valetudo map data" switch turns on automatically), choose the map layers and fill in the MQTT topic prefix.
+
 ## Retrieving map image
 
-To retrieve map image you have to use [MQTT Vacuum Camera](https://github.com/sca075/mqtt_vacuum_camera/) custom integration made by [@sca075](https://github.com/sca075) (recommended; supports auto-calibration) or [I can't believe it's not Valetudo](https://github.com/Hypfer/Icantbelieveitsnotvaletudo) (not recommended; manual calibration required).
+Alternatively, to retrieve a pre-rendered map image you have to use [MQTT Vacuum Camera](https://github.com/sca075/mqtt_vacuum_camera/) custom integration made by [@sca075](https://github.com/sca075) (recommended; supports auto-calibration) or [I can't believe it's not Valetudo](https://github.com/Hypfer/Icantbelieveitsnotvaletudo) (not recommended; manual calibration required).
 
 ## Available templates
 

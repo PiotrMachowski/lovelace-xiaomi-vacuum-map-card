@@ -19,6 +19,12 @@
 --map-card-predefined-point-label-color
 --map-card-predefined-point-label-color-selected
 --map-card-predefined-point-label-font-size
+--map-card-valetudo-marker-wrapper-size
+--map-card-valetudo-marker-icon-size
+--map-card-valetudo-marker-icon-color
+--map-card-valetudo-marker-background-color
+--map-card-valetudo-robot-icon-color
+--map-card-valetudo-robot-background-color
 --map-card-manual-point-radius
 --map-card-manual-point-line-color
 --map-card-manual-point-fill-color
@@ -88,6 +94,8 @@
 --map-card-room-label-color
 --map-card-room-label-color-selected
 --map-card-room-label-font-size
+--map-card-room-label-outline-color
+--map-card-room-label-outline-width
 --map-card-toast-successful-icon-color
 --map-card-toast-unsuccessful-icon-color
 --map-card-transitions-duration

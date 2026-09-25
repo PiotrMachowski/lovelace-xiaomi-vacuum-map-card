@@ -70,6 +70,9 @@ export function getWatchedEntitiesForPreset(config: CardPresetConfig, language: 
     if (config.map_source.camera) {
         watchedEntities.add(config.map_source.camera);
     }
+    if (config.map_source.valetudo_json) {
+        watchedEntities.add(config.map_source.valetudo_json);
+    }
     if (config.calibration_source?.entity) {
         watchedEntities.add(config.calibration_source.entity);
     }

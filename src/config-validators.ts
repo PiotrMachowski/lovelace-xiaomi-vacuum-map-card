@@ -24,10 +24,11 @@ import { PlatformGenerator } from "./model/generators/platform-generator";
 import { HomeAssistantFixed } from "./types/fixes";
 
 function validateMapSource(mapSource: MapSourceConfig): TranslatableString[] {
-    if (!mapSource.camera && !mapSource.image) {
+    const providedCount = [mapSource.camera, mapSource.image, mapSource.valetudo_json].filter(v => !!v).length;
+    if (providedCount === 0) {
         return ["validation.preset.map_source.none_provided"];
     }
-    if (mapSource.camera && mapSource.image) {
+    if (providedCount > 1) {
         return ["validation.preset.map_source.ambiguous"];
     }
     return [];
@@ -245,7 +246,7 @@ function validatePreset(config: CardPresetConfig, nameRequired: boolean, languag
         ["map_source", "validation.preset.map_source.missing"],
     ]);
     const vacuumPlatform = PlatformGenerator.getPlatformName(config.vacuum_platform);
-    if (!platformsWithDefaultCalibration.includes(vacuumPlatform)) {
+    if (!platformsWithDefaultCalibration.includes(vacuumPlatform) && !config.map_source?.valetudo_json) {
         mandatoryFields.set("calibration_source", "validation.preset.calibration_source.missing");
     }
     const params = Object.keys(config);

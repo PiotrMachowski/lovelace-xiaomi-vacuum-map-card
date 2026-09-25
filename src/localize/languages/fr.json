@@ -273,6 +273,16 @@
             "name": "Titre (optionnel)",
             "entity": "Entité de l'aspirateur (obligatoire)",
             "camera": "Entité de la caméra (obligatoire)",
+            "valetudo_json": "Générer la carte depuis les données Valetudo (optionnel)",
+            "valetudo_json_layers": "Calques de la carte Valetudo :",
+            "valetudo_json_layer": {
+                "no_go_area": "Zones interdites",
+                "no_mop_area": "Zones sans serpillière",
+                "virtual_wall": "Murs virtuels",
+                "active_zone": "Zone en cours de nettoyage",
+                "carpet": "Tapis"
+            },
+            "mqtt_topic": "Préfixe du topic MQTT Valetudo (obligatoire)",
             "vacuum_platform": "Plateforme (obligatoire)",
             "map_locked": "Carte verrouillée (optionnel)",
             "two_finger_pan": "Déplacement à deux doigts (optionnel)"

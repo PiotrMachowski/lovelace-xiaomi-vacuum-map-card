@@ -272,6 +272,16 @@
             "name": "Title (optional)",
             "entity": "Vacuum entity (required)",
             "camera": "Camera entity (required)",
+            "valetudo_json": "Render map from Valetudo map data (optional)",
+            "valetudo_json_layers": "Valetudo map layers:",
+            "valetudo_json_layer": {
+                "no_go_area": "No-go areas",
+                "no_mop_area": "No-mop areas",
+                "virtual_wall": "Virtual walls",
+                "active_zone": "Zone being cleaned",
+                "carpet": "Carpets"
+            },
+            "mqtt_topic": "Valetudo MQTT topic prefix (required)",
             "vacuum_platform": "Vacuum platform (required)",
             "map_locked": "Map locked (optional)",
             "two_finger_pan": "Two finger pan (optional)",

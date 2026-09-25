@@ -201,7 +201,7 @@ full_demo.mp4).
 
 <sup>1</sup> If multiple presets are configured
 
-<sup>2</sup> Not mandatory when used with a platform that support a default calibration
+<sup>2</sup> Not mandatory when used with a platform that support a default calibration, or with `map_source.valetudo_json`
 
 ### Map source options
 
@@ -209,9 +209,11 @@ full_demo.mp4).
 |----------|--------|----------------|---------------|----------------------------------------------|
 | `camera` | string | no<sup>1</sup> | -             | Entity id of map camera                      |
 | `image`  | string | no<sup>1</sup> | -             | URL of map image                             |
+| `valetudo_json` | string | no<sup>1</sup> | - | Entity id of Valetudo's MQTT map camera; the map is rendered in the browser from its embedded map data ([details](/docs/templates/hypferValetudo.md#rendering-the-map-from-valetudos-map-data)) |
+| `valetudo_json_layers` | list | no | `[no_go_area, no_mop_area, virtual_wall, active_zone]` | Extra Valetudo map data drawn with `valetudo_json`; any of `no_go_area`, `no_mop_area`, `virtual_wall`, `active_zone`, `carpet` |
 | `crop`   | object | no             | _no cropping_ | Images [cropping options](#cropping-options) |
 
-<sup>1</sup> Exactly one of `camera` or `image` must be provided
+<sup>1</sup> Exactly one of `camera`, `image` or `valetudo_json` must be provided
 
 #### Cropping options
 
@@ -232,8 +234,9 @@ full_demo.mp4).
 | `calibration_points` | list    | no<sup>1</sup> | -       | List of 3 or 4 [calibration points](#calibration-points-options)                                                                                                                                 |
 | `identity`           | boolean | no<sup>1</sup> | -       | Enables using image coordinates on map (e.g. when map is used just for rooms)                                                                                                                    |
 | `platform`           | string  | no<sup>1</sup> | -       | Enables using a default calibration from a chosen platform (provided that it supports it)                                                                                                        |
+| `valetudo_json`      | boolean | no<sup>1</sup> | -       | Enables using the calibration of the map rendered from `map_source.valetudo_json` (default when `calibration_source` is omitted with that map source)                                          |
 
-<sup>1</sup> Exactly one of `camera`, `entity`, `calibration_points`, `identity` or `platform` must be provided
+<sup>1</sup> Exactly one of `camera`, `entity`, `calibration_points`, `identity`, `platform` or `valetudo_json` must be provided
 
 #### Calibration points options
 

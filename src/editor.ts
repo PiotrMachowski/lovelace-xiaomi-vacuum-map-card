@@ -20,6 +20,7 @@ import {
 import { conditional, copyMessage, getAllEntitiesFromTheSameDevice } from "./utils";
 import { ToastRenderer } from "./renderers/toast-renderer";
 import { HomeAssistantFixed } from "./types/fixes";
+import { VALETUDO_DEFAULT_OVERLAY_LAYERS, VALETUDO_OVERLAY_LAYERS } from "./lib/valetudo-json-map-source";
 
 @customElement(EDITOR_CUSTOM_ELEMENT_NAME)
 export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<LovelaceCardEditor, "hass"> {
@@ -50,7 +51,23 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
     }
 
     get _camera(): string {
-        return this._config?.map_source?.camera || "";
+        return this._config?.map_source?.camera || this._config?.map_source?.valetudo_json || "";
+    }
+
+    get _valetudo_json(): boolean {
+        return !!this._config?.map_source?.valetudo_json;
+    }
+
+    get _valetudo_json_layers(): string[] {
+        return this._config?.map_source?.valetudo_json_layers ?? VALETUDO_DEFAULT_OVERLAY_LAYERS;
+    }
+
+    get _mqtt_topic(): string {
+        return (this._config?.internal_variables?.["topic"] as string | undefined) ?? "";
+    }
+
+    get _is_hypfer(): boolean {
+        return this._vacuum_platform === PlatformGenerator.HYPFER_VALETUDO_PLATFORM;
     }
 
     get _map_locked(): boolean {
@@ -115,7 +132,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
         const vacuums = entityIds.filter(e => e.substr(0, e.indexOf(".")) === "vacuum");
         const platforms = PlatformGenerator.getPlatforms();
         const roomsUnavailable =
-            this.hass.states[this._camera]?.attributes?.["rooms"] === undefined ||
+            (!this._valetudo_json && this.hass.states[this._camera]?.attributes?.["rooms"] === undefined) ||
             PlatformGenerator.getRoomsTemplate(this._vacuum_platform) === undefined;
 
         return html`
@@ -124,11 +141,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
                     ${this._localize("editor.description.text")}
                 </div>
                 <div class="values">
-                    <ha-textfield
-                        label="${this._localize("editor.label.name")}"
-                        .value="${this._title}"
-                        .configValue="${"title"}"
-                        @input="${this._valueChanged}"></ha-textfield>
+                    ${this._renderTextInput(this._localize("editor.label.name"), this._title, this._valueChanged, "title")}
                 </div>
                 <div class="values">
                     <ha-select
@@ -177,6 +190,42 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
                         .options="${cameras}"
                     ></ha-select>
                 </div>
+                ${conditional(this._is_hypfer || this._valetudo_json, () => html`
+                    <div class="values">
+                        <ha-formfield class="switch-wrapper" .label="${this._localize("editor.label.valetudo_json")}">
+                            <ha-switch
+                                .checked="${this._valetudo_json}"
+                                @change="${this._valetudoJsonChanged}"></ha-switch>
+                        </ha-formfield>
+                    </div>
+                `)}
+                ${conditional(this._valetudo_json, () => html`
+                    <div class="values">
+                        <p>${this._localize("editor.label.valetudo_json_layers")}</p>
+                        <div class="layer-switches">
+                            ${VALETUDO_OVERLAY_LAYERS.map(layer => html`
+                                <ha-formfield class="switch-wrapper"
+                                              .label="${this._localize(`editor.label.valetudo_json_layer.${layer}`)}">
+                                    <ha-switch
+                                        .checked="${this._valetudo_json_layers.includes(layer)}"
+                                        @change="${ev => this._valetudoJsonLayerChanged(layer, ev.target.checked)}">
+                                    </ha-switch>
+                                </ha-formfield>
+                            `)}
+                        </div>
+                    </div>
+                `)}
+                ${conditional(this._is_hypfer, () => html`
+                    <div class="values">
+                        ${this._renderTextInput(
+                            this._localize("editor.label.mqtt_topic"),
+                            this._mqtt_topic,
+                            this._mqttTopicChanged,
+                            undefined,
+                            "valetudo/robot",
+                        )}
+                    </div>
+                `)}
                 <div class="values">
                     <ha-formfield class="switch-wrapper" .label="${this._localize("editor.label.map_locked")}">
                         <ha-switch
@@ -224,6 +273,21 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
                 ${ToastRenderer.render("editor")}
             </div>
         `;
+    }
+
+    private _renderTextInput(
+        label: string,
+        value: string,
+        onInput: (ev: Event) => void,
+        configValue?: string,
+        placeholder = "",
+    ): TemplateResult {
+        // Newer HA frontends replaced ha-textfield with ha-input; an undefined element would render nothing.
+        return customElements.get("ha-textfield")
+            ? html`<ha-textfield label="${label}" placeholder="${placeholder}" .value="${value}"
+                                 .configValue="${configValue}" @input="${onInput}"></ha-textfield>`
+            : html`<ha-input label="${label}" placeholder="${placeholder}" .value="${value}"
+                             .configValue="${configValue}" @input="${onInput}"></ha-input>`;
     }
 
     private _initialize(): void {
@@ -342,13 +406,79 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
         }
         const value = ev.detail?.value ?? ev.target.value;
         if (this._camera === value) return;
-        const tmpConfig = { ...this._config };
-        tmpConfig["map_source"] = { camera: value };
-        if (!PlatformGenerator.getCalibration(this._config.vacuum_platform)
+        // Valetudo's MQTT camera is the only map Hypfer/Valetudo exposes, and it never has calibration_points.
+        const valetudoJson = this._valetudo_json
+            || (this._is_hypfer && !("calibration_points" in this.hass.states[value].attributes));
+        this._config = this._withMapSource(this._config, value, valetudoJson);
+        fireEvent(this, "config-changed", { config: this._config });
+    }
+
+    private _valetudoJsonChanged(ev): void {
+        if (!this._config || !this.hass || !this._camera) {
+            return;
+        }
+        this._config = this._withMapSource(this._config, this._camera, ev.target.checked);
+        fireEvent(this, "config-changed", { config: this._config });
+    }
+
+    private _withMapSource(
+        config: XiaomiVacuumMapCardConfig,
+        camera: string,
+        valetudoJson: boolean,
+    ): XiaomiVacuumMapCardConfig {
+        const tmpConfig = { ...config };
+        if (valetudoJson) {
+            // The rendered Valetudo map carries its own calibration; any other source would be wrong for it.
+            const layers = config.map_source?.valetudo_json_layers;
+            tmpConfig["map_source"] = { valetudo_json: camera, ...(layers ? { valetudo_json_layers: layers } : {}) };
+            delete tmpConfig["calibration_source"];
+            return tmpConfig;
+        }
+        tmpConfig["map_source"] = { camera: camera };
+        if (tmpConfig["calibration_source"]?.valetudo_json) {
+            delete tmpConfig["calibration_source"];
+        }
+        if (!PlatformGenerator.getCalibration(tmpConfig.vacuum_platform)
             && !tmpConfig["calibration_source"]
-            && "calibration_points" in this.hass.states[value].attributes
+            && "calibration_points" in (this.hass?.states[camera]?.attributes ?? {})
         ) {
             tmpConfig["calibration_source"] = { camera: true };
+        }
+        return tmpConfig;
+    }
+
+    private _valetudoJsonLayerChanged(layer: string, enabled: boolean): void {
+        if (!this._config?.map_source?.valetudo_json) {
+            return;
+        }
+        const current = this._valetudo_json_layers;
+        const layers = VALETUDO_OVERLAY_LAYERS.filter(l => (l === layer ? enabled : current.includes(l)));
+        const isDefault =
+            layers.length === VALETUDO_DEFAULT_OVERLAY_LAYERS.length &&
+            layers.every(l => VALETUDO_DEFAULT_OVERLAY_LAYERS.includes(l));
+        const mapSource = { ...this._config.map_source, valetudo_json_layers: layers };
+        if (isDefault) {
+            delete (mapSource as Record<string, unknown>)["valetudo_json_layers"];
+        }
+        this._config = { ...this._config, map_source: mapSource };
+        fireEvent(this, "config-changed", { config: this._config });
+    }
+
+    private _mqttTopicChanged(ev): void {
+        if (!this._config) {
+            return;
+        }
+        const topic = (ev.target.value as string).trim().replace(/\/+$/, "");
+        if (topic === this._mqtt_topic) return;
+        const internalVariables = { ...(this._config.internal_variables ?? {}) };
+        if (topic) {
+            internalVariables["topic"] = topic;
+        } else {
+            delete internalVariables["topic"];
+        }
+        const tmpConfig = { ...this._config, internal_variables: internalVariables };
+        if (Object.keys(internalVariables).length === 0) {
+            delete (tmpConfig as Record<string, unknown>)["internal_variables"];
         }
         this._config = tmpConfig;
         fireEvent(this, "config-changed", { config: this._config });
@@ -421,6 +551,11 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
 
             .switch-wrapper {
                 padding: 8px;
+            }
+
+            .layer-switches {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             }
 
             .selection-controls-wrapper {

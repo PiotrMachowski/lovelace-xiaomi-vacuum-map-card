@@ -42,6 +42,8 @@ import {
     EVENT_SELECTION_CHANGED,
     EVENT_SERVICE_CALL,
     EVENT_SERVICE_CALL_GET,
+    VALETUDO_JSON_DEFAULT_POLL_INTERVAL,
+    VALETUDO_JSON_POLL_INTERVALS,
 } from "./const";
 import { localize, localizeWithHass } from "./localize/localize";
 import PinchZoom from "./pinch-zoom";
@@ -78,6 +80,15 @@ import { MapObject } from "./model/map_objects/map-object";
 import { MousePosition } from "./model/map_objects/mouse-position";
 import { ServiceCallSchema } from "./model/map_mode/service-call-schema";
 import { HomeAssistantFixed } from "./types/fixes";
+import {
+    fetchValetudoMap,
+    renderValetudoMap,
+    VALETUDO_OVERLAY_LAYERS,
+    ValetudoMarker,
+    ValetudoOverlayLayer,
+    ValetudoRenderResult,
+} from "./lib/valetudo-json-map-source";
+import { ValetudoMarkerIcon, ValetudoMarkerKind } from "./model/map_objects/valetudo-marker-icon";
 import "./polyfills/objectEntries";
 import "./polyfills/objectFromEntries";
 
@@ -150,6 +161,14 @@ export class XiaomiVacuumMapCard extends LitElement {
     private modes: MapMode[] = [];
     private shouldHandleMouseUp!: boolean;
     private lastHassUpdate!: Date;
+    private valetudoJsonCache: Record<string, ValetudoRenderResult> = {};
+    private valetudoJsonFingerprint: Record<string, string> = {};
+    private valetudoJsonPending: Record<string, boolean> = {};
+    private valetudoJsonLastPoll: Record<string, number> = {};
+    private valetudoJsonLastVacuumState: Record<string, string | undefined> = {};
+    private valetudoJsonPollTimer?: number;
+    private valetudoJsonRoomsKey?: string;
+    private valetudoJsonLayersKey: Record<string, string> = {};
     public isInEditor = false;
 
     constructor() {
@@ -239,6 +258,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         }
         document.addEventListener(EVENT_LOVELACE_DOM, this._handleLovelaceDomEvent);
         this.connected = true;
+        this.valetudoJsonPollTimer = window.setInterval(() => this._pollValetudoJson(), 1000);
         this._updateElements();
         delay(100).then(() => this.requestUpdate());
     }
@@ -251,6 +271,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             window.removeEventListener(EVENT_SERVICE_CALL_GET, this._handleServiceCallGet);
         }
         document.removeEventListener(EVENT_LOVELACE_DOM, this._handleLovelaceDomEvent);
+        window.clearInterval(this.valetudoJsonPollTimer);
         this.connected = false;
     }
 
@@ -317,13 +338,16 @@ export class XiaomiVacuumMapCard extends LitElement {
                         @mousedown="${(e: MouseEvent): void => this._mouseDown(e)}"
                         @mousemove="${(e: MouseEvent): void => this._mouseMove(e)}"
                         @mouseup="${async (e: PointerEvent): Promise<void> => {await this._mouseUp(e)}}">
+                        ${validCalibration ? this._drawValetudoMarkers(preset) : null}
                         ${validCalibration ? this._drawSelection() : null}
                     </svg>
                 </div>
             </div>
         `;
         return html`
-            <ha-card style="--map-scale: ${this.mapScale}; --real-scale: ${this.realScale};">
+            <ha-card
+                class="${preset.map_source.valetudo_json ? "valetudo-map" : ""}"
+                style="--map-scale: ${this.mapScale}; --real-scale: ${this.realScale};">
                 ${conditional(
                     (this.config.title ?? "").length > 0,
                     () => html`<h1 class="card-header">${this.config.title}</h1>`,
@@ -458,6 +482,9 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (config.calibration_source?.camera) {
             return this.hass.states[config.map_source?.camera ?? ""]?.attributes["calibration_points"];
         }
+        if (config.map_source.valetudo_json && (!config.calibration_source || config.calibration_source.valetudo_json)) {
+            return this.valetudoJsonCache[config.map_source.valetudo_json]?.calibrationPoints;
+        }
         if (config.calibration_source?.platform) {
             return PlatformGenerator.getCalibration(config.calibration_source.platform);
         }
@@ -547,6 +574,8 @@ export class XiaomiVacuumMapCard extends LitElement {
         this.presetIndex = index;
         this.currentPreset = config;
         this.internalVariables = this._getInternalVariables(config);
+        this.valetudoJsonRoomsKey = undefined;
+        this._applyValetudoRooms();
 
         this._getIconsAndTiles(config, this.internalVariables)
             .then(([icons, tiles]) => this._setPreset({ ...config, tiles: tiles, icons: icons }))
@@ -582,11 +611,37 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _getModes(config: CardPresetConfig) {
         const vacuumPlatform = PlatformGenerator.getPlatformName(config.vacuum_platform);
-        return (
-            (config.map_modes?.length ?? -1) === -1 || vacuumPlatform.startsWith("Setup")
-                ? PlatformGenerator.generateDefaultModes(vacuumPlatform)
-                : config.map_modes ?? [EMPTY_MAP_MODE]
-        ).map(m => new MapMode(vacuumPlatform, m, this.config.language));
+        const useDefaults = (config.map_modes?.length ?? -1) === -1 || vacuumPlatform.startsWith("Setup");
+        const modes = useDefaults
+            ? PlatformGenerator.generateDefaultModes(vacuumPlatform)
+            : config.map_modes ?? [EMPTY_MAP_MODE];
+        const roomsTemplate = PlatformGenerator.getRoomsTemplate(vacuumPlatform);
+        // Rooms come live from the Valetudo map, so the rooms mode can be offered without any static config.
+        if (useDefaults && config.map_source.valetudo_json && roomsTemplate
+            && !modes.some(m => m.template === roomsTemplate)) {
+            modes.push({ template: roomsTemplate });
+        }
+        return modes.map(m => new MapMode(vacuumPlatform, m, this.config.language));
+    }
+
+    private _applyValetudoRooms(): void {
+        if (!this.currentPreset?.map_source?.valetudo_json) {
+            return;
+        }
+        const rooms = this._getRoomsConfig()?.rooms;
+        const key = JSON.stringify(rooms);
+        if (!rooms || key === this.valetudoJsonRoomsKey) {
+            return;
+        }
+        this.valetudoJsonRoomsKey = key;
+        const liveRoomModes = this.modes.filter(
+            m => m.selectionType === SelectionType.ROOM && (m.config.predefined_selections?.length ?? 0) === 0,
+        );
+        liveRoomModes.forEach(m => (m.predefinedSelections = rooms));
+        // Only rebuilt when room geometry changes (rare), because it clears the current selection.
+        if (liveRoomModes.includes(this.modes[this.selectedMode])) {
+            this._setCurrentMode(this.selectedMode, false);
+        }
     }
 
     private _executePresetsActivation() {
@@ -610,7 +665,49 @@ export class XiaomiVacuumMapCard extends LitElement {
         this.coordinatesConverter = new CoordinatesConverter(calibrationPoints);
     }
 
+    private _pollValetudoJson(): void {
+        const config = this.currentPreset;
+        const entityId = config?.map_source?.valetudo_json;
+        if (!entityId || !this.hass || this.valetudoJsonPending[entityId] || document.hidden) {
+            return;
+        }
+        const vacuumState = this.hass.states[config.entity]?.state;
+        const interval = VALETUDO_JSON_POLL_INTERVALS[vacuumState] ?? VALETUDO_JSON_DEFAULT_POLL_INTERVAL;
+        const layers = config.map_source.valetudo_json_layers
+            ?.filter((l): l is ValetudoOverlayLayer => (VALETUDO_OVERLAY_LAYERS as string[]).includes(l));
+        const layersKey = JSON.stringify(layers ?? null);
+        const layersChanged = layersKey !== this.valetudoJsonLayersKey[entityId];
+        const now = Date.now();
+        const due =
+            !this.valetudoJsonCache[entityId] ||
+            layersChanged ||
+            vacuumState !== this.valetudoJsonLastVacuumState[entityId] ||
+            now - (this.valetudoJsonLastPoll[entityId] ?? 0) >= interval;
+        if (!due) {
+            return;
+        }
+        this.valetudoJsonPending[entityId] = true;
+        this.valetudoJsonLastPoll[entityId] = now;
+        this.valetudoJsonLastVacuumState[entityId] = vacuumState;
+        const previousFingerprint = layersChanged ? undefined : this.valetudoJsonFingerprint[entityId];
+        fetchValetudoMap(this.hass, entityId, previousFingerprint)
+            .then(snapshot => {
+                this.valetudoJsonFingerprint[entityId] = snapshot.fingerprint;
+                if (snapshot.data) {
+                    this.valetudoJsonCache[entityId] = renderValetudoMap(snapshot.data, { layers });
+                    this.valetudoJsonLayersKey[entityId] = layersKey;
+                    this._applyValetudoRooms();
+                    this.requestUpdate();
+                }
+            })
+            .catch(e => console.warn(`[xiaomi-vacuum-map-card] Failed to render Valetudo map for ${entityId}:`, e))
+            .finally(() => (this.valetudoJsonPending[entityId] = false));
+    }
+
     private _getMapSrc(config: CardPresetConfig): string {
+        if (config.map_source.valetudo_json) {
+            return this.valetudoJsonCache[config.map_source.valetudo_json]?.dataUrl ?? DISCONNECTED_IMAGE;
+        }
         if (config.map_source.camera) {
             if (
                 this.connected &&
@@ -981,10 +1078,11 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _getRoomsConfig(): RoomConfigEventData | undefined {
         const config = this._getCurrentPreset();
-        const rooms = this.hass.states[config.map_source?.camera ?? ""]?.attributes["rooms"] as Record<
-            string,
-            MapExtractorRoom
-        >;
+        const rooms = (
+            config.map_source.valetudo_json
+                ? this.valetudoJsonCache[config.map_source.valetudo_json]?.rooms
+                : this.hass.states[config.map_source?.camera ?? ""]?.attributes["rooms"]
+        ) as Record<string, MapExtractorRoom>;
         const roomsConfig = new Array<RoomConfig>();
         if (rooms) {
             const mode = this.modes.filter(m => m.selectionType === SelectionType.ROOM).reverse()[0];
@@ -1103,6 +1201,25 @@ export class XiaomiVacuumMapCard extends LitElement {
                 this.selectablePredefinedPoints.filter(p => p.isDynamic()).length > 0 && update();
                 break;
         }
+    }
+
+    private _drawValetudoMarkers(config: CardPresetConfig): SVGTemplateResult | null {
+        const rendered = config.map_source.valetudo_json
+            ? this.valetudoJsonCache[config.map_source.valetudo_json]
+            : undefined;
+        if (!rendered) {
+            return null;
+        }
+        const markers: [ValetudoMarker | undefined, ValetudoMarkerKind][] = [
+            [rendered.charger, "charger"],
+            [rendered.goToTarget, "go-to-target"],
+            [rendered.robot, "robot"],
+        ];
+        return svg`${markers
+            .filter(([marker]) => marker)
+            .map(([marker, kind]) =>
+                new ValetudoMarkerIcon(marker as ValetudoMarker, kind, this._getContext()).render(),
+            )}`;
     }
 
     private _drawSelection(): SVGTemplateResult | null {
@@ -1372,6 +1489,17 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     static get styles(): CSSResultGroup {
         return css`
+            /* Labels sit on the multicoloured rendered Valetudo map, where the default dark label text vanishes. */
+            ha-card.valetudo-map {
+                --map-card-internal-room-label-color: var(--map-card-room-label-color, #ffffff);
+                --map-card-internal-room-label-color-selected: var(--map-card-room-label-color-selected, #ffffff);
+                --map-card-internal-room-label-outline-color: var(
+                    --map-card-room-label-outline-color,
+                    rgba(0, 0, 0, 0.85)
+                );
+                --map-card-internal-room-label-outline-width: var(--map-card-room-label-outline-width, 3px);
+            }
+
             ha-card {
                 overflow: hidden;
                 display: flow-root;
@@ -1427,6 +1555,24 @@ export class XiaomiVacuumMapCard extends LitElement {
                 --map-card-internal-predefined-point-label-font-size: var(
                     --map-card-predefined-point-label-font-size,
                     12px
+                );
+                --map-card-internal-valetudo-marker-wrapper-size: var(--map-card-valetudo-marker-wrapper-size, 32px);
+                --map-card-internal-valetudo-marker-icon-size: var(--map-card-valetudo-marker-icon-size, 22px);
+                --map-card-internal-valetudo-marker-icon-color: var(
+                    --map-card-valetudo-marker-icon-color,
+                    var(--map-card-internal-secondary-text-color)
+                );
+                --map-card-internal-valetudo-marker-background-color: var(
+                    --map-card-valetudo-marker-background-color,
+                    var(--map-card-internal-secondary-color)
+                );
+                --map-card-internal-valetudo-robot-icon-color: var(
+                    --map-card-valetudo-robot-icon-color,
+                    var(--map-card-internal-primary-text-color)
+                );
+                --map-card-internal-valetudo-robot-background-color: var(
+                    --map-card-valetudo-robot-background-color,
+                    var(--map-card-internal-primary-color)
                 );
                 --map-card-internal-manual-point-radius: var(--map-card-manual-point-radius, 5px);
                 --map-card-internal-manual-point-line-color: var(--map-card-manual-point-line-color, yellow);
@@ -1650,6 +1796,8 @@ export class XiaomiVacuumMapCard extends LitElement {
                     var(--map-card-internal-primary-text-color)
                 );
                 --map-card-internal-room-label-font-size: var(--map-card-room-label-font-size, 12px);
+                --map-card-internal-room-label-outline-color: var(--map-card-room-label-outline-color, transparent);
+                --map-card-internal-room-label-outline-width: var(--map-card-room-label-outline-width, 0px);
                 --map-card-internal-toast-successful-icon-color: var(
                     --map-card-toast-successful-icon-color,
                     rgb(0, 255, 0)
@@ -1821,6 +1969,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             ${ManualPoint.styles}
             ${PredefinedPoint.styles}
             ${Room.styles}
+            ${ValetudoMarkerIcon.styles}
             ${IconsWrapper.styles}
             ${TilesWrapper.styles}
             ${DropdownMenu.styles}
