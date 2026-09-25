@@ -124,11 +124,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
                     ${this._localize("editor.description.text")}
                 </div>
                 <div class="values">
-                    <ha-textfield
-                        label="${this._localize("editor.label.name")}"
-                        .value="${this._title}"
-                        .configValue="${"title"}"
-                        @input="${this._valueChanged}"></ha-textfield>
+                    ${this._renderTextInput(this._localize("editor.label.name"), this._title, this._valueChanged, "title")}
                 </div>
                 <div class="values">
                     <ha-select
@@ -224,6 +220,21 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
                 ${ToastRenderer.render("editor")}
             </div>
         `;
+    }
+
+    private _renderTextInput(
+        label: string,
+        value: string,
+        onInput: (ev: Event) => void,
+        configValue?: string,
+        placeholder = "",
+    ): TemplateResult {
+        // Newer HA frontends replaced ha-textfield with ha-input; an undefined element would render nothing.
+        return customElements.get("ha-textfield")
+            ? html`<ha-textfield label="${label}" placeholder="${placeholder}" .value="${value}"
+                                 .configValue="${configValue}" @input="${onInput}"></ha-textfield>`
+            : html`<ha-input label="${label}" placeholder="${placeholder}" .value="${value}"
+                             .configValue="${configValue}" @input="${onInput}"></ha-input>`;
     }
 
     private _initialize(): void {
