@@ -1,5 +1,5 @@
 // noinspection CssUnresolvedCustomProperty
-import { css, CSSResultGroup, svg, SVGTemplateResult } from "lit";
+import { css, CSSResultGroup, html, svg, SVGTemplateResult, TemplateResult } from "lit";
 
 import { Context } from "./context";
 import { MousePosition } from "./mouse-position";
@@ -112,7 +112,12 @@ export abstract class MapObject {
         return this._context.roundMap(point);
     }
 
-    protected renderIcon(config: IconConfig | undefined, click: () => void, htmlClass: string): SVGTemplateResult {
+    protected renderIcon(
+        config: IconConfig | undefined,
+        click: () => void,
+        htmlClass: string,
+        content?: TemplateResult,
+    ): SVGTemplateResult {
         const mapped = config ? this.vacuumToScaledMap(config.x, config.y) : [];
         return svg`${conditional(
             config != null && mapped.length > 0,
@@ -122,7 +127,7 @@ export abstract class MapObject {
                                x="${mapped[0]}px" y="${mapped[1]}px" width="36px" height="36px">         
                     <body xmlns="http://www.w3.org/1999/xhtml">
                       <div class="map-icon-wrapper ${htmlClass} clickable" @click="${click}" >
-                          <ha-icon icon="${config?.name}" style="background: transparent;"></ha-icon>
+                          ${content ?? html`<ha-icon icon="${config?.name}" style="background: transparent;"></ha-icon>`}
                       </div>
                     </body>
                 </foreignObject>
