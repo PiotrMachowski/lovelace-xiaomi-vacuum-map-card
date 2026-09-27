@@ -1036,11 +1036,20 @@ export class XiaomiVacuumMapCard extends LitElement {
         return roomId;
     }
 
+    private _modeConsumesSelection(mode: MapMode): boolean {
+        const schema = mode.serviceCallSchema?.config;
+        if (!schema) {
+            return true;
+        }
+        return /\[\[selection(_size|_unwrapped)?\]\]/.test(JSON.stringify(schema));
+    }
+
     private async _run(debug: boolean): Promise<void> {
         const currentPreset = this._getCurrentPreset();
         const currentMode = this._getCurrentMode();
         const { selection, variables } = this._getSelection(currentMode);
-        if ((selection as any[]).length == 0 || !currentMode) {
+        const selectionRequired = currentMode ? this._modeConsumesSelection(currentMode) : true;
+        if (((selection as any[]).length == 0 && selectionRequired) || !currentMode) {
             this._showToast("popups.no_selection", "mdi:close", false);
             forwardHaptic("failure");
         } else {

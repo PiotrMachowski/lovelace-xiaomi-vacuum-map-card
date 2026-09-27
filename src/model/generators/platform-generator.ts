@@ -16,6 +16,7 @@ import * as roborockCoreTemplate from "./platform_templates/roborock.json";
 import * as simpleWyzeTemplate from "./platform_templates/romedtino_simple-wyze-vac.json";
 import * as myneatoTemplate from "./platform_templates/BenjaminPaap_myneato.json";
 import * as johnnyh1975RoombaPlus from "./platform_templates/johnnyh1975_roomba_plus.json";
+import * as jonrVacTemplate from "./platform_templates/moriceh_jonr-vac.json";
 import * as setupDecimalTemplate from "./platform_templates/setup_decimal.json";
 import * as setupIntegerTemplate from "./platform_templates/setup_integer.json";
 import {
@@ -49,6 +50,7 @@ export class PlatformGenerator {
     public static ROMEDTINO_SIMPLE_WAZE_PLATFORM = "romedtino/simple-wyze-vac";
     public static BENJAMIN_PAAP_MYNEATO_PLATFORM = "BenjaminPaap/home-assistant-myneato";
     public static JOHNNYH1975_ROOMBA_PLUS = "johnnyh1975/ha_roomba_plus";
+    public static MORICEH_JONR_VAC_PLATFORM = "moriceh/jonr-vac";
     public static SETUP_INTEGER_PLATFORM = "Setup integer";
     public static SETUP_DECIMAL_PLATFORM = "Setup decimal";
 
@@ -74,6 +76,7 @@ export class PlatformGenerator {
         [PlatformGenerator.DEEBOTUNIVERSE_DEEBOT_4_HOME_ASSISTANT_PLATFORM, deebotTemplate as PlatformTemplate],
         [PlatformGenerator.ROMEDTINO_SIMPLE_WAZE_PLATFORM, simpleWyzeTemplate],
         [PlatformGenerator.BENJAMIN_PAAP_MYNEATO_PLATFORM, myneatoTemplate as PlatformTemplate],
+        [PlatformGenerator.MORICEH_JONR_VAC_PLATFORM, jonrVacTemplate as PlatformTemplate],
         [PlatformGenerator.SETUP_INTEGER_PLATFORM, setupIntegerTemplate],
         [PlatformGenerator.SETUP_DECIMAL_PLATFORM, setupDecimalTemplate],
     ]);
@@ -97,6 +100,7 @@ export class PlatformGenerator {
         [PlatformGenerator.DEEBOTUNIVERSE_DEEBOT_4_HOME_ASSISTANT_PLATFORM, "DeebotUniverseDeebot4homeAssistant"],
         [PlatformGenerator.ROMEDTINO_SIMPLE_WAZE_PLATFORM, "romedtinoSimpleWyze"],
         [PlatformGenerator.BENJAMIN_PAAP_MYNEATO_PLATFORM, "BenjaminPaapMyNeato"],
+        [PlatformGenerator.MORICEH_JONR_VAC_PLATFORM, "moricehJonrVac"],
         [PlatformGenerator.SETUP_INTEGER_PLATFORM, "setup"],
         [PlatformGenerator.SETUP_DECIMAL_PLATFORM, "setup"],
     ]);

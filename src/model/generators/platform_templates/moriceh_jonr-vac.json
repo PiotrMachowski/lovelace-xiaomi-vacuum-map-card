@@ -1,0 +1,251 @@
+{
+    "map_modes": {
+        "default_templates": [
+            "vacuum_start",
+            "vacuum_clean_segment",
+            "vacuum_clean_zone"
+        ],
+        "templates": {
+            "vacuum_start": {
+                "name": "map_mode.vacuum_start",
+                "icon": "mdi:play",
+                "selection_type": "PREDEFINED_POINT",
+                "repeats_type": "EXTERNAL",
+                "max_repeats": 2,
+                "service_call_schema": {
+                    "service": "vacuum.start",
+                    "service_data": {
+                        "entity_id": "[[entity_id]]"
+                    }
+                }
+            },
+            "vacuum_clean_segment": {
+                "name": "map_mode.vacuum_clean_segment",
+                "icon": "mdi:floor-plan",
+                "selection_type": "ROOM",
+                "id_type": "number",
+                "repeats_type": "EXTERNAL",
+                "max_repeats": 2,
+                "max_selections": 16,
+                "service_call_schema": {
+                    "service": "jonr_vac.clean_segment",
+                    "service_data": {
+                        "segments": "[[selection]]",
+                        "entity_id": "[[entity_id]]",
+                        "repeats": "[[repeats]]"
+                    }
+                }
+            },
+            "vacuum_clean_zone": {
+                "name": "map_mode.vacuum_clean_zone",
+                "icon": "mdi:select-drag",
+                "selection_type": "MANUAL_RECTANGLE",
+                "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 20,
+                "repeats_type": "EXTERNAL",
+                "max_repeats": 2,
+                "max_selections": 20,
+                "service_call_schema": {
+                    "service": "jonr_vac.clean_zone",
+                    "service_data": {
+                        "zones": "[[selection]]",
+                        "entity_id": "[[entity_id]]",
+                        "repeats": "[[repeats]]"
+                    }
+                }
+            },
+            "vacuum_clean_zone_predefined": {
+                "name": "map_mode.vacuum_clean_zone_predefined",
+                "icon": "mdi:vector-selection",
+                "selection_type": "PREDEFINED_RECTANGLE",
+                "coordinates_rounding": true,
+                "coordinates_to_meters_divider": 20,
+                "repeats_type": "EXTERNAL",
+                "max_repeats": 2,
+                "max_selections": 20,
+                "service_call_schema": {
+                    "service": "jonr_vac.clean_zone",
+                    "service_data": {
+                        "zones": "[[selection]]",
+                        "entity_id": "[[entity_id]]",
+                        "repeats": "[[repeats]]"
+                    }
+                }
+            }
+        }
+    },
+    "tiles": {
+        "from_attributes": [],
+        "from_sensors": [
+            {
+                "tile_id": "status",
+                "unique_id_regex": "^[^_]+_status$",
+                "label": "tile.status.label",
+                "icon": "mdi:robot-vacuum",
+                "translation_keys": [
+                    "cleaning",
+                    "paused",
+                    "idle",
+                    "returning",
+                    "docked",
+                    "error",
+                    "localizing"
+                ]
+            },
+            {
+                "tile_id": "battery_level",
+                "unique_id_regex": "_battery",
+                "label": "tile.battery_level.label",
+                "icon": "mdi:battery-heart-variant",
+                "unit": "%"
+            },
+            {
+                "tile_id": "cleaning_time",
+                "unique_id_regex": "_session_clean_time",
+                "label": "tile.cleaning_time.label",
+                "icon": "mdi:timer-sand",
+                "unit": "unit.minute_shortcut",
+                "multiplier": 0.016666666666666666
+            },
+            {
+                "tile_id": "cleaned_area",
+                "unique_id_regex": "_session_clean_area",
+                "label": "tile.cleaned_area.label",
+                "icon": "mdi:ruler-square",
+                "unit": "unit.meter_squared_shortcut"
+            },
+            {
+                "tile_id": "total_cleaning_time",
+                "unique_id_regex": "_total_clean_time",
+                "label": "tile.total_cleaning_time.label",
+                "icon": "mdi:history",
+                "unit": "unit.hour_shortcut",
+                "multiplier": 0.0002777777777777778
+            },
+            {
+                "tile_id": "cleaning_count",
+                "unique_id_regex": "_total_clean_count",
+                "label": "tile.cleaning_count.label",
+                "icon": "mdi:counter",
+                "unit": "x"
+            },
+            {
+                "tile_id": "main_brush_left",
+                "unique_id_regex": "_main_brush_life",
+                "label": "tile.main_brush_left.label",
+                "icon": "mdi:broom",
+                "unit": "%"
+            },
+            {
+                "tile_id": "side_brush_left",
+                "unique_id_regex": "_side_brush_life",
+                "label": "tile.side_brush_left.label",
+                "icon": "mdi:broom",
+                "unit": "%"
+            },
+            {
+                "tile_id": "filter_left",
+                "unique_id_regex": "_filter_life",
+                "label": "tile.filter_left.label",
+                "icon": "mdi:air-filter",
+                "unit": "%"
+            },
+            {
+                "tile_id": "mop_left",
+                "unique_id_regex": "_mop_life",
+                "label": "tile.mop_left.label",
+                "icon": "mdi:layers-triple-outline",
+                "unit": "%"
+            }
+        ]
+    },
+    "icons": [
+        {
+            "type": "menu",
+            "menu_id": "mode",
+            "icon_id": "mode",
+            "unique_id_regex": "^[^_]+_mode$",
+            "available_values_attribute": "options",
+            "icon": "mdi:vacuum",
+            "icon_mapping": {
+                "both": "mdi:vacuum",
+                "sweep": "mdi:broom",
+                "mop": "mdi:water",
+                "sweep_then_mop": "mdi:layers",
+                "custom": "mdi:cogs"
+            },
+            "tap_action": {
+                "action": "call-service",
+                "service": "select.select_option",
+                "service_data": {
+                    "option": "[[value]]",
+                    "entity_id": "[[entity_id]]"
+                }
+            }
+        },
+        {
+            "type": "menu",
+            "menu_id": "fan_speed",
+            "icon_id": "fan_speed",
+            "unique_id_regex": "^[^_]+_fan_speed$",
+            "available_values_attribute": "options",
+            "icon": "mdi:gauge-low",
+            "icon_mapping": {
+                "quiet": "mdi:gauge-empty",
+                "standard": "mdi:gauge-low",
+                "strong": "mdi:gauge",
+                "turbo": "mdi:gauge-full"
+            },
+            "tap_action": {
+                "action": "call-service",
+                "service": "select.select_option",
+                "service_data": {
+                    "option": "[[value]]",
+                    "entity_id": "[[entity_id]]"
+                }
+            }
+        },
+        {
+            "type": "menu",
+            "menu_id": "water_level",
+            "icon_id": "water_level",
+            "unique_id_regex": "^[^_]+_water_level$",
+            "available_values_attribute": "options",
+            "icon": "mdi:water",
+            "icon_mapping": {
+                "low": "mdi:water-minus",
+                "mid": "mdi:water",
+                "high": "mdi:water-plus"
+            },
+            "tap_action": {
+                "action": "call-service",
+                "service": "select.select_option",
+                "service_data": {
+                    "option": "[[value]]",
+                    "entity_id": "[[entity_id]]"
+                }
+            }
+        },
+        {
+            "type": "menu",
+            "menu_id": "route",
+            "icon_id": "route",
+            "unique_id_regex": "^[^_]+_route$",
+            "available_values_attribute": "options",
+            "icon": "mdi:map-marker-radius",
+            "icon_mapping": {
+                "fast": "mdi:fast-forward",
+                "daily": "mdi:calendar-check-outline",
+                "fine": "mdi:shimmer"
+            },
+            "tap_action": {
+                "action": "call-service",
+                "service": "select.select_option",
+                "service_data": {
+                    "option": "[[value]]",
+                    "entity_id": "[[entity_id]]"
+                }
+            }
+        }
+    ]
+}

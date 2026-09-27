@@ -272,6 +272,7 @@ Following vacuum platforms are supported out of the box at this moment:
 - [`BenjaminPaap/home-assistant-myneato`](/docs/templates/BenjaminPaapMyNeato.md)
 - [`CoderAS-ru/hass-neatsvor`](/docs/templates/CoderASruNeatsvor.md)
 - [`johnnyh1975/ha_roomba_plus`](/docs/templates/johnnyh1975RoombaPlus.md)
+- [`moriceh/jonr-vac`](/docs/templates/moricehJonrVac.md)
 
 [Create a request for a new built-in platform](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/new?assignees=PiotrMachowski&labels=new+platform&template=new_platform_request.yml)
 
