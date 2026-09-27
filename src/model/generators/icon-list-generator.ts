@@ -176,7 +176,7 @@ export class IconListGenerator {
         if (IconListGenerator.isFeatureSupported(state, 16))
             icons.push({
                 icon_id: "return_to_base",
-                icon: "mdi:home-map-marker",
+                icon: "mdi:home-import-outline",
                 conditions: [
                     {
                         entity: vacuumEntity,
