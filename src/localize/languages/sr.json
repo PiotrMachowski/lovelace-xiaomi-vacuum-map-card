@@ -1,0 +1,294 @@
+{
+    "common": {
+        "version": "Верзија",
+        "invalid_configuration": "Неисправна конфигурација {0}",
+        "description": "Картица која омогућава управљање усисивачем помоћу мапе",
+        "old_configuration": "Детектована је стара конфигурација. Прилагодите поставке најновијој шеми или направите нову картицу испочетка.",
+        "old_configuration_migration_link": "Водич за миграцију"
+    },
+    "map_mode": {
+        "invalid": "Неисправан шаблон!",
+        "vacuum_goto": "Иди на тачку",
+        "vacuum_goto_predefined": "Тачке",
+        "vacuum_clean_segment": "Просторије",
+        "vacuum_clean_point": "Чишћење тачке",
+        "vacuum_clean_point_predefined": "Тачке",
+        "vacuum_clean_zone": "Чишћење зоне",
+        "vacuum_clean_zone_predefined": "Листа зона",
+        "vacuum_follow_path": "Путања",
+        "setup_zone": "Координате зоне",
+        "setup_point": "Координате тачке",
+        "setup_outline": "Координате контуре"
+    },
+    "validation": {
+        "preset": {
+            "entity": {
+                "missing": "Недостаје својство: entity"
+            },
+            "preset_name": {
+                "missing": "Недостаје својство: preset_name"
+            },
+            "platform": {
+                "invalid": "Неисправна платформа усисивача: {0}"
+            },
+            "map_source": {
+                "missing": "Недостаје својство: map_source",
+                "none_provided": "Није унета ни камера ни слика мапе",
+                "ambiguous": "Дозвољен је само један извор мапе"
+            },
+            "calibration_source": {
+                "missing": "Недостаје својство: calibration_source",
+                "ambiguous": "Дозвољен је само један извор калибрације",
+                "none_provided": "Није унет извор калибрације",
+                "calibration_points": {
+                    "invalid_number": "Захтевају се тачно 3 или 4 калибрационе тачке",
+                    "missing_map": "Свака калибрациона тачка мора да садржи координате мапе",
+                    "missing_vacuum": "Свака калибрациона тачка мора да садржи координате усисивача",
+                    "missing_coordinate": "Калибрационе тачке мапе и усисивача морају садржати и x и y координату"
+                }
+            },
+            "icons": {
+                "invalid": "Грешка у конфигурацији: icons",
+                "icon": {
+                    "missing": "Сваки унос на листи икона мора садржати својство icon"
+                }
+            },
+            "tiles": {
+                "invalid": "Грешка у конфигурацији: tiles",
+                "entity": {
+                    "missing": "Сваки унос на листи плочица мора садржати ентитет или интерну варијаблу"
+                },
+                "label": {
+                    "missing": "Сваки унос на листи плочица мора садржати ознаку (label)"
+                }
+            },
+            "map_modes": {
+                "invalid": "Грешка у конфигурацији: map_modes",
+                "icon": {
+                    "missing": "Недостаје икона за режим мапе"
+                },
+                "name": {
+                    "missing": "Недостаје назив за режим мапе"
+                },
+                "template": {
+                    "invalid": "Неисправан шаблон: {0}"
+                },
+                "predefined_selections": {
+                    "not_applicable": "Režim {0} ne podržava unapred definisane selekcije",
+                    "zones": {
+                        "missing": "Недостаје конфигурација зона",
+                        "invalid_parameters_number": "Свака зона мора имати тачно 4 параметра"
+                    },
+                    "points": {
+                        "position": {
+														"missing": "Недостаје конфигурација тачака",
+														"invalid_parameters_number": "Свака тачка мора имати тачно 2 параметра"
+
+                        }
+                    },
+                    "rooms": {
+                        "id": {
+                            "missing": "Недостаје ID просторије",
+                            "invalid_format": "Неисправан ID просторије: {0}"
+                        },
+                        "outline": {
+                            "invalid_parameters_number": "Свака тачка контуре просторије мора имати тачно 2 параметра"
+                        }
+                    },
+                    "label": {
+                        "x": {
+                            "missing": "Ознака мора имати својство x"
+                        },
+                        "y": {
+                            "missing": "Ознака мора имати својство y"
+                        },
+                        "text": {
+                            "missing": "Ознака мора имати својство text"
+                        }
+                    },
+                    "icon": {
+                        "x": {
+                            "missing": "Икона мора имати својство x"
+                        },
+                        "y": {
+                            "missing": "Икона мора имати својство y"
+                        },
+                        "name": {
+														"missing": "Икона мора имати својство name"
+                        }
+                    }
+                },
+                "service_call_schema": {
+                    "missing": "Недостаје шема позива сервиса",
+                    "service": {
+                        "missing": "Шема позива сервиса мора садржати сервис",
+                        "invalid": "Неисправан сервис: {0}"
+                    }
+                }
+            }
+        },
+        "invalid_entities": "Неисправни ентитети:",
+        "invalid_calibration": "Неисправна калибрација, проверите конфигурацију"
+    },
+    "tile": {
+        "status": {
+            "label": "Статус",
+            "value": {
+                "starting": "Покретање",
+                "charger disconnected": "Пуњач одвојен",
+                "idle": "Мировање",
+                "remote control active": "Даљински управљач активан",
+                "cleaning": "Чишћење",
+                "returning home": "Повратак на базу",
+                "manual mode": "Ручни режим",
+                "charging": "Пуњење",
+                "charging problem": "Проблем са пуњењем",
+                "paused": "Паузирано",
+                "spot cleaning": "Локално чишћење",
+                "error": "Грешка",
+                "sleeping": "Спавање",
+                "shutting down": "Искључивање",
+                "updating": "Ажурирање",
+                "docking": "Пристајање на базу",
+                "going to target": "Иде ка циљу",
+                "zoned cleaning": "Чишћење зоне",
+                "segment cleaning": "Чишћење просторије",
+                "emptying the bin": "Пражњење посуде",
+                "charging complete": "Напуњен",
+                "device offline": "Уређај није повезан"
+            }
+        },
+        "battery_level": {
+            "label": "Батерија"
+        },
+        "fan_speed": {
+            "label": "Ventilator",
+            "value": {
+                "silent": "Тихо",
+                "standard": "Стандардно",
+                "medium": "Средње",
+                "turbo": "Турбо",
+                "auto": "Аутоматски",
+                "gentle": "Благо",
+                "strong": "Снажно"
+            }
+        },
+        "sensor_dirty_left": {
+            "label": "Сензори"
+        },
+        "filter_left": {
+            "label": "Филтер"
+        },
+        "main_brush_left": {
+            "label": "Главна четка"
+        },
+        "side_brush_left": {
+            "label": "Бочна четка"
+        },
+        "cleaning_count": {
+            "label": "Очишћена површина"
+        },
+        "cleaned_area": {
+            "label": "Očišćena površina"
+        },
+        "total_cleaned_area": {
+            "label": "Укупно очишћено"
+        },
+        "cleaning_time": {
+            "label": "Време чишћења"
+        },
+        "total_cleaning_time": {
+            "label": "Укупно време рада"
+        },
+        "mop_left": {
+            "label": "Крпа за брисање"
+        },
+        "bin_full": {
+            "label": "Посуда пуна",
+            "value": {
+								"true": "Да",
+								"false": "Не"
+            }
+        },
+        "bin_present": {
+            "label": "Посуда присутна",
+            "value": {
+								"true": "Да",
+								"false": "Не"
+            }
+        },
+        "water_volume": {
+            "label": "Количина воде"
+        },
+        "mop_pad_humidity": {
+            "label": "Krpa za brisanje"
+        },
+        "cleaning_mode": {
+            "label": "Режим чишћења"
+        },
+        "tight_mopping": {
+            "label": "Темељно брисање"
+        },
+        "wetness_level": {
+            "label": "Влажност крпе"
+        },
+        "mop_wash_level": {
+            "label": "Прање крпе"
+        },
+        "auto_empty_mode": {
+            "label": "Аутоматско пражњење"
+        },
+        "cleaning_route": {
+            "label": "Путања чишћења"
+        },
+        "cleangenius": {
+            "label": "CleanGenius"
+        }
+    },
+    "icon": {
+        "vacuum_start": "Покрени",
+        "vacuum_pause": "Паузирај",
+        "vacuum_stop": "Заустави",
+        "vacuum_return_to_base": "Врати на базу",
+        "vacuum_clean_spot": "Локално чишћење",
+        "vacuum_locate": "Пронађи",
+        "vacuum_set_fan_speed": "Брзина вентилатора"
+    },
+    "unit": {
+        "hour_shortcut": "ч",
+        "meter_shortcut": "м",
+        "meter_squared_shortcut": "м²",
+        "minute_shortcut": "мин"
+    },
+    "popups": {
+        "success": "Успешно!",
+        "no_selection": "Ништа није изабрано",
+        "failed": "Позив сервиса није успео"
+    },
+    "editor": {
+        "description": {
+            "text": "Овај визуелни едитор подржава само основну конфигурацију. За напредније подешавање користите YAML режим."
+        },
+        "label": {
+            "name": "Наслов (опционо)",
+            "entity": "Ентитет усисивача (обавезно)",
+            "camera": "Ентитет камере (обавезно)",
+            "vacuum_platform": "Платформа усисивача (обавезно)",
+            "map_locked": "Закључана мапа (опционо)",
+            "two_finger_pan": "Померање мапе са два прста (опционо)",
+            "platforms_documentation": "Документација за изабрану платформу ({0})",
+            "selection": "Избор:",
+            "copy": "Копирај",
+            "copied": "Копирано!",
+            "set_static_config": "Генериши статичку конфигурацију",
+            "config_set": "Конфигурација је постављена!\nОтворите едитор конфигурације да је прилагодите.",
+            "config_set_failed": "Ажурирање конфигурације није успело.",
+            "generate_rooms_config": "Генериши конфигурацију просторија",
+            "copy_service_call": "Копирај позив сервиса",
+            "copy_entity_info": "Копирај информације о ентитетима"
+        },
+        "alerts": {
+            "set_static_config": "Ову функционалност би требало да користите само ако желите ручно да прилагодите аутоматски генерисану конфигурацију.\nНаставити?"
+        }
+    }
+}
