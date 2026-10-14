@@ -120,6 +120,7 @@ export interface PlatformTemplate {
 
 export interface TileTemplate extends TileConfig {
     readonly translation_keys?: Array<string>;
+    readonly duration_unit?: string;
 }
 
 export interface TileFromAttributeTemplate extends TileTemplate {
