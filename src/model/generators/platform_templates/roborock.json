@@ -111,6 +111,19 @@
     "tiles": {
         "from_sensors": [
             {
+                "tile_id": "status",
+                "icon": "mdi:robot-vacuum",
+                "unique_id_regex": "^(q7_)?status_(?!indicator_)",
+                "label": "tile.status.label"
+            },
+            {
+                "tile_id": "battery_level",
+                "icon": "mdi:battery",
+                "unique_id_regex": "^battery_",
+                "label": "tile.battery_level.label",
+                "unit": "%"
+            },
+            {
                 "tile_id": "main_brush_left",
                 "icon": "mdi:brush",
                 "unique_id_regex": "main_brush_time_left_",
