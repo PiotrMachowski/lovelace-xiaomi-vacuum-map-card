@@ -328,9 +328,11 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
     private _handleRoomConfig(e: Event): void {
         const roomsTemplate = PlatformGenerator.getRoomsTemplate(this._vacuum_platform);
         const roomConfig = (e as any).roomConfig as RoomConfigEventData;
-        // Reject answers addressed to another editor before reporting failure: with two editors on a
-        // page the second one receives the first one's reply, and it must stay silent instead of
-        // showing "config set failed". (The toast is not asserted in the harness.)
+        // Reject non-empty answers addressed to another editor before reporting failure: with two
+        // editors on a page the second one receives the first one's reply and must stay silent
+        // instead of showing "config set failed". An empty answer carries no entity or request id,
+        // so it still reaches the failure toast in every open editor. (The toast is not asserted in
+        // the harness.)
         if (roomConfig) {
             // The response's entity must match what this editor is actually configuring. Without this
             // check a reply from a different mounted card would overwrite this card's selections with

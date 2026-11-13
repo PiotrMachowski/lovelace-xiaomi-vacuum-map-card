@@ -6,10 +6,12 @@ import type { MapExtractorRoom, RoomConfig, RoomConfigEventData, XiaomiVacuumMap
 import {
     cameraEntity,
     extractorRoom,
+    fireRoomConfig,
     fixtureConfig,
     fixtureHass,
     fixtureStates,
     loadSyntheticFixture,
+    mountEditor,
     mountPage,
     settle,
     syntheticCalibrationPoints,
@@ -216,5 +218,68 @@ describe("room-config events are scoped to a card (#944)", () => {
         });
 
         await page.cleanup();
+    });
+
+    it("answers only for the camera it shows when one vacuum has two maps", async () => {
+        useHarnessClock();
+        const fixture = loadSyntheticFixture();
+        const configA = fixtureConfig(fixture);
+        // One robot, two maps (e.g. one per floor): the entity is identical, so only the camera
+        // separates the cards. Camera B is mounted first and would answer first.
+        const hass = withSecondCamera(fixtureHass(fixture));
+        const configB: XiaomiVacuumMapCardConfig = {
+            ...configA,
+            map_source: { camera: SECOND_CAMERA },
+        };
+
+        const page = await mountPage([
+            { kind: "card", config: configB, hass, inEditorPreview: true },
+            { kind: "card", config: configA, hass, inEditorPreview: true },
+            { kind: "editor", config: configA, hass },
+        ]);
+        const [editor] = page.editors;
+
+        const answeredCameras: Array<string | undefined> = [];
+        window.addEventListener(EVENT_ROOM_CONFIG, event => {
+            answeredCameras.push((event as Event & { roomConfig: RoomConfigEventData }).roomConfig.camera);
+        });
+        const changes = recordConfigChanges(editor);
+
+        findGenerateButton(editor.shadowRoot).click();
+        await settle(editor.element);
+
+        expect({
+            answeredCameras,
+            editorConfigs: changes,
+        }).toEqual({
+            answeredCameras: [configA.map_source.camera],
+            editorConfigs: [ROOMS_A],
+        });
+
+        await page.cleanup();
+    });
+});
+
+describe("editor room-config answers", () => {
+    it("ignores an answer addressed to another entity", async () => {
+        useHarnessClock();
+        const fixture = loadSyntheticFixture();
+        const config = fixtureConfig(fixture);
+        const editor = await mountEditor(config, fixtureHass(fixture));
+        const changes = recordConfigChanges(editor);
+
+        // The card normally filters by entity before answering, so no mounted card can send this.
+        // The editor still checks it: answer with a foreign entity and no request id, so only the
+        // entity check can reject it.
+        fireRoomConfig({
+            modeIndex: -1,
+            rooms: [{ id: "7", outline: [[100, 100], [300, 100], [300, 300], [100, 300]] }],
+            entity: SECOND_VACUUM,
+        });
+        await settle(editor.element);
+
+        expect({ configChanges: changes }).toEqual({ configChanges: [] });
+
+        await editor.cleanup();
     });
 });
