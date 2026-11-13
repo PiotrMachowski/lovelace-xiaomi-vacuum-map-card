@@ -7,7 +7,6 @@ import {
     CardPresetConfig,
     ConditionalObjectConfig,
     ConditionConfig,
-    EntityRegistryEntry,
     KeyReplacer,
     Language,
     PredefinedPointConfig,
@@ -257,44 +256,10 @@ function getScratchPoint(): SVGPoint {
     return scratchSvg.createSVGPoint();
 }
 
-export async function getAllEntitiesFromTheSameDevice(
-    hass: HomeAssistantFixed,
-    entity: string,
-): Promise<EntityRegistryEntry[]> {
-    let entityRegistryEntries;
-    try {
-        entityRegistryEntries = await _getAllEntitiesFromTheSameDevice(hass, entity);
-    } catch {
-        entityRegistryEntries = [];
-    }
-    return entityRegistryEntries;
-}
-
-async function _getAllEntitiesFromTheSameDevice(
-    hass: HomeAssistantFixed,
-    entity: string,
-): Promise<EntityRegistryEntry[]> {
-    const vacuumDeviceId = (
-        await hass.callWS<EntityRegistryEntry>({
-            type: "config/entity_registry/get",
-            entity_id: entity,
-        })
-    )["device_id"];
-    const vacuumSensors = (
-        await hass.callWS<{ device_id: string; entity_id: string }[]>({
-            type: "config/entity_registry/list",
-        })
-    ).filter(e => e.device_id === vacuumDeviceId);
-    const allEntities = await Promise.all(
-        vacuumSensors.map(vs =>
-            hass.callWS<EntityRegistryEntry>({
-                type: "config/entity_registry/get",
-                entity_id: vs.entity_id,
-            }),
-        ),
-    );
-    return allEntities.filter(e => e.disabled_by == null);
-}
+// The registry lookup lives in its own module (`src/entity-registry.ts`): it is shared by the icon
+// and tile generators and by the editor, and it memoizes one websocket call per connection and
+// vacuum. Re-exported here so existing `./utils` imports keep working.
+export { getAllEntitiesFromTheSameDevice } from "./entity-registry";
 
 export async function delay(ms: number): Promise<void> {
     await new Promise<void>(resolve => setTimeout(() => resolve(), ms));
