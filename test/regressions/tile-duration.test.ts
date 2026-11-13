@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { Tile } from "../../src/components/tile";
-import { TilesGenerator } from "../../src/model/generators/tiles-generator";
+import { resolveTileMultiplier, TilesGenerator } from "../../src/model/generators/tiles-generator";
 import type { HomeAssistantFixed } from "../../src/types/fixes";
 import type { TileConfig } from "../../src/types/types";
 import { fixtureHass, loadSyntheticFixture, withRegistryEntries, withState, type MockHass } from "../harness";
@@ -128,5 +128,48 @@ describe("Roborock duration tiles (#965)", () => {
 
         expect(tile.multiplier).toBeUndefined();
         expect(await renderTileValue(tile, hass)).toBe("42");
+    });
+});
+
+describe("duration_unit multiplier resolution (#965)", () => {
+    const conversions: Array<{ durationUnit: string; sourceUnit: string; multiplier: number }> = [
+        { durationUnit: "ms", sourceUnit: "s", multiplier: 1000 },
+        { durationUnit: "s", sourceUnit: "ms", multiplier: 0.001 },
+        { durationUnit: "min", sourceUnit: "s", multiplier: 1 / 60 },
+        { durationUnit: "min", sourceUnit: "min", multiplier: 1 },
+        { durationUnit: "h", sourceUnit: "ms", multiplier: 1 / 3600000 },
+        { durationUnit: "h", sourceUnit: "min", multiplier: 1 / 60 },
+        { durationUnit: "h", sourceUnit: "h", multiplier: 1 },
+        { durationUnit: "h", sourceUnit: "d", multiplier: 24 },
+        { durationUnit: "d", sourceUnit: "h", multiplier: 1 / 24 },
+    ];
+
+    for (const conversion of conversions) {
+        it(`converts ${conversion.sourceUnit} to ${conversion.durationUnit}`, () => {
+            expect(resolveTileMultiplier(
+                { duration_unit: conversion.durationUnit },
+                conversion.sourceUnit,
+            )).toBeCloseTo(conversion.multiplier, 10);
+        });
+    }
+
+    it("assumes seconds for an attribute-based tile", () => {
+        expect(resolveTileMultiplier({ duration_unit: "h" }, undefined)).toBeCloseTo(1 / 3600, 10);
+    });
+
+    it("assumes seconds for an unknown source unit", () => {
+        expect(resolveTileMultiplier({ duration_unit: "h" }, "weeks")).toBeCloseTo(1 / 3600, 10);
+    });
+
+    it("returns the configured multiplier when the template has no duration_unit", () => {
+        expect(resolveTileMultiplier({ multiplier: 0.5 }, "min")).toBe(0.5);
+    });
+
+    it("returns undefined when the template has neither", () => {
+        expect(resolveTileMultiplier({}, "min")).toBeUndefined();
+    });
+
+    it("falls back to the configured multiplier for an unknown duration_unit", () => {
+        expect(resolveTileMultiplier({ multiplier: 0.5, duration_unit: "fortnight" }, "min")).toBe(0.5);
     });
 });

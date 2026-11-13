@@ -17,6 +17,35 @@ import { TemplatableItemValue } from "../map_mode/templatable-value";
 import { HomeAssistantFixed } from "../../types/fixes";
 import { computeAttributeNameDisplay } from "../../localize/hass/compute_attribute_display";
 
+const DURATION_UNITS_IN_SECONDS: Record<string, number> = {
+    ms: 0.001,
+    s: 1,
+    min: 60,
+    h: 3600,
+    d: 86400,
+};
+
+/**
+ * Resolves the multiplier a tile template needs to show a duration in its `duration_unit`.
+ * Platform templates used to hard-code a multiplier that assumed the sensor reported seconds;
+ * Roborock core reports ms, s, min, h or d depending on the firmware, so the factor is derived
+ * from the entity's `unit_of_measurement` instead.
+ *
+ * A value without a known time unit (an attribute-based tile, or an unusual sensor unit) is
+ * assumed to be in seconds, which keeps templates without `duration_unit` unchanged.
+ */
+export function resolveTileMultiplier(
+    tileTemplate: TileTemplate,
+    sourceUnit: string | undefined,
+): number | undefined {
+    const target = tileTemplate.duration_unit;
+    if (target !== undefined && target in DURATION_UNITS_IN_SECONDS) {
+        const source = sourceUnit !== undefined ? DURATION_UNITS_IN_SECONDS[sourceUnit] ?? 1 : 1;
+        return source / DURATION_UNITS_IN_SECONDS[target];
+    }
+    return tileTemplate.multiplier ? tileTemplate.multiplier : undefined;
+}
+
 
 class TilesGeneratorContext {
     private readonly _tiles: TileConfig[];
@@ -236,7 +265,7 @@ export class TilesGenerator {
             icon: icon,
             unit: tileTemplate.unit ? localize(tileTemplate.unit, language) : undefined,
             precision: tileTemplate.precision ? tileTemplate.precision : 0,
-            multiplier: tileTemplate.multiplier ? tileTemplate.multiplier : undefined,
+            multiplier: TilesGenerator.getMultiplier(hass, tileTemplate, entity_id, attribute),
             translations: TilesGenerator.generateTranslationKeys(
                 tileTemplate.translation_keys ?? [],
                 tileTemplate.tile_id,
@@ -248,6 +277,20 @@ export class TilesGenerator {
             TilesGenerator.getDefaultVariables(vacuum_entity_id, entity_id, attribute),
             variables,
         ) as unknown as TileConfig;
+    }
+
+    private static getMultiplier(
+        hass: HomeAssistantFixed,
+        tileTemplate: TileTemplate,
+        entity_id: string,
+        attribute: string | undefined,
+    ): number | undefined {
+        // Attribute-based tiles show an attribute value, so the entity's own unit says nothing
+        // about it; they keep the seconds assumption.
+        const sourceUnit = attribute === undefined
+            ? hass.states[entity_id]?.attributes.unit_of_measurement
+            : undefined;
+        return resolveTileMultiplier(tileTemplate, sourceUnit);
     }
 
     private static getTileLabel(
@@ -279,7 +322,7 @@ export class TilesGenerator {
     }
 
     private static cleanup(tileConfig: TileTemplate): Record<string, unknown> {
-        const toRemove = ["unique_id_regex", "translation_keys"];
+        const toRemove = ["unique_id_regex", "translation_keys", "duration_unit"];
         const e = tileConfig as unknown as Record<string, unknown>;
         for (const key in e) {
             if (e.hasOwnProperty(key) && toRemove.includes(key)) {
