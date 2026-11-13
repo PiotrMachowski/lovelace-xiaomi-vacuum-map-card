@@ -49,6 +49,7 @@ import {
     MAP_VIEW_SAVE_DEBOUNCE,
 } from "./const";
 import { getMapView, hashString, MapView, normalizeAngle, setMapView } from "./model/map-view-store";
+import { cameraRefreshKey, decideMapRefresh, MAP_REFRESH_INTERVAL_MS, MapRefreshState } from "./model/map-refresh-policy";
 // the event names themselves are hard-coded in the template below: lit needs a literal @name
 import { RotateEventDetail } from "./pinch-zoom/pinch-zoom";
 import { localize, localizeWithHass } from "./localize/localize";
@@ -171,6 +172,8 @@ export class XiaomiVacuumMapCard extends LitElement {
     private delayedCallbacks = new Set<number>();
     private roomColorDetection?: RoomColorDetection;
     private lastRoomColorDetectionKey?: string;
+    private mapRefreshState?: MapRefreshState;
+    private trailingMapRefreshPending = false;
 
     constructor() {
         super();
@@ -178,6 +181,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         this._handleRoomsConfigGet = this._handleRoomsConfigGet.bind(this);
         this._handleServiceCallGet = this._handleServiceCallGet.bind(this);
         this._handleLovelaceDomEvent = this._handleLovelaceDomEvent.bind(this);
+        this._handleVisibilityChange = this._handleVisibilityChange.bind(this);
         this._flushMapView = this._flushMapView.bind(this);
     }
 
@@ -264,6 +268,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             window.addEventListener(EVENT_SERVICE_CALL_GET, this._handleServiceCallGet)
         }
         document.addEventListener(EVENT_LOVELACE_DOM, this._handleLovelaceDomEvent);
+        document.addEventListener("visibilitychange", this._handleVisibilityChange);
         window.addEventListener("pagehide", this._flushMapView);
         this.connected = true;
         this._updateElements();
@@ -285,8 +290,12 @@ export class XiaomiVacuumMapCard extends LitElement {
             window.removeEventListener(EVENT_SERVICE_CALL_GET, this._handleServiceCallGet);
         }
         document.removeEventListener(EVENT_LOVELACE_DOM, this._handleLovelaceDomEvent);
+        document.removeEventListener("visibilitychange", this._handleVisibilityChange);
         window.removeEventListener("pagehide", this._flushMapView);
         this._cancelDelayedCallbacks();
+        // The trailing map refresh was one of the cancelled callbacks; a re-attach must be able to
+        // schedule a new one instead of believing it is still pending.
+        this.trailingMapRefreshPending = false;
         // A zoom, a rotation or a map reset leaves an inline transition duration on the map content
         // and queues the 300 ms callback that clears it. That callback is gone now, and the style
         // attribute is only rewritten when a crop value changes, so a card re-attached within those
@@ -755,13 +764,10 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _getMapSrc(config: CardPresetConfig): string {
         if (config.map_source.camera) {
-            if (
-                this.connected &&
-                this.lastHassUpdate &&
-                this.lastHassUpdate.getTime() + DISCONNECTION_TIME >= new Date().getTime()
-            ) {
-                const url = this.hass.hassUrl(this.hass.states[config.map_source.camera].attributes.entity_picture);
-                return `${url}&v=${+new Date()}`;
+            if (this.connected && this._isHassFresh()) {
+                const camera = config.map_source.camera;
+                const state = this._decideMapRefresh(camera);
+                return `${this.hass.hassUrl(state.entityPicture)}&v=${state.version}`;
             }
             return DISCONNECTED_IMAGE;
         }
@@ -769,6 +775,91 @@ export class XiaomiVacuumMapCard extends LitElement {
             return `${config.map_source.image}`;
         }
         return DISCONNECTED_IMAGE;
+    }
+
+    /**
+     * `true` while Home Assistant is still delivering `hass` to this card. It closes its websocket a
+     * few minutes after a tab is hidden, so after a long hidden period the last update stops moving:
+     * a render then would fall back to the disconnected placeholder and its `load` would run room
+     * detection against that placeholder canvas while recording the live camera key. `_getMapSrc`
+     * and the visibility handler share this test so they cannot disagree about the camera being
+     * usable.
+     */
+    private _isHassFresh(): boolean {
+        return !!this.lastHassUpdate && this.lastHassUpdate.getTime() + DISCONNECTION_TIME >= Date.now();
+    }
+
+    /**
+     * Applies the refresh policy for one render and returns the state to build the URL from. The
+     * decision lives in `mapRefreshState` between renders, so a render caused by the vacuum, a tile
+     * or an icon update recomputes the same URL and Lit leaves the image alone.
+     */
+    private _decideMapRefresh(camera: string): MapRefreshState {
+        const entity = this.hass.states[camera];
+        const now = Date.now();
+        const hidden = document.hidden === true;
+        const decision = decideMapRefresh({
+            camera: {
+                cameraId: camera,
+                lastUpdated: entity?.last_updated ?? entity?.last_changed,
+                entityPicture: entity?.attributes?.entity_picture as string | undefined,
+            },
+            previous: this.mapRefreshState,
+            now,
+            hidden,
+        });
+        this.mapRefreshState = decision.state;
+        // Suppressed here only means "the interval has not elapsed": the policy cannot suppress a
+        // visible decision for any other reason once it has a previous state. The render that would
+        // have fetched the snapshot is replayed when the window ends instead of waiting for the
+        // next render, which for a docked vacuum can be minutes later (MQTT/Valetudo cameras change
+        // the image without a state write, so nothing else would cause one).
+        if (!decision.changed && !hidden) {
+            this._scheduleTrailingMapRefresh(decision.state, now);
+        }
+        return decision.state;
+    }
+
+    /**
+     * Re-runs the held-back render exactly when the 5 s window ends. At most one callback exists at
+     * a time, so a burst of renders shares the one at its boundary, and it is only created after a
+     * render was suppressed: an idle card still has no timer and never polls the camera.
+     */
+    private _scheduleTrailingMapRefresh(state: MapRefreshState, now: number): void {
+        if (this.trailingMapRefreshPending || !this.connected) {
+            return;
+        }
+        const delay = Math.max(0, state.at + MAP_REFRESH_INTERVAL_MS - now);
+        this.trailingMapRefreshPending = true;
+        this._scheduleDelayedCallback(() => {
+            this.trailingMapRefreshPending = false;
+            // A hidden tab is the visibility handler's case; it must not render or request on its
+            // own, and the frozen URL would come out of this render unchanged anyway.
+            if (document.hidden === true) {
+                return;
+            }
+            this.requestUpdate();
+        }, delay);
+    }
+
+    /**
+     * A background tab must not keep asking the camera for snapshots. The policy freezes the URL
+     * while hidden; the first render after the tab becomes visible again is where the frozen camera
+     * change or the elapsed interval is picked up, as a single new request.
+     *
+     * If Home Assistant has already closed the websocket, this card has no usable `hass` and must
+     * not request that render: it would show the disconnected placeholder, and the placeholder's
+     * load would run the map image and room-colour detection against the wrong canvas. The
+     * reconnect sets `hass`, which renders and applies the deferred refresh on its own.
+     */
+    private _handleVisibilityChange(): void {
+        if (document.hidden) {
+            return;
+        }
+        if (!this._isHassFresh()) {
+            return;
+        }
+        this.requestUpdate();
     }
 
     private _createMapControls(): TemplateResult[] {
@@ -1517,11 +1608,11 @@ export class XiaomiVacuumMapCard extends LitElement {
             return;
         }
 
-        const detectionKey = [
-            camera,
-            entity.last_updated ?? entity.last_changed ?? "",
-            entity.attributes.last_update_timestamp ?? "",
-        ].join(":");
+        const detectionKey = cameraRefreshKey({
+            cameraId: camera,
+            lastUpdated: entity.last_updated ?? entity.last_changed,
+            entityPicture: entity.attributes.entity_picture as string | undefined,
+        });
         if (detectionKey === this.lastRoomColorDetectionKey) return;
         this.lastRoomColorDetectionKey = detectionKey;
 
@@ -1752,8 +1843,9 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (!zoomerRect.width || !zoomerRect.height) {
             return;
         }
-        // A camera map gets a fresh src on every render, so the image is often mid-load. Waiting for
-        // `complete` alone would starve the restore on a busy dashboard; once we have measured a real
+        // A camera map can be mid-load when the restore runs: a refresh after the interval or after
+        // a camera change replaces the src, and only those now cause a reload. Waiting for
+        // `complete` alone would starve the restore during that load; once we have measured a real
         // image the laid out content box is enough to position against.
         const mapImage = this._getMapImage();
         const imageReady = mapImage && ((mapImage.complete && mapImage.naturalWidth > 0) || this.realImageWidth > 0);
