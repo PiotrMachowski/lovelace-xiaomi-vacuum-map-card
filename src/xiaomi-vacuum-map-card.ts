@@ -49,6 +49,7 @@ import {
     MAP_VIEW_SAVE_DEBOUNCE,
 } from "./const";
 import { getMapView, hashString, MapView, normalizeAngle, setMapView } from "./model/map-view-store";
+import { cameraRefreshKey, decideMapRefresh, MapRefreshState } from "./model/map-refresh-policy";
 // the event names themselves are hard-coded in the template below: lit needs a literal @name
 import { RotateEventDetail } from "./pinch-zoom/pinch-zoom";
 import { localize, localizeWithHass } from "./localize/localize";
@@ -171,6 +172,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     private delayedCallbacks = new Set<number>();
     private roomColorDetection?: RoomColorDetection;
     private lastRoomColorDetectionKey?: string;
+    private mapRefreshState?: MapRefreshState;
 
     constructor() {
         super();
@@ -178,6 +180,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         this._handleRoomsConfigGet = this._handleRoomsConfigGet.bind(this);
         this._handleServiceCallGet = this._handleServiceCallGet.bind(this);
         this._handleLovelaceDomEvent = this._handleLovelaceDomEvent.bind(this);
+        this._handleVisibilityChange = this._handleVisibilityChange.bind(this);
         this._flushMapView = this._flushMapView.bind(this);
     }
 
@@ -264,6 +267,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             window.addEventListener(EVENT_SERVICE_CALL_GET, this._handleServiceCallGet)
         }
         document.addEventListener(EVENT_LOVELACE_DOM, this._handleLovelaceDomEvent);
+        document.addEventListener("visibilitychange", this._handleVisibilityChange);
         window.addEventListener("pagehide", this._flushMapView);
         this.connected = true;
         this._updateElements();
@@ -285,6 +289,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             window.removeEventListener(EVENT_SERVICE_CALL_GET, this._handleServiceCallGet);
         }
         document.removeEventListener(EVENT_LOVELACE_DOM, this._handleLovelaceDomEvent);
+        document.removeEventListener("visibilitychange", this._handleVisibilityChange);
         window.removeEventListener("pagehide", this._flushMapView);
         this._cancelDelayedCallbacks();
         // A zoom, a rotation or a map reset leaves an inline transition duration on the map content
@@ -760,8 +765,9 @@ export class XiaomiVacuumMapCard extends LitElement {
                 this.lastHassUpdate &&
                 this.lastHassUpdate.getTime() + DISCONNECTION_TIME >= new Date().getTime()
             ) {
-                const url = this.hass.hassUrl(this.hass.states[config.map_source.camera].attributes.entity_picture);
-                return `${url}&v=${+new Date()}`;
+                const camera = config.map_source.camera;
+                const state = this._decideMapRefresh(camera);
+                return `${this.hass.hassUrl(state.entityPicture)}&v=${state.version}`;
             }
             return DISCONNECTED_IMAGE;
         }
@@ -769,6 +775,39 @@ export class XiaomiVacuumMapCard extends LitElement {
             return `${config.map_source.image}`;
         }
         return DISCONNECTED_IMAGE;
+    }
+
+    /**
+     * Applies the refresh policy for one render and returns the state to build the URL from. The
+     * decision lives in `mapRefreshState` between renders, so a render caused by the vacuum, a tile
+     * or an icon update recomputes the same URL and Lit leaves the image alone.
+     */
+    private _decideMapRefresh(camera: string): MapRefreshState {
+        const entity = this.hass.states[camera];
+        const decision = decideMapRefresh({
+            camera: {
+                cameraId: camera,
+                lastUpdated: entity?.last_updated ?? entity?.last_changed,
+                entityPicture: entity?.attributes?.entity_picture as string | undefined,
+            },
+            previous: this.mapRefreshState,
+            now: Date.now(),
+            hidden: document.hidden === true,
+        });
+        this.mapRefreshState = decision.state;
+        return decision.state;
+    }
+
+    /**
+     * A background tab must not keep asking the camera for snapshots. The policy freezes the URL
+     * while hidden; the first render after the tab becomes visible again is where the frozen camera
+     * change or the elapsed interval is picked up, as a single new request.
+     */
+    private _handleVisibilityChange(): void {
+        if (document.hidden) {
+            return;
+        }
+        this.requestUpdate();
     }
 
     private _createMapControls(): TemplateResult[] {
@@ -1517,11 +1556,11 @@ export class XiaomiVacuumMapCard extends LitElement {
             return;
         }
 
-        const detectionKey = [
-            camera,
-            entity.last_updated ?? entity.last_changed ?? "",
-            entity.attributes.last_update_timestamp ?? "",
-        ].join(":");
+        const detectionKey = cameraRefreshKey({
+            cameraId: camera,
+            lastUpdated: entity.last_updated ?? entity.last_changed,
+            entityPicture: entity.attributes.entity_picture as string | undefined,
+        });
         if (detectionKey === this.lastRoomColorDetectionKey) return;
         this.lastRoomColorDetectionKey = detectionKey;
 
@@ -1752,8 +1791,9 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (!zoomerRect.width || !zoomerRect.height) {
             return;
         }
-        // A camera map gets a fresh src on every render, so the image is often mid-load. Waiting for
-        // `complete` alone would starve the restore on a busy dashboard; once we have measured a real
+        // A camera map can be mid-load when the restore runs: a refresh after the interval or after
+        // a camera change replaces the src, and only those now cause a reload. Waiting for
+        // `complete` alone would starve the restore during that load; once we have measured a real
         // image the laid out content box is enough to position against.
         const mapImage = this._getMapImage();
         const imageReady = mapImage && ((mapImage.complete && mapImage.naturalWidth > 0) || this.realImageWidth > 0);
