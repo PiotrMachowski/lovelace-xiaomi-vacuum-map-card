@@ -42,7 +42,14 @@ import {
     EVENT_SELECTION_CHANGED,
     EVENT_SERVICE_CALL,
     EVENT_SERVICE_CALL_GET,
+    MAP_ROTATION_SNAP_THRESHOLD,
+    MAP_ROTATION_STEP,
+    MAP_VIEW_ID_ATTRIBUTES,
+    MAP_VIEW_SAVE_DEBOUNCE,
 } from "./const";
+import { getMapView, hashString, MapView, normalizeAngle, setMapView } from "./model/map-view-store";
+// the event names themselves are hard-coded in the template below: lit needs a literal @name
+import { RotateEventDetail } from "./pinch-zoom/pinch-zoom";
 import { localize, localizeWithHass } from "./localize/localize";
 import PinchZoom from "./pinch-zoom";
 import "./pinch-zoom";
@@ -129,6 +136,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     @state() public repeats = 1;
     @state() private selectedMode = 0;
     @state() private mapLocked = false;
+    @state() private mapRotation = 0;
     @state() private configErrors: string[] = [];
     @state() private connected = false;
     @state() public internalVariables = {};
@@ -151,6 +159,12 @@ export class XiaomiVacuumMapCard extends LitElement {
     private shouldHandleMouseUp!: boolean;
     private lastHassUpdate!: Date;
     public isInEditor = false;
+    private mapViewCardKey?: string;
+    private mapViewCardKeyPath?: string;
+    private restoredMapViewKey?: string;
+    private pendingMapViewKey?: string;
+    private pendingMapView?: MapView;
+    private mapViewSaveTimer?: number;
 
     constructor() {
         super();
@@ -158,6 +172,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         this._handleRoomsConfigGet = this._handleRoomsConfigGet.bind(this);
         this._handleServiceCallGet = this._handleServiceCallGet.bind(this);
         this._handleLovelaceDomEvent = this._handleLovelaceDomEvent.bind(this);
+        this._flushMapView = this._flushMapView.bind(this);
     }
 
     @property({ attribute: false }) public _hass!: HomeAssistantFixed;
@@ -212,6 +227,9 @@ export class XiaomiVacuumMapCard extends LitElement {
             throw new Error(this._localize("common.invalid_configuration"));
         }
         this.config = config;
+        this.mapViewCardKey = undefined;
+        this.mapViewCardKeyPath = undefined;
+        this.restoredMapViewKey = undefined;
         if (isOldConfig(config)) {
             this.oldConfig = true;
             return;
@@ -238,6 +256,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             this.isInEditor = true;
         }
         document.addEventListener(EVENT_LOVELACE_DOM, this._handleLovelaceDomEvent);
+        window.addEventListener("pagehide", this._flushMapView);
         this.connected = true;
         this._updateElements();
         delay(100).then(() => this.requestUpdate());
@@ -251,6 +270,8 @@ export class XiaomiVacuumMapCard extends LitElement {
             window.removeEventListener(EVENT_SERVICE_CALL_GET, this._handleServiceCallGet);
         }
         document.removeEventListener(EVENT_LOVELACE_DOM, this._handleLovelaceDomEvent);
+        window.removeEventListener("pagehide", this._flushMapView);
+        this._flushMapView();
         this.connected = false;
     }
 
@@ -306,7 +327,10 @@ export class XiaomiVacuumMapCard extends LitElement {
                     alt="camera_image"
                     class="${this.mapScale * this.realScale > 1 ? "zoomed" : ""}"
                     src="${mapSrc}"
-                    @load="${() => this._calculateBasicScale()}" />
+                    @load="${() => {
+                        this._calculateBasicScale();
+                        this._restoreMapView();
+                    }}" />
                 <div id="map-image-overlay">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -323,7 +347,9 @@ export class XiaomiVacuumMapCard extends LitElement {
             </div>
         `;
         return html`
-            <ha-card style="--map-scale: ${this.mapScale}; --real-scale: ${this.realScale};">
+            <ha-card
+                style="--map-scale: ${this.mapScale}; --real-scale: ${this.realScale}; --map-rotation: ${this
+                    .mapRotation}deg;">
                 ${conditional(
                     (this.config.title ?? "").length > 0,
                     () => html`<h1 class="card-header">${this.config.title}</h1>`,
@@ -346,7 +372,10 @@ export class XiaomiVacuumMapCard extends LitElement {
                         @change="${this._calculateScale}"
                         two-finger-pan="${preset.two_finger_pan}"
                         locked="${this.mapLocked}"
+                        rotatable="${this._isRotationGestureEnabled()}"
                         no-default-pan="${this.mapLocked || preset.two_finger_pan}"
+                        @pinch-rotate="${this._handleRotateGesture}"
+                        @pinch-rotate-end="${this._handleRotateGestureEnd}"
                         style="touch-action: none;">
                         ${mapZoomerContent}
                     </pinch-zoom>
@@ -362,6 +391,10 @@ export class XiaomiVacuumMapCard extends LitElement {
                                 icon="mdi:image-filter-center-focus"
                                 class="icon-on-map clickable ripple"
                                 @click="${this._restoreMap}"></ha-icon>
+                            <ha-icon
+                                icon="mdi:rotate-right"
+                                class="icon-on-map clickable ripple"
+                                @click="${this._rotateMap}"></ha-icon>
                             <div class="map-zoom-icons-main">
                                 <ha-icon
                                     icon="mdi:magnify-minus"
@@ -531,7 +564,14 @@ export class XiaomiVacuumMapCard extends LitElement {
             return;
         }
         const config = index === 0 ? this.config : (this.config.additional_presets ?? [])[index - 1];
-        if (!this.mapLocked) this._getPinchZoom()?.setTransform({ scale: 1, x: 0, y: 0, allowChangeEvent: true });
+        // must happen before the reset below, so that the reset is not persisted for the preset we are leaving
+        this.restoredMapViewKey = undefined;
+        // the angle and the pan/zoom belong together - the offsets only make sense for the angle they
+        // were taken at - so a locked map has to keep both or neither
+        if (!this.mapLocked) {
+            this._getPinchZoom()?.setTransform({ scale: 1, x: 0, y: 0, allowChangeEvent: true });
+            this.mapRotation = this._getConfiguredRotation(config);
+        }
         if (user) {
             forwardHaptic("selection");
         }
@@ -1081,7 +1121,10 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (s) {
             s.style.borderRadius = this._getCssProperty("--map-card-internal-big-radius");
         }
-        delay(100).then(() => this._calculateBasicScale());
+        delay(100).then(() => {
+            this._calculateBasicScale();
+            this._restoreMapView();
+        });
 
         if (!somethingChanged) {
             return;
@@ -1127,6 +1170,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     private _toggleLock(): void {
         this.mapLocked = !this.mapLocked;
         forwardHaptic("selection");
+        this._persistMapView();
         delay(500).then(() => this.requestUpdate());
     }
 
@@ -1232,9 +1276,11 @@ export class XiaomiVacuumMapCard extends LitElement {
     private _restoreMap(): void {
         const zoomerContent = this._getMapZoomerContent();
         zoomerContent.style.transitionDuration = this._getCssProperty("--map-card-internal-transitions-duration");
+        this.mapRotation = this._getConfiguredRotation(this._getCurrentPreset());
         this._getPinchZoom().setTransform({ scale: 1, x: 0, y: 0, allowChangeEvent: true });
         this.mapScale = 1;
         forwardHaptic("selection");
+        this._persistMapView();
         delay(300).then(() => (zoomerContent.style.transitionDuration = "0s"));
     }
 
@@ -1281,6 +1327,256 @@ export class XiaomiVacuumMapCard extends LitElement {
         this.mapScale = pinchZoom.scale;
         this.mapX = pinchZoom.x;
         this.mapY = pinchZoom.y;
+        this._persistMapView();
+    }
+
+    private _isRotationGestureEnabled(): boolean {
+        return !this.mapLocked && (this._getCurrentPreset()?.map_rotation_gesture ?? true);
+    }
+
+    private _getConfiguredRotation(config?: CardPresetConfig): number {
+        const configured = Number(config?.map_rotation);
+        return Number.isFinite(configured) ? normalizeAngle(configured) : 0;
+    }
+
+    private _rotateMap(): void {
+        forwardHaptic("selection");
+        const zoomerContent = this._getMapZoomerContent();
+        if (zoomerContent) {
+            zoomerContent.style.transitionDuration = this._getCssProperty("--map-card-internal-transitions-duration");
+            delay(300).then(() => (zoomerContent.style.transitionDuration = "0s"));
+        }
+        // step from the nearest right angle, so a button press after a free rotation still lands square
+        this._setRotation(Math.round(this.mapRotation / MAP_ROTATION_STEP) * MAP_ROTATION_STEP + MAP_ROTATION_STEP);
+    }
+
+    private _handleRotateGesture(event: CustomEvent<RotateEventDetail>): void {
+        const angleDiff = event.detail?.angleDiff;
+        if (!Number.isFinite(angleDiff)) {
+            return;
+        }
+        this._setRotation(this.mapRotation + angleDiff);
+    }
+
+    private _handleRotateGestureEnd(): void {
+        const step = Math.round(this.mapRotation / MAP_ROTATION_STEP) * MAP_ROTATION_STEP;
+        if (Math.abs(normalizeAngle(this.mapRotation - step + 180) - 180) <= MAP_ROTATION_SNAP_THRESHOLD) {
+            this._setRotation(step);
+        }
+        this._persistMapView();
+    }
+
+    /**
+     * Rotates around the middle of the visible area rather than the middle of the map, so whatever
+     * the user is looking at stays put. The rotation itself is a plain CSS transform on the map
+     * content; pan/zoom is nudged here to compensate.
+     */
+    private _setRotation(degrees: number): void {
+        const rotation = normalizeAngle(degrees);
+        if (rotation === this.mapRotation) {
+            return;
+        }
+        const pinchZoom = this._getPinchZoom();
+        const zoomerContent = this._getMapZoomerContent();
+        const previousRotation = this.mapRotation;
+        this.mapRotation = rotation;
+
+        if (pinchZoom && zoomerContent) {
+            const bounds = pinchZoom.getBoundingClientRect();
+            const scale = pinchZoom.scale;
+            if (bounds.width && bounds.height && scale) {
+                // centre of the map content and of the viewport, both in unrotated content pixels
+                const centerX = zoomerContent.offsetWidth / 2;
+                const centerY = zoomerContent.offsetHeight / 2;
+                const viewX = bounds.width / 2;
+                const viewY = bounds.height / 2;
+                const offsetX = (viewX - pinchZoom.x) / scale - centerX;
+                const offsetY = (viewY - pinchZoom.y) / scale - centerY;
+                const radians = ((rotation - previousRotation) * Math.PI) / 180;
+                const cos = Math.cos(radians);
+                const sin = Math.sin(radians);
+                pinchZoom.setTransform({
+                    scale,
+                    x: viewX - scale * (centerX + offsetX * cos - offsetY * sin),
+                    y: viewY - scale * (centerY + offsetX * sin + offsetY * cos),
+                    allowChangeEvent: true,
+                });
+            }
+        }
+        this._persistMapView();
+        this.requestUpdate();
+    }
+
+    private _isMapViewPersistenceEnabled(): boolean {
+        return this.config?.persist_map_view !== false && !this.isInEditor;
+    }
+
+    private _isMapLockPersistenceEnabled(): boolean {
+        return this.config?.persist_map_lock !== false;
+    }
+
+    /**
+     * The dashboard path is part of the key, so the same card placed on two views keeps a view per
+     * view. Set `map_view_storage_key` to opt out of that, either to survive a dashboard rename or
+     * to deliberately share one view between pages.
+     */
+    private _getMapViewDashboardPath(): string {
+        return (window.location?.pathname ?? "").replace(/\/+$/, "");
+    }
+
+    private _getMapViewCardKey(): string {
+        const path = this._getMapViewDashboardPath();
+        if (this.mapViewCardKey && this.mapViewCardKeyPath === path) {
+            return this.mapViewCardKey;
+        }
+        const config = this.config ?? ({} as XiaomiVacuumMapCardConfig);
+        this.mapViewCardKeyPath = path;
+        if (config.map_view_storage_key) {
+            this.mapViewCardKey = String(config.map_view_storage_key);
+            return this.mapViewCardKey;
+        }
+        const signature = JSON.stringify([
+            path,
+            config.title ?? "",
+            config.entity ?? "",
+            this._getAllPresets().map(preset => [
+                preset?.preset_name ?? "",
+                preset?.map_source?.camera ?? "",
+                preset?.map_source?.image ?? "",
+                preset?.entity ?? "",
+            ]),
+        ]);
+        this.mapViewCardKey = hashString(signature);
+        return this.mapViewCardKey;
+    }
+
+    private _getMapViewMapId(camera: string): string {
+        if (!camera || !this.hass) {
+            return "";
+        }
+        const state = this.hass.states[camera];
+        if (!state) {
+            return "";
+        }
+        const attributes = state.attributes ?? {};
+        for (const attribute of MAP_VIEW_ID_ATTRIBUTES) {
+            const value = attributes[attribute];
+            if (value !== null && value !== undefined && ["string", "number", "boolean"].includes(typeof value)) {
+                const asString = String(value);
+                if (asString.length > 0) {
+                    return `${attribute}=${asString.length > 32 ? hashString(asString) : asString}`;
+                }
+            }
+        }
+        const calibrationPoints = attributes.calibration_points;
+        if (Array.isArray(calibrationPoints) && calibrationPoints.length > 0) {
+            const normalized = calibrationPoints.map((point: CalibrationPoint) => [
+                Math.round(Number(point?.map?.x)) || 0,
+                Math.round(Number(point?.map?.y)) || 0,
+                Math.round(Number(point?.vacuum?.x)) || 0,
+                Math.round(Number(point?.vacuum?.y)) || 0,
+            ]);
+            return `cal=${hashString(JSON.stringify(normalized))}`;
+        }
+        return "";
+    }
+
+    private _getMapViewKey(): string {
+        const preset = this._getCurrentPreset() ?? ({} as CardPresetConfig);
+        const camera = preset.map_source?.camera ?? "";
+        const image = preset.map_source?.image ?? "";
+        return [this._getMapViewCardKey(), this.presetIndex ?? 0, camera || image, this._getMapViewMapId(camera)].join(
+            "|",
+        );
+    }
+
+    private _restoreMapView(): void {
+        if (!this._isMapViewPersistenceEnabled()) {
+            return;
+        }
+        const pinchZoom = this._getPinchZoom();
+        if (!pinchZoom) {
+            return;
+        }
+        const key = this._getMapViewKey();
+        if (this.restoredMapViewKey === key) {
+            return;
+        }
+        const zoomerRect = pinchZoom.getBoundingClientRect();
+        if (!zoomerRect.width || !zoomerRect.height) {
+            return;
+        }
+        // A camera map gets a fresh src on every render, so the image is often mid-load. Waiting for
+        // `complete` alone would starve the restore on a busy dashboard; once we have measured a real
+        // image the laid out content box is enough to position against.
+        const mapImage = this._getMapImage();
+        const imageReady = mapImage && ((mapImage.complete && mapImage.naturalWidth > 0) || this.realImageWidth > 0);
+        if (!imageReady) {
+            return;
+        }
+        const zoomerContent = this._getMapZoomerContent();
+        if (!zoomerContent) {
+            return;
+        }
+        const contentRect = zoomerContent.getBoundingClientRect();
+        if (!contentRect.width || !contentRect.height) {
+            return;
+        }
+        this.restoredMapViewKey = key;
+        const view = getMapView(key);
+        if (!view) {
+            return;
+        }
+        if (this._isMapLockPersistenceEnabled() && typeof view.locked === "boolean") {
+            this.mapLocked = view.locked;
+        }
+        // set directly rather than through _setRotation: the stored x/y already match this angle
+        this.mapRotation = view.rotation;
+        pinchZoom.setTransform({ scale: view.scale, x: view.x, y: view.y, allowChangeEvent: false });
+        this.mapScale = pinchZoom.scale;
+        this.mapX = pinchZoom.x;
+        this.mapY = pinchZoom.y;
+        this.requestUpdate();
+    }
+
+    private _persistMapView(): void {
+        if (!this._isMapViewPersistenceEnabled()) {
+            return;
+        }
+        const pinchZoom = this._getPinchZoom();
+        if (!pinchZoom) {
+            return;
+        }
+        const key = this._getMapViewKey();
+        if (this.restoredMapViewKey !== key) {
+            return;
+        }
+        this.pendingMapViewKey = key;
+        this.pendingMapView = {
+            scale: pinchZoom.scale,
+            x: pinchZoom.x,
+            y: pinchZoom.y,
+            rotation: this.mapRotation,
+            locked: this._isMapLockPersistenceEnabled() ? this.mapLocked : undefined,
+        };
+        if (this.mapViewSaveTimer) {
+            clearTimeout(this.mapViewSaveTimer);
+        }
+        this.mapViewSaveTimer = window.setTimeout(this._flushMapView, MAP_VIEW_SAVE_DEBOUNCE);
+    }
+
+    private _flushMapView(): void {
+        if (this.mapViewSaveTimer) {
+            clearTimeout(this.mapViewSaveTimer);
+            this.mapViewSaveTimer = undefined;
+        }
+        const key = this.pendingMapViewKey;
+        const view = this.pendingMapView;
+        this.pendingMapViewKey = undefined;
+        this.pendingMapView = undefined;
+        if (key && view) {
+            setMapView(key, view);
+        }
     }
 
     private _getPinchZoom(): PinchZoom {
@@ -1680,7 +1976,9 @@ export class XiaomiVacuumMapCard extends LitElement {
             }
 
             #map-zoomer-content {
-                transform: translate(var(--x), var(--y)) scale(var(--scale));
+                /* the last three functions rotate the map around its own middle, inside the pan/zoom */
+                transform: translate(var(--x), var(--y)) scale(var(--scale)) translate(50%, 50%)
+                    rotate(var(--map-rotation, 0deg)) translate(-50%, -50%);
                 transform-origin: 0 0;
                 position: relative;
             }

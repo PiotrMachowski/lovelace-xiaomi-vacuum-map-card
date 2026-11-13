@@ -275,7 +275,10 @@
             "camera": "Entité de la caméra (obligatoire)",
             "vacuum_platform": "Plateforme (obligatoire)",
             "map_locked": "Carte verrouillée (optionnel)",
-            "two_finger_pan": "Déplacement à deux doigts (optionnel)"
+            "two_finger_pan": "Déplacement à deux doigts (optionnel)",
+            "persist_map_view": "Mémoriser le zoom et la position (optionnel)",
+            "persist_map_lock": "Mémoriser l'état du verrouillage (optionnel)",
+            "map_view_storage_key": "Clé de stockage de la vue de la carte (optionnel)"
         }
     }
 }

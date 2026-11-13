@@ -222,7 +222,10 @@
             "camera": "Kamera-entitet (obligatorisk)",
             "vacuum_platform": "Støvsugerplattform (obligatorisk)",
             "map_locked": "Låst kart (valgfritt)",
-            "two_finger_pan": "Panorering med to fingre (valgfritt)"
+            "two_finger_pan": "Panorering med to fingre (valgfritt)",
+            "persist_map_view": "Husk zoom og posisjon (valgfritt)",
+            "persist_map_lock": "Husk låsetilstand (valgfritt)",
+            "map_view_storage_key": "Lagringsnøkkel for kartvisning (valgfritt)"
         }
     }
 }

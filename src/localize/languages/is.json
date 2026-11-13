@@ -222,7 +222,10 @@
             "camera": "Camera eining (nauðsynlegt)",
             "vacuum_platform": "Vacuum platform (nauðsynlegt)",
             "map_locked": "Læsa korti (valkvætt)",
-            "two_finger_pan": "Val með 2 fingrum (valkvætt)"
+            "two_finger_pan": "Val með 2 fingrum (valkvætt)",
+            "persist_map_view": "Muna aðdrátt og staðsetningu (valkvætt)",
+            "persist_map_lock": "Muna læsingarstöðu (valkvætt)",
+            "map_view_storage_key": "Geymslulykill kortasýnar (valkvætt)"
         }
     }
 }

@@ -216,16 +216,45 @@ export function getMousePosition(
     element: SVGGraphicsElement,
     scale: number,
 ): MousePosition {
-    let x, y;
+    let clientX, clientY;
     if (event instanceof MouseEvent) {
-        x = event.offsetX;
-        y = event.offsetY;
+        clientX = event.clientX;
+        clientY = event.clientY;
     }
-    if (window.TouchEvent && event instanceof TouchEvent && event.touches) {
-        x = (event.touches[0].clientX - element.getBoundingClientRect().x) / scale;
-        y = (event.touches[0].clientY - element.getBoundingClientRect().y) / scale;
+    if (window.TouchEvent && event instanceof TouchEvent && event.touches?.length) {
+        clientX = event.touches[0].clientX;
+        clientY = event.touches[0].clientY;
     }
-    return new MousePosition(x, y);
+    if (clientX === undefined || clientY === undefined) {
+        return new MousePosition(NaN, NaN);
+    }
+
+    // The screen CTM already accounts for pan, zoom and rotation, so inverting it maps a screen
+    // point straight back into the map's own coordinates whatever the map is currently doing.
+    const screenCtm = element.getScreenCTM ? element.getScreenCTM() : null;
+    if (screenCtm) {
+        const point = getScratchPoint();
+        point.x = clientX;
+        point.y = clientY;
+        const mapped = point.matrixTransform(screenCtm.inverse());
+        return new MousePosition(mapped.x, mapped.y);
+    }
+
+    // Fall back to the old axis aligned approximation if the CTM is unavailable.
+    if (event instanceof MouseEvent) {
+        return new MousePosition(event.offsetX, event.offsetY);
+    }
+    const bounds = element.getBoundingClientRect();
+    return new MousePosition((clientX - bounds.x) / scale, (clientY - bounds.y) / scale);
+}
+
+let scratchSvg: SVGSVGElement | undefined;
+
+function getScratchPoint(): SVGPoint {
+    if (!scratchSvg) {
+        scratchSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    }
+    return scratchSvg.createSVGPoint();
 }
 
 export async function getAllEntitiesFromTheSameDevice(

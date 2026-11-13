@@ -222,7 +222,10 @@
             "camera": "攝影機實體（必填）",
             "vacuum_platform": "vacuum platform（必填）",
             "map_locked": "鎖定地圖（選填）",
-            "two_finger_pan": "雙指縮放（選填）"
+            "two_finger_pan": "雙指縮放（選填）",
+            "persist_map_view": "記住縮放和位置（選填）",
+            "persist_map_lock": "記住鎖定狀態（選填）",
+            "map_view_storage_key": "地圖檢視儲存鍵（選填）"
         }
     }
 }

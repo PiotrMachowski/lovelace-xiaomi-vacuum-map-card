@@ -72,7 +72,7 @@ export class PredefinedMultiRectangle extends PredefinedMapObject {
                 `,
                 )}
                 ${this.renderIcon(this._config.icon, () => this._click(), "predefined-rectangle-icon-wrapper")}
-                ${this.renderLabel(this._config.label, "predefined-rectangle-label")}
+                ${this.renderLabel(this._config.label, "predefined-rectangle-label", this._config.icon)}
             </g>
         `;
     }
@@ -153,7 +153,8 @@ export class PredefinedMultiRectangle extends PredefinedMapObject {
                         calc(var(--map-card-internal-predefined-rectangle-icon-wrapper-size) / -2),
                         calc(var(--map-card-internal-predefined-rectangle-icon-wrapper-size) / -2)
                     )
-                    scale(calc(1 / var(--map-scale)));
+                    scale(calc(1 / var(--map-scale)))
+                    rotate(calc(-1 * var(--map-rotation, 0deg)));
                 background: var(--map-card-internal-predefined-rectangle-icon-background-color);
                 color: var(--map-card-internal-predefined-rectangle-icon-color);
                 --mdc-icon-size: var(--map-card-internal-predefined-rectangle-icon-size);

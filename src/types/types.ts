@@ -51,6 +51,9 @@ export interface XiaomiVacuumMapCardConfig extends LovelaceCardConfig, CardPrese
     readonly language?: Language;
     readonly debug?: boolean;
     readonly action_handler_id?: string;
+    readonly persist_map_view?: boolean;
+    readonly persist_map_lock?: boolean;
+    readonly map_view_storage_key?: string;
 }
 
 export interface CardPresetConfig extends ConditionalObjectConfig {
@@ -60,6 +63,8 @@ export interface CardPresetConfig extends ConditionalObjectConfig {
     readonly map_source: MapSourceConfig;
     readonly map_locked?: boolean;
     readonly two_finger_pan?: boolean;
+    readonly map_rotation?: number;
+    readonly map_rotation_gesture?: boolean;
     readonly calibration_source?: CalibrationSourceConfig;
     readonly icons?: IconActionConfig[];
     readonly append_icons?: boolean;

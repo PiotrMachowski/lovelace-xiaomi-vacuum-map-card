@@ -71,7 +71,7 @@ export class PredefinedPoint extends PredefinedMapObject {
         return svg`
             <g class="predefined-point-wrapper ${this._selected ? "selected" : ""}">
                 ${this.renderIcon(this._iconConfig, () => this._click(), "predefined-point-icon-wrapper")}
-                ${this.renderLabel(this._config.label, "predefined-point-label")}
+                ${this.renderLabel(this._config.label, "predefined-point-label", this._iconConfig)}
             </g>
         `;
     }
@@ -123,7 +123,8 @@ export class PredefinedPoint extends PredefinedMapObject {
                         calc(var(--map-card-internal-predefined-point-icon-wrapper-size) / -2),
                         calc(var(--map-card-internal-predefined-point-icon-wrapper-size) / -2)
                     )
-                    scale(calc(1 / var(--map-scale)));
+                    scale(calc(1 / var(--map-scale)))
+                    rotate(calc(-1 * var(--map-rotation, 0deg)));
                 background: var(--map-card-internal-predefined-point-icon-background-color);
                 color: var(--map-card-internal-predefined-point-icon-color);
                 --mdc-icon-size: var(--map-card-internal-predefined-point-icon-size);

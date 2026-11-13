@@ -222,7 +222,10 @@
             "camera": "Kamera-entitet (obligatoriskt)",
             "vacuum_platform": "Dammsugarplattform (obligatoriskt)",
             "map_locked": "Låst karta (valfritt)",
-            "two_finger_pan": "Panorering med två fingrar (valfritt)"
+            "two_finger_pan": "Panorering med två fingrar (valfritt)",
+            "persist_map_view": "Kom ihåg zoom och position (valfritt)",
+            "persist_map_lock": "Kom ihåg låsningsläget (valfritt)",
+            "map_view_storage_key": "Lagringsnyckel för kartvy (valfritt)"
         }
     }
 }

@@ -224,7 +224,10 @@
             "camera": "摄像机实体（必填）",
             "vacuum_platform": "扫地机平台（必填）",
             "map_locked": "地图锁定（可选）",
-            "two_finger_pan": "双指缩放（可选）"
+            "two_finger_pan": "双指缩放（可选）",
+            "persist_map_view": "记住缩放和位置（可选）",
+            "persist_map_lock": "记住锁定状态（可选）",
+            "map_view_storage_key": "地图视图存储键（可选）"
         }
     }
 }
