@@ -118,8 +118,10 @@ export class Tile extends RootlessLitElement {
             }
         }
         const translations = this.config.translations ?? {};
-        if (`${value}`.toLowerCase() in translations) {
-            value = translations[`${value}`.toLowerCase()];
+        const translationKey = Object.keys(translations)
+            .find(key => key.toLowerCase() === `${value}`.toLowerCase());
+        if (translationKey !== undefined) {
+            value = translations[translationKey];
         }
         return `${value}${unit}`;
     }
