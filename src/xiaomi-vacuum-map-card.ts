@@ -167,6 +167,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     private pendingMapViewKey?: string;
     private pendingMapView?: MapView;
     private mapViewSaveTimer?: number;
+    private mapImageLoadedWhileDetached = false;
     private delayedCallbacks = new Set<number>();
     private roomColorDetection?: RoomColorDetection;
     private lastRoomColorDetectionKey?: string;
@@ -266,6 +267,11 @@ export class XiaomiVacuumMapCard extends LitElement {
         window.addEventListener("pagehide", this._flushMapView);
         this.connected = true;
         this._updateElements();
+        // A load that arrived while the card was detached is replayed once the first render has
+        // produced the image and canvas elements again.
+        if (this.mapImageLoadedWhileDetached) {
+            this._scheduleDelayedCallback(() => this._refreshMapImageAfterReconnect(), 0);
+        }
         this._scheduleDelayedCallback(() => this.requestUpdate(), 100);
     }
 
@@ -282,10 +288,11 @@ export class XiaomiVacuumMapCard extends LitElement {
         window.removeEventListener("pagehide", this._flushMapView);
         this._cancelDelayedCallbacks();
         // A zoom, a rotation or a map reset leaves an inline transition duration on the map content
-        // and queues the 300 ms callback that clears it. That callback is gone now, and Lit never
-        // rewrites the static style attribute, so a card re-attached within those 300 ms would keep
-        // the transition forever and animate every later pan and pinch. Nothing can be seen while
-        // the card is detached, so finish the transition here instead of leaving it pending.
+        // and queues the 300 ms callback that clears it. That callback is gone now, and the style
+        // attribute is only rewritten when a crop value changes, so a card re-attached within those
+        // 300 ms would keep the transition until the next crop change and animate every later pan
+        // and pinch. Nothing can be seen while the card is detached, so finish the transition here
+        // instead of leaving it pending.
         const zoomerContent = this._getMapZoomerContent();
         if (zoomerContent) {
             zoomerContent.style.transitionDuration = "0s";
@@ -323,6 +330,31 @@ export class XiaomiVacuumMapCard extends LitElement {
     private _cancelDelayedCallbacks(): void {
         this.delayedCallbacks.forEach(timer => window.clearTimeout(timer));
         this.delayedCallbacks.clear();
+    }
+
+    /**
+     * Replays the load work that arrived while the card was detached. The image element is
+     * `display: none`; the visible map is the canvas `_renderMapImage` draws, so dropping the load
+     * would leave a static-image map at the canvas default size and blank. A static `image` source
+     * keeps its src, so no second `load` follows the re-attach to do this work.
+     *
+     * Scheduled rather than called inline: `connectedCallback` runs before the first render, so the
+     * image and canvas may not exist yet. The readiness checks make a repeated re-attach harmless,
+     * and a load that fires while connected clears the flag before this runs.
+     */
+    private _refreshMapImageAfterReconnect(): void {
+        if (!this.mapImageLoadedWhileDetached) {
+            return;
+        }
+        const mapImage = this._getMapImage();
+        if (!mapImage?.complete || !mapImage.naturalWidth) {
+            return;
+        }
+        this.mapImageLoadedWhileDetached = false;
+        this._renderMapImage(this._getCurrentPreset()?.map_source.transparent_background ?? false);
+        this._calculateBasicScale();
+        this._detectRoomColors();
+        this._restoreMapView();
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
@@ -382,10 +414,14 @@ export class XiaomiVacuumMapCard extends LitElement {
                     @load="${() => {
                         // A cached or slow image can finish loading after Home Assistant detached the
                         // card; the restore below reaches `window`, so bail out exactly like the
-                        // delayed work does instead of touching a torn-down environment.
+                        // delayed work does instead of touching a torn-down environment. A static
+                        // `image` source keeps the same src across a detach, so this load is the
+                        // only one the card will get: remember it and replay it on re-attach.
                         if (!this.connected) {
+                            this.mapImageLoadedWhileDetached = true;
                             return;
                         }
+                        this.mapImageLoadedWhileDetached = false;
                         this._renderMapImage(preset.map_source.transparent_background ?? false);
                         this._calculateBasicScale();
                         this._detectRoomColors();

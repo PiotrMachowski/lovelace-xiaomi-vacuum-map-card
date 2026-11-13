@@ -115,8 +115,8 @@ describe("card disconnect and delayed work", () => {
 
         // Home Assistant detaches and re-attaches cards on a masonry re-layout, well inside the
         // 300 ms window in which the inline duration is meant to be cleared. The pending reset is
-        // cancelled by the disconnect, and Lit never rewrites the static style attribute, so the
-        // card itself has to leave it at "0s" before it is attached again.
+        // cancelled by the disconnect, and the style attribute is only rewritten when a crop value
+        // changes, so the card itself has to leave it at "0s" before it is attached again.
         const parent = card.element.parentElement as HTMLElement;
         card.element.remove();
         parent.appendChild(card.element);
@@ -138,5 +138,26 @@ describe("card disconnect and delayed work", () => {
         card.element.remove();
         await card.fireMapLoad();
         expect(restoreMapView).not.toHaveBeenCalled();
+    });
+
+    it("draws the canvas for a map image load that landed while the card was detached", async () => {
+        const { card, clock } = await mountSettledCard();
+        const canvas = (): HTMLCanvasElement => card.shadowRoot.getElementById("map-image") as HTMLCanvasElement;
+        // The visible map is the canvas, not the hidden image, and it still has its default size.
+        expect(canvas().width).toBe(300);
+
+        // A static `image` source keeps its src through a detach, so the delayed load is the only
+        // one the card receives. Removing the card while the image loads is what a view switch or
+        // a masonry re-layout does on a busy dashboard.
+        const parent = card.element.parentElement as HTMLElement;
+        card.element.remove();
+        await card.fireMapLoad({ width: 321, height: 123 });
+        expect(canvas().width).toBe(300);
+
+        parent.appendChild(card.element);
+        await clock.advance(1000);
+
+        expect(canvas().width).toBe(321);
+        expect(canvas().height).toBe(123);
     });
 });
