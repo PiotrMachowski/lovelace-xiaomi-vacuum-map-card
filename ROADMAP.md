@@ -244,7 +244,8 @@ the whole registry (multi-megabyte on large installs), then calls `/get` for eve
 - Use `device_id` from `hass.entities` to filter the display registry locally.
 - Call `config/entity_registry/get_entries` once with the candidate entity ids. This command
   exists in HA core and returns full entries including `unique_id`, without admin.
-- Memoize per `(hass.connection, vacuum)` and dedupe concurrent calls from the icon and tile
+- Memoize per `(hass.connection, vacuum, device entity set)` so a changed entity set refreshes
+  the entry, and dedupe concurrent calls from the icon and tile
   generators (`src/model/generators/icon-list-generator.ts:294`,
   `src/model/generators/tiles-generator.ts:169`).
 - Keep `/list` only as a fallback if `get_entries` fails.
