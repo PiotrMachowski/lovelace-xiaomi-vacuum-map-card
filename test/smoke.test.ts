@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+
+import { PNG } from "pngjs";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -49,6 +52,36 @@ describe("card renders from the synthetic fixture", () => {
         await selectPreset(card, 1);
         expect(card.shadowRoot.querySelector(".preset-indicator")?.textContent?.trim()).toBe("○●");
     });
+
+    it("falls back to the disconnected image after the disconnection timeout", async () => {
+        const clock = useHarnessClock();
+        const fixture = loadSyntheticFixture();
+        const card = await mountCard(fixtureConfig(fixture), fixtureHass(fixture));
+        const mapImage = () => card.shadowRoot.getElementById("map-image-source") as HTMLImageElement;
+
+        expect(mapImage().getAttribute("src")).toContain("/api/camera_proxy/camera.vacuum_map");
+
+        // _getMapSrc compares Date against lastHassUpdate + DISCONNECTION_TIME (360 s).
+        await clock.advance(361000);
+        card.element.requestUpdate();
+        await card.element.updateComplete;
+
+        expect(mapImage().getAttribute("src")).not.toContain("/api/camera_proxy");
+        expect(mapImage().getAttribute("src")).toContain("data:image/png;base64,");
+    });
+});
+
+describe("harness clock", () => {
+    it("controls document.hidden and fires visibilitychange", async () => {
+        const clock = useHarnessClock();
+        let changes = 0;
+        document.addEventListener("visibilitychange", () => changes++);
+
+        await clock.setDocumentHidden(true);
+
+        expect(document.hidden).toBe(true);
+        expect(changes).toBe(1);
+    });
 });
 
 describe("editor renders", () => {
@@ -90,6 +123,8 @@ describe("card renders from the real-instance fixture", () => {
 
         expect(card.shadowRoot.querySelector("ha-card")).not.toBeNull();
         expect(card.shadowRoot.getElementById("map-image-source")).not.toBeNull();
-        await card.fireMapLoad();
+
+        const map = PNG.sync.read(readFileSync(fixture!.mapPngPath));
+        await card.fireMapLoad({ width: map.width, height: map.height });
     });
 });

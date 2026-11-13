@@ -60,7 +60,17 @@ describe("room-config events are not scoped to a card (#944)", () => {
             attributes: { ...fixture.states["vacuum.roborock_s7"].attributes, friendly_name: "Roborock S8" },
         }).hass;
         const hassB = withState(
-            hassBWithVacuum,
+            {
+                ...hassBWithVacuum,
+                entities: {
+                    ...hassBWithVacuum.entities,
+                    [SECOND_VACUUM]: {
+                        entity_id: SECOND_VACUUM,
+                        device_id: "device-roborock-s8",
+                        name: "Roborock S8",
+                    },
+                },
+            },
             SECOND_CAMERA,
             cameraEntity({
                 entity_id: SECOND_CAMERA,
