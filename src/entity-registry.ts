@@ -18,11 +18,11 @@ function isEnabledEntry(entry: EntityRegistryEntry | null | undefined): entry is
 /**
  * Registry lookups, memoized per `(hass.connection, vacuum entity id)`.
  *
- * Why this key: `hass.connection` already takes the `connection` out of the "connection + vacuum"
- * pair. It is stable for a whole page and is replaced on a reload or a websocket reconnect, so the
- * cache is page-scoped. Two cards, or the icon and tile generators of one card, on the same page
- * share one lookup per vacuum; a second page starts empty. The vacuum's entity id keys the inner
- * map so two vacuums never share an answer.
+ * Why this key: the connection is stable for a whole page and is replaced on a reload or a
+ * websocket reconnect, so the cache is page-scoped - two cards, or the icon and tile generators of
+ * one card, share one lookup per vacuum on that page, and a second page starts empty. The vacuum's
+ * entity id keys the inner map so two vacuums never share an answer. The `WeakMap` also releases a
+ * closed page's cache with its connection once nothing else holds it.
  *
  * Only a successful result is kept. A failed lookup is removed from the map so the next caller
  * retries instead of inheriting an empty list for the lifetime of the page: a websocket may still
