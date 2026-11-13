@@ -20,6 +20,7 @@ Compared on 2026-11-13 after fetching `upstream/master`:
 | Map appearance | Optional near-white transparency and high-contrast room labels support the dark dashboard map. | `5276b9b`, `36b890b` |
 | Zoom alignment | Base image scale uses untransformed canvas layout width so zoom/rotation is applied once to the image and overlays. The local regression check covers zoom and rotation. | `2d5d439` |
 | Release packaging | The release workflow has `contents: write` permission so it can attach the built card asset to a release. | `1655011` |
+| CI validation | HACS validation skips the `issues` check (upstream owns issue tracking) while the fork's repository topics satisfy the `topics` check. The master→dev automerge job requests `contents: write` so `GITHUB_TOKEN` can push. | PR #1 |
 
 ## Scope boundaries
 

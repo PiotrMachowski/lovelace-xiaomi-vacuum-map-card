@@ -15,3 +15,6 @@ jobs:
         uses: "hacs/action@main"
         with:
           category: "plugin"
+          # This fork does not track issues; upstream owns bug reports.
+          # Repository topics are defined on the fork itself.
+          ignore: "issues"
