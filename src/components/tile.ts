@@ -6,6 +6,7 @@ import { HassEntity } from "home-assistant-js-websocket/dist/types";
 
 import { actionHandler } from "../action-handler-directive";
 import { conditional } from "../utils";
+import { computeEntityName } from "../entity-name";
 import {
     ActionHandlerFunctionCreator,
     EntityConfig,
@@ -85,7 +86,7 @@ export class Tile extends RootlessLitElement {
         if (stateObject !== undefined) {
             if (this.config.attribute !== undefined)
                 return computeAttributeNameDisplay(this.hass.localize, stateObject, this.hass.entities, this.config.attribute);
-            return stateObject.attributes?.friendly_name ?? this.config.entity;
+            return computeEntityName(this.hass, stateObject) ?? this.config.entity;
         }
         return this.config.tile_id ?? "tile";
     }
