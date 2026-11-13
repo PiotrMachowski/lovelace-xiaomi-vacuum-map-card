@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>xiaomi-vacuum-map-card visual harness</title>
+        <style>
+            /*
+             * A fixed light Home Assistant-like theme. The card reads these custom properties from
+             * whatever theme is active, so pinning them keeps screenshots independent of the
+             * reviewer's dashboard theme. Font family is pinned because it is the one inherited
+             * property that changes text antialiasing between machines.
+             */
+            :root {
+                --primary-text-color: #212121;
+                --text-light-primary-color: #ffffff;
+                --slider-color: #03a9f4;
+                --slider-secondary-color: #e0e0e0;
+                --secondary-background-color: #e8eaed;
+                --disabled-text-color: #bdbdbd;
+                --card-background-color: #ffffff;
+                color-scheme: light;
+            }
+
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                background: #ffffff;
+            }
+
+            body {
+                /* Installed by Playwright's browser dependencies on Linux, so CI and the baseline
+                   image render identical glyphs. */
+                font-family: "DejaVu Sans", sans-serif;
+                color: var(--primary-text-color);
+            }
+
+            #card-root {
+                width: 400px;
+                margin: 0;
+                padding: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="card-root"></div>
+        <script type="module" src="/dist/xiaomi-vacuum-map-card.js"></script>
+        <script type="module" src="/harness.js"></script>
+    </body>
+</html>

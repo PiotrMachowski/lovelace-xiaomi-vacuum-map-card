@@ -1,0 +1,78 @@
+name: 'Visual'
+
+# Deliberately outside the main Build gate: this job needs a production bundle and a Chromium
+# binary, so it runs only on demand or on pull requests carrying the `visual` label.
+#
+# `synchronize` is in the event list on purpose. With `labeled` alone, pushing to an already
+# labelled pull request started no run, so the last green result described an older head and the
+# new commit had no visual check. The job-level `if` also re-reads the label, so `opened`,
+# `synchronize` and `reopened` stay inert for unlabelled pull requests.
+on:
+  workflow_dispatch:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - labeled
+    branches:
+      - master
+      - dev
+
+permissions:
+  contents: read
+
+jobs:
+  visual:
+    name: Visual (Playwright)
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      contains(github.event.pull_request.labels.*.name, 'visual')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    container:
+      # The committed baselines in test/visual/__screenshots__/ were generated in this exact image.
+      # Do not replace it with a runner-installed browser: Chromium build and fonts must match.
+      #
+      # Bumping @playwright/test means bumping this tag and PLAYWRIGHT_VERSION together, then
+      # regenerating every baseline in the new image. There is deliberately no `playwright install`
+      # step: if the two versions drift, the guard below fails, and if it were removed the run would
+      # fail with "Executable doesn't exist" instead of silently downloading a different Chromium
+      # into this image and comparing against baselines from another browser build.
+      image: mcr.microsoft.com/playwright:v1.65.0-jammy
+      options: --user 1001
+    env:
+      HOME: /tmp
+      # Must match both `@playwright/test` in package.json and the image tag above.
+      PLAYWRIGHT_VERSION: '1.65.0'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify Playwright matches the pinned image
+        run: |
+          installed="$(./node_modules/.bin/playwright --version | awk '{print $2}')"
+          if [ "$installed" != "$PLAYWRIGHT_VERSION" ]; then
+            echo "::error::@playwright/test is $installed, but the image and the baselines are pinned to $PLAYWRIGHT_VERSION."
+            echo "Bump the image tag, PLAYWRIGHT_VERSION and @playwright/test together, then regenerate every baseline in the new image."
+            exit 1
+          fi
+          echo "Playwright $installed matches the pinned image."
+
+      - name: Build bundle
+        run: npm run build
+
+      - name: Run visual tests
+        run: npm run test:visual
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
