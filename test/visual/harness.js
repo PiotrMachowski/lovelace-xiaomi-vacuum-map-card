@@ -228,6 +228,29 @@ async function mount(config) {
     return true;
 }
 
+/**
+ * A room's rendered outline bounding box in source-image pixels (not CSS pixels).
+ *
+ * The SVG lives in the untransformed layout space, so `getBBox()` is independent of zoom and
+ * rotation, and room outlines are drawn at `imagePixel * realScale`. Dividing by `realScale` gives
+ * back the pixel rectangle the detector found, which can be compared with the fixture geometry
+ * without involving a screenshot or any browser rendering detail.
+ */
+function roomOutlineBox(roomId) {
+    const wrapper = roomWrapper(roomId);
+    const polygon = wrapper?.querySelector("polygon");
+    const realScale = visual.card?.realScale;
+    if (!polygon) throw new Error(`visual harness: room ${roomId} is not rendered`);
+    if (!realScale) throw new Error("visual harness: realScale is not available");
+    const box = polygon.getBBox();
+    return {
+        x: box.x / realScale,
+        y: box.y / realScale,
+        width: box.width / realScale,
+        height: box.height / realScale,
+    };
+}
+
 /** The rendered outline's centre as a fraction of the untransformed map content box. */
 function roomAnchor(roomId) {
     const wrapper = roomWrapper(roomId);
@@ -299,6 +322,7 @@ function describe() {
 visual.mount = mount;
 visual.setZoom = setZoom;
 visual.roomAnchor = roomAnchor;
+visual.roomOutlineBox = roomOutlineBox;
 visual.roomPoint = roomPoint;
 visual.selectedRoomIds = selectedRoomIds;
 visual.describe = describe;

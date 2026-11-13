@@ -27,14 +27,48 @@ interface VisualDescription {
     selectedRooms: string[];
 }
 
+interface Box {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
 interface VisualHarness {
     ready: boolean;
     mount: (config: XiaomiVacuumMapCardConfig) => Promise<boolean>;
     setZoom: (scale: number, anchor?: { x: number; y: number }) => Promise<{ mapScale: number; realScale: number }>;
     roomAnchor: (roomId: string) => { x: number; y: number };
+    roomOutlineBox: (roomId: string) => Box;
     roomPoint: (roomId: string, fractionX?: number, fractionY?: number) => { x: number; y: number };
     selectedRoomIds: () => string[];
     describe: () => VisualDescription;
+}
+
+/**
+ * Room `1` ("Living room") in `test/fixtures/synthetic/map.png` pixels.
+ *
+ * `generate.cjs` fills pixels 100..169 × 20..69, so the detected outline runs along the edges at
+ * 100..170 × 20..70; `camera.json` describes the same room in vacuum coordinates (1000..1700 ×
+ * 200..700), which the fixture calibration divides by 10. Keep the three in sync if the fixture
+ * changes.
+ */
+const LIVING_ROOM_IMAGE_RECT: Box = { x: 100, y: 20, width: 70, height: 50 };
+
+/** Tolerance in source-image pixels: the fixture rectangle is axis-aligned integer geometry. */
+const OUTLINE_TOLERANCE = 0.75;
+
+/**
+ * Compares an outline box with the expected image-pixel rectangle and names the failing edge, so a
+ * misalignment explains the expected geometry instead of only reporting a screenshot diff.
+ */
+function expectImageRect(actual: Box, expected: Box, label: string): void {
+    (Object.keys(expected) as Array<keyof Box>).forEach(key => {
+        expect(
+            Math.abs(actual[key] - expected[key]),
+            `${label} ${key} is ${actual[key].toFixed(2)} image px, expected ${expected[key]} ± ${OUTLINE_TOLERANCE}`,
+        ).toBeLessThanOrEqual(OUTLINE_TOLERANCE);
+    });
 }
 
 type VisualWindow = Window & { visualHarness: VisualHarness };
@@ -125,6 +159,19 @@ for (const zoom of [1, 2.5] as const) {
             expect(description.rooms.some(room => room.selected)).toBe(false);
             expect(description.imageRect.width).toBeGreaterThan(0);
             expect(description.imageRect.height).toBeGreaterThan(0);
+
+            // The numeric companion to the screenshot: whichever zoom/rotation is active, the
+            // Living room outline must still cover its rectangle in the fixture image. The
+            // screenshot catches image/overlay drift; this says which expected rectangle failed,
+            // and it is pure geometry, so it does not depend on the browser build.
+            const outline = await page.evaluate(() =>
+                (window as unknown as VisualWindow).visualHarness.roomOutlineBox("1"),
+            );
+            expectImageRect(
+                outline,
+                LIVING_ROOM_IMAGE_RECT,
+                `Living room outline (zoom ${zoom}, rotation ${rotation})`,
+            );
 
             await expect(page.locator(CARD)).toHaveScreenshot(`overlay-zoom-${zoom}-rotation-${rotation}.png`);
         });

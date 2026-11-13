@@ -4,13 +4,21 @@ import { defineConfig } from "@playwright/test";
  * Visual regression harness for the built card bundle.
  *
  * Kept out of the Vitest run and out of the main Build gate: `npm test` stays fast, and this suite
- * only runs on `workflow_dispatch` or on pull requests labelled `visual` (see .github/workflows/visual.yml).
+ * only runs on `workflow_dispatch` or on every push to a pull request labelled `visual` (see
+ * .github/workflows/visual.yml).
  *
  * Baselines are Chromium-only and must be regenerated inside the same Playwright image the workflow
- * uses, never on macOS:
+ * uses, never on macOS. Install, build and test all run in the container, as your own user so the
+ * bind-mounted checkout does not end up root-owned; `--platform linux/amd64` is required on Apple
+ * Silicon because the committed baselines come from CI's amd64 runner:
  *
- *   docker run --rm -v "$PWD":/work -w /work mcr.microsoft.com/playwright:v1.65.0-jammy \
- *       npx playwright test --update-snapshots
+ *   docker run --rm --platform linux/amd64 -v "$PWD":/work -w /work -e HOME=/tmp \
+ *       --user "$(id -u):$(id -g)" mcr.microsoft.com/playwright:v1.65.0-jammy \
+ *       bash -lc 'npm ci && npm run build && npx playwright test --update-snapshots'
+ *
+ * Bumping @playwright/test means bumping the image tag and PLAYWRIGHT_VERSION in the workflow, then
+ * regenerating every baseline. The workflow does not run `playwright install`, so a mismatch fails
+ * instead of silently using a different Chromium.
  */
 export default defineConfig({
     testDir: "test/visual",
