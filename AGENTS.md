@@ -1,5 +1,12 @@
 # Agent guide
 
+## Fork relationship
+
+- This repository is Igloczek's fork of `PiotrMachowski/lovelace-xiaomi-vacuum-map-card`; upstream remains the base for general development.
+- Keep the active differences, intended scope, and upstream-sync notes in [`FORK.md`](FORK.md). Read it before changing fork-specific behavior or syncing upstream.
+- Add every intentional fork-only feature or fix to `FORK.md`, including its reason, scope, and originating issue/PR/commit. When upstream absorbs it, mark it superseded with the upstream commit.
+- In a fresh clone, configure the original repository as `upstream` before attempting a sync; this checkout already has that remote configured.
+
 ## Project map
 
 - This is a TypeScript/Lit custom card for Home Assistant. The main card is `src/xiaomi-vacuum-map-card.ts`.
