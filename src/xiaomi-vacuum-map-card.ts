@@ -23,6 +23,7 @@ import {
     CardPresetConfig,
     MapExtractorRoom,
     PredefinedZoneConfig,
+    SelectionState,
     TranslatableString,
     VariablesStorage,
 } from "./types/types";
@@ -73,6 +74,7 @@ import { PredefinedPoint } from "./model/map_objects/predefined-point";
 import { PredefinedMultiRectangle } from "./model/map_objects/predefined-multi-rectangle";
 import { Room } from "./model/map_objects/room";
 import { RoomColorDetection, RoomColorDetector } from "./model/room-color-detector";
+import { auditRoomSelection, RoomConfigStatus } from "./model/room-config";
 import { calculateRealScale } from "./model/map-scale";
 import { areAllEntitiesDefined, isOldConfig, validateConfig } from "./config-validators";
 import { MapMode } from "./model/map_mode/map-mode";
@@ -404,6 +406,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         const mapSrc = this._getMapSrc(preset);
         const validCalibration = !!this.coordinatesConverter && this.coordinatesConverter.calibrated;
         const mapControls = validCalibration ? this._createMapControls() : [];
+        const staleRoomIds = this._auditRoomSelection(this._getCurrentMode())?.staleIds ?? [];
 
         const mapZoomerContent = html`
             <div
@@ -511,6 +514,18 @@ export class XiaomiVacuumMapCard extends LitElement {
                     </div>
                 </div>
                 ${conditional(!validCalibration, () => this._showInvalidCalibrationWarning())}
+                ${conditional(
+                    staleRoomIds.length > 0,
+                    () => html`
+                        <hui-warning class="room-config-warning">
+                            ${this._localize(["validation.stale_rooms", "{0}", staleRoomIds.join(", ")] as [
+                                string,
+                                string,
+                                string,
+                            ])}
+                        </hui-warning>
+                    `,
+                )}
                 ${conditional(
                     modes.length > 1 || mapControls.length > 0 || (icons?.length??0) !== 0 || (tiles?.length ?? 0) !== 0,
                     () => html`
@@ -989,8 +1004,17 @@ export class XiaomiVacuumMapCard extends LitElement {
             case SelectionType.ROOM:
                 const configuredRooms = newMode.predefinedSelections.map(ps => ps as RoomConfig);
                 const extractedRooms = this._getRoomsConfig()?.rooms;
-                const roomConfigs = extractedRooms?.length ? extractedRooms : configuredRooms;
+                const roomConfigStatus = this._auditRoomSelection(newMode, preserveSelectedRoomIds);
+                const staleRoomIds = new Set(roomConfigStatus?.staleIds ?? []);
                 const configuredRoomsById = new Map(configuredRooms.map(room => [String(room.id), room]));
+                // A configured id the camera no longer reports is still drawn, from its configured
+                // (now wrong) outline, so the warning has something to point at. It is marked stale
+                // and cannot be selected; `_getSelection` is the second guard for a selection that
+                // predates a re-map.
+                const staleRooms = roomConfigStatus?.staleIds
+                    .map(id => configuredRoomsById.get(id))
+                    .filter((room): room is RoomConfig => room !== undefined) ?? [];
+                const roomConfigs = extractedRooms?.length ? [...extractedRooms, ...staleRooms] : configuredRooms;
                 const detectedRegions = new Map(
                     (this.roomColorDetection?.regions ?? []).map(region => [region.id, region]),
                 );
@@ -1014,6 +1038,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                     return new Room(config, this._getContext(), {
                         imageOutline: region?.outline,
                         selected: preserveSelectedRoomIds?.has(String(room.id)),
+                        stale: staleRoomIds.has(String(room.id)),
                     });
                 });
                 this.selectedRooms = this.selectableRooms.filter(s => s.selected);
@@ -1069,12 +1094,15 @@ export class XiaomiVacuumMapCard extends LitElement {
                 variables = variablesExtractor(this.selectedPredefinedRectangles);
                 break;
             case SelectionType.ROOM:
-                const selectedRooms = this.selectedRooms
+                const staleRoomIds = new Set(this._auditRoomSelection(mode)?.staleIds ?? []);
+                const usableRooms = this.selectedRooms.filter(
+                    room => !room.stale && !staleRoomIds.has(String(room.toVacuum())),
+                );
+                const selectedRooms = usableRooms
                     .map(r => r.toVacuum())
                     .map(r => XiaomiVacuumMapCard.adjustRoomId(r, mode));
                 selection = [...selectedRooms, ...(repeats && selectedRooms.length > 0 ? [repeats] : [])];
-                variables = this.selectedRooms[0]?.variables ?? {};
-                variables = variablesExtractor(this.selectedRooms);
+                variables = variablesExtractor(usableRooms);
                 break;
             case SelectionType.MANUAL_PATH:
                 selection = this.selectedManualPath.toVacuum(repeats);
@@ -1248,6 +1276,39 @@ export class XiaomiVacuumMapCard extends LitElement {
         newValues[variable] = value;
         this.internalVariables = newValues;
         this.requestUpdate();
+    }
+
+    /** The live `rooms` attribute of the preset's camera, or undefined when it exposes none. */
+    private _getLiveRooms(): Record<string, MapExtractorRoom> | undefined {
+        const camera = this._getCurrentPreset()?.map_source?.camera;
+        return camera
+            ? (this.hass?.states[camera]?.attributes["rooms"] as Record<string, MapExtractorRoom> | undefined)
+            : undefined;
+    }
+
+    /**
+     * Compares the current ROOM mode's configured selections with the live camera metadata.
+     * `undefined` when the current mode is not a ROOM mode, so callers can skip the audit.
+     *
+     * The audit is deliberately recomputed from the current `hass` instead of trusting the room
+     * objects: camera metadata can shift while a selection made against the old metadata is still
+     * held, and that stale id must not reach the service call (issue #928).
+     */
+    private _auditRoomSelection(
+        mode: MapMode | undefined,
+        preservedSelectedIds?: Set<string>,
+    ): RoomConfigStatus | undefined {
+        if (mode?.selectionType !== SelectionType.ROOM) return undefined;
+        const configured = (mode.predefinedSelections as RoomConfig[])
+            .filter(room => room && room.id !== undefined)
+            .map(room => ({
+                id: room.id,
+                selected:
+                    room.default_state === SelectionState.SELECTED ||
+                    (!!room.state_entity && this.hass?.states[room.state_entity]?.state === "on") ||
+                    !!preservedSelectedIds?.has(String(room.id)),
+            }));
+        return auditRoomSelection(configured, this._getLiveRooms());
     }
 
     private _getRoomsConfig(requestId?: string): RoomConfigEventData | undefined {

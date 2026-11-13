@@ -16,17 +16,33 @@ const ORDER_BADGE_LABEL_OFFSET = 20;
 export interface RoomRenderOptions {
     readonly imageOutline?: Array<[number, number]>;
     readonly selected?: boolean;
+    /** The configured id is absent from the live camera metadata (issue #928). */
+    readonly stale?: boolean;
 }
 
 export class Room extends PredefinedMapObject {
     private readonly _config: RoomConfig;
     private readonly _imageOutline?: Array<[number, number]>;
+    private readonly _stale: boolean;
 
     constructor(config: RoomConfig, context: Context, options: RoomRenderOptions = {}) {
         super(config, context);
         this._config = config;
         this._imageOutline = options.imageOutline;
-        if (options.selected !== undefined && !config.state_entity) this._selected = options.selected;
+        this._stale = options.stale === true;
+        // A stale room exists only to show which configured id no longer matches the map. It must
+        // never be selected, including through `default_state` or a state entity, or a service
+        // call would clean a room id the camera no longer reports (issue #928).
+        if (this._stale) {
+            this._selected = false;
+        } else if (options.selected !== undefined && !config.state_entity) {
+            this._selected = options.selected;
+        }
+    }
+
+    /** True when the configured id is absent from the live camera metadata. */
+    public get stale(): boolean {
+        return this._stale;
     }
 
     public render(): SVGTemplateResult {
@@ -37,14 +53,17 @@ export class Room extends PredefinedMapObject {
         const order = this._selected ? this._context.selectedRooms().indexOf(this) + 1 : 0;
         const iconContent = order > 0 ? html`<span class="room-order">${order}</span>` : undefined;
         return svg`
-            <g class="room-wrapper ${this._selected ? "selected" : ""} 
+            <g class="room-wrapper ${this._selected ? "selected" : ""} ${this._stale ? "room-stale" : ""}
             room-${`${this._config.id}`.replace(/[^a-zA-Z0-9_\-]/gm, "_")}-wrapper">
-                <polygon class="room-outline ${this._imageOutline ? "" : "clickable"}"
+                <polygon class="room-outline ${this._imageOutline || this._stale ? "" : "clickable"}"
                          points="${poly.map(p => p.join(", ")).join(" ")}"
-                         @click="${this._imageOutline ? undefined : async (): Promise<void> => this.click()}">
+                         @click="${this._imageOutline || this._stale
+                             ? undefined
+                             : async (): Promise<void> => this.click()}">
                 </polygon>
                 ${this.renderIcon(this._config.icon, () => this.click(), "room-icon-wrapper", iconContent)}
                 ${this.renderOrderBadge(order)}
+                ${this.renderStaleMarker()}
                 ${this.renderLabel(this._config.label, "room-label", this._config.icon)}
             </g>
         `;
@@ -67,6 +86,21 @@ export class Room extends PredefinedMapObject {
     }
 
     /**
+     * A configured room whose id is no longer in the camera metadata. The room is drawn from its
+     * stored outline and marked with an exclamation mark above the label; the card's warning names
+     * the ids. It is never clickable or selected (issue #928).
+     */
+    private renderStaleMarker(): SVGTemplateResult {
+        if (!this._stale) return svg``;
+        const anchor = this._config.label ?? this._outlineCenter();
+        if (!anchor) return svg``;
+        return this.renderLabel(
+            { ...anchor, text: "!", offset_y: (anchor.offset_y ?? 0) - ORDER_BADGE_LABEL_OFFSET },
+            "room-stale-marker",
+        );
+    }
+
+    /**
      * An anchor for the badge of a configured room that has neither an icon nor a label: the average
      * of the outline's vertices, which is close to the middle of the convex outlines a configured
      * room has. It is not a true centroid, and the caller still lifts the badge
@@ -84,6 +118,8 @@ export class Room extends PredefinedMapObject {
     }
 
     public async click(): Promise<void> {
+        // A stale room is a warning, not a target: its id is absent from the live camera metadata.
+        if (this._stale) return;
         if (!this._selected && this._context.selectedRooms().length >= this._context.maxSelections()) {
             forwardHaptic("failure");
             return;
@@ -164,6 +200,31 @@ export class Room extends PredefinedMapObject {
                 stroke-linejoin: round;
                 paint-order: stroke fill;
                 pointer-events: none;
+            }
+
+            /* A configured room whose id is no longer in the camera metadata. The marker reuses
+               .label-text for its counter-rotation and offset, and repeats the centring the room
+               label gets from .room-label. */
+            text.room-stale-marker {
+                font-size: calc(var(--map-card-internal-room-label-font-size) * 1.4 / var(--map-scale));
+                font-weight: 700;
+                text-anchor: middle;
+                dominant-baseline: middle;
+                fill: var(--map-card-internal-room-label-color-stale, var(--error-color, #db4437));
+                stroke: var(--map-card-internal-room-label-outline-color);
+                stroke-width: calc(var(--map-card-internal-room-label-outline-width) / var(--map-scale));
+                stroke-linejoin: round;
+                paint-order: stroke fill;
+                pointer-events: none;
+            }
+
+            .room-wrapper.room-stale > .room-outline {
+                stroke: var(--map-card-internal-room-outline-line-color-stale, var(--error-color, #db4437));
+                fill: var(--map-card-internal-room-outline-fill-color-stale, rgba(219, 68, 55, 0.12));
+            }
+
+            .room-wrapper.room-stale > .room-label {
+                fill: var(--map-card-internal-room-label-color-stale, var(--error-color, #db4437));
             }
 
             .room-label {
