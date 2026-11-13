@@ -44,12 +44,8 @@ function findGenerateButton(root: ShadowRoot): HTMLElement {
     return button as HTMLElement;
 }
 
-describe("room-config events are not scoped to a card (#944)", () => {
-    // Expected failure on purpose: upstream PR #944 is not in this fork yet. `EVENT_ROOM_CONFIG_GET`
-    // and `EVENT_ROOM_CONFIG` are global window events, so both cards answer editor A's request and
-    // both editors accept every answer. Batch B2 ports #944 (request id + matching card/editor) and
-    // flips this back to a normal `it`.
-    it.fails("only answers the editor that asked", async () => {
+describe("room-config events are scoped to a card (#944)", () => {
+    it("only answers the editor that asked", async () => {
         useHarnessClock();
         const fixture = loadSyntheticFixture();
         const configA = fixtureConfig(fixture);
