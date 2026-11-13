@@ -6,6 +6,7 @@ import { HassEntity } from "home-assistant-js-websocket/dist/types";
 
 import { actionHandler } from "../action-handler-directive";
 import { conditional } from "../utils";
+import { computeEntityName } from "../entity-name";
 import {
     ActionHandlerFunctionCreator,
     EntityConfig,
@@ -85,7 +86,7 @@ export class Tile extends RootlessLitElement {
         if (stateObject !== undefined) {
             if (this.config.attribute !== undefined)
                 return computeAttributeNameDisplay(this.hass.localize, stateObject, this.hass.entities, this.config.attribute);
-            return stateObject.attributes?.friendly_name ?? this.config.entity;
+            return computeEntityName(this.hass, stateObject) ?? this.config.entity;
         }
         return this.config.tile_id ?? "tile";
     }
@@ -118,8 +119,19 @@ export class Tile extends RootlessLitElement {
             }
         }
         const translations = this.config.translations ?? {};
-        if (`${value}`.toLowerCase() in translations) {
-            value = translations[`${value}`.toLowerCase()];
+        // Master matched the lower-cased value as an exact key. Keep that first so a config with
+        // both `{Charging, charging}` still resolves to `charging` exactly as before, then fall back
+        // to the case-insensitive scan so a mixed-case-only key still matches a differently-cased
+        // value.
+        const valueKey = `${value}`.toLowerCase();
+        if (Object.prototype.hasOwnProperty.call(translations, valueKey)) {
+            value = translations[valueKey];
+        } else {
+            const translationKey = Object.keys(translations)
+                .find(key => key.toLowerCase() === valueKey);
+            if (translationKey !== undefined) {
+                value = translations[translationKey];
+            }
         }
         return `${value}${unit}`;
     }

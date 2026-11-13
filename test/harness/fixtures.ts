@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import type { HassEntity } from "home-assistant-js-websocket/dist/types";
 
 import type { XiaomiVacuumMapCardConfig } from "../../src/types/types";
-import { mockHass, type MockEntityRegistryEntry, type MockHass } from "./hass";
+import { mockHass, type MockEntityRegistryEntry, type MockHass, type MockHassOptions } from "./hass";
 
 const FIXTURES_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../fixtures");
 
@@ -61,9 +61,16 @@ export function fixtureStates(bundle: FixtureBundle): Record<string, HassEntity>
     return { ...bundle.states, [bundle.camera.entity_id]: bundle.camera };
 }
 
-/** A mock hass populated from a fixture. */
-export function fixtureHass(bundle: FixtureBundle): MockHass {
+/**
+ * A mock hass populated from a fixture. `options` are forwarded to `mockHass` for everything except
+ * the states and registry, which come from the fixture; `configVersion` is the usual override.
+ */
+export function fixtureHass(
+    bundle: FixtureBundle,
+    options: Omit<MockHassOptions, "states" | "entities"> = {},
+): MockHass {
     return mockHass({
+        ...options,
         states: fixtureStates(bundle),
         entities: bundle.registry,
     });

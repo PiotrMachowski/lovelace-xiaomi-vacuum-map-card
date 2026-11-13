@@ -42,6 +42,12 @@ export interface MockHassOptions {
     locale?: Partial<FrontendLocaleDataFixed>;
     language?: string;
     hassUrlBase?: string;
+    /**
+     * Value reported as `hass.config.version`, i.e. the Home Assistant frontend version the card
+     * sees. Defaults to `DEFAULT_HA_VERSION`, which is new enough for `formatEntityName`'s 2026.4
+     * signature. Set it to an older version to exercise a version gate.
+     */
+    configVersion?: string;
 }
 
 export interface MockHass extends HomeAssistantFixed {
@@ -74,6 +80,13 @@ const hassRuntimes = new WeakMap<object, MockHassRuntime>();
 
 const DEFAULT_LANGUAGE = "en";
 const DEFAULT_HASS_URL = "http://homeassistant.local:8123";
+
+/**
+ * Frontend version `mockHass` reports by default. It is past every version gate in the card
+ * (`formatEntityName` needs 2026.4), so tests exercise the newest code path unless they ask for an
+ * older version through `MockHassOptions.configVersion`.
+ */
+export const DEFAULT_HA_VERSION = "2026.11.0";
 
 function toRegistryEntries(entities: MockEntityRegistryInput | undefined): MockEntityRegistryEntry[] {
     if (!entities) return [];
@@ -206,6 +219,8 @@ export function mockHass(options: MockHassOptions = {}): MockHass {
     const hass = {
         states,
         entities: toDisplayRegistry(registryEntries),
+        // Only `version` is populated: it is the one field of `hass.config` the card reads.
+        config: { version: options.configVersion ?? DEFAULT_HA_VERSION },
         connected: true,
         language,
         locale: {

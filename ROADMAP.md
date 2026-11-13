@@ -184,6 +184,12 @@ output for `own-setup`, review the diff, then commit.
 Acceptance: existing configurations without `duration_unit` are byte-identical; the
 `own-setup` snapshot is reviewed.
 
+Open follow-up: #957's `entityNamesChanged` re-render hook is **not carried**. It belongs in
+`shouldUpdate` in `src/xiaomi-vacuum-map-card.ts`, which B2's merge owns. Cost: a device, area or
+floor rename, and Home Assistant's startup swap of the real formatter, do not refresh tile labels
+until the next watched-entity update. A follow-up must add the check to `shouldUpdate` and test it
+by swapping `hass.devices` (or `hass.formatEntityName`) between two renders.
+
 ### B4 - Roborock status/battery templates (S, conditional)
 
 Upstream: PR #964 (issue #908). The tile regexes and battery tile are only verifiable against a
