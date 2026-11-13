@@ -22,6 +22,7 @@ Compared on 2026-11-13 after fetching `upstream/master`:
 | Release packaging | The release workflow has `contents: write` permission so it can attach the built card asset to a release. | `1655011` |
 | CI validation | HACS validation skips the `issues` check (upstream owns issue tracking) while the fork's repository topics satisfy the `topics` check. The master→dev automerge job requests `contents: write` so `GITHUB_TOKEN` can push. | PR #1 |
 | CI baseline | Build, release, HACS and automerge workflows use `actions/checkout@v4`; build and release run Node 22 on `actions/setup-node@v4` with npm caching, and the build job runs `npx tsc --noEmit` before bundling. `package-lock.json` is regenerated as lockfile v3 with every package version unchanged. Upstream still pins Node 14 and has no type-check gate. | PR #2 |
+| Test infrastructure | Vitest 3 with happy-dom, the harness under `test/harness/`, synthetic and own-setup fixture locations, `npm test` in CI, and the pure `RoomColorDetector.detectFromImageData` split. Tests import `src/` directly; the real-instance fixture stays empty until P0d. Upstream has no unit-test harness. | PR #3 |
 
 ## Scope boundaries
 
