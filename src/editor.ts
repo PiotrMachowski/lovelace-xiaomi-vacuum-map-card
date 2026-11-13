@@ -239,11 +239,12 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
                             </ha-formfield>
                         </div>
                         <div class="values">
-                            <ha-textfield
-                                label="${this._localize("editor.label.map_view_storage_key")}"
-                                .value="${this._map_view_storage_key}"
-                                .configValue="${"map_view_storage_key"}"
-                                @input="${this._valueChanged}"></ha-textfield>
+                            ${this._renderTextInput(
+                                this._localize("editor.label.map_view_storage_key"),
+                                this._map_view_storage_key,
+                                this._valueChanged,
+                                "map_view_storage_key",
+                            )}
                         </div>
                     `,
                 )}
@@ -287,12 +288,13 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
         configValue?: string,
         placeholder = "",
     ): TemplateResult {
-        // Newer HA frontends replaced ha-textfield with ha-input; an undefined element would render nothing.
-        return customElements.get("ha-textfield")
-            ? html`<ha-textfield label="${label}" placeholder="${placeholder}" .value="${value}"
-                                 .configValue="${configValue}" @input="${onInput}"></ha-textfield>`
-            : html`<ha-input label="${label}" placeholder="${placeholder}" .value="${value}"
-                             .configValue="${configValue}" @input="${onInput}"></ha-input>`;
+        // Current HA frontends provide ha-input; older ones only had ha-textfield. Prefer the
+        // element the frontend actually defines so a text field never renders as an unknown tag.
+        return customElements.get("ha-input")
+            ? html`<ha-input label="${label}" placeholder="${placeholder}" .value="${value}"
+                             .configValue="${configValue}" @input="${onInput}"></ha-input>`
+            : html`<ha-textfield label="${label}" placeholder="${placeholder}" .value="${value}"
+                                 .configValue="${configValue}" @input="${onInput}"></ha-textfield>`;
     }
 
     private _initialize(): void {
