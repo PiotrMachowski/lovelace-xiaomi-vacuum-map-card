@@ -85,19 +85,34 @@ export interface EditorHandle {
 }
 
 export interface MountCardOptions {
+    /**
+     * Mount into this element instead of `document.body`. The caller owns it: the harness never
+     * removes it and never wraps it. Remove the container yourself to disconnect the card. An
+     * editor-preview container must still be the card's parent when `disconnectedCallback` runs,
+     * otherwise the card keeps its window listeners until B2 fixes that path (see `ROADMAP.md`).
+     */
     container?: HTMLElement;
-    /** Wraps the card in `<hui-card-preview>` so the card considers itself in the card editor. */
+    /** Wraps the card in a harness-owned `<hui-card-preview>` so it considers itself in the card editor. */
     inEditorPreview?: boolean;
 }
 
-function resolveContainer(options: MountCardOptions): HTMLElement {
-    if (options.container) return options.container;
+interface ResolvedContainer {
+    container: HTMLElement;
+    /** A wrapper the harness created and must remove on cleanup; undefined for caller-owned mounts. */
+    ownedWrapper?: HTMLElement;
+}
+
+function resolveContainer(options: MountCardOptions): ResolvedContainer {
+    if (options.container) return { container: options.container };
     if (options.inEditorPreview) {
         const preview = document.createElement("hui-card-preview");
         document.body.appendChild(preview);
-        return preview;
+        // Track the wrapper, not only its child: removing the wrapper disconnects the card while
+        // it still has its editor parent, so `disconnectedCallback` can remove its listeners.
+        trackMountedElement(preview);
+        return { container: preview, ownedWrapper: preview };
     }
-    return document.body;
+    return { container: document.body };
 }
 
 async function ensureCardElementDefined(): Promise<void> {
@@ -115,13 +130,15 @@ export async function mountCard(
     options: MountCardOptions = {},
 ): Promise<CardHandle> {
     await ensureCardElementDefined();
-    const container = resolveContainer(options);
+    const { container, ownedWrapper } = resolveContainer(options);
     const element = document.createElement("xiaomi-vacuum-map-card") as XiaomiVacuumMapCard;
-    trackMountedElement(element);
+    if (!options.container) trackMountedElement(element);
 
+    // Home Assistant sets config and hass before attaching the element to the DOM. The card's
+    // shouldUpdate/render return early without a config, so order is config, hass, append.
     element.setConfig(config);
-    container.appendChild(element);
     element.hass = hass;
+    container.appendChild(element);
     const shadowRoot = await waitFor(() => element.shadowRoot, { label: "card shadow root" });
     await settle(element);
 
@@ -138,7 +155,17 @@ export async function mountCard(
             await fireMapLoad(handle, loadOptions);
         },
         cleanup: async (): Promise<void> => {
-            element.remove();
+            if (ownedWrapper) {
+                // Remove the wrapper, not the card: a detached card has no parent chain, and the
+                // card's disconnectedCallback re-evaluates `_isInEditor()` on it (ROADMAP B2).
+                ownedWrapper.remove();
+                return;
+            }
+            if (!options.container) {
+                element.remove();
+            }
+            // A caller-owned container is deliberately left mounted. Removing it is the caller's
+            // job, so the card still has its parent when it disconnects.
         },
     };
     return handle;
