@@ -42,7 +42,9 @@ function validateCalibrationPoint(calibrationPoint: CalibrationPoint): Translata
         errors.push("validation.preset.calibration_source.calibration_points.missing_vacuum");
     }
     if (
-        [calibrationPoint?.map, calibrationPoint?.vacuum].filter(p => p.x === undefined || p.y === undefined).length > 0
+        [calibrationPoint?.map, calibrationPoint?.vacuum]
+            .filter(p => p !== undefined)
+            .some(p => p.x === undefined || p.y === undefined)
     ) {
         errors.push("validation.preset.calibration_source.calibration_points.missing_coordinate");
     }
@@ -121,8 +123,7 @@ function validatePredefinedRectangleConfig(ps: PredefinedSelectionConfig): Trans
     const errors: TranslatableString[] = [];
     if (!config.zones) {
         errors.push("validation.preset.map_modes.predefined_selections.zones.missing");
-    }
-    if (typeof config.zones !== "string" && config.zones.filter(z => z.length != 4).length > 0) {
+    } else if (typeof config.zones !== "string" && config.zones.filter(z => z.length != 4).length > 0) {
         errors.push("validation.preset.map_modes.predefined_selections.zones.invalid_parameters_number");
     }
     if (config.icon) {
@@ -157,8 +158,7 @@ function validateRoomConfig(ps: PredefinedSelectionConfig): TranslatableString[]
     const errors: TranslatableString[] = [];
     if (config.id === undefined) {
         errors.push("validation.preset.map_modes.predefined_selections.rooms.id.missing");
-    }
-    if (!config.id.toString().match(/^[A-Za-z0-9 _]+$/i)) {
+    } else if (!config.id.toString().match(/^[A-Za-z0-9 _]+$/i)) {
         errors.push([
             "validation.preset.map_modes.predefined_selections.rooms.id.invalid_format",
             "{0}",
