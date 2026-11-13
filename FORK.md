@@ -1,6 +1,6 @@
 # Fork scope and upstream differences
 
-This repository is Igloczek's fork of [PiotrMachowski/lovelace-xiaomi-vacuum-map-card](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card). Upstream is the baseline; this fork carries the focused Home Assistant fixes and features listed below.
+This repository is Igloczek's fork of [PiotrMachowski/lovelace-xiaomi-vacuum-map-card](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card). Upstream is the baseline; this fork carries the focused Home Assistant fixes and features listed below. Planned upstream carries, fork-only fixes and the testing strategy are in [`ROADMAP.md`](ROADMAP.md).
 
 ## Upstream snapshot
 
