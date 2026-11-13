@@ -16,10 +16,10 @@ Opus 5.5) returned `VERDICT: APPROVE` on the PR.
 | P0c | Playwright visual harness (separate job, `visual` label) | in progress | - | - | - | - |
 | P0d | Capture the real Home Assistant fixture | blocked | - | - | - | needs the user's HA instance (see Manual checks) |
 | B1 | Config robustness (#937, #940, #938; #952 postponed) | merged | [#4](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/4) | APPROVE | `a8b3a39` | - |
-| B2 | Editor room-config path (#956, #944, duplicate cleanup, #958) | in review | [#5](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/5) | round 1 CHANGES_REQUIRED, re-check running | - | - |
+| B2 | Editor room-config path (#956, #944, duplicate cleanup, #958) | merged | [#5](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/5) | APPROVE (round 3) | `c8042b9` | - |
 | B3 | Tiles, labels and icons (#723, #957, #965, #961) | merged | [#6](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/6) | APPROVE (round 2) | `6fe6307` | - |
 | B4 | Roborock status/battery templates (#964) | postponed | - | - | - | needs a real Roborock-core registry fixture |
-| B5 | Cleaning-order badges (#959) | planned | - | - | - | after B2 |
+| B5 | Cleaning-order badges (#959) | in progress | - | - | - | - |
 | B6 | Map refresh policy (#704, #357) | planned | - | - | - | after B5 |
 | B7 | Registry payload and caching (#864) | planned | - | - | - | after B3 |
 | B8 | Preset rooms and stale room IDs (#385, #928) | planned | - | - | - | after B6 |
