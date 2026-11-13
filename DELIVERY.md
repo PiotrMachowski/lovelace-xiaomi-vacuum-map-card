@@ -20,13 +20,19 @@ Opus 5.5) returned `VERDICT: APPROVE` on the PR.
 | B3 | Tiles, labels and icons (#723, #957, #965, #961) | merged | [#6](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/6) | APPROVE (round 2) | `6fe6307` | - |
 | B4 | Roborock status/battery templates (#964) | postponed | - | - | - | needs a real Roborock-core registry fixture |
 | B5 | Cleaning-order badges (#959) | in progress | - | - | - | - |
-| B6 | Map refresh policy (#704, #357) | planned | - | - | - | after B5 |
+| B6 | Map refresh policy (#704, #357) | in progress | - | - | - | - |
 | B7 | Registry payload and caching (#864) | merged | [#8](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/8) | APPROVE (round 2) | `5939551` | - |
 | B8 | Preset rooms and stale room IDs (#385, #928) | planned | - | - | - | after B6 |
 | B9 | Default map view (#873) | planned | - | - | - | after B8 |
 | B10 | Horizontal layout and card height (#183, #943) | planned | - | - | - | after B9 and P0c |
 | R1 | In-repo rebrand and README rewrite | planned | - | - | - | after code batches |
 | R2 | GitHub repository rename and release surface | planned | - | - | - | last, after every code PR merges |
+
+## Delivery fixes that are not roadmap batches
+
+| Fix | Why | PR | Council | Merge SHA |
+|---|---|---|---|---|
+| Deterministic test gate: cancelling delayed card work on disconnect | The 100 ms delayed update could outlive the element and throw `ReferenceError: window is not defined` after happy-dom teardown (~1 in 15 runs), reddening an otherwise green build. Also finishes a cancelled 300 ms transition reset and defers a map-image load that lands while detached. | [#9](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/9) | APPROVE (round 3) | `966d348` |
 
 ## Postponed
 
