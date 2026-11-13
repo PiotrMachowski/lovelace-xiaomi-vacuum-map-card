@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import type { HassEntity } from "home-assistant-js-websocket/dist/types";
 
 import { Tile } from "../../src/components/tile";
 
@@ -56,6 +57,31 @@ function hassWithEntityNameFormatter(name: string): MockHass & { formatEntityNam
 }
 
 /**
+ * The 2025.10 frontend formatter. Its signature is `(stateObj, type, separator = " ")`, and it runs
+ * `ensureArray(type)` before iterating the result, so the `undefined` this card passes throws
+ * `TypeError: undefined is not iterable`. Calling it on a 2025.10 hass is the crash the version
+ * gate prevents.
+ */
+function hassWithLegacyEntityNameFormatter(version: string): MockHass & { formatEntityName: ReturnType<typeof vi.fn> } {
+    const hass = fixtureHass(loadSyntheticFixture(), { configVersion: version });
+    const formatEntityName = vi.fn((_stateObj: HassEntity, type?: string | string[]): string => {
+        const types = type as unknown as string[];
+        let joined = "";
+        for (const item of types) joined += item;
+        return joined;
+    });
+    return { ...hass, formatEntityName } as MockHass & { formatEntityName: ReturnType<typeof vi.fn> };
+}
+
+/** A hass whose formatter exists and passes the version gate but throws, like a future signature change. */
+function hassWithThrowingEntityNameFormatter(): MockHass & { formatEntityName: ReturnType<typeof vi.fn> } {
+    const hass = fixtureHass(loadSyntheticFixture());
+    return { ...hass, formatEntityName: vi.fn(() => { throw new TypeError("formatter signature changed"); }) } as MockHass & {
+        formatEntityName: ReturnType<typeof vi.fn>;
+    };
+}
+
+/**
  * Simulates an older Home Assistant frontend that does not ship `hass.formatEntityName` yet.
  * `mockHass` always provides one, so the property has to be removed for this case.
  */
@@ -91,6 +117,16 @@ describe("tile translations (#723)", () => {
         const rendered = await renderTile(tile({}), hassWithStatus("MixedCase"));
         expect(rendered.value).toBe("MixedCase");
     });
+
+    it("prefers an exact lower-case key over an earlier mixed-case key", async () => {
+        // Master resolved the lower-cased value as an exact key, so `charging` wins over the
+        // earlier `Charging`; the case-insensitive scan must not change that.
+        const rendered = await renderTile(
+            tile({ Charging: "A", charging: "B" }),
+            hassWithStatus("Charging"),
+        );
+        expect(rendered.value).toBe("B");
+    });
 });
 
 describe("tile labels (#957)", () => {
@@ -103,6 +139,46 @@ describe("tile labels (#957)", () => {
         const rendered = await renderTile(labelTile(), hass);
         expect(rendered.label).toBe("Registry name");
         expect(hass.formatEntityName).toHaveBeenCalled();
+    });
+
+    it("returns the friendly name on a 2025.10 frontend instead of throwing", async () => {
+        // The 2025.10 formatter iterates its second argument, so calling it with `undefined` throws
+        // `TypeError: undefined is not iterable`. Without the version gate this render rejects.
+        const hass = hassWithLegacyEntityNameFormatter("2025.10.3");
+        const rendered = await renderTile(labelTile(), hass);
+        expect(rendered.label).toBe("Roborock S7 Status");
+        // The gate is what keeps the incompatible call from happening at all; a try/catch alone
+        // would hide the crash but still call a formatter whose contract this card does not meet.
+        expect(hass.formatEntityName).not.toHaveBeenCalled();
+    });
+
+    it("returns the friendly name on a 2026.3 frontend", async () => {
+        const hass = hassWithLegacyEntityNameFormatter("2026.3.4");
+        const rendered = await renderTile(labelTile(), hass);
+        expect(rendered.label).toBe("Roborock S7 Status");
+        expect(hass.formatEntityName).not.toHaveBeenCalled();
+    });
+
+    it("takes the resolver path on 2026.10 even though \"2026.10.3\" sorts below \"2026.4\" as text", async () => {
+        const hass = { ...hassWithEntityNameFormatter("Registry name"), config: { version: "2026.10.3" } } as MockHass & {
+            formatEntityName: ReturnType<typeof vi.fn>;
+        };
+        const rendered = await renderTile(labelTile(), hass);
+        expect(rendered.label).toBe("Registry name");
+        expect(hass.formatEntityName).toHaveBeenCalled();
+    });
+
+    it("falls back to the friendly name when hass.formatEntityName throws", async () => {
+        const hass = hassWithThrowingEntityNameFormatter();
+        const rendered = await renderTile(labelTile(), hass);
+        expect(rendered.label).toBe("Roborock S7 Status");
+        expect(hass.formatEntityName).toHaveBeenCalled();
+    });
+
+    it("falls back to the friendly name when the formatter returns nothing", async () => {
+        const hass = { ...fixtureHass(loadSyntheticFixture()), formatEntityName: vi.fn(() => "") } as MockHass;
+        const rendered = await renderTile(labelTile(), hass);
+        expect(rendered.label).toBe("Roborock S7 Status");
     });
 
     it("falls back to the friendly name when hass has no formatEntityName", async () => {

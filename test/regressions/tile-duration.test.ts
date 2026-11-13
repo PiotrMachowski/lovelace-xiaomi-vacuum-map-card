@@ -103,8 +103,22 @@ describe("Roborock duration tiles (#965)", () => {
         expect(await renderTileValue(tile, hass)).toBe("2 h");
     });
 
-    // Roborock core reports the cleaning time in minutes, which the old seconds-based multiplier
-    // truncated to 0 min.
+    it("assumes seconds for a duration_unit template whose sensor reports no unit", async () => {
+        // The template asks for hours and the sensor carries no `unit_of_measurement` at all, which
+        // is the end-to-end version of `resolveTileMultiplier`'s seconds assumption.
+        const hass = hassWithSensor({
+            entityId: "sensor.main_brush_time_left",
+            uniqueId: "main_brush_time_left_1",
+            state: "7200",
+        });
+        const tile = findTile(await generatedTiles(hass), "main_brush_left");
+
+        expect(tile.multiplier).toBeCloseTo(1 / 3600, 10);
+        expect(await renderTileValue(tile, hass)).toBe("2 h");
+    });
+
+    // Roborock core reports the cleaning time in minutes. The old seconds-based multiplier turned
+    // 31 min into 31 * (1/60) ≈ 0.52, which `toFixed(0)` rounded to "1" - so the tile read "1 min".
     it("renders a minute sensor as minutes", async () => {
         const hass = hassWithSensor({
             entityId: "sensor.cleaning_time",

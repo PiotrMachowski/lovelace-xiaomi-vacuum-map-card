@@ -119,10 +119,19 @@ export class Tile extends RootlessLitElement {
             }
         }
         const translations = this.config.translations ?? {};
-        const translationKey = Object.keys(translations)
-            .find(key => key.toLowerCase() === `${value}`.toLowerCase());
-        if (translationKey !== undefined) {
-            value = translations[translationKey];
+        // Master matched the lower-cased value as an exact key. Keep that first so a config with
+        // both `{Charging, charging}` still resolves to `charging` exactly as before, then fall back
+        // to the case-insensitive scan so a mixed-case-only key still matches a differently-cased
+        // value.
+        const valueKey = `${value}`.toLowerCase();
+        if (Object.prototype.hasOwnProperty.call(translations, valueKey)) {
+            value = translations[valueKey];
+        } else {
+            const translationKey = Object.keys(translations)
+                .find(key => key.toLowerCase() === valueKey);
+            if (translationKey !== undefined) {
+                value = translations[translationKey];
+            }
         }
         return `${value}${unit}`;
     }
