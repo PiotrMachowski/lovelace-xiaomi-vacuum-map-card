@@ -118,6 +118,33 @@ describe("editor room-config generation is idempotent", () => {
         expect(emitted).not.toBe(config.map_modes);
     });
 
+    it("keeps the ROOM mode when the reported index points at a non-room mode", async () => {
+        useHarnessClock();
+        const fixture = loadSyntheticFixture();
+        const baseConfig = fixtureConfig(fixture);
+        const roomsTemplate = PlatformGenerator.getRoomsTemplate(baseConfig.vacuum_platform as string);
+        expect(roomsTemplate).toBeDefined();
+        const defaultTemplate = PlatformGenerator.generateDefaultModes(baseConfig.vacuum_platform as string)[0].template;
+
+        // The card reports index 0, which is a cleaning mode here, not the ROOM mode it meant.
+        const config: XiaomiVacuumMapCardConfig = { ...baseConfig, map_modes: [{ template: defaultTemplate }] };
+        const editor = await mountEditor(config, fixtureHass(fixture));
+        const changes: XiaomiVacuumMapCardConfig[] = [];
+        editor.element.addEventListener("config-changed", event => {
+            changes.push((event as CustomEvent<{ config: XiaomiVacuumMapCardConfig }>).detail.config);
+        });
+
+        fireRoomConfig({ modeIndex: 0, rooms: rooms("reported index"), entity: baseConfig.entity });
+        await settle(editor.element);
+
+        expect(changes).toHaveLength(1);
+        const emitted = changes[0].map_modes ?? [];
+        // The cleaning mode is untouched and the ROOM mode is appended instead of replacing it.
+        expect(emitted.map(mode => mode.template)).toEqual([defaultTemplate, roomsTemplate]);
+        expect(emitted[0].predefined_selections).toBeUndefined();
+        expect(emitted[1].predefined_selections).toEqual(rooms("reported index"));
+    });
+
     it("collapses duplicate ROOM modes left by an earlier broken generation", async () => {
         useHarnessClock();
         const fixture = loadSyntheticFixture();

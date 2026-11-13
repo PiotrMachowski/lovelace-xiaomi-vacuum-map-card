@@ -3,7 +3,13 @@ import { css, CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators";
 import { fireEvent, LovelaceCardEditor } from "custom-card-helpers";
 
-import { RoomConfigEventData, RoomConfigRequestEventData, TranslatableString, XiaomiVacuumMapCardConfig } from "./types/types";
+import {
+    MapModeConfig,
+    RoomConfigEventData,
+    RoomConfigRequestEventData,
+    TranslatableString,
+    XiaomiVacuumMapCardConfig,
+} from "./types/types";
 import { localizeWithHass } from "./localize/localize";
 import { PlatformGenerator } from "./model/generators/platform-generator";
 import {
@@ -20,6 +26,7 @@ import {
 import { conditional, copyMessage, getAllEntitiesFromTheSameDevice } from "./utils";
 import { ToastRenderer } from "./renderers/toast-renderer";
 import { HomeAssistantFixed } from "./types/fixes";
+import { SelectionType } from "./model/map_mode/selection-type";
 
 // Every "Generate rooms config" request gets a unique id so a late answer to an older request
 // cannot overwrite a newer one and two editors on one page cannot accept each other's answers.
@@ -321,19 +328,24 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
     private _handleRoomConfig(e: Event): void {
         const roomsTemplate = PlatformGenerator.getRoomsTemplate(this._vacuum_platform);
         const roomConfig = (e as any).roomConfig as RoomConfigEventData;
+        // Reject answers addressed to another editor before reporting failure: with two editors on a
+        // page the second one receives the first one's reply, and it must stay silent instead of
+        // showing "config set failed". (The toast is not asserted in the harness.)
+        if (roomConfig) {
+            // The response's entity must match what this editor is actually configuring. Without this
+            // check a reply from a different mounted card would overwrite this card's selections with
+            // the wrong robot's rooms; see RoomConfigEventData.
+            if (roomConfig.entity !== undefined && roomConfig.entity !== this._entity) {
+                return;
+            }
+            // A response that echoes a request id belongs to the request that carried it. Ignore stale
+            // answers and answers to another editor; an answer without an id is a legacy producer.
+            if (roomConfig.requestId !== undefined && roomConfig.requestId !== this._pendingRoomConfigRequestId) {
+                return;
+            }
+        }
         if (!roomConfig) {
             this._showToast("editor.label.config_set_failed", "mdi:close", false);
-            return;
-        }
-        // The response's entity must match what this editor is actually configuring. Without this
-        // check a reply from a different mounted card would overwrite this card's selections with
-        // the wrong robot's rooms; see RoomConfigEventData.
-        if (roomConfig.entity !== undefined && roomConfig.entity !== this._entity) {
-            return;
-        }
-        // A response that echoes a request id belongs to the request that carried it. Ignore stale
-        // answers and answers to another editor; an answer without an id is a legacy producer.
-        if (roomConfig.requestId !== undefined && roomConfig.requestId !== this._pendingRoomConfigRequestId) {
             return;
         }
         this._pendingRoomConfigRequestId = undefined;
@@ -345,7 +357,10 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
         let roomsModeIndex = roomsTemplate
             ? map_modes.findIndex(mode => mode.template === roomsTemplate)
             : -1;
-        if (roomsModeIndex < 0 && reportedIndex >= 0 && reportedIndex < map_modes.length) {
+        // Fall back to the reported index only when it points at a ROOM selection: the lists can
+        // differ, and replacing a cleaning mode there would corrupt it instead of adding rooms.
+        if (roomsModeIndex < 0 && reportedIndex >= 0 && reportedIndex < map_modes.length
+            && this._isRoomMode(map_modes[reportedIndex])) {
             roomsModeIndex = reportedIndex;
         }
         if (roomsModeIndex >= 0) {
@@ -379,6 +394,21 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
             this._setConfig({ ...this._config, map_modes: map_modes });
         }
         this._showToast("editor.label.config_set", "mdi:check", true);
+    }
+
+    /**
+     * Resolves a raw MapModeConfig's selection type the same way `MapMode` does: an explicit
+     * `selection_type` wins, otherwise the referenced platform template supplies it.
+     */
+    private _isRoomMode(mode: MapModeConfig): boolean {
+        const roomSelectionType = SelectionType[SelectionType.ROOM];
+        if (mode.selection_type !== undefined) {
+            return mode.selection_type === roomSelectionType;
+        }
+        if (mode.template === undefined) {
+            return false;
+        }
+        return PlatformGenerator.getModeTemplate(this._vacuum_platform, mode.template)?.selection_type === roomSelectionType;
     }
 
     private _handleServiceCall(e: Event): void {
