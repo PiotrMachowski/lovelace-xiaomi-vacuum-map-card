@@ -71,6 +71,7 @@ import {
 import { PredefinedPoint } from "./model/map_objects/predefined-point";
 import { PredefinedMultiRectangle } from "./model/map_objects/predefined-multi-rectangle";
 import { Room } from "./model/map_objects/room";
+import { RoomColorDetection, RoomColorDetector } from "./model/room-color-detector";
 import { areAllEntitiesDefined, isOldConfig, validateConfig } from "./config-validators";
 import { MapMode } from "./model/map_mode/map-mode";
 import { SelectionType } from "./model/map_mode/selection-type";
@@ -165,6 +166,8 @@ export class XiaomiVacuumMapCard extends LitElement {
     private pendingMapViewKey?: string;
     private pendingMapView?: MapView;
     private mapViewSaveTimer?: number;
+    private roomColorDetection?: RoomColorDetection;
+    private lastRoomColorDetectionKey?: string;
 
     constructor() {
         super();
@@ -322,13 +325,17 @@ export class XiaomiVacuumMapCard extends LitElement {
                  margin-bottom: ${(preset.map_source.crop?.bottom ?? 0) * -1}px;
                  margin-left: ${(preset.map_source.crop?.left ?? 0) * -1}px;
                  margin-right: ${(preset.map_source.crop?.right ?? 0) * -1}px;">
-                <img
+                <canvas
                     id="map-image"
+                    class="${this.mapScale * this.realScale > 1 ? "zoomed" : ""}"></canvas>
+                <img
+                    id="map-image-source"
                     alt="camera_image"
-                    class="${this.mapScale * this.realScale > 1 ? "zoomed" : ""}"
                     src="${mapSrc}"
                     @load="${() => {
+                        this._renderMapImage(preset.map_source.transparent_background ?? false);
                         this._calculateBasicScale();
+                        this._detectRoomColors();
                         this._restoreMapView();
                     }}" />
                 <div id="map-image-overlay">
@@ -338,6 +345,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                         id="svg-wrapper"
                         width="100%"
                         height="100%"
+                        @click="${(e: MouseEvent): void => this._handleRoomColorClick(e)}"
                         @mousedown="${(e: MouseEvent): void => this._mouseDown(e)}"
                         @mousemove="${(e: MouseEvent): void => this._mouseMove(e)}"
                         @mouseup="${async (e: PointerEvent): Promise<void> => {await this._mouseUp(e)}}">
@@ -452,6 +460,16 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected updated(changedProperties: PropertyValues): void {
+        if (changedProperties.has("config")) {
+            delay(0).then(() => {
+                const mapImage = this._getMapImage();
+                if (!mapImage?.complete || !mapImage.naturalWidth) return;
+                this._renderMapImage(this._getCurrentPreset()?.map_source.transparent_background ?? false);
+                this._calculateBasicScale();
+                this._detectRoomColors();
+                this.requestUpdate();
+            });
+        }
         const oldHass = changedProperties.get("_hass") as HomeAssistantFixed | undefined;
         const changed = oldHass && this.hass && checkIfEntitiesChanged(this.entitiesToManuallyUpdate, oldHass, this.hass);
         this._updateElements(changed);
@@ -761,7 +779,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         return getMousePosition(event, this._getSvgWrapper(), this.mapScale);
     }
 
-    private _setCurrentMode(newModeIndex: number, manual = true): void {
+    private _setCurrentMode(newModeIndex: number, manual = true, preserveSelectedRoomIds?: Set<string>): void {
         const newMode = this.modes[newModeIndex];
         this.selectedManualRectangles = [];
         this.selectedManualPoint = undefined;
@@ -789,9 +807,35 @@ export class XiaomiVacuumMapCard extends LitElement {
                     .map(s => s.state_entity as string);
                 break;
             case SelectionType.ROOM:
-                this.selectableRooms = newMode.predefinedSelections.map(
-                    ps => new Room(ps as RoomConfig, this._getContext()),
+                const configuredRooms = newMode.predefinedSelections.map(ps => ps as RoomConfig);
+                const extractedRooms = this._getRoomsConfig()?.rooms;
+                const roomConfigs = extractedRooms?.length ? extractedRooms : configuredRooms;
+                const configuredRoomsById = new Map(configuredRooms.map(room => [String(room.id), room]));
+                const detectedRegions = new Map(
+                    (this.roomColorDetection?.regions ?? []).map(region => [region.id, region]),
                 );
+                this.selectableRooms = roomConfigs.map(room => {
+                    const configured = configuredRoomsById.get(String(room.id));
+                    const region = detectedRegions.get(String(room.id));
+                    const center = room.label ? [room.label.x, room.label.y] : undefined;
+                    const config: RoomConfig = {
+                        ...configured,
+                        ...room,
+                        icon: configured?.icon
+                            ? { ...configured.icon, x: center?.[0] ?? configured.icon.x, y: center?.[1] ?? configured.icon.y }
+                            : undefined,
+                        label: region && room.label
+                            ? { ...room.label, offset_x: 0, offset_y: 0 }
+                            : room.label ?? configured?.label,
+                        variables: configured?.variables,
+                        default_state: configured?.default_state,
+                        state_entity: configured?.state_entity,
+                    };
+                    return new Room(config, this._getContext(), {
+                        imageOutline: region?.outline,
+                        selected: preserveSelectedRoomIds?.has(String(room.id)),
+                    });
+                });
                 this.selectedRooms = this.selectableRooms.filter(s => s.selected);
                 this.entitiesToManuallyUpdate = newMode.predefinedSelections
                     .filter(s => s.state_entity)
@@ -1028,8 +1072,8 @@ export class XiaomiVacuumMapCard extends LitElement {
             for (const room_id in rooms) {
                 if (!rooms.hasOwnProperty(room_id)) continue;
                 const room = rooms[room_id];
-                if(!room.outline && !room.x0 && !room.y0 && !room.x1 && !room.y1)
-                    continue;
+                const hasBounds = [room.x0, room.y0, room.x1, room.y1].every(value => typeof value === "number");
+                if (!room.outline && !hasBounds) continue;
                 const outline = room.outline ?? [
                     [room.x0, room.y0],
                     [room.x1, room.y0],
@@ -1041,18 +1085,22 @@ export class XiaomiVacuumMapCard extends LitElement {
                     keepFloat ? v / divide : Math.round(v / divide);
                 const x = outline.reduce((a, v) => a + (v[0] ?? 0), 0);
                 const y = outline.reduce((a, v) => a + (v[1] ?? 0), 0);
+                const region = this.roomColorDetection?.regions.find(candidate => candidate.id === room_id);
+                const detectedCenter = region && this.coordinatesConverter
+                    ? this.coordinatesConverter.mapToVacuum(region.center[0], region.center[1])
+                    : undefined;
 
                 const roomConfig = {
                     id: room_id,
                     icon: {
                         name: room.icon ?? "mdi:broom",
-                        x: room.x ?? formatCoord(x, outline.length),
-                        y: room.y ?? formatCoord(y, outline.length),
+                        x: room.x ?? detectedCenter?.[0] ?? formatCoord(x, outline.length),
+                        y: room.y ?? detectedCenter?.[1] ?? formatCoord(y, outline.length),
                     },
                     label: {
                         text: room.name ?? `Room ${room_id}`,
-                        x: room.x ?? formatCoord(x, outline.length),
-                        y: room.y ?? formatCoord(y, outline.length),
+                        x: room.x ?? detectedCenter?.[0] ?? formatCoord(x, outline.length),
+                        y: room.y ?? detectedCenter?.[1] ?? formatCoord(y, outline.length),
                         offset_y: 35,
                     },
                     outline: outline,
@@ -1284,6 +1332,36 @@ export class XiaomiVacuumMapCard extends LitElement {
         return getComputedStyle(this._getMapImage()).getPropertyValue(property);
     }
 
+    private _renderMapImage(transparentBackground: boolean): void {
+        const image = this._getMapImage();
+        const canvas = this._getMapCanvas();
+        if (!image?.naturalWidth || !image.naturalHeight || !canvas) return;
+
+        canvas.width = image.naturalWidth;
+        canvas.height = image.naturalHeight;
+        const context = canvas.getContext("2d");
+        if (!context) return;
+        context.drawImage(image, 0, 0);
+        if (!transparentBackground) return;
+
+        try {
+            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            for (let offset = 0; offset < imageData.data.length; offset += 4) {
+                const red = imageData.data[offset];
+                const green = imageData.data[offset + 1];
+                const blue = imageData.data[offset + 2];
+                const minimum = Math.min(red, green, blue);
+                const maximum = Math.max(red, green, blue);
+                if (minimum >= 250 && maximum - minimum <= 6) imageData.data[offset + 3] = 0;
+            }
+            context.putImageData(imageData, 0, 0);
+        } catch (_error) {
+            // Keep the source map visible if the browser does not allow pixel access.
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(image, 0, 0);
+        }
+    }
+
     private _zoomIn(): void {
         forwardHaptic("selection");
         this._updateScale(1.5);
@@ -1311,11 +1389,75 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _calculateBasicScale(): void {
         const mapImage = this._getMapImage();
-        if (mapImage && mapImage.naturalWidth > 0) {
+        const mapCanvas = this._getMapCanvas();
+        if (mapImage && mapCanvas && mapImage.naturalWidth > 0) {
             this.realImageWidth = mapImage.naturalWidth;
             this.realImageHeight = mapImage.naturalHeight;
-            this.realScale = mapImage.width / mapImage.naturalWidth;
+            this.realScale = (mapCanvas.getBoundingClientRect().width || mapCanvas.width) / mapImage.naturalWidth;
         }
+    }
+
+    private _detectRoomColors(): void {
+        const preset = this._getCurrentPreset();
+        const camera = preset?.map_source?.camera;
+        const entity = camera ? this.hass.states[camera] : undefined;
+        const rooms = entity?.attributes?.rooms as Record<string, MapExtractorRoom> | undefined;
+        const image = this._getMapCanvas();
+        if (!camera || !entity || !rooms || !image?.width || !image.height) {
+            const hadDetection = this.roomColorDetection !== undefined;
+            this.roomColorDetection = undefined;
+            this.lastRoomColorDetectionKey = undefined;
+            if (hadDetection) this._refreshRoomsAfterColorDetection();
+            return;
+        }
+
+        const detectionKey = [
+            camera,
+            entity.last_updated ?? entity.last_changed ?? "",
+            entity.attributes.last_update_timestamp ?? "",
+        ].join(":");
+        if (detectionKey === this.lastRoomColorDetectionKey) return;
+        this.lastRoomColorDetectionKey = detectionKey;
+
+        const previousDetection = this.roomColorDetection;
+        this.roomColorDetection = this.coordinatesConverter
+            ? RoomColorDetector.detect(image, rooms, this.coordinatesConverter)
+            : undefined;
+        if (!this.roomColorDetection && !previousDetection) return;
+
+        this._refreshRoomsAfterColorDetection();
+    }
+
+    private _refreshRoomsAfterColorDetection(): void {
+        if (this._getCurrentMode()?.selectionType === SelectionType.ROOM) {
+            const selectedRoomIds = new Set(this.selectedRooms.map(room => String(room.toVacuum())));
+            this._setCurrentMode(this.selectedMode, false, selectedRoomIds);
+            this.requestUpdate();
+        }
+    }
+
+    private _handleRoomColorClick(event: MouseEvent): void {
+        if (this._getCurrentMode()?.selectionType !== SelectionType.ROOM || !this.roomColorDetection || !this.realScale) {
+            return;
+        }
+        if (event.target instanceof Element && event.target.closest(".clickable")) return;
+
+        const point = this._getMousePosition(event);
+        const x = Math.floor(point.x / this.realScale);
+        const y = Math.floor(point.y / this.realScale);
+        const imageData = this.roomColorDetection.imageData;
+        if (x < 0 || y < 0 || x >= imageData.width || y >= imageData.height) return;
+
+        const offset = (y * imageData.width + x) * 4;
+        const colorKey = RoomColorDetector.getColorKey(
+            imageData.data[offset],
+            imageData.data[offset + 1],
+            imageData.data[offset + 2],
+        );
+        const roomId = this.roomColorDetection.roomIdByColor.get(colorKey);
+        if (roomId === undefined) return;
+        const room = this.selectableRooms.find(candidate => String(candidate.toVacuum()) === roomId);
+        if (room) void room.click();
     }
 
     private _calculateScale(): void {
@@ -1582,7 +1724,11 @@ export class XiaomiVacuumMapCard extends LitElement {
     }
 
     private _getMapImage(): HTMLImageElement {
-        return this.shadowRoot?.getElementById("map-image") as HTMLImageElement;
+        return this.shadowRoot?.getElementById("map-image-source") as HTMLImageElement;
+    }
+
+    private _getMapCanvas(): HTMLCanvasElement {
+        return this.shadowRoot?.getElementById("map-image") as HTMLCanvasElement;
     }
 
     private _getMapZoomerContent(): HTMLElement {
@@ -1944,6 +2090,11 @@ export class XiaomiVacuumMapCard extends LitElement {
                     var(--map-card-internal-primary-text-color)
                 );
                 --map-card-internal-room-label-font-size: var(--map-card-room-label-font-size, 12px);
+                --map-card-internal-room-label-outline-color: var(
+                    --map-card-room-label-outline-color,
+                    rgba(0, 0, 0, 0.9)
+                );
+                --map-card-internal-room-label-outline-width: var(--map-card-room-label-outline-width, 2px);
                 --map-card-internal-toast-successful-icon-color: var(
                     --map-card-toast-successful-icon-color,
                     rgb(0, 255, 0)
@@ -1984,6 +2135,10 @@ export class XiaomiVacuumMapCard extends LitElement {
             #map-image {
                 width: 100%;
                 margin-bottom: -6px;
+            }
+
+            #map-image-source {
+                display: none;
             }
 
             #map-image.zoomed {

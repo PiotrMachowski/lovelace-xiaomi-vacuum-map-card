@@ -88,6 +88,8 @@
 --map-card-room-label-color
 --map-card-room-label-color-selected
 --map-card-room-label-font-size
+--map-card-room-label-outline-color
+--map-card-room-label-outline-width
 --map-card-toast-successful-icon-color
 --map-card-toast-unsuccessful-icon-color
 --map-card-transitions-duration

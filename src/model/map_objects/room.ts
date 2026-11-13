@@ -7,24 +7,34 @@ import { deleteFromArray } from "../../utils";
 import { RoomConfig } from "../../types/types";
 import {PredefinedMapObject} from "./predefined-map-object";
 
+export interface RoomRenderOptions {
+    readonly imageOutline?: Array<[number, number]>;
+    readonly selected?: boolean;
+}
+
 export class Room extends PredefinedMapObject {
     private readonly _config: RoomConfig;
+    private readonly _imageOutline?: Array<[number, number]>;
 
-    constructor(config: RoomConfig, context: Context) {
+    constructor(config: RoomConfig, context: Context, options: RoomRenderOptions = {}) {
         super(config, context);
         this._config = config;
+        this._imageOutline = options.imageOutline;
+        if (options.selected !== undefined && !config.state_entity) this._selected = options.selected;
     }
 
     public render(): SVGTemplateResult {
-        const poly = (this._config?.outline ?? []).map(p => this.vacuumToScaledMap(p[0], p[1]));
+        const poly = this._imageOutline
+            ? this._imageOutline.map(p => this.realScaled2Point(p))
+            : (this._config?.outline ?? []).map(p => this.vacuumToScaledMap(p[0], p[1]));
         return svg`
             <g class="room-wrapper ${this._selected ? "selected" : ""} 
             room-${`${this._config.id}`.replace(/[^a-zA-Z0-9_\-]/gm, "_")}-wrapper">
-                <polygon class="room-outline clickable"
+                <polygon class="room-outline ${this._imageOutline ? "" : "clickable"}"
                          points="${poly.map(p => p.join(", ")).join(" ")}"
-                         @click="${async (): Promise<void> => this._click()}">
+                         @click="${this._imageOutline ? undefined : async (): Promise<void> => this.click()}">
                 </polygon>
-                ${this.renderIcon(this._config.icon, () => this._click(), "room-icon-wrapper")}
+                ${this.renderIcon(this._config.icon, () => this.click(), "room-icon-wrapper")}
                 ${this.renderLabel(this._config.label, "room-label", this._config.icon)}
             </g>
         `;
@@ -34,7 +44,7 @@ export class Room extends PredefinedMapObject {
         return this._config.id;
     }
 
-    private async _click(): Promise<void> {
+    public async click(): Promise<void> {
         if (!this._selected && this._context.selectedRooms().length >= this._context.maxSelections()) {
             forwardHaptic("failure");
             return;
@@ -99,8 +109,11 @@ export class Room extends PredefinedMapObject {
                 pointer-events: none;
                 font-size: calc(var(--map-card-internal-room-label-font-size) / var(--map-scale));
                 fill: var(--map-card-internal-room-label-color);
-                transition: color var(--map-card-internal-transitions-duration) ease,
-                    background var(--map-card-internal-transitions-duration) ease;
+                stroke: var(--map-card-internal-room-label-outline-color);
+                stroke-width: calc(var(--map-card-internal-room-label-outline-width) / var(--map-scale));
+                stroke-linejoin: round;
+                paint-order: stroke fill;
+                transition: fill var(--map-card-internal-transitions-duration) ease;
             }
 
             .room-wrapper.selected > .room-outline {

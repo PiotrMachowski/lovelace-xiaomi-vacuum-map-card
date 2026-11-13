@@ -81,6 +81,7 @@ export interface MapSourceConfig {
     readonly camera?: string;
     readonly image?: string;
     readonly crop?: MapCroppingConfig;
+    readonly transparent_background?: boolean;
 }
 
 export interface CalibrationSourceConfig {

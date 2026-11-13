@@ -233,6 +233,7 @@ full_demo.mp4).
 | `camera` | string | no<sup>1</sup> | -             | Entity id of map camera                      |
 | `image`  | string | no<sup>1</sup> | -             | URL of map image                             |
 | `crop`   | object | no             | _no cropping_ | Images [cropping options](#cropping-options) |
+| `transparent_background` | boolean | no | `false` | Makes near-white map pixels transparent so the map blends into the card |
 
 <sup>1</sup> Exactly one of `camera` or `image` must be provided
 
@@ -421,7 +422,7 @@ Examples:
 <sup>2</sup> Required if `template` is not provided
 
 <sup>3</sup> Required if `template` is not provided and `selection_type` is one
-of: `PREDEFINED_RECTANGLE`, `PREDEFINED_POINT`, `ROOM`
+of: `PREDEFINED_RECTANGLE`, `PREDEFINED_POINT`. `ROOM` selections can be read automatically from the map camera's `rooms` attribute.
 
 #### Supported templates
 
@@ -459,7 +460,7 @@ Following selection types are supported at this moment:
   https://user-images.githubusercontent.com/6118709/141666923-965679e9-25fb-44cd-be08-fc63e5c85ce0.mp4
 
   </details>
-- `ROOM`: Identifier-based selection with free-drawn outline
+- `ROOM`: Identifier-based selection. When the map camera exposes room metadata and the map uses distinct solid room colors, the card can detect each colored area, draw its outline, and use the room name from camera metadata. If color detection is unavailable, configured room selections are used.
   <details>
   <summary>Example video</summary>
 
@@ -563,6 +564,8 @@ Format of data depends on selected `selection_type`:
  | `state_entity`  | entity id               | no       | -            | Entity that should be used to store the state of selection (e.g. `switch.bathroom`)             |
 
   > See [this page](/docs/templates/setup.md#getting-coordinates) to check how to easily create outline.
+
+  `predefined_selections` may be omitted when the map camera provides a `rooms` attribute. The card will use the names and identifiers from that attribute and, when the image has distinct room fill colors, detect the room shapes and centers from the image.
 
 #### Icon options
 
