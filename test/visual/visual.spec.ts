@@ -198,6 +198,13 @@ test("room hit-testing selects the clicked room at zoom 1", async ({ page }) => 
     await expect(page.locator(`${CARD} .room-0-wrapper.selected`)).toHaveCount(0);
     await expect(page.locator(`${CARD} .room-2-wrapper.selected`)).toHaveCount(0);
 
+    // The selected room shows its cleaning order above its label. These rooms come from the colour
+    // detection, carry no icon, and so take the fork's badge path rather than upstream's icon slot;
+    // that path only exists in Chromium, which is why it is asserted here and not in Vitest. The
+    // unselected rooms must stay unnumbered, so this is not merely "a badge was rendered".
+    await expect(page.locator(`${CARD} .room-1-wrapper text.room-order`)).toHaveText("1");
+    await expect(page.locator(`${CARD} .room-0-wrapper .room-order`)).toHaveCount(0);
+
     await expect(page.locator(CARD)).toHaveScreenshot("room-hit-test.png");
 });
 

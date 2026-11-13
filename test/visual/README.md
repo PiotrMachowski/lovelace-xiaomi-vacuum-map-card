@@ -17,7 +17,7 @@ is involved: `index.html` plus `harness.js` mount the card element with a mock `
 | `overlay alignment at zoom 1 and rotation 90` | rotation is applied once, to image and overlay together |
 | `overlay alignment at zoom 2.5 and rotation 0` | `realScale` stays in untransformed layout pixels when zoomed |
 | `overlay alignment at zoom 2.5 and rotation 90` | both at once, the case that historically drifted |
-| `room hit-testing selects the clicked room at zoom 1` | clicking a room's colour selects that room |
+| `room hit-testing selects the clicked room at zoom 1` | clicking a room's colour selects that room, and the selected room shows its cleaning order |
 | `default vertical layout` | header, preset selector, map and controls stack vertically |
 | `horizontal layout once B10 exists` | **skipped**: the horizontal layout is batch B10 and does not exist yet |
 

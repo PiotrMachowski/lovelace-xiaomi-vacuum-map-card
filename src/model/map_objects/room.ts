@@ -66,7 +66,12 @@ export class Room extends PredefinedMapObject {
         );
     }
 
-    /** Centres the badge on the room when a configured room has neither an icon nor a label. */
+    /**
+     * An anchor for the badge of a configured room that has neither an icon nor a label: the average
+     * of the outline's vertices, which is close to the middle of the convex outlines a configured
+     * room has. It is not a true centroid, and the caller still lifts the badge
+     * ORDER_BADGE_LABEL_OFFSET above this point, exactly as it lifts it above a label.
+     */
     private _outlineCenter(): LabelConfig | undefined {
         const outline = this._config.outline;
         if (!outline?.length) return undefined;
@@ -143,13 +148,21 @@ export class Room extends PredefinedMapObject {
                 line-height: 1;
             }
 
-            /* A badge drawn above an icon-less room's label reuses .label-text, so it already inherits
-               the label's centring, size scaling and counter-rotation. Only the weight, a size that
-               stands out from the room name and the click-through are added here: the room outline
-               underneath the badge stays clickable. */
+            /* A badge drawn above an icon-less room's label reuses .label-text, which supplies the
+               counter-rotation and the offset. Centring and the outline belong to .room-label, not to
+               .label-text, so they are repeated here: without them a single digit sits several pixels
+               right of the room centre, and the number is unreadable on a light room. The badge is
+               heavier and larger than the room name, and it ignores pointer events so the outline
+               underneath stays clickable. */
             text.room-order {
                 font-size: calc(var(--map-card-internal-room-label-font-size) * 1.4 / var(--map-scale));
                 font-weight: 700;
+                text-anchor: middle;
+                dominant-baseline: middle;
+                stroke: var(--map-card-internal-room-label-outline-color);
+                stroke-width: calc(var(--map-card-internal-room-label-outline-width) / var(--map-scale));
+                stroke-linejoin: round;
+                paint-order: stroke fill;
                 pointer-events: none;
             }
 
