@@ -16,18 +16,21 @@ function isEnabledEntry(entry: EntityRegistryEntry | null | undefined): entry is
 }
 
 /**
- * Registry lookups, memoized per `(hass.connection, vacuum entity id)`.
+ * Registry lookups, memoized per `(hass.connection, vacuum entity id, device entity set)`.
  *
- * Why this key: the connection is stable for a whole page and is replaced on a reload or a
- * websocket reconnect, so the cache is page-scoped - two cards, or the icon and tile generators of
- * one card, share one lookup per vacuum on that page, and a second page starts empty. The vacuum's
- * entity id keys the inner map so two vacuums never share an answer. The `WeakMap` also releases a
+ * Lifetime: the entry lives for the browser tab and survives websocket reconnects -
+ * `home-assistant-js-websocket` reconnects in place by swapping its socket, so the `Connection`
+ * object is not replaced and the `WeakMap` entry outlives a dropped socket or a Home Assistant
+ * restart. It refreshes when the device entity set changes: the inner key ends with the device's
+ * candidate ids, so enabling, adding or removing an entity on that device makes the next lookup a
+ * miss and it reads the registry again, as the pre-cache code did on every `setConfig`. Within one
+ * entity set, two cards, or the icon and tile generators of one card, share one lookup per vacuum;
+ * a second page starts empty because it has its own connection, and the `WeakMap` releases a
  * closed page's cache with its connection once nothing else holds it.
  *
  * Only a successful result is kept. A failed lookup is removed from the map so the next caller
- * retries instead of inheriting an empty list for the lifetime of the page: a websocket may still
- * be connecting, and caching the failure would permanently hide a vacuum's sensors after one
- * transient error.
+ * retries instead of inheriting an empty list: a websocket may still be connecting, and caching
+ * the failure would permanently hide a vacuum's sensors after one transient error.
  */
 const registryCache = new WeakMap<Connection, Map<string, Promise<EntityRegistryEntry[]>>>();
 
@@ -38,6 +41,21 @@ function cacheFor(connection: Connection): Map<string, Promise<EntityRegistryEnt
         registryCache.set(connection, cache);
     }
     return cache;
+}
+
+/** The entity ids the display registry assigns to `deviceId`, in registry insertion order. */
+function candidateEntityIds(hass: HomeAssistantFixed, deviceId: string): string[] {
+    return Object.values(hass.entities)
+        .filter(entry => entry.device_id === deviceId)
+        .map(entry => entry.entity_id);
+}
+
+/**
+ * Freezes the shared answer so one generator cannot corrupt another's copy of the cached array.
+ * Freezing keeps the identity shared, which is what the "same cached result" tests assert.
+ */
+function freezeEntries(entries: EntityRegistryEntry[]): EntityRegistryEntry[] {
+    return Object.freeze(entries) as EntityRegistryEntry[];
 }
 
 /**
@@ -60,26 +78,35 @@ export function getAllEntitiesFromTheSameDevice(
     // before the display registry arrives would otherwise keep an empty sensor list for the page.
     if (!deviceId) return Promise.resolve([]);
 
-    const cache = cacheFor(hass.connection);
-    const cached = cache.get(entity);
+    const candidateIds = candidateEntityIds(hass, deviceId);
+    // The candidate ids are part of the key, so a changed device entity set (an enabled sensor, a
+    // new integration version) is a cache miss and reads the registry again.
+    const key = `${entity}|${candidateIds.join(",")}`;
+    // A hass without a connection (a preview, or a half-initialized card) cannot be memoized:
+    // `WeakMap.set(undefined, ...)` throws. A throwaway map keeps this path single-file without
+    // catching, and the lookup still resolves (or fails) exactly as it would uncached.
+    const cache = hass.connection
+        ? cacheFor(hass.connection)
+        : new Map<string, Promise<EntityRegistryEntry[]>>();
+    const cached = cache.get(key);
     if (cached) return cached;
 
-    const pending = loadEntitiesForDevice(hass, deviceId).catch(() => {
-        // Not cached: the next call retries (see `registryCache`).
-        cache.delete(entity);
-        return [];
-    });
-    cache.set(entity, pending);
+    const pending = loadEntitiesForDevice(hass, deviceId, candidateIds)
+        .then(freezeEntries)
+        .catch(() => {
+            // Not cached: the next call retries (see `registryCache`).
+            cache.delete(key);
+            return [];
+        });
+    cache.set(key, pending);
     return pending;
 }
 
 async function loadEntitiesForDevice(
     hass: HomeAssistantFixed,
     deviceId: string,
+    candidateIds: string[],
 ): Promise<EntityRegistryEntry[]> {
-    const candidateIds = Object.values(hass.entities)
-        .filter(entry => entry.device_id === deviceId)
-        .map(entry => entry.entity_id);
     try {
         const entries = await hass.callWS<EntityRegistryEntries>({
             type: "config/entity_registry/get_entries",
