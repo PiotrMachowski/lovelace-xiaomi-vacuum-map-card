@@ -51,4 +51,50 @@ describe("withState", () => {
         expect(state.attributes).toBe(attributes);
         expect(state.attributes.friendly_name).toBe("Example");
     });
+
+    it("replaces attributes wholesale instead of merging them", () => {
+        const hass = mockHass({
+            states: {
+                "sensor.example": {
+                    entity_id: "sensor.example",
+                    state: "1",
+                    attributes: { friendly_name: "Example", unit_of_measurement: "W" },
+                    last_changed: "2026-01-01T00:00:00.000Z",
+                    last_updated: "2026-01-01T00:00:00.000Z",
+                    context: { id: "fixture-sensor-example", parent_id: null, user_id: null },
+                },
+            },
+        });
+
+        const { state } = withState(hass, "sensor.example", {
+            attributes: { friendly_name: "Patched" },
+        });
+
+        expect(state.attributes).toEqual({ friendly_name: "Patched" });
+        expect("unit_of_measurement" in state.attributes).toBe(false);
+    });
+
+    it("does not bump last_updated unless the patch sets it", () => {
+        const hass = mockHass({
+            states: {
+                "sensor.example": {
+                    entity_id: "sensor.example",
+                    state: "1",
+                    attributes: { friendly_name: "Example" },
+                    last_changed: "2026-01-01T00:00:00.000Z",
+                    last_updated: "2026-01-01T00:00:00.000Z",
+                    context: { id: "fixture-sensor-example", parent_id: null, user_id: null },
+                },
+            },
+        });
+
+        const unchanged = withState(hass, "sensor.example", { state: "2" });
+        expect(unchanged.state.last_updated).toBe("2026-01-01T00:00:00.000Z");
+
+        const patched = withState(hass, "sensor.example", {
+            state: "2",
+            last_updated: "2026-01-01T00:01:00.000Z",
+        });
+        expect(patched.state.last_updated).toBe("2026-01-01T00:01:00.000Z");
+    });
 });

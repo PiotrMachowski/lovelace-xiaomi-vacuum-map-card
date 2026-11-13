@@ -58,6 +58,20 @@ export interface WithStateResult {
     state: HassEntity;
 }
 
+interface MockHassRuntime {
+    registryEntries: MockEntityRegistryEntry[];
+    customHandlers: Record<string, WSHandler>;
+    wsCalls: WSCall[];
+}
+
+interface MockRouter {
+    handlers: Map<string, WSHandler>;
+    callWS: <T>(message: Record<string, unknown>) => Promise<T>;
+}
+
+/** Router state lives beside the public hass so a derived hass can re-seed its own router. */
+const hassRuntimes = new WeakMap<object, MockHassRuntime>();
+
 const DEFAULT_LANGUAGE = "en";
 const DEFAULT_HASS_URL = "http://homeassistant.local:8123";
 
@@ -124,15 +138,14 @@ function makeConnection(): Connection {
 }
 
 /**
- * Builds a `hass` object with the pieces this card reads. `callWS` serves the entity registry and
- * frontend translation commands and records every call in `hass.wsCalls`.
+ * Builds the websocket router shared by `mockHass` and `withRegistryEntries`. The registry
+ * handlers close over the entry list, so each derived hass must get its own router.
  */
-export function mockHass(options: MockHassOptions = {}): MockHass {
-    const language = options.language ?? DEFAULT_LANGUAGE;
-    const registryEntries = toRegistryEntries(options.entities);
-    const states = options.states ?? {};
-    const wsCalls: WSCall[] = [];
-
+function makeRouter(
+    registryEntries: MockEntityRegistryEntry[],
+    customHandlers: Record<string, WSHandler>,
+    wsCalls: WSCall[],
+): MockRouter {
     const handlers = new Map<string, WSHandler>();
     handlers.set("config/entity_registry/get", message => {
         const entityId = String(message.entity_id ?? "");
@@ -143,12 +156,52 @@ export function mockHass(options: MockHassOptions = {}): MockHass {
     handlers.set("config/entity_registry/list", () => registryEntries);
     handlers.set("config/entity_registry/get_entries", message => {
         const requested = (message.entity_ids ?? []) as string[];
-        return {
-            entries: registryEntries.filter(entry => requested.includes(entry.entity_id)),
-        };
+        // Home Assistant core (`config/entity_registry.py`, `websocket_get_entities`) answers with
+        // a plain object keyed by entity id and `null` for ids without a registry entry. It is not
+        // `{ entries: [...] }`; production code in B7 will read this shape directly.
+        const entries: Record<string, MockEntityRegistryEntry | null> = {};
+        for (const entityId of requested) {
+            entries[entityId] = registryEntries.find(candidate => candidate.entity_id === entityId) ?? null;
+        }
+        return entries;
     });
     handlers.set("frontend/get_translations", () => ({ resources: {} }));
-    Object.entries(options.callWS ?? {}).forEach(([type, handler]) => handlers.set(type, handler));
+    Object.entries(customHandlers).forEach(([type, handler]) => handlers.set(type, handler));
+
+    return {
+        handlers,
+        callWS: async <T>(message: Record<string, unknown>): Promise<T> => {
+            wsCalls.push({ type: String(message.type), message });
+            const handler = handlers.get(String(message.type));
+            if (!handler) {
+                throw new Error(`mockHass: unhandled websocket command "${String(message.type)}"`);
+            }
+            return (await handler(message)) as T;
+        },
+    };
+}
+
+function makeSetWSHandler(
+    router: MockRouter,
+    customHandlers: Record<string, WSHandler>,
+): MockHass["setWSHandler"] {
+    return (type: string, handler: WSHandler): void => {
+        customHandlers[type] = handler;
+        router.handlers.set(type, handler);
+    };
+}
+
+/**
+ * Builds a `hass` object with the pieces this card reads. `callWS` serves the entity registry and
+ * frontend translation commands and records every call in `hass.wsCalls`.
+ */
+export function mockHass(options: MockHassOptions = {}): MockHass {
+    const language = options.language ?? DEFAULT_LANGUAGE;
+    const registryEntries = toRegistryEntries(options.entities);
+    const states = options.states ?? {};
+    const wsCalls: WSCall[] = [];
+    const customHandlers: Record<string, WSHandler> = { ...(options.callWS ?? {}) };
+    const router = makeRouter(registryEntries, customHandlers, wsCalls);
 
     const hass = {
         states,
@@ -165,19 +218,10 @@ export function mockHass(options: MockHassOptions = {}): MockHass {
         hassUrl: (path?: string): string => `${options.hassUrlBase ?? DEFAULT_HASS_URL}${path ?? ""}`,
         localize: makeLocalize(language),
         callService: vi.fn(async () => undefined),
-        callWS: async <T>(message: Record<string, unknown>): Promise<T> => {
-            wsCalls.push({ type: String(message.type), message });
-            const handler = handlers.get(String(message.type));
-            if (!handler) {
-                throw new Error(`mockHass: unhandled websocket command "${String(message.type)}"`);
-            }
-            return (await handler(message)) as T;
-        },
+        callWS: router.callWS,
         connection: makeConnection(),
         wsCalls,
-        setWSHandler: (type: string, handler: WSHandler): void => {
-            handlers.set(type, handler);
-        },
+        setWSHandler: makeSetWSHandler(router, customHandlers),
         resetWSCalls: (): void => {
             wsCalls.length = 0;
         },
@@ -189,7 +233,51 @@ export function mockHass(options: MockHassOptions = {}): MockHass {
             String(stateObj.attributes.friendly_name ?? stateObj.entity_id),
     };
 
+    hassRuntimes.set(hass, { registryEntries, customHandlers, wsCalls });
     return hass as unknown as MockHass;
+}
+
+function mergeRegistryEntries(
+    base: MockEntityRegistryEntry[],
+    extra: MockEntityRegistryEntry[],
+): MockEntityRegistryEntry[] {
+    const merged = new Map(base.map(entry => [entry.entity_id, entry]));
+    extra.forEach(entry => merged.set(entry.entity_id, entry));
+    return [...merged.values()];
+}
+
+/**
+ * Returns a new hass whose entity registry adds `entries` to the one the original hass was built
+ * with. Entries with an existing `entity_id` replace that entry; new ids are appended.
+ *
+ * `hass.entities`, `config/entity_registry/get` and `config/entity_registry/get_entries` all read
+ * the merged list, so a derived hass is usable when a test needs a registry entry that
+ * `mockHass` never saw. The #944 second vacuum is exactly that case. Patching `hass.entities`
+ * directly (or copying it through `withState`) is not enough: the websocket router would still
+ * answer from the original list and `get` would throw.
+ *
+ * The returned hass gets its own websocket call log and its own handler map; the original hass is
+ * untouched and keeps recording its own calls.
+ */
+export function withRegistryEntries(hass: MockHass, entries: MockEntityRegistryInput): MockHass {
+    const runtime = hassRuntimes.get(hass);
+    if (!runtime) throw new Error("withRegistryEntries: hass was not created by mockHass");
+    const registryEntries = mergeRegistryEntries(runtime.registryEntries, toRegistryEntries(entries));
+    const customHandlers: Record<string, WSHandler> = { ...runtime.customHandlers };
+    const wsCalls: WSCall[] = [];
+    const router = makeRouter(registryEntries, customHandlers, wsCalls);
+    const next = {
+        ...hass,
+        entities: toDisplayRegistry(registryEntries),
+        callWS: router.callWS,
+        wsCalls,
+        setWSHandler: makeSetWSHandler(router, customHandlers),
+        resetWSCalls: (): void => {
+            wsCalls.length = 0;
+        },
+    };
+    hassRuntimes.set(next, { registryEntries, customHandlers, wsCalls });
+    return next as unknown as MockHass;
 }
 
 /**
@@ -198,6 +286,17 @@ export function mockHass(options: MockHassOptions = {}): MockHass {
  * `hasConfigOrAnyEntityChanged` compares watched states by reference, so every other state object
  * is kept identical on purpose: reusing the changed state would make a card look like it had not
  * updated, and rebuilding all states would make every entity look changed.
+ *
+ * `patch.attributes` replaces the attributes object wholesale; it is not merged key by key. Read
+ * the previous attributes and spread them when only one key should change.
+ *
+ * `last_updated` is copied from the previous state unless the patch supplies it. This helper does
+ * not advance the clock or bump `last_updated`, so tests that depend on freshness (the map refresh
+ * policy in B6, for example) must pass their own timestamp.
+ *
+ * This helper cannot add a registry entry: the websocket router keeps its own list. Use
+ * `withRegistryEntries` for that. Patching `hass.entities` here would leave
+ * `config/entity_registry/get` answering from the original registry.
  */
 export function withState(hass: MockHass, entityId: string, patch: Partial<HassEntity>): WithStateResult {
     const previous = hass.states[entityId];
@@ -214,13 +313,15 @@ export function withState(hass: MockHass, entityId: string, patch: Partial<HassE
         ...patch,
         entity_id: entityId,
     } as HassEntity;
-    return {
-        hass: {
-            ...hass,
-            states: { ...hass.states, [entityId]: state },
-        } as MockHass,
-        state,
-    };
+    const nextHass = {
+        ...hass,
+        states: { ...hass.states, [entityId]: state },
+    } as MockHass;
+    // The derived hass keeps the same registry and router, so a later `withRegistryEntries` can
+    // start from it instead of losing the router state.
+    const runtime = hassRuntimes.get(hass);
+    if (runtime) hassRuntimes.set(nextHass, runtime);
+    return { hass: nextHass, state };
 }
 
 export interface CameraEntityOptions {
