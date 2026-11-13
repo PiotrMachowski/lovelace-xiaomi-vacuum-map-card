@@ -3,7 +3,13 @@ import { css, CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators";
 import { fireEvent, LovelaceCardEditor } from "custom-card-helpers";
 
-import { RoomConfigEventData, TranslatableString, XiaomiVacuumMapCardConfig } from "./types/types";
+import {
+    MapModeConfig,
+    RoomConfigEventData,
+    RoomConfigRequestEventData,
+    TranslatableString,
+    XiaomiVacuumMapCardConfig,
+} from "./types/types";
 import { localizeWithHass } from "./localize/localize";
 import { PlatformGenerator } from "./model/generators/platform-generator";
 import {
@@ -20,6 +26,11 @@ import {
 import { conditional, copyMessage, getAllEntitiesFromTheSameDevice } from "./utils";
 import { ToastRenderer } from "./renderers/toast-renderer";
 import { HomeAssistantFixed } from "./types/fixes";
+import { SelectionType } from "./model/map_mode/selection-type";
+
+// Every "Generate rooms config" request gets a unique id so a late answer to an older request
+// cannot overwrite a newer one and two editors on one page cannot accept each other's answers.
+let roomConfigRequestCounter = 0;
 
 @customElement(EDITOR_CUSTOM_ELEMENT_NAME)
 export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<LovelaceCardEditor, "hass"> {
@@ -28,6 +39,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
     @state() private _helpers?: any;
     @state() private _lastSelection?: any;
     private _initialized = false;
+    private _pendingRoomConfigRequestId?: string;
 
     constructor() {
         super();
@@ -83,8 +95,19 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
         }
     }
 
-    private static _generateRoomsConfig(): void {
-        window.dispatchEvent(new Event(EVENT_ROOM_CONFIG_GET));
+    private _generateRoomsConfig(): void {
+        // Attach the entity/camera being edited and a request id: every mounted card receives the
+        // window event, but only the matching card answers and only this editor accepts the answer.
+        const requestId = String(++roomConfigRequestCounter);
+        this._pendingRoomConfigRequestId = requestId;
+        const request: RoomConfigRequestEventData = {
+            entity: this._entity,
+            camera: this._camera,
+            requestId: requestId,
+        };
+        const event = new Event(EVENT_ROOM_CONFIG_GET);
+        Object.assign(event, request);
+        window.dispatchEvent(event);
     }
 
     public setConfig(config: XiaomiVacuumMapCardConfig): void {
@@ -136,11 +159,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
                     ${this._localize("editor.description.text")}
                 </div>
                 <div class="values">
-                    <ha-textfield
-                        label="${this._localize("editor.label.name")}"
-                        .value="${this._title}"
-                        .configValue="${"title"}"
-                        @input="${this._valueChanged}"></ha-textfield>
+                    ${this._renderTextInput(this._localize("editor.label.name"), this._title, this._valueChanged, "title")}
                 </div>
                 <div class="values">
                     <ha-select
@@ -227,11 +246,12 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
                             </ha-formfield>
                         </div>
                         <div class="values">
-                            <ha-textfield
-                                label="${this._localize("editor.label.map_view_storage_key")}"
-                                .value="${this._map_view_storage_key}"
-                                .configValue="${"map_view_storage_key"}"
-                                @input="${this._valueChanged}"></ha-textfield>
+                            ${this._renderTextInput(
+                                this._localize("editor.label.map_view_storage_key"),
+                                this._map_view_storage_key,
+                                this._valueChanged,
+                                "map_view_storage_key",
+                            )}
                         </div>
                     `,
                 )}
@@ -247,7 +267,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
                         ${this._localize("editor.label.set_static_config")}
                     </ha-button>
                     <ha-button size="small" variant="brand" appearance="filled"
-                               @click="${() => XiaomiVacuumMapCardEditor._generateRoomsConfig()}"
+                               @click="${() => this._generateRoomsConfig()}"
                         .disabled=${roomsUnavailable}>
                         ${this._localize("editor.label.generate_rooms_config")}
                     </ha-button>
@@ -266,6 +286,22 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
                 ${ToastRenderer.render("editor")}
             </div>
         `;
+    }
+
+    private _renderTextInput(
+        label: string,
+        value: string,
+        onInput: (ev: Event) => void,
+        configValue?: string,
+        placeholder = "",
+    ): TemplateResult {
+        // Current HA frontends provide ha-input; older ones only had ha-textfield. Prefer the
+        // element the frontend actually defines so a text field never renders as an unknown tag.
+        return customElements.get("ha-input")
+            ? html`<ha-input label="${label}" placeholder="${placeholder}" .value="${value}"
+                             .configValue="${configValue}" @input="${onInput}"></ha-input>`
+            : html`<ha-textfield label="${label}" placeholder="${placeholder}" .value="${value}"
+                                 .configValue="${configValue}" @input="${onInput}"></ha-textfield>`;
     }
 
     private _initialize(): void {
@@ -292,31 +328,89 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
     private _handleRoomConfig(e: Event): void {
         const roomsTemplate = PlatformGenerator.getRoomsTemplate(this._vacuum_platform);
         const roomConfig = (e as any).roomConfig as RoomConfigEventData;
+        // Reject non-empty answers addressed to another editor before reporting failure: with two
+        // editors on a page the second one receives the first one's reply and must stay silent
+        // instead of showing "config set failed". An empty answer carries no entity or request id,
+        // so it still reaches the failure toast in every open editor. (The toast is not asserted in
+        // the harness.)
+        if (roomConfig) {
+            // The response's entity must match what this editor is actually configuring. Without this
+            // check a reply from a different mounted card would overwrite this card's selections with
+            // the wrong robot's rooms; see RoomConfigEventData.
+            if (roomConfig.entity !== undefined && roomConfig.entity !== this._entity) {
+                return;
+            }
+            // A response that echoes a request id belongs to the request that carried it. Ignore stale
+            // answers and answers to another editor; an answer without an id is a legacy producer.
+            if (roomConfig.requestId !== undefined && roomConfig.requestId !== this._pendingRoomConfigRequestId) {
+                return;
+            }
+        }
         if (!roomConfig) {
             this._showToast("editor.label.config_set_failed", "mdi:close", false);
             return;
         }
-        const map_modes = this._config?.map_modes ?? [];
-        if (map_modes.length !== 0 && (roomConfig.modeIndex ?? -1) >= 0) {
-            map_modes[roomConfig.modeIndex ?? -1] = {
-                ...map_modes[roomConfig.modeIndex ?? -1],
+        this._pendingRoomConfigRequestId = undefined;
+        const map_modes = [...(this._config?.map_modes ?? [])];
+        const reportedIndex = roomConfig.modeIndex ?? -1;
+        // Compare by template, not only by the index the card reported: the card and the editor
+        // can hold different mode lists (e.g. the card has no `map_modes`, the editor already
+        // generated them). A template match keeps repeated generation idempotent.
+        let roomsModeIndex = roomsTemplate
+            ? map_modes.findIndex(mode => mode.template === roomsTemplate)
+            : -1;
+        // Fall back to the reported index only when it points at a ROOM selection: the lists can
+        // differ, and replacing a cleaning mode there would corrupt it instead of adding rooms.
+        if (roomsModeIndex < 0 && reportedIndex >= 0 && reportedIndex < map_modes.length
+            && this._isRoomMode(map_modes[reportedIndex])) {
+            roomsModeIndex = reportedIndex;
+        }
+        if (roomsModeIndex >= 0) {
+            map_modes[roomsModeIndex] = {
+                ...map_modes[roomsModeIndex],
                 predefined_selections: roomConfig.rooms,
             };
-        } else {
-            if (map_modes.length === 0) {
-                map_modes.push(...PlatformGenerator.generateDefaultModes(this._vacuum_platform));
+            // Collapse duplicates left by an earlier broken generation, keeping the first.
+            if (roomsTemplate) {
+                for (let index = map_modes.length - 1; index > roomsModeIndex; index--) {
+                    if (map_modes[index].template === roomsTemplate) {
+                        map_modes.splice(index, 1);
+                    }
+                }
             }
+        } else if (map_modes.length === 0) {
+            map_modes.push(...PlatformGenerator.generateDefaultModes(this._vacuum_platform));
             if (roomsTemplate) {
                 map_modes.push({
                     template: roomsTemplate,
                     predefined_selections: roomConfig.rooms,
                 });
             }
+        } else if (roomsTemplate) {
+            map_modes.push({
+                template: roomsTemplate,
+                predefined_selections: roomConfig.rooms,
+            });
         }
         if (this._config) {
             this._setConfig({ ...this._config, map_modes: map_modes });
         }
         this._showToast("editor.label.config_set", "mdi:check", true);
+    }
+
+    /**
+     * Resolves a raw MapModeConfig's selection type the same way `MapMode` does: an explicit
+     * `selection_type` wins, otherwise the referenced platform template supplies it.
+     */
+    private _isRoomMode(mode: MapModeConfig): boolean {
+        const roomSelectionType = SelectionType[SelectionType.ROOM];
+        if (mode.selection_type !== undefined) {
+            return mode.selection_type === roomSelectionType;
+        }
+        if (mode.template === undefined) {
+            return false;
+        }
+        return PlatformGenerator.getModeTemplate(this._vacuum_platform, mode.template)?.selection_type === roomSelectionType;
     }
 
     private _handleServiceCall(e: Event): void {

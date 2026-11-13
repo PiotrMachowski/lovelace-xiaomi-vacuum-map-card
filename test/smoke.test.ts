@@ -84,10 +84,9 @@ describe("harness clock", () => {
     });
 });
 
-// #958 element-fallback coverage belongs to batch B2. When it lands, mask the newer element with
-// `withoutCustomElement("ha-input")` from `test/harness/` and assert the editor renders
-// `ha-textfield`; an `exclude` list on `stubHaElements` cannot work because `setupHarness()` has
-// already defined every stub in the global beforeEach.
+// The #958 element-fallback test lives in `test/regressions/editor-text-field-fallback.test.ts`
+// and uses `withoutCustomElement("ha-input")`; here the harness defines ha-input, so the editor
+// must render that element.
 describe("editor renders", () => {
     it("mounts the editor form", async () => {
         useHarnessClock();
@@ -96,7 +95,8 @@ describe("editor renders", () => {
 
         expect(editor.shadowRoot.querySelector(".card-config")).not.toBeNull();
         expect(editor.shadowRoot.querySelectorAll("ha-select").length).toBeGreaterThanOrEqual(3);
-        expect(editor.shadowRoot.querySelectorAll("ha-textfield").length).toBeGreaterThanOrEqual(2);
+        expect(editor.shadowRoot.querySelectorAll("ha-input").length).toBeGreaterThanOrEqual(2);
+        expect(editor.shadowRoot.querySelectorAll("ha-textfield").length).toBe(0);
         const buttons = Array.from(editor.shadowRoot.querySelectorAll("ha-button")).map(
             button => button.textContent ?? "",
         );

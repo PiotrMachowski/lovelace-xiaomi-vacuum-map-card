@@ -88,8 +88,8 @@ export interface MountCardOptions {
     /**
      * Mount into this element instead of `document.body`. The caller owns it: the harness never
      * removes it and never wraps it. Remove the container yourself to disconnect the card. An
-     * editor-preview container must still be the card's parent when `disconnectedCallback` runs,
-     * otherwise the card keeps its window listeners until B2 fixes that path (see `ROADMAP.md`).
+     * editor-preview container must still be the card's parent when `disconnectedCallback` runs so
+     * teardown matches Home Assistant's DOM ordering; the card also cleans up when removed directly.
      */
     container?: HTMLElement;
     /** Wraps the card in a harness-owned `<hui-card-preview>` so it considers itself in the card editor. */
@@ -156,8 +156,8 @@ export async function mountCard(
         },
         cleanup: async (): Promise<void> => {
             if (ownedWrapper) {
-                // Remove the wrapper, not the card: a detached card has no parent chain, and the
-                // card's disconnectedCallback re-evaluates `_isInEditor()` on it (ROADMAP B2).
+                // Remove the wrapper, not the card, so the card disconnects while it still has its
+                // editor-preview parent, exactly as Home Assistant tears a preview down.
                 ownedWrapper.remove();
                 return;
             }
