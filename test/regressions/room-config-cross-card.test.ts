@@ -1,14 +1,17 @@
 import { describe, expect, it } from "vitest";
 
 import { EVENT_ROOM_CONFIG } from "../../src/const";
+import type { EditorHandle, MockHass } from "../harness";
 import type { MapExtractorRoom, RoomConfig, RoomConfigEventData, XiaomiVacuumMapCardConfig } from "../../src/types/types";
 import {
     cameraEntity,
     extractorRoom,
+    fireRoomConfig,
     fixtureConfig,
     fixtureHass,
     fixtureStates,
     loadSyntheticFixture,
+    mountEditor,
     mountPage,
     settle,
     syntheticCalibrationPoints,
@@ -44,44 +47,56 @@ function findGenerateButton(root: ShadowRoot): HTMLElement {
     return button as HTMLElement;
 }
 
-describe("room-config events are not scoped to a card (#944)", () => {
-    // Expected failure on purpose: upstream PR #944 is not in this fork yet. `EVENT_ROOM_CONFIG_GET`
-    // and `EVENT_ROOM_CONFIG` are global window events, so both cards answer editor A's request and
-    // both editors accept every answer. Batch B2 ports #944 (request id + matching card/editor) and
-    // flips this back to a normal `it`.
-    it.fails("only answers the editor that asked", async () => {
+/** Adds the second vacuum's state and registry entry, leaving the camera unchanged. */
+function withSecondVacuum(hass: MockHass): MockHass {
+    const withVacuumState = withState(hass, SECOND_VACUUM, {
+        ...hass.states["vacuum.roborock_s7"],
+        entity_id: SECOND_VACUUM,
+        attributes: { ...hass.states["vacuum.roborock_s7"].attributes, friendly_name: "Roborock S8" },
+    }).hass;
+    // Register the second vacuum through the router, not only in `hass.entities`: the card's
+    // generators call `config/entity_registry/get` for it, and a hand-patched display registry
+    // would leave that command answering from the first fixture.
+    return withRegistryEntries(withVacuumState, {
+        [SECOND_VACUUM]: {
+            entity_id: SECOND_VACUUM,
+            unique_id: "roborock_s8",
+            device_id: "device-roborock-s8",
+            platform: "xiaomi_miio",
+            name: "Roborock S8",
+        },
+    });
+}
+
+function withSecondCamera(hass: MockHass): MockHass {
+    return withState(
+        hass,
+        SECOND_CAMERA,
+        cameraEntity({
+            entity_id: SECOND_CAMERA,
+            rooms: secondVacuumRooms(),
+            calibration_points: syntheticCalibrationPoints(),
+            entity_picture: "/api/camera_proxy/camera.vacuum_map_b?token=REDACTED_TOKEN",
+        }),
+    ).hass;
+}
+
+/** Records the room ids of every `config-changed` an editor emits. */
+function recordConfigChanges(editor: EditorHandle): string[][] {
+    const changes: string[][] = [];
+    editor.element.addEventListener("config-changed", event => {
+        changes.push(roomIdsOf((event as CustomEvent<{ config: XiaomiVacuumMapCardConfig }>).detail.config));
+    });
+    return changes;
+}
+
+describe("room-config events are scoped to a card (#944)", () => {
+    it("only answers the editor that asked", async () => {
         useHarnessClock();
         const fixture = loadSyntheticFixture();
         const configA = fixtureConfig(fixture);
         const hassA = fixtureHass(fixture);
-
-        const hassBWithVacuum = withState(hassA, SECOND_VACUUM, {
-            ...fixture.states["vacuum.roborock_s7"],
-            entity_id: SECOND_VACUUM,
-            attributes: { ...fixture.states["vacuum.roborock_s7"].attributes, friendly_name: "Roborock S8" },
-        }).hass;
-        // Register the second vacuum through the router, not only in `hass.entities`: the card's
-        // generators call `config/entity_registry/get` for it, and a hand-patched display registry
-        // would leave that command answering from the first fixture.
-        const hassBWithRegistry = withRegistryEntries(hassBWithVacuum, {
-            [SECOND_VACUUM]: {
-                entity_id: SECOND_VACUUM,
-                unique_id: "roborock_s8",
-                device_id: "device-roborock-s8",
-                platform: "xiaomi_miio",
-                name: "Roborock S8",
-            },
-        });
-        const hassB = withState(
-            hassBWithRegistry,
-            SECOND_CAMERA,
-            cameraEntity({
-                entity_id: SECOND_CAMERA,
-                rooms: secondVacuumRooms(),
-                calibration_points: syntheticCalibrationPoints(),
-                entity_picture: "/api/camera_proxy/camera.vacuum_map_b?token=REDACTED_TOKEN",
-            }),
-        ).hass;
+        const hassB = withSecondCamera(withSecondVacuum(hassA));
         const configB: XiaomiVacuumMapCardConfig = {
             ...configA,
             entity: SECOND_VACUUM,
@@ -100,17 +115,11 @@ describe("room-config events are not scoped to a card (#944)", () => {
         window.addEventListener(EVENT_ROOM_CONFIG, event => {
             roomConfigEvents.push((event as Event & { roomConfig: RoomConfigEventData }).roomConfig);
         });
-        // Snapshot the room ids inside the listener: the editor mutates `map_modes` in place, so a
-        // stored config reference would later show the final array for every change and misattribute
-        // rooms from a later answer to the first one.
-        const changesForA: string[][] = [];
-        const changesForB: string[][] = [];
-        editorA.element.addEventListener("config-changed", event => {
-            changesForA.push(roomIdsOf((event as CustomEvent<{ config: XiaomiVacuumMapCardConfig }>).detail.config));
-        });
-        editorB.element.addEventListener("config-changed", event => {
-            changesForB.push(roomIdsOf((event as CustomEvent<{ config: XiaomiVacuumMapCardConfig }>).detail.config));
-        });
+        // Snapshot the room ids inside the listener so each `config-changed` event is recorded
+        // against the config it carried; a stored reference would make every entry show the value
+        // of the latest change.
+        const changesForA = recordConfigChanges(editorA);
+        const changesForB = recordConfigChanges(editorB);
 
         // Press "Generate rooms config" in editor A. Editor B never asks for anything.
         findGenerateButton(editorA.shadowRoot).click();
@@ -132,5 +141,145 @@ describe("room-config events are not scoped to a card (#944)", () => {
         });
 
         await page.cleanup();
+    });
+
+    it("accepts only its own answers when two editors share one entity and camera", async () => {
+        useHarnessClock();
+        const fixture = loadSyntheticFixture();
+        const config = fixtureConfig(fixture);
+        const hass = fixtureHass(fixture);
+
+        // Same entity and camera everywhere: only the request id separates the two editors.
+        const page = await mountPage([
+            { kind: "card", config, hass, inEditorPreview: true },
+            { kind: "card", config, hass, inEditorPreview: true },
+            { kind: "editor", config, hass },
+            { kind: "editor", config, hass },
+        ]);
+        const [editorA, editorB] = page.editors;
+
+        let answerCount = 0;
+        window.addEventListener(EVENT_ROOM_CONFIG, () => {
+            answerCount++;
+        });
+        const changesForA = recordConfigChanges(editorA);
+        const changesForB = recordConfigChanges(editorB);
+
+        // Each request is answered by both mounted cards; two clicks produce four answers.
+        findGenerateButton(editorA.shadowRoot).click();
+        await settle(editorA.element);
+        findGenerateButton(editorA.shadowRoot).click();
+        await settle(editorA.element);
+
+        expect({
+            answerCount,
+            editorAConfigs: changesForA,
+            editorBConfigs: changesForB,
+        }).toEqual({
+            answerCount: 4,
+            editorAConfigs: [ROOMS_A, ROOMS_A],
+            editorBConfigs: [],
+        });
+
+        await page.cleanup();
+    });
+
+    it("answers from the card whose entity matches the request", async () => {
+        useHarnessClock();
+        const fixture = loadSyntheticFixture();
+        const configA = fixtureConfig(fixture);
+        const hassA = fixtureHass(fixture);
+        // Same camera; only the entity differs, so only the entity check can separate the cards.
+        const hassB = withSecondVacuum(hassA);
+        const configB: XiaomiVacuumMapCardConfig = { ...configA, entity: SECOND_VACUUM };
+
+        const page = await mountPage([
+            { kind: "card", config: configA, hass: hassA, inEditorPreview: true },
+            { kind: "card", config: configB, hass: hassB, inEditorPreview: true },
+            { kind: "editor", config: configA, hass: hassA },
+        ]);
+        const [editor] = page.editors;
+
+        const answeredBy: Array<string | undefined> = [];
+        window.addEventListener(EVENT_ROOM_CONFIG, event => {
+            answeredBy.push((event as Event & { roomConfig: RoomConfigEventData }).roomConfig.entity);
+        });
+        const changes = recordConfigChanges(editor);
+
+        findGenerateButton(editor.shadowRoot).click();
+        await settle(editor.element);
+
+        expect({
+            answeredBy,
+            editorConfigs: changes,
+        }).toEqual({
+            answeredBy: [configA.entity],
+            editorConfigs: [ROOMS_A],
+        });
+
+        await page.cleanup();
+    });
+
+    it("answers only for the camera it shows when one vacuum has two maps", async () => {
+        useHarnessClock();
+        const fixture = loadSyntheticFixture();
+        const configA = fixtureConfig(fixture);
+        // One robot, two maps (e.g. one per floor): the entity is identical, so only the camera
+        // separates the cards. Camera B is mounted first and would answer first.
+        const hass = withSecondCamera(fixtureHass(fixture));
+        const configB: XiaomiVacuumMapCardConfig = {
+            ...configA,
+            map_source: { camera: SECOND_CAMERA },
+        };
+
+        const page = await mountPage([
+            { kind: "card", config: configB, hass, inEditorPreview: true },
+            { kind: "card", config: configA, hass, inEditorPreview: true },
+            { kind: "editor", config: configA, hass },
+        ]);
+        const [editor] = page.editors;
+
+        const answeredCameras: Array<string | undefined> = [];
+        window.addEventListener(EVENT_ROOM_CONFIG, event => {
+            answeredCameras.push((event as Event & { roomConfig: RoomConfigEventData }).roomConfig.camera);
+        });
+        const changes = recordConfigChanges(editor);
+
+        findGenerateButton(editor.shadowRoot).click();
+        await settle(editor.element);
+
+        expect({
+            answeredCameras,
+            editorConfigs: changes,
+        }).toEqual({
+            answeredCameras: [configA.map_source.camera],
+            editorConfigs: [ROOMS_A],
+        });
+
+        await page.cleanup();
+    });
+});
+
+describe("editor room-config answers", () => {
+    it("ignores an answer addressed to another entity", async () => {
+        useHarnessClock();
+        const fixture = loadSyntheticFixture();
+        const config = fixtureConfig(fixture);
+        const editor = await mountEditor(config, fixtureHass(fixture));
+        const changes = recordConfigChanges(editor);
+
+        // The card normally filters by entity before answering, so no mounted card can send this.
+        // The editor still checks it: answer with a foreign entity and no request id, so only the
+        // entity check can reject it.
+        fireRoomConfig({
+            modeIndex: -1,
+            rooms: [{ id: "7", outline: [[100, 100], [300, 100], [300, 300], [100, 300]] }],
+            entity: SECOND_VACUUM,
+        });
+        await settle(editor.element);
+
+        expect({ configChanges: changes }).toEqual({ configChanges: [] });
+
+        await editor.cleanup();
     });
 });
