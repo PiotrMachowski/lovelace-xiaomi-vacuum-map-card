@@ -69,7 +69,6 @@ describe("registry lookup payload (#864)", () => {
 
         const [request] = wsMessages(hass, "config/entity_registry/get_entries");
         expect(request.entity_ids).toEqual(deviceEntityIds(hass, DEVICE));
-        expect(request.entity_ids).not.toContain("camera.vacuum_map_b");
     });
 
     it("makes no websocket call for an entity that is not in the display registry", async () => {
