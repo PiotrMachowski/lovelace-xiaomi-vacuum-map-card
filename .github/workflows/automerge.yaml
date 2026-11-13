@@ -13,7 +13,7 @@ jobs:
     name: Automatically merge master to dev
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         name: Git checkout
         with:
           fetch-depth: 0

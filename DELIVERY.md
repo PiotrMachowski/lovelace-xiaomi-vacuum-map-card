@@ -11,7 +11,7 @@ Opus 5.5) returned `VERDICT: APPROVE` on the PR.
 
 | Batch | Scope | Status | PR | Council | Merge SHA | Blocker |
 |---|---|---|---|---|---|---|
-| P0a | Node 22 CI, `actions/checkout@v4`, lockfile v3, `tsc --noEmit` in CI | in progress | - | - | - | - |
+| P0a | Node 22 CI, `actions/checkout@v4`, lockfile v3, `tsc --noEmit` in CI | review | #2 | - | - | - |
 | P0b | Vitest 3 + happy-dom harness, fixtures, `detectFromImageData`, first two failing tests, `npm test` in CI | planned | - | - | - | waiting for P0a |
 | P0c | Playwright visual harness (separate job, `visual` label) | planned | - | - | - | waiting for P0b |
 | P0d | Capture the real Home Assistant fixture | blocked | - | - | - | needs the user's HA instance (see Manual checks) |
