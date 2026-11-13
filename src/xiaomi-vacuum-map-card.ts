@@ -72,6 +72,7 @@ import { PredefinedPoint } from "./model/map_objects/predefined-point";
 import { PredefinedMultiRectangle } from "./model/map_objects/predefined-multi-rectangle";
 import { Room } from "./model/map_objects/room";
 import { RoomColorDetection, RoomColorDetector } from "./model/room-color-detector";
+import { calculateRealScale } from "./model/map-scale";
 import { areAllEntitiesDefined, isOldConfig, validateConfig } from "./config-validators";
 import { MapMode } from "./model/map_mode/map-mode";
 import { SelectionType } from "./model/map_mode/selection-type";
@@ -1393,7 +1394,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (mapImage && mapCanvas && mapImage.naturalWidth > 0) {
             this.realImageWidth = mapImage.naturalWidth;
             this.realImageHeight = mapImage.naturalHeight;
-            this.realScale = (mapCanvas.getBoundingClientRect().width || mapCanvas.width) / mapImage.naturalWidth;
+            this.realScale = calculateRealScale(mapCanvas, mapImage.naturalWidth);
         }
     }
 
