@@ -17,7 +17,7 @@ is involved: `index.html` plus `harness.js` mount the card element with a mock `
 | `overlay alignment at zoom 1 and rotation 90` | rotation is applied once, to image and overlay together |
 | `overlay alignment at zoom 2.5 and rotation 0` | `realScale` stays in untransformed layout pixels when zoomed |
 | `overlay alignment at zoom 2.5 and rotation 90` | both at once, the case that historically drifted |
-| `room hit-testing selects the clicked room at zoom 1` | clicking a room's colour selects that room, and the selected room shows its cleaning order |
+| `room hit-testing selects the clicked room at zoom 1` | clicking a room's colour selects that room, and the selected room's cleaning-order badge is centred above its label |
 | `default vertical layout` | header, preset selector, map and controls stack vertically |
 | `horizontal layout once B10 exists` | **skipped**: the horizontal layout is batch B10 and does not exist yet |
 
@@ -26,6 +26,12 @@ outline bounding box, in source-image pixels, must equal the rectangle in
 `test/fixtures/synthetic/map.png` within 0.75 px (`LIVING_ROOM_IMAGE_RECT` in `visual.spec.ts`).
 That assertion is independent of the browser build, so a layout regression reports the expected
 rectangle even when the screenshot diff alone is hard to read.
+
+The room hit test asserts the cleaning-order badge the same way, because the screenshot cannot: at
+400 x 398 px, `maxDiffPixelRatio: 0.001` tolerates 159 differing pixels while a missing or shifted
+badge changes only about 104. The badge's centre must stay within 1 px of its room label's centre and
+its bottom above the label's top, and its computed `text-anchor` must be `middle` with a `stroke`
+that is not `none`. The screenshot of that test covers the surrounding frame, not the badge.
 
 ## Baselines
 
