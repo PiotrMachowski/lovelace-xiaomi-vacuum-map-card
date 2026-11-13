@@ -91,7 +91,7 @@ describe("editor room-config generation is idempotent", () => {
         const baseConfig = fixtureConfig(fixture);
         const roomsTemplate = PlatformGenerator.getRoomsTemplate(baseConfig.vacuum_platform as string);
         expect(roomsTemplate).toBeDefined();
-        const [defaultTemplate] = PlatformGenerator.generateDefaultModes(baseConfig.vacuum_platform as string);
+        const defaultTemplate = PlatformGenerator.generateDefaultModes(baseConfig.vacuum_platform as string)[0].template;
 
         const modes: MapModeConfig[] = [
             { template: defaultTemplate },
@@ -124,7 +124,7 @@ describe("editor room-config generation is idempotent", () => {
         const baseConfig = fixtureConfig(fixture);
         const roomsTemplate = PlatformGenerator.getRoomsTemplate(baseConfig.vacuum_platform as string);
         expect(roomsTemplate).toBeDefined();
-        const [defaultTemplate] = PlatformGenerator.generateDefaultModes(baseConfig.vacuum_platform as string);
+        const defaultTemplate = PlatformGenerator.generateDefaultModes(baseConfig.vacuum_platform as string)[0].template;
 
         const config: XiaomiVacuumMapCardConfig = {
             ...baseConfig,
