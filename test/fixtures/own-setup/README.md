@@ -6,6 +6,11 @@ real Home Assistant instance so the tests describe the actual vacuum instead of 
 **Status:** waiting on batch P0d. The smoke test in `test/smoke.test.ts` skips with a visible
 message while any of the files below is missing, so P0d only has to drop the files in.
 
+**`map.png` is the home's floor plan.** Committing it to this public repository needs the user's
+explicit approval, separately from the rest of the capture. A redacted or cropped version is
+acceptable. If the layout still identifies the home, leave `map.png` out and keep the smoke test
+skipped rather than committing it.
+
 ## Files to capture
 
 Copy these four files into `test/fixtures/own-setup/`:

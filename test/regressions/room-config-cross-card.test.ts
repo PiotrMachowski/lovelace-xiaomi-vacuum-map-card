@@ -13,6 +13,7 @@ import {
     settle,
     syntheticCalibrationPoints,
     useHarnessClock,
+    withRegistryEntries,
     withState,
 } from "../harness";
 
@@ -59,18 +60,20 @@ describe("room-config events are not scoped to a card (#944)", () => {
             entity_id: SECOND_VACUUM,
             attributes: { ...fixture.states["vacuum.roborock_s7"].attributes, friendly_name: "Roborock S8" },
         }).hass;
-        const hassB = withState(
-            {
-                ...hassBWithVacuum,
-                entities: {
-                    ...hassBWithVacuum.entities,
-                    [SECOND_VACUUM]: {
-                        entity_id: SECOND_VACUUM,
-                        device_id: "device-roborock-s8",
-                        name: "Roborock S8",
-                    },
-                },
+        // Register the second vacuum through the router, not only in `hass.entities`: the card's
+        // generators call `config/entity_registry/get` for it, and a hand-patched display registry
+        // would leave that command answering from the first fixture.
+        const hassBWithRegistry = withRegistryEntries(hassBWithVacuum, {
+            [SECOND_VACUUM]: {
+                entity_id: SECOND_VACUUM,
+                unique_id: "roborock_s8",
+                device_id: "device-roborock-s8",
+                platform: "xiaomi_miio",
+                name: "Roborock S8",
             },
+        });
+        const hassB = withState(
+            hassBWithRegistry,
             SECOND_CAMERA,
             cameraEntity({
                 entity_id: SECOND_CAMERA,
@@ -97,13 +100,16 @@ describe("room-config events are not scoped to a card (#944)", () => {
         window.addEventListener(EVENT_ROOM_CONFIG, event => {
             roomConfigEvents.push((event as Event & { roomConfig: RoomConfigEventData }).roomConfig);
         });
-        const changesForA: XiaomiVacuumMapCardConfig[] = [];
-        const changesForB: XiaomiVacuumMapCardConfig[] = [];
+        // Snapshot the room ids inside the listener: the editor mutates `map_modes` in place, so a
+        // stored config reference would later show the final array for every change and misattribute
+        // rooms from a later answer to the first one.
+        const changesForA: string[][] = [];
+        const changesForB: string[][] = [];
         editorA.element.addEventListener("config-changed", event => {
-            changesForA.push((event as CustomEvent<{ config: XiaomiVacuumMapCardConfig }>).detail.config);
+            changesForA.push(roomIdsOf((event as CustomEvent<{ config: XiaomiVacuumMapCardConfig }>).detail.config));
         });
         editorB.element.addEventListener("config-changed", event => {
-            changesForB.push((event as CustomEvent<{ config: XiaomiVacuumMapCardConfig }>).detail.config);
+            changesForB.push(roomIdsOf((event as CustomEvent<{ config: XiaomiVacuumMapCardConfig }>).detail.config));
         });
 
         // Press "Generate rooms config" in editor A. Editor B never asks for anything.
@@ -117,8 +123,8 @@ describe("room-config events are not scoped to a card (#944)", () => {
             answeredWithRooms: roomConfigEvents.map(event =>
                 (event.rooms ?? []).map(room => String(room.id)),
             ),
-            editorAConfigs: changesForA.map(roomIdsOf),
-            editorBConfigs: changesForB.map(roomIdsOf),
+            editorAConfigs: changesForA,
+            editorBConfigs: changesForB,
         }).toEqual({
             answeredWithRooms: [ROOMS_A],
             editorAConfigs: [ROOMS_A],
