@@ -4,8 +4,14 @@ import { forwardHaptic } from "custom-card-helpers";
 
 import { Context } from "./context";
 import { deleteFromArray } from "../../utils";
-import { RoomConfig } from "../../types/types";
+import { LabelConfig, RoomConfig } from "../../types/types";
 import {PredefinedMapObject} from "./predefined-map-object";
+
+/**
+ * Distance in CSS pixels between a room's label and the cleaning-order badge drawn above it when
+ * the room has no icon. It clears the label's own text and stays inside small room outlines.
+ */
+const ORDER_BADGE_LABEL_OFFSET = 20;
 
 export interface RoomRenderOptions {
     readonly imageOutline?: Array<[number, number]>;
@@ -38,9 +44,34 @@ export class Room extends PredefinedMapObject {
                          @click="${this._imageOutline ? undefined : async (): Promise<void> => this.click()}">
                 </polygon>
                 ${this.renderIcon(this._config.icon, () => this.click(), "room-icon-wrapper", iconContent)}
+                ${this.renderOrderBadge(order)}
                 ${this.renderLabel(this._config.label, "room-label", this._config.icon)}
             </g>
         `;
+    }
+
+    /**
+     * The order badge for a selected room that has no icon. Upstream draws the number in the icon
+     * slot, but rooms detected from the map colours carry no icon, so for them the number is drawn
+     * above the room label instead of being dropped. A room with an icon keeps the upstream
+     * behaviour: the number replaces the icon.
+     */
+    private renderOrderBadge(order: number): SVGTemplateResult {
+        if (order <= 0 || this._config.icon) return svg``;
+        const anchor = this._config.label ?? this._outlineCenter();
+        if (!anchor) return svg``;
+        return this.renderLabel(
+            { ...anchor, text: `${order}`, offset_y: (anchor.offset_y ?? 0) - ORDER_BADGE_LABEL_OFFSET },
+            "room-order",
+        );
+    }
+
+    /** Centres the badge on the room when a configured room has neither an icon nor a label. */
+    private _outlineCenter(): LabelConfig | undefined {
+        const outline = this._config.outline;
+        if (!outline?.length) return undefined;
+        const sum = outline.reduce((acc, point) => [acc[0] + point[0], acc[1] + point[1]], [0, 0]);
+        return { text: "", x: sum[0] / outline.length, y: sum[1] / outline.length };
     }
 
     public toVacuum(): number | string {
@@ -112,6 +143,16 @@ export class Room extends PredefinedMapObject {
                 line-height: 1;
             }
 
+            /* A badge drawn above an icon-less room's label reuses .label-text, so it already inherits
+               the label's centring, size scaling and counter-rotation. Only the weight, a size that
+               stands out from the room name and the click-through are added here: the room outline
+               underneath the badge stays clickable. */
+            text.room-order {
+                font-size: calc(var(--map-card-internal-room-label-font-size) * 1.4 / var(--map-scale));
+                font-weight: 700;
+                pointer-events: none;
+            }
+
             .room-label {
                 text-anchor: middle;
                 dominant-baseline: middle;
@@ -137,6 +178,10 @@ export class Room extends PredefinedMapObject {
             }
 
             .room-wrapper.selected > .room-label {
+                fill: var(--map-card-internal-room-label-color-selected);
+            }
+
+            .room-wrapper.selected > text.room-order {
                 fill: var(--map-card-internal-room-label-color-selected);
             }
         `;
