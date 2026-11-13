@@ -19,10 +19,10 @@ Opus 5.5) returned `VERDICT: APPROVE` on the PR.
 | B2 | Editor room-config path (#956, #944, duplicate cleanup, #958) | merged | [#5](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/5) | APPROVE (round 3) | `c8042b9` | - |
 | B3 | Tiles, labels and icons (#723, #957, #965, #961) | merged | [#6](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/6) | APPROVE (round 2) | `6fe6307` | - |
 | B4 | Roborock status/battery templates (#964) | postponed | - | - | - | needs a real Roborock-core registry fixture |
-| B5 | Cleaning-order badges (#959) | in review | [#10](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/10) | under review | - | - |
+| B5 | Cleaning-order badges (#959) | merged | [#10](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/10) | APPROVE (round 3) | `f3a27f1` | - |
 | B6 | Map refresh policy (#704, #357) | merged | [#11](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/11) | APPROVE (round 2) | `03a9420` | - |
 | B7 | Registry payload and caching (#864) | merged | [#8](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/8) | APPROVE (round 2) | `5939551` | - |
-| B8 | Preset rooms and stale room IDs (#385, #928) | planned | - | - | - | after B6 |
+| B8 | Preset rooms and stale room IDs (#385, #928) | in progress | - | - | - | - |
 | B9 | Default map view (#873) | planned | - | - | - | after B8 |
 | B10 | Horizontal layout and card height (#183, #943) | planned | - | - | - | after B9 and P0c |
 | R1 | In-repo rebrand and README rewrite | planned | - | - | - | after code batches |
@@ -65,11 +65,11 @@ table above; P0d is a user-captured fixture, not an upstream item.
 | #965 | Duration tiles for sensors reporting hours/minutes | B3 | merged, PR #6 |
 | #961 | `return_to_base` icon matches Home Assistant core | B3 | merged, PR #6 |
 | #964 | Roborock status/battery tile templates | B4 | postponed: needs a real Roborock-core registry |
-| #959 | Cleaning-order badges on selected rooms | B5 | in review, PR #10 |
+| #959 | Cleaning-order badges on selected rooms | B5 | merged, PR #10 |
 | #704 + #357 | Camera snapshot request storm / constant map reloads | B6 | merged, PR #11 |
 | #864 | Whole entity registry downloaded, then `/get` per entity | B7 | merged, PR #8 |
-| #385 | Preset switch does not refresh rooms | B8 | planned (verify first; may already be fixed by the fork) |
-| #928 | Room IDs shift after a map edit | B8 | planned |
+| #385 | Preset switch does not refresh rooms | B8 | in progress (verify first) |
+| #928 | Room IDs shift after a map edit | B8 | in progress |
 | #873 | Configured default map view | B9 | planned |
 | #183 + #943 | Horizontal layout and card height | B10 | planned |
 | #549 | Templated `predefined_selections` | - | postponed: no concrete case; Jinja subscription is a large change |
