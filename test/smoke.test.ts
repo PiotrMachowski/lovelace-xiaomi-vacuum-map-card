@@ -84,6 +84,10 @@ describe("harness clock", () => {
     });
 });
 
+// #958 element-fallback coverage belongs to batch B2. When it lands, mask the newer element with
+// `withoutCustomElement("ha-input")` from `test/harness/` and assert the editor renders
+// `ha-textfield`; an `exclude` list on `stubHaElements` cannot work because `setupHarness()` has
+// already defined every stub in the global beforeEach.
 describe("editor renders", () => {
     it("mounts the editor form", async () => {
         useHarnessClock();

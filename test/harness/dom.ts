@@ -18,12 +18,21 @@ const HA_ELEMENTS = [
 
 export type HaElementTag = (typeof HA_ELEMENTS)[number];
 
-export interface StubHaElementsOptions {
-    /**
-     * Skip defining `ha-input`. Batch B2 uses this to prove the editor falls back to
-     * `ha-textfield` on frontends without the newer element.
-     */
-    exclude?: HaElementTag[];
+/**
+ * Makes `customElements.get(tag)` report `undefined` for the rest of the test, without trying to
+ * undefine the element (a custom element cannot be removed from the registry once defined, so
+ * `stubHaElements` cannot offer an "exclude" option). Use this to exercise code that sniffs for an
+ * optional Home Assistant element: batch B2 calls `withoutCustomElement("ha-input")` to prove the
+ * editor falls back to `ha-textfield` (#958).
+ *
+ * Returns a restore function. The Vitest config's `restoreMocks` also restores it after the test.
+ */
+export function withoutCustomElement(tag: string): () => void {
+    const originalGet = customElements.get.bind(customElements);
+    const spy = vi.spyOn(customElements, "get").mockImplementation((name: string) =>
+        name === tag ? undefined : originalGet(name),
+    );
+    return () => spy.mockRestore();
 }
 
 /** Globals this harness had to add because happy-dom does not implement them. */
@@ -39,10 +48,8 @@ export function trackMountedElement(element: Element): void {
     mountedElements.add(element);
 }
 
-function defineHaElements(options: StubHaElementsOptions = {}): void {
-    const excluded = new Set(options.exclude ?? []);
+function defineHaElements(): void {
     for (const tag of HA_ELEMENTS) {
-        if (excluded.has(tag)) continue;
         if (customElements.get(tag)) continue;
         customElements.define(tag, class extends HTMLElement {});
     }
@@ -140,8 +147,8 @@ function defineSvgPointMatrixTransform(): void {
 }
 
 /** Installs the DOM surface the card actually uses. Safe to call more than once. */
-export function stubHaElements(options: StubHaElementsOptions = {}): void {
-    defineHaElements(options);
+export function stubHaElements(): void {
+    defineHaElements();
     defineLoadCardHelpers();
     defineMatchMedia();
     defineResizeObserver();
@@ -259,9 +266,9 @@ export function teardownHarnessDom(): void {
 }
 
 /** Sets up a clean harness for one test. */
-export function setupHarness(options: StubHaElementsOptions = {}): void {
+export function setupHarness(): void {
     resetHarnessDom();
-    stubHaElements(options);
+    stubHaElements();
 }
 
 export { HA_ELEMENTS };
