@@ -21,7 +21,7 @@ Opus 5.5) returned `VERDICT: APPROVE` on the PR.
 | B4 | Roborock status/battery templates (#964) | postponed | - | - | - | needs a real Roborock-core registry fixture |
 | B5 | Cleaning-order badges (#959) | in progress | - | - | - | - |
 | B6 | Map refresh policy (#704, #357) | planned | - | - | - | after B5 |
-| B7 | Registry payload and caching (#864) | in review | [#8](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/8) | round 1 CHANGES_REQUIRED, re-check running | - | - |
+| B7 | Registry payload and caching (#864) | merged | [#8](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/8) | APPROVE (round 2) | `5939551` | - |
 | B8 | Preset rooms and stale room IDs (#385, #928) | planned | - | - | - | after B6 |
 | B9 | Default map view (#873) | planned | - | - | - | after B8 |
 | B10 | Horizontal layout and card height (#183, #943) | planned | - | - | - | after B9 and P0c |
@@ -61,7 +61,7 @@ table above; P0d is a user-captured fixture, not an upstream item.
 | #964 | Roborock status/battery tile templates | B4 | postponed: needs a real Roborock-core registry |
 | #959 | Cleaning-order badges on selected rooms | B5 | in progress |
 | #704 + #357 | Camera snapshot request storm / constant map reloads | B6 | planned |
-| #864 | Whole entity registry downloaded, then `/get` per entity | B7 | in review, PR #8 |
+| #864 | Whole entity registry downloaded, then `/get` per entity | B7 | merged, PR #8 |
 | #385 | Preset switch does not refresh rooms | B8 | planned (verify first; may already be fixed by the fork) |
 | #928 | Room IDs shift after a map edit | B8 | planned |
 | #873 | Configured default map view | B9 | planned |
@@ -96,6 +96,8 @@ table above; P0d is a user-captured fixture, not an upstream item.
 | `test/visual/README.md` and the spec comment overstate the numeric overlay check: dividing by `realScale` cancels base-scale errors and `getBBox()` ignores the zoom/rotation transforms, so a base-scale regression is caught only by the screenshots. Fix the wording (and consider tightening the 0.75 px tolerance to ~0.1). | No | audit pass / R1 docs |
 | The visual workflow has no `concurrency` group, so a second label added to a `visual` PR starts a duplicate run. | No | audit pass |
 | The visual README regenerate command replaces the host `node_modules` with Linux binaries; it should say to re-run `npm ci` on the host afterwards. | No | audit pass / R1 docs |
+| Registry **icon** edits are cached: the key covers which entities exist, not their contents, so a changed sensor `icon` persists until reload where master picked it up on rebuild (cosmetic). Adding the entity icon to the cache key would close it. | No | audit pass |
+| The harness display registry includes disabled entries while core's excludes them, so the enable-a-disabled-sensor path can only be tested by editing `hass.entities` by hand. | No | audit pass (harness) |
 | **Flaky Vitest gate** (high priority): `_updateElements` schedules an uncancelled `delay(100).then(...)`; after happy-dom teardown the callback throws `ReferenceError: window is not defined` in `_restoreMapView`, which reddened one P0c Build run. Reproduced locally: **1 in 15** `npm test` runs (unhandled rejection at `src/xiaomi-vacuum-map-card.ts:1565` `_getMapViewDashboardPath` via `_restoreMapView`, after the test environment is torn down; Vitest exits non-zero, so the gate can go red on an otherwise green branch). Fix: track the timer in the card and cancel it in `disconnectedCallback`, plus a test that disconnects before the delay elapses. | No (but flaky gates are not acceptable long-term) | the batch that next touches the card (B6), or a small dedicated PR once B2 merges |
 
 ## Manual checks owed by the user
