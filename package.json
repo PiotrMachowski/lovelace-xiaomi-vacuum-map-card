@@ -56,7 +56,7 @@
         "build": "npm run lint && npm run rollup && npm run add-version",
         "test": "vitest run",
         "test:watch": "vitest",
-        "check:map-scale": "node scripts/check-map-scale.cjs",
+        "check:map-scale": "vitest run test/map-scale.test.ts",
         "add-version": "cross-var replace-in-file \"@VACUUM_MAP_CARD_VERSION_PLACEHOLDER@\" \"$npm_package_version\" \"dist/xiaomi-vacuum-map-card.js\"",
         "lint": "eslint src/*.ts",
         "rollup": "rollup -c"
