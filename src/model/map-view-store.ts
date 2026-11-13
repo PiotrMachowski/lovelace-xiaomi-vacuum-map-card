@@ -83,7 +83,7 @@ export function setMapView(key: string, view: MapView): void {
         s: view.scale,
         x: view.x,
         y: view.y,
-        r: view.rotation,
+        r: normalizeAngle(view.rotation),
         l: view.locked,
         ts: new Date().getTime(),
     };

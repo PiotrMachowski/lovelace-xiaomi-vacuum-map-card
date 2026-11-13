@@ -1372,8 +1372,10 @@ export class XiaomiVacuumMapCard extends LitElement {
      * content; pan/zoom is nudged here to compensate.
      */
     private _setRotation(degrees: number): void {
-        const rotation = normalizeAngle(degrees);
-        if (rotation === this.mapRotation) {
+        // Keep the visual angle unwrapped so the fourth 90° button press animates 270° → 360°
+        // instead of taking the long way back to 0°. Persisted/configured angles are normalized.
+        const rotation = degrees;
+        if (normalizeAngle(rotation) === normalizeAngle(this.mapRotation)) {
             return;
         }
         const pinchZoom = this._getPinchZoom();
