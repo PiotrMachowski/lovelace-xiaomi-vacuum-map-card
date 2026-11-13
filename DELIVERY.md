@@ -15,7 +15,7 @@ Opus 5.5) returned `VERDICT: APPROVE` on the PR.
 | P0b | Vitest 3 + happy-dom harness, fixtures, `detectFromImageData`, first two failing tests, `npm test` in CI | merged | [#3](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/3) | APPROVE (round 2) | `4a0dcc9` | - |
 | P0c | Playwright visual harness (separate job, `visual` label) | in progress | - | - | - | - |
 | P0d | Capture the real Home Assistant fixture | blocked | - | - | - | needs the user's HA instance (see Manual checks) |
-| B1 | Config robustness (#937, #940, #938; #952 postponed) | in progress | - | - | - | - |
+| B1 | Config robustness (#937, #940, #938; #952 postponed) | merged | [#4](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/4) | APPROVE | `a8b3a39` | - |
 | B2 | Editor room-config path (#956, #944, duplicate cleanup, #958) | in progress | - | - | - | - |
 | B3 | Tiles, labels and icons (#723, #957, #965, #961) | in progress | - | - | - | - |
 | B4 | Roborock status/battery templates (#964) | postponed | - | - | - | needs a real Roborock-core registry fixture |
@@ -33,6 +33,15 @@ Opus 5.5) returned `VERDICT: APPROVE` on the PR.
 Exactly the items in [`ROADMAP.md`](ROADMAP.md#postpone-list), with the reason recorded there:
 #964 (Roborock templates), #952 (YAML `y:` normalization), #958 beyond the element fallback,
 #19, #22, #24, #25, #26, #23, #966, #21, #27.
+
+## Follow-ups discovered during delivery
+
+| Item | Blocks a batch? | Owner |
+|---|---|---|
+| `#957`'s `entityNamesChanged` re-render hook was not carried with the `formatEntityName` fallback, because it lives in the card file that B2 owned. Without it a registry-only rename can leave a tile label stale until an unrelated entity update. | No | B3 follow-up, once B2 has merged |
+| `mountEditor` attaches the editor before setting `hass` (unlike `mountCard`). Harmless today; worth aligning when the editor harness is next touched. | No | B2 |
+| `withoutCustomElement` masks `customElements.get` only; the element still upgrades if something renders it. B2 must assert on the rendered tag name. | No | B2 |
+| An empty YAML key still crashes validation: `id:` with no value parses to `null`, passes the `=== undefined` check and throws on `null.toString()`; `map:` left empty does the same because `p !== undefined` lets `null` through. Upstream has the same gap, so patching it inside a cherry-pick would break the carry rule. | No | fork-only fix after the Phase 1 wave, with tests for `null` and the `#938` cases the council probed (native-list attribute, `null` value, non-list JSON) |
 
 ## Manual checks owed by the user
 
