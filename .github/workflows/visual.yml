@@ -1,0 +1,53 @@
+name: 'Visual'
+
+# Deliberately outside the main Build gate: this job needs a production bundle and a Chromium
+# binary, so it runs only on demand or when a pull request is labelled `visual`.
+on:
+  workflow_dispatch:
+  pull_request:
+    types:
+      - labeled
+    branches:
+      - master
+      - dev
+
+permissions:
+  contents: read
+
+jobs:
+  visual:
+    name: Visual (Playwright)
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'visual'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    container:
+      # The committed baselines in test/visual/__screenshots__/ were generated in this exact image.
+      # Do not replace it with a runner-installed browser: Chromium build and fonts must match.
+      image: mcr.microsoft.com/playwright:v1.65.0-jammy
+      options: --user 1001
+    env:
+      HOME: /tmp
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install chromium
+
+      - name: Build bundle
+        run: npm run build
+
+      - name: Run visual tests
+        run: npm run test:visual
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7

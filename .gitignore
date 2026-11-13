@@ -2,3 +2,9 @@
 /.rpt2_cache/
 /dist
 .idea
+
+# Playwright: reports, per-run output and the downloaded browser builds.
+/playwright-report/
+/test-results/
+/.playwright/
+/ms-playwright/
