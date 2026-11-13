@@ -1,0 +1,85 @@
+{
+    "vacuum.roborock_s7": {
+        "entity_id": "vacuum.roborock_s7",
+        "state": "docked",
+        "attributes": {
+            "friendly_name": "Roborock S7",
+            "battery_level": 100,
+            "fan_speed": "Balanced",
+            "fan_speed_list": ["Silent", "Balanced", "Turbo", "Max"],
+            "status": "Charging",
+            "supported_features": 8191
+        },
+        "last_changed": "2026-11-01T10:00:00.000Z",
+        "last_updated": "2026-11-01T10:00:00.000Z",
+        "context": {
+            "id": "fixture-vacuum",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    "sensor.roborock_s7_battery": {
+        "entity_id": "sensor.roborock_s7_battery",
+        "state": "100",
+        "attributes": {
+            "friendly_name": "Roborock S7 Battery",
+            "unit_of_measurement": "%",
+            "device_class": "battery",
+            "icon": "mdi:battery"
+        },
+        "last_changed": "2026-11-01T10:00:00.000Z",
+        "last_updated": "2026-11-01T10:00:00.000Z",
+        "context": {
+            "id": "fixture-battery",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    "sensor.roborock_s7_status": {
+        "entity_id": "sensor.roborock_s7_status",
+        "state": "Charging",
+        "attributes": {
+            "friendly_name": "Roborock S7 Status",
+            "icon": "mdi:robot-vacuum"
+        },
+        "last_changed": "2026-11-01T10:00:00.000Z",
+        "last_updated": "2026-11-01T10:00:00.000Z",
+        "context": {
+            "id": "fixture-status",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    "sensor.roborock_s7_cleaning_area": {
+        "entity_id": "sensor.roborock_s7_cleaning_area",
+        "state": "24",
+        "attributes": {
+            "friendly_name": "Roborock S7 Cleaning area",
+            "unit_of_measurement": "m²",
+            "icon": "mdi:ruler-square"
+        },
+        "last_changed": "2026-11-01T10:00:00.000Z",
+        "last_updated": "2026-11-01T10:00:00.000Z",
+        "context": {
+            "id": "fixture-area",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    "sensor.roborock_s7_cleaning_time": {
+        "entity_id": "sensor.roborock_s7_cleaning_time",
+        "state": "31",
+        "attributes": {
+            "friendly_name": "Roborock S7 Cleaning time",
+            "unit_of_measurement": "min",
+            "icon": "mdi:timer-outline"
+        },
+        "last_changed": "2026-11-01T10:00:00.000Z",
+        "last_updated": "2026-11-01T10:00:00.000Z",
+        "context": {
+            "id": "fixture-time",
+            "parent_id": null,
+            "user_id": null
+        }
+    }
+}
