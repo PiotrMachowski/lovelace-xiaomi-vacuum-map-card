@@ -63,7 +63,6 @@ import {
     checkIfEntitiesChanged,
     conditional,
     createActionWithConfigHandler,
-    delay,
     getMousePosition,
     getWatchedEntities,
     hasConfigOrAnyEntityChanged,
@@ -168,6 +167,8 @@ export class XiaomiVacuumMapCard extends LitElement {
     private pendingMapViewKey?: string;
     private pendingMapView?: MapView;
     private mapViewSaveTimer?: number;
+    private mapImageLoadedWhileDetached = false;
+    private delayedCallbacks = new Set<number>();
     private roomColorDetection?: RoomColorDetection;
     private lastRoomColorDetectionKey?: string;
 
@@ -266,7 +267,12 @@ export class XiaomiVacuumMapCard extends LitElement {
         window.addEventListener("pagehide", this._flushMapView);
         this.connected = true;
         this._updateElements();
-        delay(100).then(() => this.requestUpdate());
+        // A load that arrived while the card was detached is replayed once the first render has
+        // produced the image and canvas elements again.
+        if (this.mapImageLoadedWhileDetached) {
+            this._scheduleDelayedCallback(() => this._refreshMapImageAfterReconnect(), 0);
+        }
+        this._scheduleDelayedCallback(() => this.requestUpdate(), 100);
     }
 
     disconnectedCallback(): void {
@@ -280,8 +286,75 @@ export class XiaomiVacuumMapCard extends LitElement {
         }
         document.removeEventListener(EVENT_LOVELACE_DOM, this._handleLovelaceDomEvent);
         window.removeEventListener("pagehide", this._flushMapView);
+        this._cancelDelayedCallbacks();
+        // A zoom, a rotation or a map reset leaves an inline transition duration on the map content
+        // and queues the 300 ms callback that clears it. That callback is gone now, and the style
+        // attribute is only rewritten when a crop value changes, so a card re-attached within those
+        // 300 ms would keep the transition until the next crop change and animate every later pan
+        // and pinch. Nothing can be seen while the card is detached, so finish the transition here
+        // instead of leaving it pending.
+        const zoomerContent = this._getMapZoomerContent();
+        if (zoomerContent) {
+            zoomerContent.style.transitionDuration = "0s";
+        }
         this._flushMapView();
         this.connected = false;
+    }
+
+    /**
+     * Runs `callback` after `ms` unless the card disconnects first. A removed card must not keep
+     * delayed work alive: the map-view restore reaches `window` and requests an update, so a
+     * callback that outlives the card throws once its environment is torn down. The `connected`
+     * check also drops work queued by an update that finished after the element was removed.
+     *
+     * The check runs twice on purpose. Returning before `setTimeout` keeps a detached card from
+     * parking a timer that cancellation would have to collect again, and makes the intent explicit
+     * at the call site. The check inside the timer still covers a callback that fires after the
+     * disconnect without having been cancelled (for example, one queued by a `disconnectedCallback`
+     * side effect or by a timer the browser has already dequeued).
+     */
+    private _scheduleDelayedCallback(callback: () => void, ms: number): void {
+        if (!this.connected) {
+            return;
+        }
+        const timer = window.setTimeout(() => {
+            this.delayedCallbacks.delete(timer);
+            if (!this.connected) {
+                return;
+            }
+            callback();
+        }, ms);
+        this.delayedCallbacks.add(timer);
+    }
+
+    private _cancelDelayedCallbacks(): void {
+        this.delayedCallbacks.forEach(timer => window.clearTimeout(timer));
+        this.delayedCallbacks.clear();
+    }
+
+    /**
+     * Replays the load work that arrived while the card was detached. The image element is
+     * `display: none`; the visible map is the canvas `_renderMapImage` draws, so dropping the load
+     * would leave a static-image map at the canvas default size and blank. A static `image` source
+     * keeps its src, so no second `load` follows the re-attach to do this work.
+     *
+     * Scheduled rather than called inline: `connectedCallback` runs before the first render, so the
+     * image and canvas may not exist yet. The readiness checks make a repeated re-attach harmless,
+     * and a load that fires while connected clears the flag before this runs.
+     */
+    private _refreshMapImageAfterReconnect(): void {
+        if (!this.mapImageLoadedWhileDetached) {
+            return;
+        }
+        const mapImage = this._getMapImage();
+        if (!mapImage?.complete || !mapImage.naturalWidth) {
+            return;
+        }
+        this.mapImageLoadedWhileDetached = false;
+        this._renderMapImage(this._getCurrentPreset()?.map_source.transparent_background ?? false);
+        this._calculateBasicScale();
+        this._detectRoomColors();
+        this._restoreMapView();
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
@@ -339,6 +412,16 @@ export class XiaomiVacuumMapCard extends LitElement {
                     alt="camera_image"
                     src="${mapSrc}"
                     @load="${() => {
+                        // A cached or slow image can finish loading after Home Assistant detached the
+                        // card; the restore below reaches `window`, so bail out exactly like the
+                        // delayed work does instead of touching a torn-down environment. A static
+                        // `image` source keeps the same src across a detach, so this load is the
+                        // only one the card will get: remember it and replay it on re-attach.
+                        if (!this.connected) {
+                            this.mapImageLoadedWhileDetached = true;
+                            return;
+                        }
+                        this.mapImageLoadedWhileDetached = false;
                         this._renderMapImage(preset.map_source.transparent_background ?? false);
                         this._calculateBasicScale();
                         this._detectRoomColors();
@@ -467,14 +550,14 @@ export class XiaomiVacuumMapCard extends LitElement {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected updated(changedProperties: PropertyValues): void {
         if (changedProperties.has("config")) {
-            delay(0).then(() => {
+            this._scheduleDelayedCallback(() => {
                 const mapImage = this._getMapImage();
                 if (!mapImage?.complete || !mapImage.naturalWidth) return;
                 this._renderMapImage(this._getCurrentPreset()?.map_source.transparent_background ?? false);
                 this._calculateBasicScale();
                 this._detectRoomColors();
                 this.requestUpdate();
-            });
+            }, 0);
         }
         const oldHass = changedProperties.get("_hass") as HomeAssistantFixed | undefined;
         const changed = oldHass && this.hass && checkIfEntitiesChanged(this.entitiesToManuallyUpdate, oldHass, this.hass);
@@ -610,7 +693,7 @@ export class XiaomiVacuumMapCard extends LitElement {
 
         this._getIconsAndTiles(config, this.internalVariables)
             .then(([icons, tiles]) => this._setPreset({ ...config, tiles: tiles, icons: icons }))
-            .then(() => setTimeout(() => this.requestUpdate(), 100))
+            .then(() => this._scheduleDelayedCallback(() => this.requestUpdate(), 100))
             .then(() => this._setCurrentMode(0, false));
 
         if (user && this.currentPreset.activate_on_switch) {
@@ -1188,10 +1271,10 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (s) {
             s.style.borderRadius = this._getCssProperty("--map-card-internal-big-radius");
         }
-        delay(100).then(() => {
+        this._scheduleDelayedCallback(() => {
             this._calculateBasicScale();
             this._restoreMapView();
-        });
+        }, 100);
 
         if (!somethingChanged) {
             return;
@@ -1238,7 +1321,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         this.mapLocked = !this.mapLocked;
         forwardHaptic("selection");
         this._persistMapView();
-        delay(500).then(() => this.requestUpdate());
+        this._scheduleDelayedCallback(() => this.requestUpdate(), 500);
     }
 
     private _addRectangle(): void {
@@ -1348,7 +1431,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         this.mapScale = 1;
         forwardHaptic("selection");
         this._persistMapView();
-        delay(300).then(() => (zoomerContent.style.transitionDuration = "0s"));
+        this._scheduleDelayedCallback(() => (zoomerContent.style.transitionDuration = "0s"), 300);
     }
 
     private _getCssProperty(property: string): string {
@@ -1407,7 +1490,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             relativeTo: "container",
             allowChangeEvent: true,
         });
-        delay(300).then(() => (zoomerContent.style.transitionDuration = "0s"));
+        this._scheduleDelayedCallback(() => (zoomerContent.style.transitionDuration = "0s"), 300);
     }
 
     private _calculateBasicScale(): void {
@@ -1505,7 +1588,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         const zoomerContent = this._getMapZoomerContent();
         if (zoomerContent) {
             zoomerContent.style.transitionDuration = this._getCssProperty("--map-card-internal-transitions-duration");
-            delay(300).then(() => (zoomerContent.style.transitionDuration = "0s"));
+            this._scheduleDelayedCallback(() => (zoomerContent.style.transitionDuration = "0s"), 300);
         }
         // step from the nearest right angle, so a button press after a free rotation still lands square
         this._setRotation(Math.round(this.mapRotation / MAP_ROTATION_STEP) * MAP_ROTATION_STEP + MAP_ROTATION_STEP);
