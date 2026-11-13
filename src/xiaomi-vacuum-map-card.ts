@@ -63,7 +63,6 @@ import {
     checkIfEntitiesChanged,
     conditional,
     createActionWithConfigHandler,
-    delay,
     getMousePosition,
     getWatchedEntities,
     hasConfigOrAnyEntityChanged,
@@ -168,6 +167,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     private pendingMapViewKey?: string;
     private pendingMapView?: MapView;
     private mapViewSaveTimer?: number;
+    private delayedCallbacks = new Set<number>();
     private roomColorDetection?: RoomColorDetection;
     private lastRoomColorDetectionKey?: string;
 
@@ -266,7 +266,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         window.addEventListener("pagehide", this._flushMapView);
         this.connected = true;
         this._updateElements();
-        delay(100).then(() => this.requestUpdate());
+        this._scheduleDelayedCallback(() => this.requestUpdate(), 100);
     }
 
     disconnectedCallback(): void {
@@ -280,8 +280,31 @@ export class XiaomiVacuumMapCard extends LitElement {
         }
         document.removeEventListener(EVENT_LOVELACE_DOM, this._handleLovelaceDomEvent);
         window.removeEventListener("pagehide", this._flushMapView);
+        this._cancelDelayedCallbacks();
         this._flushMapView();
         this.connected = false;
+    }
+
+    /**
+     * Runs `callback` after `ms` unless the card disconnects first. A removed card must not keep
+     * delayed work alive: the map-view restore reaches `window` and requests an update, so a
+     * callback that outlives the card throws once its environment is torn down. The `connected`
+     * check also drops work queued by an update that finished after the element was removed.
+     */
+    private _scheduleDelayedCallback(callback: () => void, ms: number): void {
+        const timer = window.setTimeout(() => {
+            this.delayedCallbacks.delete(timer);
+            if (!this.connected) {
+                return;
+            }
+            callback();
+        }, ms);
+        this.delayedCallbacks.add(timer);
+    }
+
+    private _cancelDelayedCallbacks(): void {
+        this.delayedCallbacks.forEach(timer => window.clearTimeout(timer));
+        this.delayedCallbacks.clear();
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
@@ -467,14 +490,14 @@ export class XiaomiVacuumMapCard extends LitElement {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected updated(changedProperties: PropertyValues): void {
         if (changedProperties.has("config")) {
-            delay(0).then(() => {
+            this._scheduleDelayedCallback(() => {
                 const mapImage = this._getMapImage();
                 if (!mapImage?.complete || !mapImage.naturalWidth) return;
                 this._renderMapImage(this._getCurrentPreset()?.map_source.transparent_background ?? false);
                 this._calculateBasicScale();
                 this._detectRoomColors();
                 this.requestUpdate();
-            });
+            }, 0);
         }
         const oldHass = changedProperties.get("_hass") as HomeAssistantFixed | undefined;
         const changed = oldHass && this.hass && checkIfEntitiesChanged(this.entitiesToManuallyUpdate, oldHass, this.hass);
@@ -610,7 +633,7 @@ export class XiaomiVacuumMapCard extends LitElement {
 
         this._getIconsAndTiles(config, this.internalVariables)
             .then(([icons, tiles]) => this._setPreset({ ...config, tiles: tiles, icons: icons }))
-            .then(() => setTimeout(() => this.requestUpdate(), 100))
+            .then(() => this._scheduleDelayedCallback(() => this.requestUpdate(), 100))
             .then(() => this._setCurrentMode(0, false));
 
         if (user && this.currentPreset.activate_on_switch) {
@@ -1188,10 +1211,10 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (s) {
             s.style.borderRadius = this._getCssProperty("--map-card-internal-big-radius");
         }
-        delay(100).then(() => {
+        this._scheduleDelayedCallback(() => {
             this._calculateBasicScale();
             this._restoreMapView();
-        });
+        }, 100);
 
         if (!somethingChanged) {
             return;
@@ -1238,7 +1261,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         this.mapLocked = !this.mapLocked;
         forwardHaptic("selection");
         this._persistMapView();
-        delay(500).then(() => this.requestUpdate());
+        this._scheduleDelayedCallback(() => this.requestUpdate(), 500);
     }
 
     private _addRectangle(): void {
@@ -1348,7 +1371,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         this.mapScale = 1;
         forwardHaptic("selection");
         this._persistMapView();
-        delay(300).then(() => (zoomerContent.style.transitionDuration = "0s"));
+        this._scheduleDelayedCallback(() => (zoomerContent.style.transitionDuration = "0s"), 300);
     }
 
     private _getCssProperty(property: string): string {
@@ -1407,7 +1430,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             relativeTo: "container",
             allowChangeEvent: true,
         });
-        delay(300).then(() => (zoomerContent.style.transitionDuration = "0s"));
+        this._scheduleDelayedCallback(() => (zoomerContent.style.transitionDuration = "0s"), 300);
     }
 
     private _calculateBasicScale(): void {
@@ -1505,7 +1528,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         const zoomerContent = this._getMapZoomerContent();
         if (zoomerContent) {
             zoomerContent.style.transitionDuration = this._getCssProperty("--map-card-internal-transitions-duration");
-            delay(300).then(() => (zoomerContent.style.transitionDuration = "0s"));
+            this._scheduleDelayedCallback(() => (zoomerContent.style.transitionDuration = "0s"), 300);
         }
         // step from the nearest right angle, so a button press after a free rotation still lands square
         this._setRotation(Math.round(this.mapRotation / MAP_ROTATION_STEP) * MAP_ROTATION_STEP + MAP_ROTATION_STEP);
