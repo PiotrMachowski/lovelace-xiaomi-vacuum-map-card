@@ -325,21 +325,42 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
         }
         this._pendingRoomConfigRequestId = undefined;
         const map_modes = [...(this._config?.map_modes ?? [])];
-        if (map_modes.length !== 0 && (roomConfig.modeIndex ?? -1) >= 0) {
-            map_modes[roomConfig.modeIndex ?? -1] = {
-                ...map_modes[roomConfig.modeIndex ?? -1],
+        const reportedIndex = roomConfig.modeIndex ?? -1;
+        // Compare by template, not only by the index the card reported: the card and the editor
+        // can hold different mode lists (e.g. the card has no `map_modes`, the editor already
+        // generated them). A template match keeps repeated generation idempotent.
+        let roomsModeIndex = roomsTemplate
+            ? map_modes.findIndex(mode => mode.template === roomsTemplate)
+            : -1;
+        if (roomsModeIndex < 0 && reportedIndex >= 0 && reportedIndex < map_modes.length) {
+            roomsModeIndex = reportedIndex;
+        }
+        if (roomsModeIndex >= 0) {
+            map_modes[roomsModeIndex] = {
+                ...map_modes[roomsModeIndex],
                 predefined_selections: roomConfig.rooms,
             };
-        } else {
-            if (map_modes.length === 0) {
-                map_modes.push(...PlatformGenerator.generateDefaultModes(this._vacuum_platform));
+            // Collapse duplicates left by an earlier broken generation, keeping the first.
+            if (roomsTemplate) {
+                for (let index = map_modes.length - 1; index > roomsModeIndex; index--) {
+                    if (map_modes[index].template === roomsTemplate) {
+                        map_modes.splice(index, 1);
+                    }
+                }
             }
+        } else if (map_modes.length === 0) {
+            map_modes.push(...PlatformGenerator.generateDefaultModes(this._vacuum_platform));
             if (roomsTemplate) {
                 map_modes.push({
                     template: roomsTemplate,
                     predefined_selections: roomConfig.rooms,
                 });
             }
+        } else if (roomsTemplate) {
+            map_modes.push({
+                template: roomsTemplate,
+                predefined_selections: roomConfig.rooms,
+            });
         }
         if (this._config) {
             this._setConfig({ ...this._config, map_modes: map_modes });
