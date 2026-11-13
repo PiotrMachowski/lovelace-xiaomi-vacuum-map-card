@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
+import { DISCONNECTED_IMAGE, DISCONNECTION_TIME } from "../../src/const";
+import { MAP_REFRESH_INTERVAL_MS } from "../../src/model/map-refresh-policy";
 import { setMapView } from "../../src/model/map-view-store";
 import type { XiaomiVacuumMapCardConfig } from "../../src/types/types";
 import type { CardHandle, FixtureBundle, HarnessClock, MockHass } from "../harness";
@@ -217,6 +219,84 @@ describe("map refresh policy in the card", () => {
         tracker.check(6000);
 
         expect(tracker.count).toBe(1);
+    });
+
+    it("keeps the camera URL when the tab returns after Home Assistant went quiet", async () => {
+        const { card, clock, cameraId } = await mountRefreshingCard();
+        const tracker = trackSrc(card);
+        const cameraUrl = tracker.current();
+        expect(cameraUrl).toContain("/api/camera_proxy/camera.vacuum_map");
+
+        // Home Assistant closes the websocket a few minutes after a tab is hidden, so no further
+        // `hass` arrives and `lastHassUpdate` stops moving. Reproduce the council's 12 minutes.
+        await clock.setDocumentHidden(true);
+        await clock.advance(12 * 60 * 1000);
+        const internals = card.element as unknown as { lastHassUpdate: Date };
+        expect(Date.now() - internals.lastHassUpdate.getTime()).toBeGreaterThan(DISCONNECTION_TIME);
+
+        await clock.setDocumentHidden(false);
+        await card.element.updateComplete;
+        await clock.advance(0);
+        tracker.check(Date.now());
+
+        // A render now would use the disabled-camera placeholder, and its load would record the
+        // live camera key against that placeholder canvas. The reconnect is what renders instead.
+        expect(tracker.count).toBe(0);
+        expect(tracker.current()).toBe(cameraUrl);
+        expect(tracker.current()).not.toBe(DISCONNECTED_IMAGE);
+        expect(tracker.current()).not.toContain("data:image/png;base64,");
+
+        // The reconnect delivers a fresh `hass`, and that render applies the deferred refresh.
+        const camera = card.hass.states[cameraId];
+        const reconnected = withState(card.hass, cameraId, {
+            last_updated: "2026-11-01T10:12:00.000Z",
+            attributes: {
+                ...camera.attributes,
+                entity_picture: "/api/camera_proxy/camera.vacuum_map?token=reconnected",
+            },
+        }).hass;
+        await applyHass(card, reconnected);
+        tracker.check(Date.now());
+        expect(tracker.count).toBe(1);
+        expect(tracker.current()).toContain("token=reconnected");
+    });
+
+    it("replays a suppressed render exactly once after the interval, then stops", async () => {
+        const { card, clock, vacuumId } = await mountRefreshingCard();
+        const tracker = trackSrc(card);
+        let elapsed = 0;
+
+        // The mount-time follow-up render (100 ms after connect) was held back by the interval, so
+        // its trailing refresh is the first change, at the 5 s boundary.
+        await clock.advance(MAP_REFRESH_INTERVAL_MS);
+        elapsed += MAP_REFRESH_INTERVAL_MS;
+        tracker.check(elapsed);
+        expect(tracker.count).toBe(1);
+        expect(tracker.times).toEqual([MAP_REFRESH_INTERVAL_MS]);
+
+        // A render 1 s later — the vacuum docking, the MQTT case where the camera image changes
+        // without a camera state write — is still inside the window and must not fetch a snapshot.
+        await clock.advance(1000);
+        elapsed += 1000;
+        await applyHass(card, withState(card.hass, vacuumId, {
+            state: "docked",
+            last_updated: "2026-11-01T10:00:06.000Z",
+        }).hass);
+        tracker.check(elapsed);
+        expect(tracker.count).toBe(1);
+
+        // The held-back render is replayed when the window ends, not at the next render minutes
+        // later: exactly one change, at the interval, with none after it.
+        await clock.advance(MAP_REFRESH_INTERVAL_MS * 2 - elapsed);
+        elapsed = MAP_REFRESH_INTERVAL_MS * 2;
+        tracker.check(elapsed);
+        expect(tracker.count).toBe(2);
+        expect(tracker.times).toEqual([MAP_REFRESH_INTERVAL_MS, MAP_REFRESH_INTERVAL_MS * 2]);
+
+        await clock.advance(120000);
+        elapsed += 120000;
+        tracker.check(elapsed);
+        expect(tracker.count).toBe(2);
     });
 
     it("does not change the map-view key or reapply the stored view when the src changes", async () => {
