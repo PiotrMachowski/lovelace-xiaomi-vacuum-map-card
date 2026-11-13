@@ -376,7 +376,7 @@ export function getFilledTemplate(
     return target;
 }
 
-export function getDynamicPredefinedSelectionItems(hass: HomeAssistant, source: string[]): unknown[] {
+export function getDynamicPredefinedSelectionItems(hass: HomeAssistantFixed, source: string[]): unknown[] {
     const entity = hass.states[source[0]];
     if (!entity) {
         return [];
