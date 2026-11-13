@@ -31,8 +31,59 @@ Opus 5.5) returned `VERDICT: APPROVE` on the PR.
 ## Postponed
 
 Exactly the items in [`ROADMAP.md`](ROADMAP.md#postpone-list), with the reason recorded there:
-#964 (Roborock templates), #952 (YAML `y:` normalization), #958 beyond the element fallback,
-#19, #22, #24, #25, #26, #23, #966, #21, #27.
+#964 (Roborock status/battery tiles), #952 (YAML `y:` normalization), #958 beyond the element
+fallback, #549 (templated `predefined_selections`), #503 + #922 (static floorplan background),
+#134 (rotated zone rectangle), #967 + #960 (Valetudo icons / JSON map source), #715 + #600
+(Ecovacs SVG viewbox), #916 (delayed start), #966 (non-admin MQTT), #821 (collapse map).
+
+The references above are upstream GitHub issue and pull-request numbers. Earlier revisions of this
+file quoted an internal backlog numbering that did not correspond to GitHub; it has been corrected.
+
+## Coverage matrix
+
+One row per upstream item considered for this fork, mapped to the batch that owns it and its
+status. Programme batches with no upstream item (P0a, P0b, P0c, R1, R2) are tracked in the batch
+table above; P0d is a user-captured fixture, not an upstream item.
+
+| Upstream | Scope | Batch | Status |
+|---|---|---|---|
+| #937 | Validation crash: predefined selection without `id`/`zones` | B1 | merged, PR #4 |
+| #940 | Validation crash: incomplete calibration point | B1 | merged, PR #4 |
+| #938 | Invalid dynamic predefined selections throw | B1 | merged, PR #4 |
+| #952 | YAML 1.1 unquoted `y:` normalization | B1 | postponed: no repro on the real parser |
+| #956 | Frozen `map_modes` mutation in the room config generator | B2 | merged, PR #5 |
+| #944 | Room-config events not scoped to the requesting card | B2 | merged, PR #5 (extended with camera + request id) |
+| #958 | Editor text fields on frontends without `ha-textfield` | B2 | merged, PR #5 (fallback order reversed; real frontend element API still a manual check) |
+| #723 | Tile translations lower-case the value but not the keys | B3 | merged, PR #6 |
+| #957 | Resolve tile labels via `hass.formatEntityName` | B3 | merged, PR #6 (the `entityNamesChanged` re-render hook is an open follow-up) |
+| #965 | Duration tiles for sensors reporting hours/minutes | B3 | merged, PR #6 |
+| #961 | `return_to_base` icon matches Home Assistant core | B3 | merged, PR #6 |
+| #964 | Roborock status/battery tile templates | B4 | postponed: needs a real Roborock-core registry |
+| #959 | Cleaning-order badges on selected rooms | B5 | in progress |
+| #704 + #357 | Camera snapshot request storm / constant map reloads | B6 | planned |
+| #864 | Whole entity registry downloaded, then `/get` per entity | B7 | in review, PR #8 |
+| #385 | Preset switch does not refresh rooms | B8 | planned (verify first; may already be fixed by the fork) |
+| #928 | Room IDs shift after a map edit | B8 | planned |
+| #873 | Configured default map view | B9 | planned |
+| #183 + #943 | Horizontal layout and card height | B10 | planned |
+| #549 | Templated `predefined_selections` | - | postponed: no concrete case; Jinja subscription is a large change |
+| #503 + #922 | Static floorplan background | - | postponed: needs a floorplan, calibration fixture and alignment decision |
+| #134 | Rotated zone rectangle | - | postponed: Roborock zone API is axis-aligned |
+| #967 + #960 | Valetudo icons / JSON map source | - | postponed: large, platform-specific, no Valetudo instance |
+| #715 + #600 | Ecovacs SVG viewbox | - | postponed: needs an Ecovacs SVG camera fixture |
+| #916 | Delayed start | - | postponed: an HA script or automation does this better |
+| #966 | Non-admin MQTT | - | postponed: HA policy change, not fixable in the card |
+| #821 | Collapse map | - | postponed: only if free inside B10 |
+| #411 | Unable to press Start on Tizen Browser | - | skipped: not scheduled in ROADMAP; no batch assigned |
+| #454 | Remove support for the `miio2` integration | - | skipped: removal is a breaking change with no benefit for this dashboard |
+| #861 | Proposed calibration documentation changes | - | skipped: documentation PR, not carried; docs move to `docs/` in R1 |
+| #955 | Revise coordinate-retrieval setup steps | - | skipped: documentation PR, not carried; docs move to `docs/` in R1 |
+| #953 | Serbian (Latin) translation | - | skipped: translation PR, orthogonal to this fork's scope |
+| #962 | `moriceh/jonr-vac` platform (JONR P20 Pro) | - | skipped: no fixture or device to verify the templates |
+| #927 | Viomi SE integration update and templates | - | skipped: no fixture or device to verify the templates |
+| #796 | Honiture Q6 Pro | - | skipped: no fixture or device |
+| #842 | Eufy RoboVac | - | skipped: no fixture or device |
+| dependabot PRs | Dependency bumps opened against upstream | - | skipped: dependency upgrades stay with upstream; this fork pins its own toolchain |
 
 ## Follow-ups discovered during delivery
 
