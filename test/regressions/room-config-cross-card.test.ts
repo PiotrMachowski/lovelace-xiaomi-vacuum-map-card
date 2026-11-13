@@ -61,7 +61,8 @@ describe("room-config events are not scoped to a card (#944)", () => {
             attributes: { ...fixture.states["vacuum.roborock_s7"].attributes, friendly_name: "Roborock S8" },
         }).hass;
         // Register the second vacuum through the router, not only in `hass.entities`: the card's
-        // generators call `config/entity_registry/get` for it, and a hand-patched display registry
+        // generators resolve the device from the display registry and then ask
+        // `config/entity_registry/get_entries` for its entries, and a hand-patched display registry
         // would leave that command answering from the first fixture.
         const hassBWithRegistry = withRegistryEntries(hassBWithVacuum, {
             [SECOND_VACUUM]: {
