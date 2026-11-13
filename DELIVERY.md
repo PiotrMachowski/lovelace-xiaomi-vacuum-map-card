@@ -13,7 +13,7 @@ Opus 5.5) returned `VERDICT: APPROVE` on the PR.
 |---|---|---|---|---|---|---|
 | P0a | Node 22 CI, `actions/checkout@v4`, lockfile v3, `tsc --noEmit` in CI | merged | [#2](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/2) | APPROVE (round 2) | `deb2555` | - |
 | P0b | Vitest 3 + happy-dom harness, fixtures, `detectFromImageData`, first two failing tests, `npm test` in CI | merged | [#3](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/3) | APPROVE (round 2) | `4a0dcc9` | - |
-| P0c | Playwright visual harness (separate job, `visual` label) | in progress | - | - | - | - |
+| P0c | Playwright visual harness (separate job, `visual` label) | merged | [#7](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/7) | APPROVE (round 2) | `683c07a` | - |
 | P0d | Capture the real Home Assistant fixture | blocked | - | - | - | needs the user's HA instance (see Manual checks) |
 | B1 | Config robustness (#937, #940, #938; #952 postponed) | merged | [#4](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/4) | APPROVE | `a8b3a39` | - |
 | B2 | Editor room-config path (#956, #944, duplicate cleanup, #958) | merged | [#5](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/5) | APPROVE (round 3) | `c8042b9` | - |
@@ -21,7 +21,7 @@ Opus 5.5) returned `VERDICT: APPROVE` on the PR.
 | B4 | Roborock status/battery templates (#964) | postponed | - | - | - | needs a real Roborock-core registry fixture |
 | B5 | Cleaning-order badges (#959) | in progress | - | - | - | - |
 | B6 | Map refresh policy (#704, #357) | planned | - | - | - | after B5 |
-| B7 | Registry payload and caching (#864) | planned | - | - | - | after B3 |
+| B7 | Registry payload and caching (#864) | in review | [#8](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/8) | round 1 CHANGES_REQUIRED, re-check running | - | - |
 | B8 | Preset rooms and stale room IDs (#385, #928) | planned | - | - | - | after B6 |
 | B9 | Default map view (#873) | planned | - | - | - | after B8 |
 | B10 | Horizontal layout and card height (#183, #943) | planned | - | - | - | after B9 and P0c |
@@ -93,6 +93,9 @@ table above; P0d is a user-captured fixture, not an upstream item.
 | `mountEditor` attaches the editor before setting `hass` (unlike `mountCard`). Harmless today; worth aligning when the editor harness is next touched. | No | B2 |
 | `withoutCustomElement` masks `customElements.get` only; the element still upgrades if something renders it. B2 must assert on the rendered tag name. | No | B2 |
 | An empty YAML key still crashes validation: `id:` with no value parses to `null`, passes the `=== undefined` check and throws on `null.toString()`; `map:` left empty does the same because `p !== undefined` lets `null` through. Upstream has the same gap, so patching it inside a cherry-pick would break the carry rule. | No | fork-only fix after the Phase 1 wave, with tests for `null` and the `#938` cases the council probed (native-list attribute, `null` value, non-list JSON) |
+| `test/visual/README.md` and the spec comment overstate the numeric overlay check: dividing by `realScale` cancels base-scale errors and `getBBox()` ignores the zoom/rotation transforms, so a base-scale regression is caught only by the screenshots. Fix the wording (and consider tightening the 0.75 px tolerance to ~0.1). | No | audit pass / R1 docs |
+| The visual workflow has no `concurrency` group, so a second label added to a `visual` PR starts a duplicate run. | No | audit pass |
+| The visual README regenerate command replaces the host `node_modules` with Linux binaries; it should say to re-run `npm ci` on the host afterwards. | No | audit pass / R1 docs |
 | **Flaky Vitest gate** (high priority): `_updateElements` schedules an uncancelled `delay(100).then(...)`; after happy-dom teardown the callback throws `ReferenceError: window is not defined` in `_restoreMapView`, which reddened one P0c Build run. Reproduced locally: **1 in 15** `npm test` runs (unhandled rejection at `src/xiaomi-vacuum-map-card.ts:1565` `_getMapViewDashboardPath` via `_restoreMapView`, after the test environment is torn down; Vitest exits non-zero, so the gate can go red on an otherwise green branch). Fix: track the timer in the card and cancel it in `disconnectedCallback`, plus a test that disconnects before the delay elapses. | No (but flaky gates are not acceptable long-term) | the batch that next touches the card (B6), or a small dedicated PR once B2 merges |
 
 ## Manual checks owed by the user
