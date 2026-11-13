@@ -14,6 +14,8 @@ import { NumberFormat, TimeFormat } from "../../src/localize/hass/translation";
  * only what the code under test reads.
  */
 export interface MockEntityRegistryEntry extends EntityRegistryDisplayEntry {
+    /** Required here: the generators resolve the vacuum's sibling entities through it. */
+    device_id: string;
     unique_id?: string;
     disabled_by?: string | null;
     hidden_by?: string | null;
