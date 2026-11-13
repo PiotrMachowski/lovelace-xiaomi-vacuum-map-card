@@ -353,15 +353,14 @@ instance.
 | #964 Roborock status/battery tiles | Needs a real Roborock-core registry; contract tests cannot prove the regexes | The real instance runs that integration, or a scrubbed fixture is supplied |
 | #952 YAML `y:` normalization | Depends on an actual repro on the current HA parser | A config with an unquoted `y:` fails on the real instance |
 | #958 beyond the element fallback | The stub only proves the branch, not HA's real element API | Manual check on the current HA |
-| #19 templated `predefined_selections` | No concrete case that `state_entity` cannot serve; Jinja subscription is a large change | A real use case and a fixture |
-| #22 static floorplan background | Needs a floorplan, calibration fixture and a decision on transparency/alignment | A concrete floorplan setup |
-| #24 rotated zone rectangle | Roborock's zone API is axis-aligned; no evidence the target platform accepts 4 arbitrary points | Vendor documentation or a working integration call |
-| #25 Valetudo icons / JSON map source | Large (945 LOC), platform-specific, no Valetudo instance to verify | Upstream lands it first, or a Valetudo fixture is available |
-| #26 Ecovacs SVG viewbox | Needs an Ecovacs SVG camera fixture | A fixture and an Ecovacs instance |
-| #23 delayed start | An HA script or automation does this better; not a map concern | A strong product reason |
+| #549 templated `predefined_selections` | No concrete case that `state_entity` cannot serve; Jinja subscription is a large change | A real use case and a fixture |
+| #503 + #922 static floorplan background | Needs a floorplan, calibration fixture and a decision on transparency/alignment | A concrete floorplan setup |
+| #134 rotated zone rectangle | Roborock's zone API is axis-aligned; no evidence the target platform accepts 4 arbitrary points | Vendor documentation or a working integration call |
+| #967 + #960 Valetudo icons / JSON map source | Large (945 LOC), platform-specific, no Valetudo instance to verify | Upstream lands it first, or a Valetudo fixture is available |
+| #715 + #600 Ecovacs SVG viewbox | Needs an Ecovacs SVG camera fixture | A fixture and an Ecovacs instance |
+| #916 delayed start | An HA script or automation does this better; not a map concern | A strong product reason |
 | #966 non-admin MQTT | HA policy change, not fixable in the card | Never in-card; at most a documentation note |
-| #21 collapse map | Card-mod/conditional-card already does it | Only if free inside B10 |
-| #27 Valetudo icons as a separate item | Duplicate of #25 | - |
+| #821 collapse map | Card-mod/conditional-card already does it | Only if free inside B10 |
 
 ## Conflict map and parallel work
 
