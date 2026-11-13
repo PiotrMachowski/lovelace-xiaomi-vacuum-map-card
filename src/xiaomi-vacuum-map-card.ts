@@ -391,10 +391,6 @@ export class XiaomiVacuumMapCard extends LitElement {
                                 icon="mdi:image-filter-center-focus"
                                 class="icon-on-map clickable ripple"
                                 @click="${this._restoreMap}"></ha-icon>
-                            <ha-icon
-                                icon="mdi:rotate-right"
-                                class="icon-on-map clickable ripple"
-                                @click="${this._rotateMap}"></ha-icon>
                             <div class="map-zoom-icons-main">
                                 <ha-icon
                                     icon="mdi:magnify-minus"
