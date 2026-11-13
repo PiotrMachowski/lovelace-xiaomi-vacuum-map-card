@@ -257,8 +257,8 @@ function getScratchPoint(): SVGPoint {
 }
 
 // The registry lookup lives in its own module (`src/entity-registry.ts`): it is shared by the icon
-// and tile generators and by the editor, and it memoizes one websocket call per connection and
-// vacuum. Re-exported here so existing `./utils` imports keep working.
+// and tile generators and by the editor, and it memoizes one websocket call per connection, vacuum
+// and device entity set. Re-exported here so existing `./utils` imports keep working.
 export { getAllEntitiesFromTheSameDevice } from "./entity-registry";
 
 export async function delay(ms: number): Promise<void> {
