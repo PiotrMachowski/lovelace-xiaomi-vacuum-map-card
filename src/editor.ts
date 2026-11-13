@@ -3,7 +3,7 @@ import { css, CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators";
 import { fireEvent, LovelaceCardEditor } from "custom-card-helpers";
 
-import { RoomConfigEventData, TranslatableString, XiaomiVacuumMapCardConfig } from "./types/types";
+import { RoomConfigEventData, RoomConfigRequestEventData, TranslatableString, XiaomiVacuumMapCardConfig } from "./types/types";
 import { localizeWithHass } from "./localize/localize";
 import { PlatformGenerator } from "./model/generators/platform-generator";
 import {
@@ -21,6 +21,10 @@ import { conditional, copyMessage, getAllEntitiesFromTheSameDevice } from "./uti
 import { ToastRenderer } from "./renderers/toast-renderer";
 import { HomeAssistantFixed } from "./types/fixes";
 
+// Every "Generate rooms config" request gets a unique id so a late answer to an older request
+// cannot overwrite a newer one and two editors on one page cannot accept each other's answers.
+let roomConfigRequestCounter = 0;
+
 @customElement(EDITOR_CUSTOM_ELEMENT_NAME)
 export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<LovelaceCardEditor, "hass"> {
     @property({ attribute: false }) public hass?: HomeAssistantFixed;
@@ -28,6 +32,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
     @state() private _helpers?: any;
     @state() private _lastSelection?: any;
     private _initialized = false;
+    private _pendingRoomConfigRequestId?: string;
 
     constructor() {
         super();
@@ -83,11 +88,18 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
         }
     }
 
-    private static _generateRoomsConfig(entity: string | undefined): void {
-        // Attach the entity being edited so every mounted card can tell whether this request is
-        // actually for it; see RoomConfigEventData and _handleRoomsConfigGet.
+    private _generateRoomsConfig(): void {
+        // Attach the entity/camera being edited and a request id: every mounted card receives the
+        // window event, but only the matching card answers and only this editor accepts the answer.
+        const requestId = String(++roomConfigRequestCounter);
+        this._pendingRoomConfigRequestId = requestId;
+        const request: RoomConfigRequestEventData = {
+            entity: this._entity,
+            camera: this._camera,
+            requestId: requestId,
+        };
         const event = new Event(EVENT_ROOM_CONFIG_GET);
-        (event as any).entity = entity;
+        Object.assign(event, request);
         window.dispatchEvent(event);
     }
 
@@ -251,7 +263,7 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
                         ${this._localize("editor.label.set_static_config")}
                     </ha-button>
                     <ha-button size="small" variant="brand" appearance="filled"
-                               @click="${() => XiaomiVacuumMapCardEditor._generateRoomsConfig(this._entity)}"
+                               @click="${() => this._generateRoomsConfig()}"
                         .disabled=${roomsUnavailable}>
                         ${this._localize("editor.label.generate_rooms_config")}
                     </ha-button>
@@ -306,6 +318,12 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
         if (roomConfig.entity !== undefined && roomConfig.entity !== this._entity) {
             return;
         }
+        // A response that echoes a request id belongs to the request that carried it. Ignore stale
+        // answers and answers to another editor; an answer without an id is a legacy producer.
+        if (roomConfig.requestId !== undefined && roomConfig.requestId !== this._pendingRoomConfigRequestId) {
+            return;
+        }
+        this._pendingRoomConfigRequestId = undefined;
         const map_modes = [...(this._config?.map_modes ?? [])];
         if (map_modes.length !== 0 && (roomConfig.modeIndex ?? -1) >= 0) {
             map_modes[roomConfig.modeIndex ?? -1] = {

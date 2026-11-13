@@ -291,6 +291,12 @@ export interface MapExtractorRoom {
     readonly y: number | undefined;
 }
 
+export interface RoomConfigRequestEventData {
+    readonly entity?: string;
+    readonly camera?: string;
+    readonly requestId?: string;
+}
+
 export interface RoomConfigEventData {
     readonly modeIndex: number;
     readonly rooms: Array<RoomConfig>;
@@ -299,6 +305,10 @@ export interface RoomConfigEventData {
     // card mounted every card receives the broadcast request and every one replies. This field lets
     // the editor reject another card's answer. See _handleRoomsConfigGet/_handleRoomConfig.
     readonly entity: string | undefined;
+    readonly camera?: string;
+    // Echoes the request id from RoomConfigRequestEventData so only the editor that asked accepts
+    // the response, even when two editors configure the same entity/camera.
+    readonly requestId?: string;
 }
 
 export interface EntityConfig {

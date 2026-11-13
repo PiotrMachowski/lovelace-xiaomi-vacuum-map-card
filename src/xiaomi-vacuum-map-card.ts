@@ -12,6 +12,7 @@ import type {
     ReplacedKey,
     RoomConfig,
     RoomConfigEventData,
+    RoomConfigRequestEventData,
     TileConfig,
     XiaomiVacuumMapCardConfig,
 } from "./types/types";
@@ -976,15 +977,18 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _handleRoomsConfigGet(e: Event): void {
         // EVENT_ROOM_CONFIG_GET is a plain window broadcast, so every mounted card receives it.
-        // Only answer when the request names this card's entity; `undefined` keeps legacy callers
-        // that dispatch the bare event working as before.
-        const requestedEntity = (e as any).entity;
-        const ownEntity = this._getCurrentPreset()?.entity;
-        if (requestedEntity !== undefined && requestedEntity !== ownEntity) {
+        // Only answer when the request names this card's entity/camera; `undefined` keeps legacy
+        // callers that dispatch the bare event working as before.
+        const request = e as Event & Partial<RoomConfigRequestEventData>;
+        const currentPreset = this._getCurrentPreset();
+        if (request.entity !== undefined && request.entity !== currentPreset?.entity) {
+            return;
+        }
+        if (request.camera !== undefined && request.camera !== currentPreset?.map_source?.camera) {
             return;
         }
         const event = new Event(EVENT_ROOM_CONFIG);
-        (event as any).roomConfig = this._getRoomsConfig();
+        (event as any).roomConfig = this._getRoomsConfig(request.requestId);
         window.dispatchEvent(event);
     }
 
@@ -1068,7 +1072,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         this.requestUpdate();
     }
 
-    private _getRoomsConfig(): RoomConfigEventData | undefined {
+    private _getRoomsConfig(requestId?: string): RoomConfigEventData | undefined {
         const config = this._getCurrentPreset();
         const rooms = this.hass.states[config.map_source?.camera ?? ""]?.attributes["rooms"] as Record<
             string,
@@ -1116,7 +1120,13 @@ export class XiaomiVacuumMapCard extends LitElement {
                 } as RoomConfig;
                 roomsConfig.push(roomConfig);
             }
-            return { modeIndex: modeIndex, rooms: roomsConfig, entity: config.entity };
+            return {
+                modeIndex: modeIndex,
+                rooms: roomsConfig,
+                entity: config.entity,
+                camera: config.map_source?.camera,
+                requestId: requestId,
+            };
         }
         return undefined;
     }

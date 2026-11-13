@@ -61,7 +61,7 @@ describe("editor room-config generation", () => {
             configChanges.push((event as CustomEvent<{ config: XiaomiVacuumMapCardConfig }>).detail.config);
         });
 
-        const roomConfig: RoomConfigEventData = { modeIndex: 1, rooms: generatedRooms() };
+        const roomConfig: RoomConfigEventData = { modeIndex: 1, rooms: generatedRooms(), entity: baseConfig.entity };
         const captured = captureWindowErrors();
         fireRoomConfig(roomConfig);
         await settle(editor.element);
@@ -100,7 +100,7 @@ describe("editor room-config generation", () => {
         });
 
         const captured = captureWindowErrors();
-        fireRoomConfig({ modeIndex: 0, rooms: generatedRooms() });
+        fireRoomConfig({ modeIndex: 0, rooms: generatedRooms(), entity: baseConfig.entity });
         await settle(editor.element);
         captured.stop();
 
