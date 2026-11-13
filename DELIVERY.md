@@ -12,7 +12,7 @@ Opus 5.5) returned `VERDICT: APPROVE` on the PR.
 | Batch | Scope | Status | PR | Council | Merge SHA | Blocker |
 |---|---|---|---|---|---|---|
 | P0a | Node 22 CI, `actions/checkout@v4`, lockfile v3, `tsc --noEmit` in CI | merged | [#2](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/2) | APPROVE (round 2) | `deb2555` | - |
-| P0b | Vitest 3 + happy-dom harness, fixtures, `detectFromImageData`, first two failing tests, `npm test` in CI | in progress | - | - | - | - |
+| P0b | Vitest 3 + happy-dom harness, fixtures, `detectFromImageData`, first two failing tests, `npm test` in CI | review | [#3](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/3) | - | - | - |
 | P0c | Playwright visual harness (separate job, `visual` label) | planned | - | - | - | waiting for P0b |
 | P0d | Capture the real Home Assistant fixture | blocked | - | - | - | needs the user's HA instance (see Manual checks) |
 | B1 | Config robustness (#937, #940, #938; #952 postponed) | planned | - | - | - | waiting for P0b |

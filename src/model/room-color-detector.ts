@@ -22,8 +22,19 @@ export interface DetectedRoomColor {
     readonly outline: PointType[];
 }
 
+/**
+ * The part of `ImageData` room detection reads. Declaring it lets PNG fixtures and other pure
+ * pixel buffers go through `detectFromImageData` without a browser canvas, while a real
+ * `ImageData` still satisfies it.
+ */
+export interface ImageDataLike {
+    readonly width: number;
+    readonly height: number;
+    readonly data: Uint8ClampedArray;
+}
+
 export interface RoomColorDetection {
-    readonly imageData: ImageData;
+    readonly imageData: ImageDataLike;
     readonly regions: DetectedRoomColor[];
     readonly roomIdByColor: Map<number, string>;
 }
@@ -64,33 +75,46 @@ export class RoomColorDetector {
         try {
             if (!isCanvas) context.drawImage(image, 0, 0);
             const imageData = context.getImageData(0, 0, imageWidth, imageHeight);
-            const candidates = Object.keys(rooms)
-                .map(id => this._getCandidate(id, rooms[id], imageData, converter))
-                .filter((candidate): candidate is RoomCandidate => candidate !== undefined);
-            const colorAssignments = this._assignColors(candidates);
-            const regions: DetectedRoomColor[] = [];
-            const roomIdByColor = new Map<number, string>();
-
-            colorAssignments.forEach((colorKey, id) => {
-                const candidate = candidates.find(entry => entry.id === id);
-                if (!candidate) return;
-                const region = this._extractRegion(id, colorKey, candidate.bounds, imageData);
-                if (!region) return;
-                regions.push(region);
-                roomIdByColor.set(colorKey, id);
-            });
-
-            return regions.length > 0 ? { imageData, regions, roomIdByColor } : undefined;
+            return this.detectFromImageData(imageData, rooms, converter);
         } catch (_error) {
             // A remote image without canvas access cannot be segmented; callers keep their normal room config.
             return undefined;
         }
     }
 
+    /**
+     * Pure room detection over raw RGBA pixels. `detect` is the browser/canvas wrapper; callers
+     * that already have pixel data (PNG fixtures in tests, or a future non-canvas source) use
+     * this directly. `converter` must be calibrated, which `detect` checks.
+     */
+    public static detectFromImageData(
+        imageData: ImageDataLike,
+        rooms: Record<string, MapExtractorRoom>,
+        converter: CoordinatesConverter,
+    ): RoomColorDetection | undefined {
+        const candidates = Object.keys(rooms)
+            .map(id => this._getCandidate(id, rooms[id], imageData, converter))
+            .filter((candidate): candidate is RoomCandidate => candidate !== undefined);
+        const colorAssignments = this._assignColors(candidates);
+        const regions: DetectedRoomColor[] = [];
+        const roomIdByColor = new Map<number, string>();
+
+        colorAssignments.forEach((colorKey, id) => {
+            const candidate = candidates.find(entry => entry.id === id);
+            if (!candidate) return;
+            const region = this._extractRegion(id, colorKey, candidate.bounds, imageData);
+            if (!region) return;
+            regions.push(region);
+            roomIdByColor.set(colorKey, id);
+        });
+
+        return regions.length > 0 ? { imageData, regions, roomIdByColor } : undefined;
+    }
+
     private static _getCandidate(
         id: string,
         room: MapExtractorRoom,
-        imageData: ImageData,
+        imageData: ImageDataLike,
         converter: CoordinatesConverter,
     ): RoomCandidate | undefined {
         if (room.outline) return undefined;
@@ -168,7 +192,7 @@ export class RoomColorDetector {
         id: string,
         colorKey: number,
         bounds: PixelBounds,
-        imageData: ImageData,
+        imageData: ImageDataLike,
     ): DetectedRoomColor | undefined {
         const width = bounds.right - bounds.left + 1;
         const height = bounds.bottom - bounds.top + 1;

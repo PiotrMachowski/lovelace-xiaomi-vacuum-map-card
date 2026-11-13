@@ -1,0 +1,68 @@
+[
+    {
+        "entity_id": "vacuum.roborock_s7",
+        "unique_id": "roborock_s7",
+        "device_id": "device-roborock-s7",
+        "platform": "xiaomi_miio",
+        "name": null,
+        "original_name": "Roborock S7",
+        "disabled_by": null,
+        "hidden_by": null,
+        "area_id": "kitchen"
+    },
+    {
+        "entity_id": "camera.vacuum_map",
+        "unique_id": "roborock_s7_map",
+        "device_id": "device-roborock-s7",
+        "platform": "xiaomi_miio",
+        "name": null,
+        "original_name": "Vacuum map",
+        "disabled_by": null,
+        "hidden_by": null,
+        "area_id": null
+    },
+    {
+        "entity_id": "sensor.roborock_s7_battery",
+        "unique_id": "roborock_s7_battery",
+        "device_id": "device-roborock-s7",
+        "platform": "xiaomi_miio",
+        "name": null,
+        "original_name": "Roborock S7 Battery",
+        "disabled_by": null,
+        "hidden_by": null,
+        "area_id": null
+    },
+    {
+        "entity_id": "sensor.roborock_s7_status",
+        "unique_id": "roborock_s7_status",
+        "device_id": "device-roborock-s7",
+        "platform": "xiaomi_miio",
+        "name": null,
+        "original_name": "Roborock S7 Status",
+        "disabled_by": null,
+        "hidden_by": null,
+        "area_id": null
+    },
+    {
+        "entity_id": "sensor.roborock_s7_cleaning_area",
+        "unique_id": "roborock_s7_cleaning_area",
+        "device_id": "device-roborock-s7",
+        "platform": "xiaomi_miio",
+        "name": null,
+        "original_name": "Roborock S7 Cleaning area",
+        "disabled_by": null,
+        "hidden_by": null,
+        "area_id": null
+    },
+    {
+        "entity_id": "sensor.roborock_s7_cleaning_time",
+        "unique_id": "roborock_s7_cleaning_time",
+        "device_id": "device-roborock-s7",
+        "platform": "xiaomi_miio",
+        "name": null,
+        "original_name": "Roborock S7 Cleaning time",
+        "disabled_by": null,
+        "hidden_by": null,
+        "area_id": null
+    }
+]

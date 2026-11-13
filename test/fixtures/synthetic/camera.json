@@ -1,0 +1,54 @@
+{
+    "entity_id": "camera.vacuum_map",
+    "state": "idle",
+    "attributes": {
+        "friendly_name": "Vacuum map",
+        "entity_picture": "/api/camera_proxy/camera.vacuum_map?token=REDACTED_TOKEN",
+        "access_token": "REDACTED_TOKEN",
+        "last_update_timestamp": 1761981600,
+        "calibration_points": [
+            {
+                "map": { "x": 0, "y": 0 },
+                "vacuum": { "x": 0, "y": 0 }
+            },
+            {
+                "map": { "x": 200, "y": 0 },
+                "vacuum": { "x": 2000, "y": 0 }
+            },
+            {
+                "map": { "x": 0, "y": 150 },
+                "vacuum": { "x": 0, "y": 1500 }
+            }
+        ],
+        "rooms": {
+            "0": {
+                "x0": 200,
+                "y0": 200,
+                "x1": 800,
+                "y1": 700,
+                "name": "Kitchen"
+            },
+            "1": {
+                "x0": 1000,
+                "y0": 200,
+                "x1": 1700,
+                "y1": 700,
+                "name": "Living room"
+            },
+            "2": {
+                "x0": 200,
+                "y0": 900,
+                "x1": 800,
+                "y1": 1300,
+                "name": "Bedroom"
+            }
+        }
+    },
+    "last_changed": "2026-11-01T10:00:00.000Z",
+    "last_updated": "2026-11-01T10:00:00.000Z",
+    "context": {
+        "id": "fixture-camera",
+        "parent_id": null,
+        "user_id": null
+    }
+}

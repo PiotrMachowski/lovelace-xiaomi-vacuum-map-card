@@ -147,6 +147,10 @@ Upstream: PR #956, #944; fork: duplicate-mode cleanup (#928 observation); PR #95
 - #958: render `ha-input` when `customElements.get("ha-input")` is defined, otherwise
   `ha-textfield`, so the editor survives HA frontend component changes
   (`src/editor.ts:139`, `src/editor.ts:230`).
+- Card disconnect leak: `disconnectedCallback` re-evaluates `_isInEditor()` after the card has
+  been detached, so an editor-preview card keeps its window listeners. B2 must switch the
+  disconnect path to the `isInEditor` flag stored in `connectedCallback`; P0b works around it in
+  the harness by removing the `hui-card-preview` wrapper instead of the card.
 
 Tests (DOM): frozen config + generate; two cards with two editors on one page, asserting card B
 never answers editor A; generate twice and assert one ROOM mode; assert the fallback element
