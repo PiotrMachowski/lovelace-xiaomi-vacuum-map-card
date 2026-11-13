@@ -12,12 +12,12 @@ Opus 5.5) returned `VERDICT: APPROVE` on the PR.
 | Batch | Scope | Status | PR | Council | Merge SHA | Blocker |
 |---|---|---|---|---|---|---|
 | P0a | Node 22 CI, `actions/checkout@v4`, lockfile v3, `tsc --noEmit` in CI | merged | [#2](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/2) | APPROVE (round 2) | `deb2555` | - |
-| P0b | Vitest 3 + happy-dom harness, fixtures, `detectFromImageData`, first two failing tests, `npm test` in CI | review | [#3](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/3) | - | - | - |
-| P0c | Playwright visual harness (separate job, `visual` label) | planned | - | - | - | waiting for P0b |
+| P0b | Vitest 3 + happy-dom harness, fixtures, `detectFromImageData`, first two failing tests, `npm test` in CI | merged | [#3](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/3) | APPROVE (round 2) | `4a0dcc9` | - |
+| P0c | Playwright visual harness (separate job, `visual` label) | in progress | - | - | - | - |
 | P0d | Capture the real Home Assistant fixture | blocked | - | - | - | needs the user's HA instance (see Manual checks) |
-| B1 | Config robustness (#937, #940, #938; #952 postponed) | planned | - | - | - | waiting for P0b |
-| B2 | Editor room-config path (#956, #944, duplicate cleanup, #958) | planned | - | - | - | waiting for P0b |
-| B3 | Tiles, labels and icons (#723, #957, #965, #961) | planned | - | - | - | waiting for P0b |
+| B1 | Config robustness (#937, #940, #938; #952 postponed) | in progress | - | - | - | - |
+| B2 | Editor room-config path (#956, #944, duplicate cleanup, #958) | in progress | - | - | - | - |
+| B3 | Tiles, labels and icons (#723, #957, #965, #961) | in progress | - | - | - | - |
 | B4 | Roborock status/battery templates (#964) | postponed | - | - | - | needs a real Roborock-core registry fixture |
 | B5 | Cleaning-order badges (#959) | planned | - | - | - | after B2 |
 | B6 | Map refresh policy (#704, #357) | planned | - | - | - | after B5 |
