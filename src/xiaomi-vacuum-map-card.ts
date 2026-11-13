@@ -2083,16 +2083,16 @@ export class XiaomiVacuumMapCard extends LitElement {
                 );
                 --map-card-internal-room-label-color: var(
                     --map-card-room-label-color,
-                    var(--map-card-internal-secondary-text-color)
+                    #fff
                 );
                 --map-card-internal-room-label-color-selected: var(
                     --map-card-room-label-color-selected,
-                    var(--map-card-internal-primary-text-color)
+                    #fff
                 );
                 --map-card-internal-room-label-font-size: var(--map-card-room-label-font-size, 12px);
                 --map-card-internal-room-label-outline-color: var(
                     --map-card-room-label-outline-color,
-                    rgba(0, 0, 0, 0.9)
+                    rgba(0, 0, 0, 0.95)
                 );
                 --map-card-internal-room-label-outline-width: var(--map-card-room-label-outline-width, 2px);
                 --map-card-internal-toast-successful-icon-color: var(

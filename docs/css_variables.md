@@ -94,3 +94,5 @@
 --map-card-toast-unsuccessful-icon-color
 --map-card-transitions-duration
 ```
+
+Room labels default to white text with a dark outline for contrast across map colors. Use the room label color and outline variables above to customize them.

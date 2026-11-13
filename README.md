@@ -237,6 +237,8 @@ full_demo.mp4).
 
 <sup>1</sup> Exactly one of `camera` or `image` must be provided
 
+For `ROOM` selections, the card can use room IDs and names from the camera's `rooms` attribute, then trace each room's colored region from the map image. Manual room definitions remain available as a fallback when the camera does not provide room metadata or the map has no distinct room colors.
+
 #### Cropping options
 
 | Key      | Type   | Required | Default | Description                                      |
