@@ -13,6 +13,8 @@ import {
 type CardWithDelayedWork = {
     _updateElements: (somethingChanged?: boolean) => void;
     _restoreMapView: () => void;
+    _rotateMap: () => void;
+    _getCssProperty: (property: string) => string;
 };
 
 interface DelayedWorkFixture {
@@ -100,5 +102,41 @@ describe("card disconnect and delayed work", () => {
 
         await clock.advance(2);
         expect(restoreMapView).toHaveBeenCalledTimes(1);
+    });
+
+    it("clears a cancelled rotate transition when the card is re-attached within 300 ms", async () => {
+        const { card, clock, delayed } = await mountSettledCard();
+        // happy-dom has no custom-property cascade, so stub the value a rotate press would read.
+        vi.spyOn(delayed, "_getCssProperty").mockReturnValue("200ms");
+        delayed._rotateMap();
+
+        const zoomerContent = card.shadowRoot.getElementById("map-zoomer-content") as HTMLElement;
+        expect(zoomerContent.style.transitionDuration).toBe("200ms");
+
+        // Home Assistant detaches and re-attaches cards on a masonry re-layout, well inside the
+        // 300 ms window in which the inline duration is meant to be cleared. The pending reset is
+        // cancelled by the disconnect, and Lit never rewrites the static style attribute, so the
+        // card itself has to leave it at "0s" before it is attached again.
+        const parent = card.element.parentElement as HTMLElement;
+        card.element.remove();
+        parent.appendChild(card.element);
+        await clock.advance(1000);
+
+        const reattached = card.shadowRoot.getElementById("map-zoomer-content") as HTMLElement;
+        expect(reattached.style.transitionDuration).toBe("0s");
+    });
+
+    it("ignores a map image load that lands after the card is removed", async () => {
+        const { card, delayed } = await mountSettledCard();
+        const restoreMapView = vi.spyOn(delayed, "_restoreMapView");
+
+        // The load path is live while connected, so the assertion below is about the removal.
+        await card.fireMapLoad();
+        expect(restoreMapView).toHaveBeenCalled();
+        restoreMapView.mockClear();
+
+        card.element.remove();
+        await card.fireMapLoad();
+        expect(restoreMapView).not.toHaveBeenCalled();
     });
 });
