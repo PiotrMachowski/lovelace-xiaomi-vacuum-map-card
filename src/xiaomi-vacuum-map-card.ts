@@ -429,7 +429,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
-        if (changedProps.has("layout")) {
+        if (changedProps.has("layout") && this.config) {
             // `layout` is set by hui-card after the element is created; the reflected attribute
             // drives the sections-view height rules even when no watched entity changed.
             return true;
