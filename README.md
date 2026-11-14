@@ -130,14 +130,32 @@ templates, the entities the card discovers and the service calls it uses.
 upstream, so those requests go to the
 [upstream tracker](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/new?labels=new+platform&template=new_platform_request.yml).
 
+## Reporting a problem
+
+A screenshot rarely explains a map, room or tile bug: the card version, the vacuum integration, the
+camera metadata and the console errors all matter. The repository includes a triage skill that
+collects exactly that, locally and with your approval.
+
+1. Tell your agent: **“Run the triage skill for this repository and prepare a report I can send.”**
+2. Answer its questions, then review the redacted bundle. It does not upload anything, read secrets,
+   or publish your map, room names or coordinates without asking.
+3. Attach `triage-report.md`, `triage-data.json` and the attachments to the
+   [triage report form](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/issues/new?template=triage_report.yml).
+
+The same bundle can become a regression fixture, which is how device-specific gaps get covered
+without the maintainer owning the same robot: attach the generated `fixture/` folder too. The full
+guide, including a manual checklist for when you have no agent or no local access, is
+[getting help with a card problem](docs/triage.md).
+
 ## Project
 
 Planned work and the items waiting on hardware are in [ROADMAP.md](ROADMAP.md); released changes are
 in [CHANGELOG.md](CHANGELOG.md); the differences from upstream are recorded in [FORK.md](FORK.md).
 
 Bugs and feature requests for this fork belong on the
-[fork tracker](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/issues). If the same
-configuration also fails with the upstream release, report it upstream as well.
+[fork tracker](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/issues); for a card
+problem, start with [Reporting a problem](#reporting-a-problem). If the same configuration also fails
+with the upstream release, report it upstream as well.
 
 ## Attribution and license
 
