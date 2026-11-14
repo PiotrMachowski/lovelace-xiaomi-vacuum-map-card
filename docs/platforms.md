@@ -39,5 +39,5 @@ without a separate coordinate tool. The [setup platforms guide](templates/setup.
 walks through the editor picker and the copy button.
 
 The platform pages themselves are unchanged from upstream. A template is only claimed as tested
-when a fixture or a real instance backs it; see the [maintenance model](../README.md#maintenance-model)
+when a fixture or a real instance backs it; see the [maintenance model](../README.md#project)
 for what that means for hardware-specific features.

@@ -2,8 +2,8 @@
 
 These tests drive a real Home Assistant instance in Docker, install the card the way a user does,
 and exercise the behaviours the mock harness cannot prove. The delivery owns this verification: a
-release is only published after this suite passes against the release candidate, and the screenshots
-under `docs/evidence/e2e/` are the evidence.
+release is only published after this suite passes against the release candidate; screenshots are
+written to the gitignored `test/e2e/artifacts/`.
 
 ## What it covers
 
@@ -53,8 +53,8 @@ node test/e2e/install-local-build.cjs              # put this checkout's build i
 npm run test:e2e
 ```
 
-Screenshots are written to `test/e2e/artifacts/` (gitignored); copy the relevant ones to
-`docs/evidence/e2e/` when a behaviour changes.
+Screenshots are written to `test/e2e/artifacts/` (gitignored); attach the relevant ones to a pull
+request or release when a behaviour changes.
 
 ## Fixture camera
 
