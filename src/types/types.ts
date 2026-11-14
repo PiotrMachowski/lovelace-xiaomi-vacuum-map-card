@@ -45,8 +45,37 @@ export type EntityRegistryEntry = {
     disabled_by?: string;
 };
 
+/**
+ * How the card arranges the map and the controls below/beside it.
+ *
+ * `vertical` is the upstream arrangement and the default: map first, then modes, icons and tiles.
+ * `horizontal` puts the map and the controls side by side, with the controls column scrolling
+ * inside the card when it is taller than the map.
+ */
+export type CardLayout = "vertical" | "horizontal";
+
+/**
+ * The subset of Home Assistant's `LovelaceGridOptions` this card returns from `getGridOptions()`.
+ *
+ * HA's interface is declared in `home-assistant/frontend` at `src/panels/lovelace/types.ts`:
+ * `columns?: number | "full"`, `rows?: number | "auto"`, `max_columns?`, `min_columns?`,
+ * `min_rows?` and `max_rows?`. Sections divide a section into 12 columns, and `computeCardGridSize`
+ * in `src/panels/lovelace/common/compute-card-grid-size.ts` defaults a missing `columns` to 12 and
+ * a missing `rows` to `"auto"`. The card returns numeric rows so the height can be resized in the
+ * sections view, which issue #943 reported as impossible.
+ */
+export interface CardGridOptions {
+    columns?: number | "full";
+    rows?: number | "auto";
+    max_columns?: number;
+    min_columns?: number;
+    min_rows?: number;
+    max_rows?: number;
+}
+
 export interface XiaomiVacuumMapCardConfig extends LovelaceCardConfig, CardPresetConfig {
     readonly title?: string;
+    readonly layout?: CardLayout;
     readonly additional_presets?: CardPresetConfig[];
     readonly language?: Language;
     readonly debug?: boolean;

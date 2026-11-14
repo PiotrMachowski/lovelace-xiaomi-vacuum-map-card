@@ -20,6 +20,8 @@ import {
     ActionHandlerFunction,
     ActionType,
     CalibrationPoint,
+    CardGridOptions,
+    CardLayout,
     CardPresetConfig,
     MapExtractorRoom,
     PredefinedZoneConfig,
@@ -175,6 +177,8 @@ export class XiaomiVacuumMapCard extends LitElement {
     private lastRoomColorDetectionKey?: string;
     private mapRefreshState?: MapRefreshState;
     private trailingMapRefreshPending = false;
+    private mapResizeObserver?: ResizeObserver;
+    private observedMapCanvas?: HTMLCanvasElement;
 
     constructor() {
         super();
@@ -187,6 +191,13 @@ export class XiaomiVacuumMapCard extends LitElement {
     }
 
     @property({ attribute: false }) public _hass!: HomeAssistantFixed;
+
+    /**
+     * Set by Home Assistant's `hui-card` wrapper (`layout = "grid"` in a sections view). Reflected
+     * so the shadow stylesheet can make the card fill the grid cell only when it is actually in
+     * that wrapper; every other view keeps the upstream content-sized layout.
+     */
+    @property({ reflect: true }) public layout?: string;
 
     public get hass(): HomeAssistantFixed {
         return this._hass;
@@ -258,6 +269,53 @@ export class XiaomiVacuumMapCard extends LitElement {
         return 12;
     }
 
+    /**
+     * The sections-view grid spans for a layout.
+     *
+     * Source for the shape and values: Home Assistant's `LovelaceGridOptions` in
+     * `home-assistant/frontend/src/panels/lovelace/types.ts` (`columns` 1–12 or `"full"`, `rows` a
+     * count or `"auto"`, plus `min_*`/`max_*` clamps), applied by `computeCardGridSize` in
+     * `src/panels/lovelace/common/compute-card-grid-size.ts`; the custom-card docs add that a
+     * section is 12 columns, one row is 56 px plus an 8 px gap, and a column value that is a
+     * multiple of 3 lines cards up (`columns: 12` here). Numeric `rows` is deliberate: with
+     * `rows: "auto"` Home Assistant follows the content and the user cannot resize the height,
+     * which is the problem issue #943 reports. Horizontal needs more width than vertical, hence
+     * the higher `min_columns` and the shorter default height (its map column is usually wider, so
+     * the map row is shorter than the same map stacked above its controls).
+     *
+     * HA invokes this as an instance method (`hui-card.getElementGridOptions` calls
+     * `this._element.getGridOptions()`), so the instance method below delegates here with the
+     * configured layout. Keeping the table static also makes it testable without mounting a card
+     * and lets a caller ask for either layout explicitly.
+     */
+    public static getGridOptions(layout: CardLayout = "vertical"): CardGridOptions {
+        if (layout === "horizontal") {
+            return {
+                columns: 12,
+                rows: 6,
+                min_columns: 6,
+                min_rows: 3,
+                max_rows: 12,
+            };
+        }
+        return {
+            columns: 12,
+            rows: 8,
+            min_columns: 3,
+            min_rows: 4,
+            max_rows: 12,
+        };
+    }
+
+    /** The grid options for the card's configured layout, as `hui-card` reads them. */
+    public getGridOptions(): CardGridOptions {
+        return XiaomiVacuumMapCard.getGridOptions(this._getCardLayout());
+    }
+
+    private _getCardLayout(): CardLayout {
+        return this.config?.layout === "horizontal" ? "horizontal" : "vertical";
+    }
+
     connectedCallback(): void {
         super.connectedCallback();
         // Store the result: `disconnectedCallback` cannot re-evaluate it after the element has
@@ -293,6 +351,9 @@ export class XiaomiVacuumMapCard extends LitElement {
         document.removeEventListener(EVENT_LOVELACE_DOM, this._handleLovelaceDomEvent);
         document.removeEventListener("visibilitychange", this._handleVisibilityChange);
         window.removeEventListener("pagehide", this._flushMapView);
+        this.mapResizeObserver?.disconnect();
+        this.mapResizeObserver = undefined;
+        this.observedMapCanvas = undefined;
         this._cancelDelayedCallbacks();
         // The trailing map refresh was one of the cancelled callbacks; a re-attach must be able to
         // schedule a new one instead of believing it is still pending.
@@ -368,6 +429,11 @@ export class XiaomiVacuumMapCard extends LitElement {
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
+        if (changedProps.has("layout")) {
+            // `layout` is set by hui-card after the element is created; the reflected attribute
+            // drives the sections-view height rules even when no watched entity changed.
+            return true;
+        }
         if (!this.config) {
             return false;
         }
@@ -454,6 +520,115 @@ export class XiaomiVacuumMapCard extends LitElement {
                 </div>
             </div>
         `;
+        const mapSection = html`
+            <div class="map-wrapper">
+                <pinch-zoom
+                    min-scale="0.5"
+                    id="map-zoomer"
+                    @change="${this._calculateScale}"
+                    two-finger-pan="${preset.two_finger_pan}"
+                    locked="${this.mapLocked}"
+                    rotatable="${this._isRotationGestureEnabled()}"
+                    no-default-pan="${this.mapLocked || preset.two_finger_pan}"
+                    @pinch-rotate="${this._handleRotateGesture}"
+                    @pinch-rotate-end="${this._handleRotateGestureEnd}"
+                    style="touch-action: none;">
+                    ${mapZoomerContent}
+                </pinch-zoom>
+                <div id="map-zoomer-overlay">
+                    <div style="right: 0; top: 0; position: absolute;">
+                        <ha-icon
+                            icon="${this.mapLocked ? "mdi:lock" : "mdi:lock-open"}"
+                            class="standalone-icon-on-map clickable ripple"
+                            @click="${this._toggleLock}"></ha-icon>
+                    </div>
+                    <div class="map-zoom-icons" style="visibility: ${this.mapLocked ? "hidden" : "visible"}">
+                        <ha-icon
+                            icon="mdi:image-filter-center-focus"
+                            class="icon-on-map clickable ripple"
+                            @click="${this._resetMapView}"></ha-icon>
+                        <div class="map-zoom-icons-main">
+                            <ha-icon
+                                icon="mdi:magnify-minus"
+                                class="icon-on-map clickable ripple"
+                                @click="${this._zoomOut}"></ha-icon>
+                            <ha-icon
+                                icon="mdi:magnify-plus"
+                                class="icon-on-map clickable ripple"
+                                @click="${this._zoomIn}"></ha-icon>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        const warningSection = html`
+            ${conditional(!validCalibration, () => this._showInvalidCalibrationWarning())}
+            ${conditional(
+                staleRoomIds.length > 0,
+                () => html`
+                    <hui-warning class="room-config-warning">
+                        ${this._localize(["validation.stale_rooms", "{0}", staleRoomIds.join(", ")] as [
+                            string,
+                            string,
+                            string,
+                        ])}
+                    </hui-warning>
+                `,
+            )}
+        `;
+        const hasControls =
+            modes.length > 1 || mapControls.length > 0 || (icons?.length ?? 0) !== 0 || (tiles?.length ?? 0) !== 0;
+        const controlsSection = conditional(
+            hasControls,
+            () => html`
+                <div class="controls-wrapper">
+                    ${conditional(
+                        validCalibration && (modes.length > 1 || mapControls.length > 0),
+                        () => html`
+                            <div class="map-controls-wrapper">
+                                <div class="map-controls">
+                                    ${conditional(modes.length > 1, () => html`
+                                        <xvmc-dropdown-menu
+                                            .values=${modes}
+                                            .currentIndex=${this.selectedMode}
+                                            .setValue=${selected => this._setCurrentMode(selected)}
+                                            .renderNameCollapsed=${true}>
+                                        </xvmc-dropdown-menu>
+                                        `,
+                                    )}
+                                    ${conditional(
+                                        mapControls.length > 0,
+                                        () => html` <div class="map-actions-list">${mapControls}</div> `,
+                                    )}
+                                </div>
+                            </div>
+                        `,
+                    )}
+                    <xvmc-icons-wrapper
+                        .icons=${icons}
+                        .isInEditor=${this.isInEditor}
+                        .onAction=${(c: ActionableObjectConfig, action?: string) => createActionWithConfigHandler(this, c, action)}>
+                    </xvmc-icons-wrapper>
+                    <xvmc-tiles-wrapper
+                        .hass=${this.hass}
+                        .tiles=${tiles}
+                        .isInEditor=${this.isInEditor}
+                        .onAction=${(c: ActionableObjectConfig, action?: string) => createActionWithConfigHandler(this, c, action)}
+                        .internalVariables=${this.internalVariables}>
+                    </xvmc-tiles-wrapper>
+                </div>`,
+        );
+        // The wrapper exists only for the horizontal arrangement. With no controls there is nothing
+        // to place beside, so the map keeps the full card width in either layout.
+        const content =
+            this._getCardLayout() === "horizontal" && hasControls
+                ? html`
+                      <div class="layout-content horizontal">
+                          ${mapSection} ${warningSection}
+                          <div class="controls-column">${controlsSection}</div>
+                      </div>
+                  `
+                : html`${mapSection}${warningSection}${controlsSection}`;
         return html`
             <ha-card
                 style="--map-scale: ${this.mapScale}; --real-scale: ${this.realScale}; --map-rotation: ${this
@@ -473,98 +648,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                     .openNextPreset=${(): void => this._openNextPreset()}
                     .nextPresetIndex=${this._getNextPresetIndex()}>
                 </xvmc-preset-selector>
-                <div class="map-wrapper">
-                    <pinch-zoom
-                        min-scale="0.5"
-                        id="map-zoomer"
-                        @change="${this._calculateScale}"
-                        two-finger-pan="${preset.two_finger_pan}"
-                        locked="${this.mapLocked}"
-                        rotatable="${this._isRotationGestureEnabled()}"
-                        no-default-pan="${this.mapLocked || preset.two_finger_pan}"
-                        @pinch-rotate="${this._handleRotateGesture}"
-                        @pinch-rotate-end="${this._handleRotateGestureEnd}"
-                        style="touch-action: none;">
-                        ${mapZoomerContent}
-                    </pinch-zoom>
-                    <div id="map-zoomer-overlay">
-                        <div style="right: 0; top: 0; position: absolute;">
-                            <ha-icon
-                                icon="${this.mapLocked ? "mdi:lock" : "mdi:lock-open"}"
-                                class="standalone-icon-on-map clickable ripple"
-                                @click="${this._toggleLock}"></ha-icon>
-                        </div>
-                        <div class="map-zoom-icons" style="visibility: ${this.mapLocked ? "hidden" : "visible"}">
-                            <ha-icon
-                                icon="mdi:image-filter-center-focus"
-                                class="icon-on-map clickable ripple"
-                                @click="${this._resetMapView}"></ha-icon>
-                            <div class="map-zoom-icons-main">
-                                <ha-icon
-                                    icon="mdi:magnify-minus"
-                                    class="icon-on-map clickable ripple"
-                                    @click="${this._zoomOut}"></ha-icon>
-                                <ha-icon
-                                    icon="mdi:magnify-plus"
-                                    class="icon-on-map clickable ripple"
-                                    @click="${this._zoomIn}"></ha-icon>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                ${conditional(!validCalibration, () => this._showInvalidCalibrationWarning())}
-                ${conditional(
-                    staleRoomIds.length > 0,
-                    () => html`
-                        <hui-warning class="room-config-warning">
-                            ${this._localize(["validation.stale_rooms", "{0}", staleRoomIds.join(", ")] as [
-                                string,
-                                string,
-                                string,
-                            ])}
-                        </hui-warning>
-                    `,
-                )}
-                ${conditional(
-                    modes.length > 1 || mapControls.length > 0 || (icons?.length??0) !== 0 || (tiles?.length ?? 0) !== 0,
-                    () => html`
-                    <div class="controls-wrapper">
-                        ${conditional(
-                            validCalibration && (modes.length > 1 || mapControls.length > 0),
-                            () => html`
-                                <div class="map-controls-wrapper">
-                                    <div class="map-controls">
-                                        ${conditional(modes.length > 1, () => html`
-                                            <xvmc-dropdown-menu
-                                                .values=${modes}
-                                                .currentIndex=${this.selectedMode}
-                                                .setValue=${selected => this._setCurrentMode(selected)}
-                                                .renderNameCollapsed=${true}>
-                                            </xvmc-dropdown-menu>
-                                            `,
-                                        )}
-                                        ${conditional(
-                                            mapControls.length > 0,
-                                            () => html` <div class="map-actions-list">${mapControls}</div> `,
-                                        )}
-                                    </div>
-                                </div>
-                            `,
-                        )}
-                        <xvmc-icons-wrapper
-                            .icons=${icons}
-                            .isInEditor=${this.isInEditor}
-                            .onAction=${(c: ActionableObjectConfig, action?: string) => createActionWithConfigHandler(this, c, action)}>
-                        </xvmc-icons-wrapper>
-                        <xvmc-tiles-wrapper
-                            .hass=${this.hass}
-                            .tiles=${tiles}
-                            .isInEditor=${this.isInEditor}
-                            .onAction=${(c: ActionableObjectConfig, action?: string) => createActionWithConfigHandler(this, c, action)}
-                            .internalVariables=${this.internalVariables}>
-                        </xvmc-tiles-wrapper>
-                    </div>`
-                )}
+                ${content}
                 ${ToastRenderer.render("map-card")}
             </ha-card>
         `;
@@ -585,6 +669,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         const oldHass = changedProperties.get("_hass") as HomeAssistantFixed | undefined;
         const changed = oldHass && this.hass && checkIfEntitiesChanged(this.entitiesToManuallyUpdate, oldHass, this.hass);
         this._updateElements(changed);
+        this._updateMapResizeObserver();
     }
 
     public _getCurrentPreset(): CardPresetConfig {
@@ -1729,6 +1814,37 @@ export class XiaomiVacuumMapCard extends LitElement {
         }
     }
 
+    /**
+     * Recalculates the base scale when the canvas is laid out at a new width.
+     *
+     * `realScale` converts image pixels to the canvas's untransformed layout width, so it is stale
+     * after a sections-view resize (or any container width change). The image is CSS-scaled to the
+     * new width, while the SVG overlay keeps drawing room outlines at the old scale, which visibly
+     * detaches the overlays from the map. The observer reads layout only; it never asks for a map
+     * refresh, so the refresh policy is untouched.
+     */
+    private _updateMapResizeObserver(): void {
+        if (typeof ResizeObserver === "undefined") {
+            return;
+        }
+        const mapCanvas = this._getMapCanvas();
+        if (!mapCanvas) {
+            return;
+        }
+        if (this.observedMapCanvas === mapCanvas) {
+            return;
+        }
+        this.mapResizeObserver?.disconnect();
+        this.observedMapCanvas = mapCanvas;
+        this.mapResizeObserver = new ResizeObserver(() => {
+            const image = this._getMapImage();
+            if (image?.naturalWidth) {
+                this._calculateBasicScale();
+            }
+        });
+        this.mapResizeObserver.observe(mapCanvas);
+    }
+
     private _detectRoomColors(): void {
         const preset = this._getCurrentPreset();
         const camera = preset?.map_source?.camera;
@@ -2492,6 +2608,89 @@ export class XiaomiVacuumMapCard extends LitElement {
                     rgb(255, 0, 0)
                 );
                 --map-card-internal-transitions-duration: var(--map-card-transitions-duration, 200ms);
+            }
+
+            /*
+             * Sections view: hui-card sets layout = "grid" and the grid section gives the cell a
+             * fixed height when getGridOptions() returns numeric rows. Fill that cell instead of
+             * letting the content overflow into the next card, and scroll inside the card when the
+             * map and controls need more height than the user picked (issue #943).
+             */
+            :host([layout="grid"]) {
+                display: block;
+                height: 100%;
+            }
+
+            :host([layout="grid"]) ha-card {
+                height: 100%;
+                overflow-y: auto;
+            }
+
+            /*
+             * Horizontal arrangement (issue #183): the map keeps the flexible first column and the
+             * controls get a clamped second column. minmax(0, 1fr) lets the map shrink below its
+             * intrinsic width instead of forcing the card wider, and the controls column scrolls
+             * internally instead of growing the card. The wrapper only exists in this layout, so
+             * the vertical arrangement keeps its upstream DOM and pixels.
+             */
+            .layout-content.horizontal {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) clamp(180px, 38%, 360px);
+                align-items: stretch;
+                min-width: 0;
+            }
+
+            .layout-content.horizontal > .map-wrapper {
+                grid-column: 1;
+                grid-row: 1;
+                min-width: 0;
+            }
+
+            .layout-content.horizontal > .controls-column {
+                grid-column: 2;
+                grid-row: 1;
+                position: relative;
+                min-width: 0;
+            }
+
+            /* Absolute so a long control list cannot set the row height: the map does, and the
+               controls scroll within the same rows instead of making the card taller. */
+            .layout-content.horizontal > .controls-column > .controls-wrapper {
+                position: absolute;
+                inset: 0;
+                margin: 15px;
+                overflow-x: hidden;
+                overflow-y: auto;
+                overscroll-behavior: contain;
+            }
+
+            .layout-content.horizontal > .room-config-warning {
+                grid-column: 1 / -1;
+                grid-row: 2;
+            }
+
+            /* A narrow controls column has to wrap its action buttons, and a long mode name must
+               ellipsize instead of widening (and clipping) the column. */
+            .layout-content.horizontal .map-actions-list {
+                flex-wrap: wrap;
+                height: auto;
+                justify-content: center;
+                margin-inline-start: 0;
+            }
+
+            .layout-content.horizontal .map-controls {
+                justify-content: center;
+            }
+
+            .layout-content.horizontal .dropdown-menu-button {
+                max-width: 100%;
+                min-width: 0;
+            }
+
+            .layout-content.horizontal .dropdown-menu-button-text {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
 
             .clickable {

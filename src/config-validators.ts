@@ -1,6 +1,7 @@
 import {
     CalibrationPoint,
     CalibrationSourceConfig,
+    CardLayout,
     CardPresetConfig,
     IconActionConfig,
     IconConfig,
@@ -306,10 +307,28 @@ export function validateMapViewConfig(mapView: MapViewConfig | undefined): Trans
     }).map(field => ["validation.map_view.invalid", "{0}", field] as TranslatableString);
 }
 
+const CARD_LAYOUTS: readonly string[] = ["vertical", "horizontal"];
+
+/**
+ * Validates the main `layout` option.
+ *
+ * An unknown value is reported instead of being silently treated as `vertical`: a typo such as
+ * `horizonal` would otherwise look like the option was ignored and send the user back to card-mod.
+ * The renderer still resolves anything that is not exactly `horizontal` to `vertical`, so a config
+ * that bypassed validation cannot crash the card.
+ */
+export function validateLayout(layout: CardLayout | undefined): TranslatableString[] {
+    if (layout === undefined || CARD_LAYOUTS.includes(layout)) {
+        return [];
+    }
+    return [["validation.layout.invalid", "{0}", String(layout)]];
+}
+
 export function validateConfig(config: XiaomiVacuumMapCardConfig): string[] {
     const errors: TranslatableString[] = [];
     const multiplePresets = (config.additional_presets?.length ?? 0) > 0;
     validatePreset(config, multiplePresets, config.language).forEach(e => errors.push(e));
+    validateLayout(config.layout).forEach(e => errors.push(e));
     validateMapViewConfig(config.map_view).forEach(e => errors.push(e));
     config.additional_presets
         ?.flatMap(preset => validatePreset(preset, multiplePresets, config.language))
