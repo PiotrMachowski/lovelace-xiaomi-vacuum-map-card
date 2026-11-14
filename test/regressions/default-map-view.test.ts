@@ -394,3 +394,22 @@ describe("configured default map view in the card", () => {
         expect(storedView().key).toBeUndefined();
     });
 });
+
+describe("storage key compatibility", () => {
+    const keyOf = (card: CardHandle): string =>
+        (card.element as unknown as { _getMapViewKey: () => string })._getMapViewKey();
+
+    it("keeps the pre-B9 storage key for a card without map_view", async () => {
+        const without = await mountWithView({ map_view: undefined });
+        const withDefault = await mountWithView({ map_view: { scale: 2 } });
+
+        const plainKey = keyOf(without.card);
+        const defaultKey = keyOf(withDefault.card);
+
+        // The pre-B9 key was `card|preset|source|mapid`. A card with no configured default must keep
+        // exactly that shape, otherwise every existing user loses the view they saved on upgrade.
+        expect(plainKey.split("|")).toHaveLength(4);
+        expect(defaultKey.split("|")).toHaveLength(5);
+        expect(defaultKey.startsWith(`${plainKey}|`)).toBe(true);
+    });
+});

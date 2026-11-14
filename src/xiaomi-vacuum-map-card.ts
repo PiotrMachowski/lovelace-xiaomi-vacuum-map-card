@@ -1962,24 +1962,29 @@ export class XiaomiVacuumMapCard extends LitElement {
         // the new default would only appear after another reset. A changed default is a changed
         // starting point, so it gets its own entry. The explicit `map_view_storage_key` still
         // replaces only the card part of the key.
+        // Only a configured default extends the key. Appending a constant when it is absent would
+        // change the storage key of every existing card, so every user with `persist_map_view`
+        // (on by default) would silently lose the view they had saved once after upgrading.
         const mapView = this.config?.map_view;
-        const mapViewSignature = mapView
-            ? hashString(
-                  JSON.stringify([
-                      mapView.scale ?? null,
-                      mapView.x ?? null,
-                      mapView.y ?? null,
-                      mapView.rotation ?? null,
-                  ]),
-              )
-            : "none";
-        return [
+        const parts = [
             this._getMapViewCardKey(),
             this.presetIndex ?? 0,
             camera || image,
             this._getMapViewMapId(camera),
-            mapViewSignature,
-        ].join("|");
+        ];
+        if (mapView) {
+            parts.push(
+                hashString(
+                    JSON.stringify([
+                        mapView.scale ?? null,
+                        mapView.x ?? null,
+                        mapView.y ?? null,
+                        mapView.rotation ?? null,
+                    ]),
+                ),
+            );
+        }
+        return parts.join("|");
     }
 
     /**
