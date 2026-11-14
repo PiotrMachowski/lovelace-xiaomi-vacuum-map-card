@@ -43,11 +43,11 @@ hardware or a fixture. Evidence links to the fork's record in [FORK.md](FORK.md)
 | Editor room config | `shipped` | Generating rooms no longer mutates Home Assistant's frozen Lovelace config and no longer answers another card's request; repeated generation leaves one ROOM mode. | [#956](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/pull/956), [#944](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/pull/944), [#958](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/pull/958) · [FORK.md](FORK.md#b2-editor-room-config) · PR [#5](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/5) |
 | Cleaning-order badges | `shipped` | A selected room shows the position it will be cleaned in, and the numbers renumber when a room is deselected. | [#959](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/pull/959) · [FORK.md](FORK.md#b5-cleaning-order-badges) · PR [#10](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/10) |
 | Stale room IDs | `shipped` | Rooms a re-map removed are marked, named in a warning and excluded from service calls, so a stale selection cannot clean the wrong room. | [#928](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/928), [#385](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/385) · [FORK.md](FORK.md#b8-stale-room-selections) · PR [#12](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/12) |
-| Default map view | `shipped` | `map_view` sets the view the map opens at, and the reset control and `map_view.reset` action return to it. Real-dashboard check pending ([DELIVERY.md](DELIVERY.md#manual-checks-owed-by-the-user)). | [#873](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/873) · [FORK.md](FORK.md#b9-default-map-view) · PR [#13](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/13) |
-| Horizontal layout | `shipped` | `layout: horizontal` puts the map beside the controls, and sections-view grid sizing lets the card be resized without `card-mod`. Real-dashboard check pending ([DELIVERY.md](DELIVERY.md#manual-checks-owed-by-the-user)). | [#183](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/183), [#943](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/943) · [FORK.md](FORK.md#b10-horizontal-layout) · PR [#14](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/14) |
+| Default map view | `shipped` | `map_view` sets the view the map opens at, and the reset control and `map_view.reset` action return to it. Verified end to end on a real dashboard ([DELIVERY.md](DELIVERY.md#end-to-end-verification-owned-by-delivery)). | [#873](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/873) · [FORK.md](FORK.md#b9-default-map-view) · PR [#13](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/13) |
+| Horizontal layout | `shipped` | `layout: horizontal` puts the map beside the controls, and sections-view grid sizing lets the card be resized without `card-mod`. Verified end to end on a real dashboard ([DELIVERY.md](DELIVERY.md#end-to-end-verification-owned-by-delivery)). | [#183](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/183), [#943](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/943) · [FORK.md](FORK.md#b10-horizontal-layout) · PR [#14](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/14) |
 | Automatic room mapping | `shipped` | Room outlines, names and hit targets come from the camera's `rooms` metadata and the map colours; hand-configured room outlines stay as the fallback when detection is unavailable. | [FORK.md](FORK.md#automatic-room-mapping) · `5276b9b` |
 | Persisted view and rotation | `shipped` | Carries upstream PR [#949](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/pull/949): the zoom, position and rotation are remembered per card, preset and map, and rotation gestures work; the toolbar's manual rotate button that came with it was dropped again in `62e339f`. | [FORK.md](FORK.md#persistent-map-view-and-rotation), [rotation controls](FORK.md#rotation-controls) · `badf9b2`, `e57bb8d` |
-| Near-white transparency | `shipped` | `transparent_background: true` makes near-white map pixels transparent so the map blends into a dark dashboard. | [FORK.md](FORK.md#map-appearance) · `5276b9b`, `36b890b` |
+| Map appearance | `shipped` | Near-white map pixels can be made transparent for a dark dashboard (`transparent_background: true`), and room labels default to white text with a dark outline so they stay readable on every map colour. | [FORK.md](FORK.md#map-appearance) · [CSS variables](docs/css_variables.md) · `5276b9b`, `36b890b` |
 | Zoom alignment | `shipped` | Zoom and rotation are applied once to the image and the overlays, so room outlines stay on the map; the local regression check covers both. | [FORK.md](FORK.md#zoom-alignment) · `2d5d439` |
 | Test and CI gates | `shipped` | Vitest with happy-dom, a Playwright visual suite at zoom, rotation, room hit-testing and layout, Node 22 and a `tsc --noEmit` gate on every pull request. | [FORK.md](FORK.md#p0-test-infrastructure), [CI baseline](FORK.md#ci-baseline), [visual harness](FORK.md#visual-regression-harness) · PR [#2](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/2), [#3](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/3), [#7](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/7) |
 | Roborock status/battery tiles | `postponed` | The generic `duration_unit` field of [#964](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/pull/964) shipped in the platform tile templates; the Roborock-specific templates need a real Roborock-core registry fixture. | [FORK.md](FORK.md#b3-tiles-labels-icons) · [ROADMAP.md](ROADMAP.md#postpone-list) |
@@ -125,6 +125,9 @@ A few behaviours differ from upstream with no YAML edit:
 - The lock button state is remembered with the view (`persist_map_lock`, default `true`) and takes
   precedence over `map_locked` after the first toggle; set `persist_map_lock: false` to always start
   from `map_locked`.
+- Earlier fork releases carried a manual rotate button in the map toolbar. Upstream never had one and
+  it was dropped again in `62e339f`; use `map_rotation`, the rotation gesture or the reset control
+  instead.
 - When the camera reports `rooms` metadata and the map has distinct room colours, the detected
   outlines, labels and hit targets replace hand-configured room outlines. Configured rooms remain
   the fallback when detection is unavailable
@@ -187,10 +190,14 @@ configuration also fails with the upstream release, report it on the
 platform-template requests that apply to both builds belong upstream because those templates are
 shared.
 
-There is no robot and no Home Assistant instance in the build environment. Hardware and vendor
-behaviour is only claimed when a real fixture proves it; [DELIVERY.md](DELIVERY.md) lists the checks
-still owed and the open follow-ups, such as a tile label staying stale after a registry-only rename.
-Items that need that evidence are postponed rather than presented as done.
+End-to-end verification is owned by delivery, not by you. A real Home Assistant 2026.11 runs in
+Docker with a controllable camera fixture, the card is installed from this repository the way a user
+installs it, and a Playwright suite drives the editor, the map view, both layouts, zoom 2.5 with
+rotation 90, the camera request rate and YAML parsing. The evidence is recorded in
+[DELIVERY.md](DELIVERY.md#end-to-end-verification-owned-by-delivery), and a behaviour is only called
+shipped when that suite proves it. Hardware and vendor behaviour that cannot be reproduced — such as
+the Roborock status/battery templates — stays explicitly postponed with its reason, never handed to
+you as a check to perform.
 
 ## Attribution and license
 

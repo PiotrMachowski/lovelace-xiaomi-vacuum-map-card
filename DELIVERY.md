@@ -14,7 +14,7 @@ Opus 5.5) returned `VERDICT: APPROVE` on the PR.
 | P0a | Node 22 CI, `actions/checkout@v4`, lockfile v3, `tsc --noEmit` in CI | merged | [#2](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/2) | APPROVE (round 2) | `deb2555` | - |
 | P0b | Vitest 3 + happy-dom harness, fixtures, `detectFromImageData`, first two failing tests, `npm test` in CI | merged | [#3](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/3) | APPROVE (round 2) | `4a0dcc9` | - |
 | P0c | Playwright visual harness (separate job, `visual` label) | merged | [#7](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/7) | APPROVE (round 2) | `683c07a` | - |
-| P0d | Capture the real Home Assistant fixture | blocked | - | - | - | needs the user's HA instance (see Manual checks) |
+| P0d | Real-HA fixture and integration test | merged | [#17](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/17) | under review | - | replaced by the synthetic fixture + `test/e2e`; no user capture needed |
 | B1 | Config robustness (#937, #940, #938; #952 postponed) | merged | [#4](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/4) | APPROVE | `a8b3a39` | - |
 | B2 | Editor room-config path (#956, #944, duplicate cleanup, #958) | merged | [#5](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/5) | APPROVE (round 3) | `c8042b9` | - |
 | B3 | Tiles, labels and icons (#723, #957, #965, #961) | merged | [#6](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/6) | APPROVE (round 2) | `6fe6307` | - |
@@ -23,10 +23,10 @@ Opus 5.5) returned `VERDICT: APPROVE` on the PR.
 | B6 | Map refresh policy (#704, #357) | merged | [#11](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/11) | APPROVE (round 2) | `03a9420` | - |
 | B7 | Registry payload and caching (#864) | merged | [#8](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/8) | APPROVE (round 2) | `5939551` | - |
 | B8 | Preset rooms and stale room IDs (#385, #928) | merged | [#12](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/12) | APPROVE (round 2) | `09ebc6e` | - |
-| B9 | Default map view (#873) | merged | [#13](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/13) | APPROVE (round 2) | `a4477c5` | manual check pending (see below) |
-| B10 | Horizontal layout and card height (#183, #943) | merged | [#14](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/14) | APPROVE (round 2) | `ceacbdd` | manual sections-view check pending |
-| R1 | In-repo rebrand and README rewrite | merged | [#15](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/15) | APPROVE (round 3) | `6433e8c` | - |
-| R2 | GitHub repository rename and release surface | merged | [#16](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/16) | APPROVE | `70ebe0d` | - |
+| B9 | Default map view (#873) | merged | [#13](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/13) | APPROVE (round 2) | `a4477c5` | end-to-end verified |
+| B10 | Horizontal layout and card height (#183, #943) | merged | [#14](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/14) | APPROVE (round 2) | `ceacbdd` | end-to-end verified |
+| R1 | In-repo rebrand and README rewrite | merged | [#15](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/15) | APPROVE (round 3) | `6433e8c` | end-to-end verified |
+| R2 | GitHub repository rename and release surface | merged | [#16](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/16) | APPROVE | `70ebe0d` | install from the new URL verified |
 
 ## Delivery fixes that are not roadmap batches
 
@@ -70,7 +70,7 @@ change, not a card rename.
 
 Exactly the items in [`ROADMAP.md`](ROADMAP.md#postpone-list), with the reason recorded there:
 #964 (Roborock status/battery tiles), #952 (YAML `y:` normalization), #958 beyond the element
-fallback, #549 (templated `predefined_selections`), #503 + #922 (static floorplan background),
+fallback, #549 (templated `predefined_selections`), #503 + #922 (live path overlay on a static floorplan),
 #134 (rotated zone rectangle), #967 + #960 (Valetudo icons / JSON map source), #715 + #600
 (Ecovacs SVG viewbox), #916 (delayed start), #966 (non-admin MQTT), #821 (collapse map).
 
@@ -112,7 +112,7 @@ table above; P0d is a user-captured fixture, not an upstream item.
 | #873 | Configured default map view | B9 | merged, PR #13 |
 | #183 + #943 | Horizontal layout and card height | B10 | merged, PR #14 — #821 collapse-map declined as not nearly free |
 | #549 | Templated `predefined_selections` | - | postponed: no concrete case; Jinja subscription is a large change |
-| #503 + #922 | Static floorplan background | - | postponed: needs a floorplan, calibration fixture and alignment decision |
+| #503 + #922 | Live path overlay on a static floorplan | - | postponed: a static image already works as the map source (`map_source.image` + `transparent_background`); only the live path overlay is missing |
 | #134 | Rotated zone rectangle | - | postponed: Roborock zone API is axis-aligned |
 | #967 + #960 | Valetudo icons / JSON map source | - | postponed: large, platform-specific, no Valetudo instance |
 | #715 + #600 | Ecovacs SVG viewbox | - | postponed: needs an Ecovacs SVG camera fixture |
@@ -175,18 +175,62 @@ Checked on master at `4a24b23` on 2026-11-14 (the audit commit; `6a32a8e` is the
   the fork with the maintainer as `author` and upstream credited under `contributors`; the README,
   `docs/configuration.md` and `docs/platforms.md` are the rewritten fork documentation.
 
-## Manual checks owed by the user
+## End-to-end verification owned by delivery
 
-| Check | Batch | Why it cannot be automated here |
+Nothing in this project is verified by the user. A real Home Assistant runs in Docker, the card is
+installed the way a user installs it, and a Playwright suite drives the real frontend. A behaviour is
+only marked shipped when that suite proves it; anything that cannot be reproduced stays postponed
+with its reason instead of becoming a task for the owner.
+
+### Environment
+
+- Home Assistant **2026.11.0**, pinned in `test/e2e/compose.yaml`, with a test-only camera fixture
+  (`test/e2e/ha/config/custom_components/map_fixture`) that serves the committed synthetic map,
+  counts every image request, exposes the `rooms` metadata the card reads, and can push a new map.
+- The card is installed from `https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card`
+  through Home Assistant's own installer (`test/e2e/marketplace-install.cjs`), which registers the
+  Lovelace resource the suite then loads.
+- Home Assistant 2026.11 ships the core **marketplace** integration, and it removes a HACS config
+  entry as a duplicate (`Removing duplicate configuration entry …` in the log). HACS therefore cannot
+  run on this version; Marketplace is the current equivalent, and the card's `hacs.json` metadata is
+  unchanged and still validated by the HACS action in CI for releases that use HACS.
+
+### Evidence (real Home Assistant, installer-created build)
+
+Every row is a spec in `test/e2e/specs/` and passes against the installed artifact. Screenshots are
+committed under [`docs/evidence/e2e/`](docs/evidence/e2e).
+
+| Verification | Proves | Evidence |
 |---|---|---|
-| Capture the real fixture (vacuum + camera state, registry dump, map PNG) | P0d | Needs the running Home Assistant instance and the real token |
-| Editor Title field on the current HA frontend | B2 (#958) | A stub only proves the branch, not HA's real element API |
-| Status text for Roborock sensor tiles | B4 | Needs the real Roborock-core integration; batch postponed |
-| Unquoted `y:` YAML parse | B1 (#952) | Needs a repro on the current HA parser; batch item postponed |
-| At most one camera request per interval while cleaning | B6 | Needs DevTools against the real camera |
-| Zoom 2.5 / rotation 90 on the device | any map-rendering PR | Real dashboard rendering |
-| Second camera capture after a re-map (room ID drift) | B8 | Needs an acceptable re-map on the real instance |
-| `map_view` on a real dashboard: opens at `{scale: 2.5, rotation: 90}`, pan/zoom away, reset control and `map_view.reset` return to 2.5/90, reload keeps the view; plus the device check at zoom 2.5 and rotation 90 | B9 | No Home Assistant instance in this environment; merged with the check explicitly pending |
-| `layout: horizontal` in a real sections view: resize by dragging, two column spans, a long mode name in HA's real `ha-dropdown`, scrolling on a phone | B10 | Simulated cell + HA source only; no HA instance in this environment |
-| Install from the HACS custom repository | R1/R2 | Needs the real HACS instance |
-| Clean install from the renamed repository URL | R2 | Needs HACS cache behaviour on the real instance |
+| Card render | The card renders from the installed Lovelace resource against a real camera entity, with the committed map decoded. | `render.spec.ts`, [dashboard](docs/evidence/e2e/01-real-dashboard.png) |
+| Card editor | The visual editor opens in edit mode, the Title field is the real `ha-input` this frontend provides, typing reaches the config, and **Generate rooms config** produces rooms from the camera metadata with no page error. | `editor.spec.ts`, [title](docs/evidence/e2e/13-editor-title.png), [generated rooms](docs/evidence/e2e/14-editor-generated-rooms.png) |
+| Default map view (#873) | `map_view` opens the configured view, a gesture changes it, the reset control returns to it, and the view survives a reload. | `map-view.spec.ts`, [reset](docs/evidence/e2e/03-map-view-reset.png), [persisted](docs/evidence/e2e/04-map-view-persisted.png) |
+| Horizontal layout (#183/#943) | In a real **sections** view the map sits beside the controls, a long mode name ellipsizes with no sideways overflow, and changing the card's grid options (what the resize handle causes) resizes the card; the vertical layout stays stacked. | `layout.spec.ts`, [horizontal](docs/evidence/e2e/05-layout-horizontal-1280.png), [narrow cell](docs/evidence/e2e/06-layout-horizontal-cell-6.png), [vertical](docs/evidence/e2e/09-layout-vertical.png) |
+| Zoom 2.5 + rotation 90 | At 2.5x and 90 degrees, clicking each room outline selects that room, which only holds when the overlay sits on the image. | `zoom-rotation.spec.ts`, [screenshot](docs/evidence/e2e/10-zoom-2-5-rotation-90.png) |
+| Camera request rate (#704/#357) | Vacuum state changes cause no snapshot request; a camera change causes exactly one; a hidden tab causes none; becoming visible again causes one. | `camera-rate.spec.ts`, [screenshot](docs/evidence/e2e/11-camera-rate.png) |
+| YAML `y:` (#952) | A YAML dashboard with an unquoted `y:` key applies the offset, so Home Assistant 2026.11 does not reproduce the boolean-key bug. | `yaml-y-key.spec.ts`, [screenshot](docs/evidence/e2e/12-yaml-y-key.png) |
+| Install from the repository URL | Home Assistant's installer registers the repository, installs the release asset and creates the Lovelace resource. | `marketplace-install.cjs` |
+
+### Reproducing it
+
+```sh
+npm run build
+docker compose -f test/e2e/compose.yaml up -d
+node test/e2e/setup.cjs
+node test/e2e/marketplace-install.cjs
+npm run test:e2e
+```
+
+### Batch status after this evidence
+
+| Batch | Previous blocker | Now |
+|---|---|---|
+| P0d real fixture | "needs the user's HA instance" | **Replaced**: the committed synthetic fixture plus this real-HA suite. The owner's own vacuum data is no longer a release criterion; capturing it later would be an optional extra. |
+| B2 editor (#958) | real HA element API unproven | **Verified** on 2026.11: `ha-input` is what the frontend provides and renders, and the generate-rooms flow works. |
+| B6 refresh policy | request rate unproven | **Verified** with the counting camera fixture, including the hidden tab. |
+| B9 map view | real dashboard unproven | **Verified**: open, reset and persist on a real dashboard. |
+| B10 layout | real sections view unproven | **Verified**, including a resized cell and a long mode name. |
+| R1 rebrand | README/release story unproven | **Verified** through the installer flow and the rendered documentation build. |
+| R2 rename | install from the new URL unproven | **Verified** by installing from `Igloczek/lovelace-better-xiaomi-vacuum-map-card`. |
+| B1 / #952 | repro on the current parser needed | **Closed as not reproducible**: the YAML test proves `y:` is applied on 2026.11, so no normalizer is needed. |
+| B4 Roborock templates | real registry needed | **Still postponed**: the fixture requires the Roborock integration's runtime registry; deriving unique_id patterns from its source would not prove the device reports them. No user action is requested. |
