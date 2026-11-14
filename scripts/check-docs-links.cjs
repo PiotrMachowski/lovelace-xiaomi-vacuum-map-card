@@ -2,10 +2,11 @@
 /*
  * Offline documentation link check.
  *
- * Verifies every relative link and anchor in README.md, CONTRIBUTING.md, FORK.md, docs/**\/*.md and
- * the GitHub issue forms. External URLs are not fetched; links that point back into this fork
- * through a github.com/Igloczek/.../blob/... URL are resolved against the working tree instead.
- * Upstream PiotrMachowski URLs stay external and are not resolved against the fork tree.
+ * Verifies every relative link and anchor in README.md, CONTRIBUTING.md, FORK.md, docs/**\/*.md,
+ * .agents/**\/*.md and the GitHub issue forms. External URLs are not fetched; links that point back
+ * into this fork through a github.com/Igloczek/.../blob/... URL are resolved against the working
+ * tree instead. Upstream PiotrMachowski URLs stay external and are not resolved against the fork
+ * tree.
  *
  * Usage: node scripts/check-docs-links.cjs
  */
@@ -29,6 +30,7 @@ function filesToCheck() {
     const explicit = ['README.md', 'CONTRIBUTING.md', 'FORK.md'];
     return explicit
         .concat(walk('docs').filter((file) => file.endsWith('.md')))
+        .concat(walk('.agents').filter((file) => file.endsWith('.md')))
         .concat(walk('.github/ISSUE_TEMPLATE').filter((file) => /\.ya?ml$/.test(file)))
         .sort();
 }
