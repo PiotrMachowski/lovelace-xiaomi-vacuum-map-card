@@ -28,6 +28,10 @@ export class Context {
         public readonly toggleEntity: (_: string) => void,
         /** Room ids of the run in progress, in cleaning order; empty when no run is shown. */
         public readonly activeRoomOrder: () => string[] = () => [],
+        /** True while the vacuum is working through a started run: room taps are ignored. */
+        public readonly roomsLocked: () => boolean = () => false,
+        /** Drops a started run that the vacuum has not picked up yet, before a new selection. */
+        public readonly dismissActiveRun: () => void = () => undefined,
     ) {}
 
     public roundMap([x, y]: PointArrayNotation): PointArrayNotation {

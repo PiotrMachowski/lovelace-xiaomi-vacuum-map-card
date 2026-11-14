@@ -171,8 +171,6 @@ describe("cleaning-order badges (#866, upstream #959)", () => {
             await card.updateHass(withState(card.hass, vacuum, { state }).hass);
             await settle(card.element);
         }
-        // The run ends once the vacuum has stayed docked for the end grace (90 s).
-        await settle(card.element, 92_000);
         expect(badges(card)).toEqual({});
         await clickRooms(card, ["2", "0", "1"]);
         await clickRoom(card, "0");

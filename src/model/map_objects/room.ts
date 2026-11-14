@@ -51,8 +51,8 @@ export class Room extends PredefinedMapObject {
             : (this._config?.outline ?? []).map(p => this.vacuumToScaledMap(p[0], p[1]));
         // Rooms are sent in click order, so a selected room shows its position in that order. Once
         // a run has started and the selection is cleared, the rooms of that run look exactly as they
-        // did when selected, numbers included, until the vacuum is done. Rooms are locked meanwhile
-        // (see `click`), so the two sources never mix.
+        // did when selected, numbers included, until the vacuum is done. A tap either is refused
+        // (rooms locked) or drops the run first (see `click`), so the two sources never mix.
         const runOrder = this._selected ? 0 : this._context.activeRoomOrder().indexOf(String(this._config.id)) + 1;
         const order = this._selected ? this._context.selectedRooms().indexOf(this) + 1 : runOrder;
         const highlighted = this._selected || runOrder > 0;
@@ -125,12 +125,14 @@ export class Room extends PredefinedMapObject {
     public async click(): Promise<void> {
         // A stale room is a warning, not a target: its id is absent from the live camera metadata.
         if (this._stale) return;
-        // While a started run is in progress the map shows its order, and the rooms are locked so
-        // that order cannot be changed or mixed with a new selection until the vacuum is done.
-        if (this._context.activeRoomOrder().length > 0) {
+        // While the vacuum works through a started run the map shows its order, and the rooms are
+        // locked so that order cannot change until the vacuum is done. Before the vacuum has
+        // reported the start (polling integrations lag), a tap begins a new selection instead.
+        if (this._context.roomsLocked()) {
             forwardHaptic("failure");
             return;
         }
+        if (this._context.activeRoomOrder().length > 0) this._context.dismissActiveRun();
         if (!this._selected && this._context.selectedRooms().length >= this._context.maxSelections()) {
             forwardHaptic("failure");
             return;

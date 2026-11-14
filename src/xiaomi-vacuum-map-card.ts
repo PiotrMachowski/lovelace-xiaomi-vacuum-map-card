@@ -76,8 +76,8 @@ import { PredefinedMultiRectangle } from "./model/map_objects/predefined-multi-r
 import { Room } from "./model/map_objects/room";
 import { RoomColorDetection, RoomColorDetector } from "./model/room-color-detector";
 import { findStaleRoomIds } from "./model/room-config";
+import { createTapGuard } from "./model/tap-guard";
 import {
-    ACTIVE_ROOM_RUN_END_GRACE_MS,
     ActiveRoomRun,
     advanceActiveRoomRun,
     loadActiveRoomRun,
@@ -163,6 +163,13 @@ export class XiaomiVacuumMapCard extends LitElement {
     private selectedManualPath: ManualPath = new ManualPath([], this._getContext());
     private selectedPredefinedRectangles: PredefinedMultiRectangle[] = [];
     private selectedRooms: Room[] = [];
+    /**
+     * Tells a tap from a pan, pinch or rotate on the map. A drag ends with a `click` on whatever is
+     * under the pointer, which selected rooms (and drew points) while the user only moved the map.
+     * The listeners run in the capture phase on the overlay, so they stop that click before the
+     * room outlines, icons or the colour-map hit test see it.
+     */
+    private readonly mapTapGuard = createTapGuard();
     /** The room run started from this card, shown on the map until the vacuum finishes it. */
     private activeRoomRun?: ActiveRoomRun;
     /** The vacuum whose stored run `activeRoomRun` was loaded for. */
@@ -519,7 +526,13 @@ export class XiaomiVacuumMapCard extends LitElement {
                         this._detectRoomColors();
                         this._restoreMapView();
                     }}" />
-                <div id="map-image-overlay">
+                <div
+                    id="map-image-overlay"
+                    @pointerdown="${this.mapTapGuard.pointerDown}"
+                    @pointermove="${this.mapTapGuard.pointerMove}"
+                    @pointerup="${this.mapTapGuard.pointerUp}"
+                    @pointercancel="${this.mapTapGuard.pointerUp}"
+                    @click="${this.mapTapGuard.click}">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         version="2.0"
@@ -1067,6 +1080,8 @@ export class XiaomiVacuumMapCard extends LitElement {
             entity => this._hass.states[entity].state,
             entity => this._hass.callService("homeassistant", "toggle", {"entity_id": entity}),
             () => this._getActiveRoomOrder(),
+            () => this._getActiveRoomOrder().length > 0 && this.activeRoomRun?.seenActive === true,
+            () => this._dismissActiveRoomRun(),
         );
     }
 
@@ -1200,6 +1215,14 @@ export class XiaomiVacuumMapCard extends LitElement {
         return run.entity === this._getCurrentPreset()?.entity ? run.roomIds : [];
     }
 
+    /** Forgets the run on the map, e.g. when the user starts a new selection before it began. */
+    private _dismissActiveRoomRun(): void {
+        if (!this.activeRoomRun) return;
+        saveActiveRoomRun(this.activeRoomRun.entity, undefined);
+        this.activeRoomRun = undefined;
+        this.requestUpdate();
+    }
+
     /**
      * Loads the stored run for the current vacuum and advances it with the vacuum's state, so the
      * badges disappear once the vacuum is done. Called on every hass update.
@@ -1217,10 +1240,6 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (next === current) return;
         this.activeRoomRun = next;
         saveActiveRoomRun(entity, next);
-        if (next?.inactiveSince !== undefined && current?.inactiveSince === undefined) {
-            // Without a later state change nothing would re-check the run, so end it on time.
-            this._scheduleDelayedCallback(() => this._advanceActiveRoomRun(), ACTIVE_ROOM_RUN_END_GRACE_MS + 1000);
-        }
         this.requestUpdate();
     }
 
