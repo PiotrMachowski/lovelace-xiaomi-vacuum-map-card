@@ -23,6 +23,13 @@
 - `RoomColorDetector` returns image-pixel room outlines. Camera `rooms` metadata supplies room IDs and names; preserve configured room selections as a fallback when detection is unavailable.
 - When changing map rendering, verify overlays and room hit-testing at multiple zoom levels and rotations. Keep rotation behavior in the shared map transform; add a manual rotation control only when the requested feature calls for one.
 
+## Fixes are for every user
+
+- Fix problems in the card, for every supported platform and vacuum. A report from one user's vacuum is a sample of a general bug: find the general cause and check the other platform templates and selection types for it.
+- Never create or change scripts, automations, helpers, integrations or other configuration in a user's Home Assistant, including the maintainer's own instance, to make the card work. A workaround that lives in one installation fixes nothing for anyone else.
+- A user's Home Assistant is for reproducing and verifying: read state, render templates, and drive the dashboard the way a user would. Installing a released card version to verify it is fine. Ask before changing the user's dashboard card configuration, and do not use it to work around a card bug.
+- When a vacuum or integration cannot do what a feature needs (for example it ignores the room order), say so, and solve it in the card for all affected platforms or document the limitation; do not ship a per-installation workaround as the fix.
+
 ## Local checks
 
 - Run `npm test` (Vitest with a happy-dom harness) for unit and DOM tests, and `npm run test:e2e` for the real-Home-Assistant suite (see `test/e2e/README.md`).
