@@ -340,6 +340,7 @@ export enum ActionType {
     MAP_MODE_NEXT = "map_mode.next",
     MAP_MODE_PREVIOUS = "map_mode.previous",
     MAP_MODE_SET = "map_mode.set",
+    MAP_VIEW_RESET = "map_view.reset",
     REPEATS_DECREMENT = "repeats.decrement",
     REPEATS_INCREMENT = "repeats.increment",
     REPEATS_SET = "repeats.set",

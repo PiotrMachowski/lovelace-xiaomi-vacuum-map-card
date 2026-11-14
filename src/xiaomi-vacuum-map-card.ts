@@ -48,7 +48,7 @@ import {
     MAP_VIEW_ID_ATTRIBUTES,
     MAP_VIEW_SAVE_DEBOUNCE,
 } from "./const";
-import { getMapView, hashString, MapView, normalizeAngle, setMapView } from "./model/map-view-store";
+import { getMapView, hashString, MapView, normalizeAngle, resolveMapView, setMapView } from "./model/map-view-store";
 import { cameraRefreshKey, decideMapRefresh, MAP_REFRESH_INTERVAL_MS, MapRefreshState } from "./model/map-refresh-policy";
 // the event names themselves are hard-coded in the template below: lit needs a literal @name
 import { RotateEventDetail } from "./pinch-zoom/pinch-zoom";
@@ -498,7 +498,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                             <ha-icon
                                 icon="mdi:image-filter-center-focus"
                                 class="icon-on-map clickable ripple"
-                                @click="${this._restoreMap}"></ha-icon>
+                                @click="${this._resetMapView}"></ha-icon>
                             <div class="map-zoom-icons-main">
                                 <ha-icon
                                     icon="mdi:magnify-minus"
@@ -1254,6 +1254,9 @@ export class XiaomiVacuumMapCard extends LitElement {
                 case ActionType.MAP_MODE_SET:
                     this._setCurrentMode(data["index"] % this.modes.length, false);
                     break;
+                case ActionType.MAP_VIEW_RESET:
+                    this._resetMapView();
+                    break;
                 case ActionType.REPEATS_DECREMENT:
                     if (currentMode) {
                         this.repeats = ((this.repeats + currentMode.maxRepeats - 2) % currentMode.maxRepeats) + 1;
@@ -1581,15 +1584,46 @@ export class XiaomiVacuumMapCard extends LitElement {
         };
     }
 
-    private _restoreMap(): void {
+    /**
+     * Returns the map to its default view: the configured `map_view` when there is one, otherwise
+     * the neutral view the card started at before B9 — scale 1, no offset, `map_rotation`.
+     *
+     * Deliberately ignores the stored view: reset means "go back to the configured starting point",
+     * not "go back to what was last saved". The result is then persisted and flushed through the
+     * same debounced path as a pan, zoom or rotation, so a reload keeps the reset view and the map
+     * refresh policy sees no additional work. A transition makes the move visible, exactly like the
+     * pre-B9 reset control.
+     */
+    private _resetMapView(): void {
         const zoomerContent = this._getMapZoomerContent();
-        zoomerContent.style.transitionDuration = this._getCssProperty("--map-card-internal-transitions-duration");
-        this.mapRotation = this._getConfiguredRotation(this._getCurrentPreset());
-        this._getPinchZoom().setTransform({ scale: 1, x: 0, y: 0, allowChangeEvent: true });
-        this.mapScale = 1;
+        if (zoomerContent) {
+            zoomerContent.style.transitionDuration = this._getCssProperty("--map-card-internal-transitions-duration");
+        }
+        const view = resolveMapView(undefined, this.config?.map_view, this._getNeutralMapView()) ??
+            this._getNeutralMapView();
+        // Set the angle before the transform: the transform's change event persists the view, and it
+        // must persist the angle the reset is going to, not the one it is leaving.
+        this.mapRotation = view.rotation;
+        const pinchZoom = this._getPinchZoom();
+        if (pinchZoom) {
+            pinchZoom.setTransform({ scale: view.scale, x: view.x, y: view.y, allowChangeEvent: true });
+            this.mapScale = pinchZoom.scale;
+            this.mapX = pinchZoom.x;
+            this.mapY = pinchZoom.y;
+        }
         forwardHaptic("selection");
+        // The transform is a no-op when the card is already at the default, so the change event does
+        // not fire and cannot be relied on to save the reset view.
         this._persistMapView();
-        this._scheduleDelayedCallback(() => (zoomerContent.style.transitionDuration = "0s"), 300);
+        if (zoomerContent) {
+            this._scheduleDelayedCallback(() => (zoomerContent.style.transitionDuration = "0s"), 300);
+        }
+        this.requestUpdate();
+    }
+
+    /** The neutral view: the state the card renders before any stored or configured view applies. */
+    private _getNeutralMapView(): MapView {
+        return { scale: 1, x: 0, y: 0, rotation: this._getConfiguredRotation(this._getCurrentPreset()) };
     }
 
     private _getCssProperty(property: string): string {
@@ -1894,10 +1928,15 @@ export class XiaomiVacuumMapCard extends LitElement {
         );
     }
 
+    /**
+     * Applies the view for the current key: a stored view when persistence is on, otherwise the
+     * configured `map_view`, otherwise nothing and the neutral view the render already started from.
+     *
+     * The configured default is intentionally independent of `persist_map_view`: that flag controls
+     * remembering what the user does, while `map_view` states where the card starts. A card with
+     * persistence disabled therefore still opens at the configured view and simply never stores one.
+     */
     private _restoreMapView(): void {
-        if (!this._isMapViewPersistenceEnabled()) {
-            return;
-        }
         const pinchZoom = this._getPinchZoom();
         if (!pinchZoom) {
             return;
@@ -1928,7 +1967,8 @@ export class XiaomiVacuumMapCard extends LitElement {
             return;
         }
         this.restoredMapViewKey = key;
-        const view = getMapView(key);
+        const stored = this._isMapViewPersistenceEnabled() ? getMapView(key) : undefined;
+        const view = resolveMapView(stored, this.config?.map_view, this._getNeutralMapView());
         if (!view) {
             return;
         }
