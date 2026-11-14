@@ -22,8 +22,8 @@ Opus 5.5) returned `VERDICT: APPROVE` on the PR.
 | B5 | Cleaning-order badges (#959) | merged | [#10](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/10) | APPROVE (round 3) | `f3a27f1` | - |
 | B6 | Map refresh policy (#704, #357) | merged | [#11](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/11) | APPROVE (round 2) | `03a9420` | - |
 | B7 | Registry payload and caching (#864) | merged | [#8](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/8) | APPROVE (round 2) | `5939551` | - |
-| B8 | Preset rooms and stale room IDs (#385, #928) | in progress | - | - | - | - |
-| B9 | Default map view (#873) | planned | - | - | - | after B8 |
+| B8 | Preset rooms and stale room IDs (#385, #928) | merged | [#12](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/12) | APPROVE (round 2) | `09ebc6e` | - |
+| B9 | Default map view (#873) | in progress | - | - | - | - |
 | B10 | Horizontal layout and card height (#183, #943) | planned | - | - | - | after B9 and P0c |
 | R1 | In-repo rebrand and README rewrite | planned | - | - | - | after code batches |
 | R2 | GitHub repository rename and release surface | planned | - | - | - | last, after every code PR merges |
@@ -68,9 +68,9 @@ table above; P0d is a user-captured fixture, not an upstream item.
 | #959 | Cleaning-order badges on selected rooms | B5 | merged, PR #10 |
 | #704 + #357 | Camera snapshot request storm / constant map reloads | B6 | merged, PR #11 |
 | #864 | Whole entity registry downloaded, then `/get` per entity | B7 | merged, PR #8 |
-| #385 | Preset switch does not refresh rooms | B8 | in progress (verify first) |
-| #928 | Room IDs shift after a map edit | B8 | in progress |
-| #873 | Configured default map view | B9 | planned |
+| #385 | Preset switch does not refresh rooms | B8 | merged, PR #12 — closed as already fixed, proven by a same-camera refresh test |
+| #928 | Room IDs shift after a map edit | B8 | merged, PR #12 |
+| #873 | Configured default map view | B9 | in progress |
 | #183 + #943 | Horizontal layout and card height | B10 | planned |
 | #549 | Templated `predefined_selections` | - | postponed: no concrete case; Jinja subscription is a large change |
 | #503 + #922 | Static floorplan background | - | postponed: needs a floorplan, calibration fixture and alignment decision |
@@ -106,6 +106,8 @@ table above; P0d is a user-captured fixture, not an upstream item.
 | The harness display registry includes disabled entries while core's excludes them, so the enable-a-disabled-sensor path can only be tested by editing `hass.entities` by hand. | No | audit pass (harness) |
 | The trailing map refresh has two untested branches: the pending-flag reset on disconnect (deleting it leaves the suite green, but a re-attached card would never schedule again) and the hidden-tab guard inside the timer callback. Adds a test each. | No | audit pass |
 | A camera change while a trailing refresh is pending costs one extra request ~5 s later (bounded, no loop); the manual DevTools check should say "one, possibly two, after a camera change". Coarse `Date.now()` rounding can also re-render at 0 ms at the boundary — a 1 ms minimum delay removes it. | No | audit pass |
+| In template-only mode without colour detection, after an id shift the card can still show a room selected (with its badge) while sending nothing and warning nothing — safe but silent to the user. | No | audit pass |
+| The stale room icon sits over the live room label in `stale-room-hit-test.png` (cosmetic); fading or hiding the stale icon is a cheap improvement. The visual spec header still says "five visual scenarios" when there are eight. | No | audit pass |
 | **Flaky Vitest gate** (high priority): `_updateElements` schedules an uncancelled `delay(100).then(...)`; after happy-dom teardown the callback throws `ReferenceError: window is not defined` in `_restoreMapView`, which reddened one P0c Build run. Reproduced locally: **1 in 15** `npm test` runs (unhandled rejection at `src/xiaomi-vacuum-map-card.ts:1565` `_getMapViewDashboardPath` via `_restoreMapView`, after the test environment is torn down; Vitest exits non-zero, so the gate can go red on an otherwise green branch). Fix: track the timer in the card and cancel it in `disconnectedCallback`, plus a test that disconnects before the delay elapses. | No (but flaky gates are not acceptable long-term) | the batch that next touches the card (B6), or a small dedicated PR once B2 merges |
 
 ## Manual checks owed by the user
