@@ -280,16 +280,61 @@ export function copyMessage(val: string): void {
     navigator.clipboard.writeText(val);
 }
 
+const JINJA_TEMPLATE_TIMEOUT_MS = 10000;
+
+/**
+ * Renders a template once through Home Assistant and settles with the first result. A template
+ * error rejects instead of waiting forever: without `report_errors` Home Assistant only logs the
+ * error and never answers, which left the run button doing nothing at all.
+ */
 export async function evaluateJinjaTemplate(
     hass: HomeAssistantFixed,
     template: string,
 ): Promise<string | Record<string, unknown>> {
-    return new Promise(resolve => {
-        hass.connection.subscribeMessage((msg: { result: string | Record<string, unknown> }) => resolve(msg.result), {
-            type: "render_template",
-            template: template,
-        });
+    return new Promise((resolve, reject) => {
+        let settled = false;
+        let unsubscribe: (() => Promise<void> | void) | undefined;
+        const finish = (settle: () => void): void => {
+            if (settled) return;
+            settled = true;
+            clearTimeout(timeout);
+            settle();
+            void Promise.resolve(unsubscribe?.()).catch(() => undefined);
+        };
+        const timeout = setTimeout(
+            () => finish(() => reject(new Error("Template evaluation timed out"))),
+            JINJA_TEMPLATE_TIMEOUT_MS,
+        );
+        hass.connection
+            .subscribeMessage(
+                (msg: { result?: string | Record<string, unknown>; error?: string; level?: string }) => {
+                    if (msg.error !== undefined) {
+                        // Warnings (an undefined variable, for example) still render a result.
+                        if (msg.level === "ERROR") finish(() => reject(new Error(msg.error)));
+                        return;
+                    }
+                    finish(() => resolve(msg.result as string | Record<string, unknown>));
+                },
+                { type: "render_template", template: template, report_errors: true },
+            )
+            .then(
+                unsub => {
+                    unsubscribe = unsub;
+                    if (settled) void Promise.resolve(unsub()).catch(() => undefined);
+                },
+                e => finish(() => reject(e instanceof Error ? e : new Error(e?.message ?? String(e)))),
+            );
     });
+}
+
+/**
+ * The service data is evaluated as one JSON document, so a string inside it (a room id from
+ * `[[selection]]`, for example) reaches Jinja as `\"13\"`, which is a syntax error inside `{{ }}`
+ * or `{% %}`. An escaped double quote is never valid Jinja there, so it is rewritten to a single
+ * quote, which Jinja reads as the same string delimiter. Text outside the delimiters is untouched.
+ */
+export function normalizeJinjaQuotes(template: string): string {
+    return template.replace(/\{\{[\s\S]*?\}\}|\{%[\s\S]*?%\}/g, block => block.replaceAll('\\"', "'"));
 }
 
 export function replaceInTarget(target: Record<string, unknown>, keyReplacer: KeyReplacer): void {

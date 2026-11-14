@@ -9,6 +9,13 @@
   `agent-report`, and leaked tokens are removed from issues and comments automatically. See
   [Report a problem](docs/report-a-problem.md).
 
+### Fixed
+
+- Selected rooms keep the order they were clicked in when the live map refreshes, instead of
+  falling back to room-id order.
+- A ROOM mode with `evaluate_data_as_template` runs again with room ids from the camera metadata;
+  a template error now shows a failure message instead of the run button doing nothing.
+
 ## 1.0.1
 
 ### Fixed
