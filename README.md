@@ -12,6 +12,24 @@ It works with Xiaomi, Roborock, Dreame, Viomi, Valetudo, Neato, Roomba, Ecovacs,
 
 ![Better Xiaomi Vacuum Map Card in a dashboard](docs/media/screenshot.png)
 
+## Why it's better
+
+Compared with the original [Xiaomi Vacuum Map Card](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card):
+
+| | Original card | Better card |
+|---|:---:|:---:|
+| 🗺️ Room outlines | ✏️ drawn by hand | ✅ read from the map |
+| 🔁 Map rotation | ❌ not available | ✅ two-finger twist or a fixed angle |
+| 💾 Zoom, position, rotation | ❌ reset on reload | ✅ remembered |
+| 🔄 Map image reloads | ❌ on every entity update | ✅ only on change, paused in background tabs |
+| 🧹 Room cleaning order | ❌ not shown | ✅ numbered badges |
+| 🚧 Selection after a re-map | ⚠️ can clean the wrong room | ✅ stale rooms blocked and flagged |
+| 🧩 A config mistake | ❌ breaks the card | ✅ clear message, card keeps working |
+| 📐 Layout | vertical only | ✅ vertical or horizontal, resizable |
+| 🐛 Bug reports | ✍️ manual forms | 🤖 [your AI agent files them](#reporting-a-problem) |
+
+Same card type, same YAML: [switching takes a minute](#coming-from-xiaomi-vacuum-map-card).
+
 ## Features
 
 **Clean from the map**
