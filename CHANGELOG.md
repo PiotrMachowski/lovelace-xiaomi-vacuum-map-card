@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.1
+
+### Fixed
+
+- The map viewport is transparent instead of Home Assistant's secondary grey, so a map with
+  transparent or near-white areas blends into the card in light and dark themes. Set
+  `--map-card-zoomer-background` to keep a visible frame.
+
 ## 1.0.0
 
 First release of this fork under its own name and version line, based on upstream `v2.4.2`.

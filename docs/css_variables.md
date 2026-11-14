@@ -101,3 +101,7 @@
 ```
 
 Room labels default to white text with a dark outline for contrast across map colors. Use the room label color and outline variables above to customize them.
+
+The map viewport (`--map-card-zoomer-background`) is transparent by default, so a map with
+transparent or near-white areas blends into the card's own background. Set the variable to a color
+when you want a visible frame around the map instead.

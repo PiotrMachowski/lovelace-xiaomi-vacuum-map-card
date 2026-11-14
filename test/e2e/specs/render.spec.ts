@@ -12,6 +12,14 @@ test("renders on a real dashboard with the real camera", async ({ loggedIn: page
     const shadowHasCard = await target.evaluate(element => !!element.shadowRoot?.querySelector("ha-card"));
     expect(shadowHasCard).toBe(true);
 
+    // The map viewport is transparent, so the card's surface shows through transparent map pixels
+    // instead of Home Assistant's secondary grey.
+    const zoomerBackground = await target.evaluate(element => {
+        const zoomer = element.shadowRoot?.getElementById("map-zoomer");
+        return zoomer ? getComputedStyle(zoomer).backgroundColor : null;
+    });
+    expect(zoomerBackground).toBe("rgba(0, 0, 0, 0)");
+
     const state = await viewState(target);
     expect(state.scale).toBeGreaterThan(0);
 

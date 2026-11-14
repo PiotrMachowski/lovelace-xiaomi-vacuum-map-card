@@ -2334,10 +2334,9 @@ export class XiaomiVacuumMapCard extends LitElement {
                     --map-card-disabled-text-color,
                     var(--disabled-text-color)
                 );
-                --map-card-internal-zoomer-background: var(
-                    --map-card-zoomer-background,
-                    var(--map-card-internal-tertiary-color)
-                );
+                /* The map viewport follows the card surface, so transparent map pixels blend into
+                   the card in both themes instead of revealing Home Assistant's secondary grey. */
+                --map-card-internal-zoomer-background: var(--map-card-zoomer-background, transparent);
                 --map-card-internal-ripple-color: var(--map-card-ripple-color, #7a7f87);
                 --map-card-internal-big-radius: var(--map-card-big-radius, 25px);
                 --map-card-internal-small-radius: var(--map-card-small-radius, 18px);
