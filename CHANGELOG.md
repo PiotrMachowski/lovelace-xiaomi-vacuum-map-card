@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.0.7
+
+### Fixed
+
+- Rooms are no longer locked after the vacuum has returned to the dock: a run ends as soon as the
+  vacuum is docked, idle or in error. Before the vacuum reports that it started, a tap on a room
+  starts a new selection instead of being refused.
+- Dragging, pinching or rotating the map no longer selects the room under the pointer.
+
+### Documentation
+
+- Removed the one-room-at-a-time script recipe. A per-installation script is not a fix; the docs
+  state that some vacuums (Viomi V8) ignore the room order instead.
+
 ## 1.0.6
 
 ### Fixed

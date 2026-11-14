@@ -236,71 +236,16 @@ For `ROOM` selections, the card can use room IDs and names from the camera's `ro
 #### Cleaning order
 
 Rooms are sent in the order you tap them, and each selected room shows its number. After **Start**
-the rooms stay highlighted with their numbers, exactly as they were selected, until the vacuum
-is done: it has stayed out of `cleaning`, `paused` and `returning` for 90 seconds (so a dock stop
-between rooms does not end the run), or it has not started within three minutes. Meanwhile the
-rooms are locked, so the order cannot change mid-run. The run is remembered per vacuum in the
-browser, so a reload keeps it.
+the rooms stay highlighted with their numbers, exactly as they were selected, while the vacuum
+works through them (`cleaning`, `paused` or `returning`); the rooms are locked meanwhile, so the
+order cannot change mid-run. The run ends as soon as the vacuum is done (docked, idle, error), or
+after three minutes if it never starts. Until the vacuum reports the start, which polling
+integrations do tens of seconds late, a tap on a room starts a new selection instead. The run is
+remembered per vacuum in the browser, so a reload keeps it.
 
 Some vacuums plan their own route and ignore the order of a multi-room command; the Viomi V8
-(`set_mode_withroom`) is one. For those, clean one room at a time with a script and start it from
-the card. The script below sends each room on its own and starts the next one once the vacuum has
-docked. Do not send the next room while the vacuum is heading home: the V8 ignores it. A room that
-does not start is sent once more.
-
-```yaml
-# scripts.yaml
-vacuum_rooms_in_order:
-  alias: Vacuum rooms in order
-  mode: restart
-  fields:
-    vacuum: { required: true, selector: { entity: { domain: vacuum } } }
-    rooms: { required: true, selector: { object: {} } }
-  sequence:
-    - repeat:
-        for_each: "{{ rooms }}"
-        sequence:
-          - action: vacuum.send_command
-            target: { entity_id: "{{ vacuum }}" }
-            data:
-              command: set_mode_withroom
-              params: "{{ [1, 1, 1, repeat.item | int] }}"
-          - wait_template: "{{ is_state(vacuum, 'cleaning') }}"
-            timeout: "00:01:30"
-            continue_on_timeout: true
-          - if: "{{ not wait.completed }}"
-            then:
-              - action: vacuum.send_command
-                target: { entity_id: "{{ vacuum }}" }
-                data:
-                  command: set_mode_withroom
-                  params: "{{ [1, 1, 1, repeat.item | int] }}"
-              - wait_template: "{{ is_state(vacuum, 'cleaning') }}"
-                timeout: "00:01:30"
-                continue_on_timeout: false
-          - if: "{{ not repeat.last }}"
-            then:
-              - wait_template: "{{ is_state(vacuum, 'docked') }}"
-                timeout: "01:00:00"
-                continue_on_timeout: false
-              - delay: { seconds: 5 }
-```
-
-```yaml
-# The card's ROOM mode
-service_call_schema:
-  service: script.turn_on
-  service_data:
-    entity_id: script.vacuum_rooms_in_order
-    variables:
-      vacuum: "[[entity_id]]"
-      rooms: "[[selection]]"
-```
-
-Use `script.turn_on` rather than calling the script directly, so the card does not wait for every
-room to finish. Sending the vacuum home also counts as "room done", so add an automation that turns
-the script off when `vacuum.stop`, `vacuum.pause` or `vacuum.return_to_base` is called (an `event`
-trigger on `call_service` with `domain: vacuum`).
+(`set_mode_withroom`) is one. On those the numbers show the order that was sent, not the order the
+vacuum cleans in.
 
 ### Cropping options
 
