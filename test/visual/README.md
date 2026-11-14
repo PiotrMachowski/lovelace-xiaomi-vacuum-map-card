@@ -39,8 +39,12 @@ only the screenshot.
 The four overlay scenarios also assert numeric geometry, not just pixels: the framed room's
 outline bounding box, in source-image pixels, must equal the rectangle in
 `test/fixtures/synthetic/map.png` within 0.75 px (`LIVING_ROOM_IMAGE_RECT` in `visual.spec.ts`).
-That assertion is independent of the browser build, so a layout regression reports the expected
-rectangle even when the screenshot diff alone is hard to read.
+That check covers the detected outline and the calibration conversion, and it names the failing edge
+so a broken outline is readable without comparing images. It is **not** the guard for scale or
+transform alignment: the box is derived with `getBBox()` divided by `realScale`, which cancels a
+base-scale error and ignores the zoom and rotation transforms, so those regressions are caught by
+the screenshots. The tolerance is deliberately below one image pixel; a 1 layout-pixel drift can
+therefore pass, and the measured values currently land exactly on the rectangle.
 
 The room hit test asserts the cleaning-order badge the same way, because the screenshot cannot: at
 400 x 398 px, `maxDiffPixelRatio: 0.001` tolerates 159 differing pixels while a missing or shifted

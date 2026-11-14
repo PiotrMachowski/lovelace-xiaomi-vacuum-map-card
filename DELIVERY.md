@@ -85,6 +85,13 @@ table above; P0d is a user-captured fixture, not an upstream item.
 
 | Upstream | Scope | Batch | Status |
 |---|---|---|---|
+| #949 | Persistent map view and map rotation | carried before this programme | merged before batch work (`badf9b2`); recorded in FORK.md |
+| #939 | Watch the current preset's entities rather than a fixed entity | - | considered; no change needed — the fork already resolves the current preset correctly |
+| #843 | Map rotation follow-up | - | grouped under #949 |
+| #771 | Multiple vacuums / room-config answers | - | grouped under #944 (B2) |
+| #932 | Frozen `map_modes` when generating rooms | - | grouped under #956 (B2) |
+| #908 | Roborock status/battery tiles | - | grouped under #964 (B4, postponed) |
+| #878, #857, #963 | Roborock duration/unit tiles | - | grouped under #965 (B3) |
 | #937 | Validation crash: predefined selection without `id`/`zones` | B1 | merged, PR #4 |
 | #940 | Validation crash: incomplete calibration point | B1 | merged, PR #4 |
 | #938 | Invalid dynamic predefined selections throw | B1 | merged, PR #4 |
@@ -125,25 +132,46 @@ table above; P0d is a user-captured fixture, not an upstream item.
 
 ## Follow-ups discovered during delivery
 
-| Item | Blocks a batch? | Owner |
+Every follow-up is either resolved or explicitly accepted. Nothing in this table is open silently.
+
+| Follow-up | Disposition | Reason or evidence |
 |---|---|---|
-| `#957`'s `entityNamesChanged` re-render hook was not carried with the `formatEntityName` fallback, because it lives in the card file that B2 owned. Without it a registry-only rename can leave a tile label stale until an unrelated entity update. | No | B3 follow-up, once B2 has merged |
-| `mountEditor` attaches the editor before setting `hass` (unlike `mountCard`). Harmless today; worth aligning when the editor harness is next touched. | No | B2 |
-| `withoutCustomElement` masks `customElements.get` only; the element still upgrades if something renders it. B2 must assert on the rendered tag name. | No | B2 |
-| An empty YAML key still crashes validation: `id:` with no value parses to `null`, passes the `=== undefined` check and throws on `null.toString()`; `map:` left empty does the same because `p !== undefined` lets `null` through. Upstream has the same gap, so patching it inside a cherry-pick would break the carry rule. | No | fork-only fix after the Phase 1 wave, with tests for `null` and the `#938` cases the council probed (native-list attribute, `null` value, non-list JSON) |
-| `test/visual/README.md` and the spec comment overstate the numeric overlay check: dividing by `realScale` cancels base-scale errors and `getBBox()` ignores the zoom/rotation transforms, so a base-scale regression is caught only by the screenshots. Fix the wording (and consider tightening the 0.75 px tolerance to ~0.1). | No | audit pass / R1 docs |
-| The visual workflow has no `concurrency` group, so a second label added to a `visual` PR starts a duplicate run. | No | audit pass |
-| The visual README regenerate command replaces the host `node_modules` with Linux binaries; it should say to re-run `npm ci` on the host afterwards. | No | audit pass / R1 docs |
-| Registry **icon** edits are cached: the key covers which entities exist, not their contents, so a changed sensor `icon` persists until reload where master picked it up on rebuild (cosmetic). Adding the entity icon to the cache key would close it. | No | audit pass |
-| The harness display registry includes disabled entries while core's excludes them, so the enable-a-disabled-sensor path can only be tested by editing `hass.entities` by hand. | No | audit pass (harness) |
-| The trailing map refresh has two untested branches: the pending-flag reset on disconnect (deleting it leaves the suite green, but a re-attached card would never schedule again) and the hidden-tab guard inside the timer callback. Adds a test each. | No | audit pass |
-| A camera change while a trailing refresh is pending costs one extra request ~5 s later (bounded, no loop); the manual DevTools check should say "one, possibly two, after a camera change". Coarse `Date.now()` rounding can also re-render at 0 ms at the boundary — a 1 ms minimum delay removes it. | No | audit pass |
-| In template-only mode without colour detection, after an id shift the card can still show a room selected (with its badge) while sending nothing and warning nothing — safe but silent to the user. | No | audit pass |
-| The stale room icon sits over the live room label in `stale-room-hit-test.png` (cosmetic); fading or hiding the stale icon is a cheap improvement. The visual spec header still says "five visual scenarios" when there are eight. | No | audit pass |
-| `map_view.reset` fired while the card is connected but hidden can hit the top-left fallback (no measurable map size) and persist it. Deferring the reset or skipping the save there would close it. | No | audit pass |
-| The two-width centring match for a configured scale is proven by a browser probe, not a committed Playwright case; adding one would lock it in. | No | audit pass |
-| Audit polish from the R2 review was applied directly on master (documentation and metadata only, gates re-run), not through a PR, because every roadmap batch had already merged. | No | done |
-| **Flaky Vitest gate** (high priority): `_updateElements` schedules an uncancelled `delay(100).then(...)`; after happy-dom teardown the callback throws `ReferenceError: window is not defined` in `_restoreMapView`, which reddened one P0c Build run. Reproduced locally: **1 in 15** `npm test` runs (unhandled rejection at `src/xiaomi-vacuum-map-card.ts:1565` `_getMapViewDashboardPath` via `_restoreMapView`, after the test environment is torn down; Vitest exits non-zero, so the gate can go red on an otherwise green branch). Fix: track the timer in the card and cancel it in `disconnectedCallback`, plus a test that disconnects before the delay elapses. | No (but flaky gates are not acceptable long-term) | the batch that next touches the card (B6), or a small dedicated PR once B2 merges |
+| Flaky Vitest gate (`ReferenceError: window is not defined` after happy-dom teardown) | **Resolved** | Fixed by PR [#9](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/9) (`966d348`): delayed card work is cancellable on disconnect, the transition reset is finished, and a detached map load is replayed on re-attach. Three council rounds; 20 consecutive local runs with no unhandled errors, and the regression test is red on master. |
+| `#957` `entityNamesChanged` re-render hook not carried | **Accepted** | Cost: a device, area or floor rename does not refresh tile labels until the next watched-entity update. Recorded in `src/entity-name.ts`, `FORK.md` and ROADMAP B3. Implementing it is a card `shouldUpdate` change plus tests, i.e. new code scope after the final audit. |
+| Null YAML key validator gap (`id:` / `map:` without a value parses to `null`) | **Accepted** | Upstream has the same gap. Fixing it means changing the cherry-picked validator logic and adding tests — new code scope. Impact is narrow (an empty YAML value produces a card error rather than a clear validation message); it is the first candidate for the next code batch. |
+| Visual workflow has no `concurrency` group | **Accepted** | A duplicate run only costs CI minutes and happens when a second label is added to an already `visual`-labelled PR. Adding it is a workflow change outside a documentation audit. |
+| `test/visual/README.md` overstated the numeric overlay check | **Resolved** | The README now says the numeric check covers the detected outline and calibration conversion, that `getBBox()/realScale` cancels base-scale errors and ignores zoom/rotation, and that the screenshots are the guard for alignment; the 0.75 px tolerance admits a 1 layout-px drift by design. |
+| Registry **icon** edits stay cached until reload | **Accepted** | Cosmetic: the cache key covers which entities exist, not their contents, so a changed sensor `icon` appears after a reload where master picked it up on rebuild. Adding the icon to the key is a one-line change for the next code batch. |
+| Harness display registry includes disabled entries (core excludes them) | **Accepted** | Test-harness fidelity only, no production impact; the enable-a-disabled-sensor path was probed by hand during B7. Filtering `disabled_by` in `toDisplayRegistry` would let a regression test cover it directly. |
+| Trailing map refresh: two branches have no test of their own (pending-flag reset on disconnect, hidden check inside the callback) | **Accepted** | Both behaviours were probed by the B6 council (disconnect while a refresh is pending clears the flag and leaves no timers; a pending timer firing while hidden does nothing). Low risk, and the card file is no longer being edited; add the tests when it is next touched. |
+| Coarse `Date.now()` rounding can re-render at 0 ms at the interval boundary | **Accepted** | Bounded and cheap: at most a no-op re-render per boundary on browsers that round the clock (Firefox anti-fingerprinting, ~100 ms). A 1 ms minimum delay would remove it. |
+| Template-only mode without colour detection can show a selected room with a badge while sending nothing and warning nothing | **Accepted** | Safe — no stale id reaches the service call (proven in B8) — but silent to the user. Fixing the feedback needs a warning for metadata-derived ids, i.e. new card code. |
+| Stale-room `!` marker overlaps the live room label in `stale-room-hit-test.png` | **Accepted** | Cosmetic in a test baseline; the warning text is the primary signal and the overlap disappears once the config is regenerated. Fading or hiding the stale icon is a cheap visual improvement. |
+| `map_view.reset` fired while the card is connected but hidden | **Accepted** | Narrow: `_centreConfiguredView` falls back to top-left anchoring only when the map has no measurable size, which requires a reset while hidden; the persisted view would then be that fallback. Deferring the reset or skipping the save would close it. |
+| Two-width centring for a configured `map_view` is proven by a browser probe, not a committed Playwright case | **Accepted** | Proven twice by council probes (400 px `-100,-74.5`; 800 px `-200,-149.5`) plus the happy-dom test at one width. Add the second width when the visual suite is next extended. |
+
+## Final audit evidence
+
+Checked on master at `6a32a8e` on 2026-11-14:
+
+- **Council verdicts.** Every batch pull request (#2, #3, #4, #5, #6, #7, #8, #9, #10, #11, #12,
+  #13, #14, #15, #16) carries a comment recording `VERDICT: APPROVE` from the independent Claude
+  Opus 5.5 council; each PR page contains exactly one such verdict comment, and the rounds that
+  required changes are recorded above it in the same comment.
+- **Merge provenance.** Every merge commit is an ancestor of master: `deb2555` P0a, `4a0dcc9` P0b,
+  `683c07a` P0c, `a8b3a39` B1, `c8042b9` B2, `6fe6307` B3, `f3a27f1` B5, `03a9420` B6, `5939551`
+  B7, `09ebc6e` B8, `a4477c5` B9, `ceacbdd` B10, `966d348` gate fix, `6433e8c` R1, `70ebe0d` R2
+  (all verified with `git merge-base --is-ancestor`).
+- **CI.** The latest master runs at `6a32a8e` are green: Build, Validate HACS, the
+  `workflow_dispatch` Visual (Playwright) run, and the master→dev automerge job.
+- **Release.** `v2.5.0-igloczek.1` is published (not a draft or prerelease), targets `6196002`, and
+  attaches `xiaomi-vacuum-map-card.js` (484,990 bytes, state `uploaded`); the asset download returns
+  the file and the old repository URLs redirect with 301.
+- **Identity.** `gh repo view` reports `Igloczek/lovelace-better-xiaomi-vacuum-map-card` with the
+  fork description, topics, enabled issues and the README homepage; `hacs.json` keeps
+  `filename: xiaomi-vacuum-map-card.js`; `package.json` points `repository`, `homepage` and `bugs` at
+  the fork with the maintainer as `author` and upstream credited under `contributors`; the README,
+  `docs/configuration.md` and `docs/platforms.md` are the rewritten fork documentation.
 
 ## Manual checks owed by the user
 
