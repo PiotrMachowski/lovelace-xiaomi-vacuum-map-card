@@ -45,6 +45,16 @@ export function loadSyntheticFixture(): FixtureBundle {
     return loadBundle("synthetic", SYNTHETIC_FIXTURE_DIR);
 }
 
+/**
+ * The same synthetic map after a simulated re-map that shifted every room id (`0,1,2` -> `3,4,5`).
+ *
+ * The room names and geometry are unchanged on purpose: only the ids moved, so a test that matches
+ * rooms by name instead of id would look fixed while the card would still clean the wrong room.
+ */
+export function loadSyntheticShiftedRoomIdsCamera(): HassEntity {
+    return readJson<HassEntity>(path.join(SYNTHETIC_FIXTURE_DIR, "camera-shifted-ids.json"));
+}
+
 /** Returns the own-setup files that are still missing. Empty when the fixture is complete. */
 export function ownSetupMissingFiles(): string[] {
     return OWN_SETUP_FILES.filter(file => !existsSync(path.join(OWN_SETUP_FIXTURE_DIR, file)));

@@ -127,7 +127,8 @@
             }
         },
         "invalid_entities": "Invalid entities:",
-        "invalid_calibration": "Invalid calibration, please check your configuration"
+        "invalid_calibration": "Invalid calibration, please check your configuration",
+        "stale_rooms": "These configured room IDs no longer exist on the camera map: {0}. The rooms are marked stale and will not be cleaned. Regenerate the rooms config after a re-map."
     },
     "tile": {
         "status": {
