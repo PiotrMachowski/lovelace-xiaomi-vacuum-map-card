@@ -23,8 +23,8 @@ Opus 5.5) returned `VERDICT: APPROVE` on the PR.
 | B6 | Map refresh policy (#704, #357) | merged | [#11](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/11) | APPROVE (round 2) | `03a9420` | - |
 | B7 | Registry payload and caching (#864) | merged | [#8](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/8) | APPROVE (round 2) | `5939551` | - |
 | B8 | Preset rooms and stale room IDs (#385, #928) | merged | [#12](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/12) | APPROVE (round 2) | `09ebc6e` | - |
-| B9 | Default map view (#873) | in progress | - | - | - | - |
-| B10 | Horizontal layout and card height (#183, #943) | planned | - | - | - | after B9 and P0c |
+| B9 | Default map view (#873) | merged | [#13](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/13) | APPROVE (round 2) | `a4477c5` | manual check pending (see below) |
+| B10 | Horizontal layout and card height (#183, #943) | in progress | - | - | - | - |
 | R1 | In-repo rebrand and README rewrite | planned | - | - | - | after code batches |
 | R2 | GitHub repository rename and release surface | planned | - | - | - | last, after every code PR merges |
 
@@ -70,8 +70,8 @@ table above; P0d is a user-captured fixture, not an upstream item.
 | #864 | Whole entity registry downloaded, then `/get` per entity | B7 | merged, PR #8 |
 | #385 | Preset switch does not refresh rooms | B8 | merged, PR #12 — closed as already fixed, proven by a same-camera refresh test |
 | #928 | Room IDs shift after a map edit | B8 | merged, PR #12 |
-| #873 | Configured default map view | B9 | in progress |
-| #183 + #943 | Horizontal layout and card height | B10 | planned |
+| #873 | Configured default map view | B9 | merged, PR #13 |
+| #183 + #943 | Horizontal layout and card height | B10 | in progress |
 | #549 | Templated `predefined_selections` | - | postponed: no concrete case; Jinja subscription is a large change |
 | #503 + #922 | Static floorplan background | - | postponed: needs a floorplan, calibration fixture and alignment decision |
 | #134 | Rotated zone rectangle | - | postponed: Roborock zone API is axis-aligned |
@@ -108,6 +108,8 @@ table above; P0d is a user-captured fixture, not an upstream item.
 | A camera change while a trailing refresh is pending costs one extra request ~5 s later (bounded, no loop); the manual DevTools check should say "one, possibly two, after a camera change". Coarse `Date.now()` rounding can also re-render at 0 ms at the boundary — a 1 ms minimum delay removes it. | No | audit pass |
 | In template-only mode without colour detection, after an id shift the card can still show a room selected (with its badge) while sending nothing and warning nothing — safe but silent to the user. | No | audit pass |
 | The stale room icon sits over the live room label in `stale-room-hit-test.png` (cosmetic); fading or hiding the stale icon is a cheap improvement. The visual spec header still says "five visual scenarios" when there are eight. | No | audit pass |
+| `map_view.reset` fired while the card is connected but hidden can hit the top-left fallback (no measurable map size) and persist it. Deferring the reset or skipping the save there would close it. | No | audit pass |
+| The two-width centring match for a configured scale is proven by a browser probe, not a committed Playwright case; adding one would lock it in. | No | audit pass |
 | **Flaky Vitest gate** (high priority): `_updateElements` schedules an uncancelled `delay(100).then(...)`; after happy-dom teardown the callback throws `ReferenceError: window is not defined` in `_restoreMapView`, which reddened one P0c Build run. Reproduced locally: **1 in 15** `npm test` runs (unhandled rejection at `src/xiaomi-vacuum-map-card.ts:1565` `_getMapViewDashboardPath` via `_restoreMapView`, after the test environment is torn down; Vitest exits non-zero, so the gate can go red on an otherwise green branch). Fix: track the timer in the card and cancel it in `disconnectedCallback`, plus a test that disconnects before the delay elapses. | No (but flaky gates are not acceptable long-term) | the batch that next touches the card (B6), or a small dedicated PR once B2 merges |
 
 ## Manual checks owed by the user
@@ -121,5 +123,6 @@ table above; P0d is a user-captured fixture, not an upstream item.
 | At most one camera request per interval while cleaning | B6 | Needs DevTools against the real camera |
 | Zoom 2.5 / rotation 90 on the device | any map-rendering PR | Real dashboard rendering |
 | Second camera capture after a re-map (room ID drift) | B8 | Needs an acceptable re-map on the real instance |
+| `map_view` on a real dashboard: opens at `{scale: 2.5, rotation: 90}`, pan/zoom away, reset control and `map_view.reset` return to 2.5/90, reload keeps the view; plus the device check at zoom 2.5 and rotation 90 | B9 | No Home Assistant instance in this environment; merged with the check explicitly pending |
 | Install from the HACS custom repository | R1/R2 | Needs the real HACS instance |
 | Clean install from the renamed repository URL | R2 | Needs HACS cache behaviour on the real instance |
