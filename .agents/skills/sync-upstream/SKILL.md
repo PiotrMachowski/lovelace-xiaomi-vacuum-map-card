@@ -92,8 +92,12 @@ For every conflict:
 
 Shared files are the normal case, not the exception. Reapply fork changes to:
 
-- `src/xiaomi-vacuum-map-card.ts` — map view/rotation, automatic room mapping, map refresh policy,
-  stale-room guards, default view, layout, disconnect cleanup.
+- `src/xiaomi-vacuum-map-card.ts` and `src/card/` — upstream keeps the whole card in one file; the
+  fork splits it into `src/card/*.ts` modules (see the [card module layout](../../../FORK.md#card-module-layout)
+  row). Port an upstream change to that file into the module that owns the code it touches, matching
+  methods by name without the leading underscore (`_restoreMapView` → `map-view.ts`
+  `restoreMapView(card)`). Map view/rotation, automatic room mapping, map refresh policy, stale-room
+  guards, default view, layout and disconnect cleanup all live there.
 - `src/editor.ts` — room-config scoping and idempotency, `ha-input` fallback, editor teardown.
 - `src/model/` — `map-view-store.ts`, `map-refresh-policy.ts`, `room-config.ts`,
   `room-color-detector.ts`, `map-scale.ts`, room map objects.

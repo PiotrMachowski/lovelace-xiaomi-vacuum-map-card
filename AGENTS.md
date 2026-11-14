@@ -11,7 +11,9 @@
 
 ## Project map
 
-- This is a TypeScript/Lit custom card for Home Assistant. The main card is `src/xiaomi-vacuum-map-card.ts`.
+- This is a TypeScript/Lit custom card for Home Assistant. The card element is `src/xiaomi-vacuum-map-card.ts`: its state, Lit lifecycle, `render()` and the Home Assistant card API. Behaviour lives in `src/card/`, one module per area, as functions that take the card:
+  - `presets.ts` presets, calibration, internal variables; `selection.ts` modes, the selection and the drawing context; `rooms.ts` camera room metadata, stale ids, colour detection and room taps; `active-run.ts` the started run on the map; `run.ts` the run button and service calls; `events.ts` window/editor events; `map-view.ts` zoom, pan, rotation and the stored map view; `map-refresh.ts` the camera snapshot URL and refresh timing; `render.ts` controls, warnings and toasts; `styles.ts` the card CSS.
+- Add new behaviour to the module for its area, or a new module, not to the card class. Keep the card class to wiring. A card member that modules need is not `private`; tests reach a few internals through thin delegates on the class (`_getSelection`, `_restoreMapView`, `_rotateMap`, ...), keep those when you move code.
 - Map models and geometry live in `src/model/`; configuration types are in `src/types/` and validation is in `src/config-validators.ts`.
 - Read `CONTRIBUTING.md` for platform-template and translation workflows. Update `docs/configuration.md` and `docs/platforms.md` when user-facing configuration or behavior changes; the README describes the card's current capabilities, install and usage.
 
