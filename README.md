@@ -212,19 +212,28 @@ card uses the configured view only when nothing is stored for the current card, 
 map reset control (the centre-focus icon on the map) and the [`map_view.reset`](#action-handling)
 action return to it.
 
-| Key        | Type   | Required | Default        | Description                                                         |
-|------------|--------|----------|----------------|---------------------------------------------------------------------|
-| `scale`    | number | no       | `1`            | Zoom level, from `0.5` to `100` (`1` is the map fitted to the card) |
-| `x`        | number | no       | `0`            | Horizontal offset in layout pixels; `0` is the untransformed position |
-| `y`        | number | no       | `0`            | Vertical offset in layout pixels; `0` is the untransformed position |
-| `rotation` | number | no       | `map_rotation` | Angle in degrees the map opens at and returns to when reset         |
+The scale is applied around the centre of the map area, exactly like the zoom-in control, and `x`/`y`
+are offsets from that centred view: `map_view: {scale: 2.5}` changes the zoom and keeps the map
+centred at any card width, while `x: 40` moves it 40 layout pixels to the right of the centred
+position. Rotation pivots on the same centre, so the offsets stay screen offsets at every angle.
+
+| Key        | Type   | Required | Default        | Description                                                                                  |
+|------------|--------|----------|----------------|----------------------------------------------------------------------------------------------|
+| `scale`    | number | no       | `1`            | Zoom level, from `0.5` to `100` (`1` is the map fitted to the card)                          |
+| `x`        | number | no       | `0`            | Horizontal offset in layout pixels from the centred view; `0` keeps the map horizontally centred |
+| `y`        | number | no       | `0`            | Vertical offset in layout pixels from the centred view; `0` keeps the map vertically centred |
+| `rotation` | number | no       | `map_rotation` | Angle in degrees the map opens at and returns to when reset                                  |
 
 Every key is optional, and a key that is left out keeps its neutral value, so
 `map_view: {scale: 2.5}` only changes the zoom. A value that is not a number, or a `scale` outside
 `0.5`–`100` (the range the zoom controls offer), is reported as a configuration error instead of
 being applied. The configured view applies to the whole card: each preset uses it where that preset
-has no stored view. Unlike `persist_map_view`, which decides whether the user's view is remembered,
-`map_view` also applies with `persist_map_view: false`.
+has no stored view. `map_view` is a main-configuration option only; a value inside
+`additional_presets` is ignored. Unlike `persist_map_view`, which decides whether the user's view is
+remembered, `map_view` also applies with `persist_map_view: false`.
+
+The configured view is part of the stored view's lookup, so editing `map_view` starts from the new
+default instead of keeping the view remembered for the old one.
 
 ```yaml
 type: custom:xiaomi-vacuum-map-card

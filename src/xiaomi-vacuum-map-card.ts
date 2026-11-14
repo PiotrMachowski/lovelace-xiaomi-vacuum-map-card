@@ -1600,7 +1600,11 @@ export class XiaomiVacuumMapCard extends LitElement {
             zoomerContent.style.transitionDuration = this._getCssProperty("--map-card-internal-transitions-duration");
         }
         const neutral = this._getNeutralMapView();
-        const view = resolveMapView(undefined, this.config?.map_view, neutral) ?? neutral;
+        // A configured view is centred like the zoom control; the neutral fallback must stay the
+        // pre-B9 top-left anchoring, so only convert when there is a `map_view`.
+        const view = this.config?.map_view
+            ? this._centreConfiguredView(resolveMapView(undefined, this.config.map_view, neutral) ?? neutral)
+            : neutral;
         // Set the angle before the transform: the transform's change event persists the view, and it
         // must persist the angle the reset is going to, not the one it is leaving.
         this.mapRotation = view.rotation;
@@ -1624,6 +1628,36 @@ export class XiaomiVacuumMapCard extends LitElement {
     /** The neutral view: the state the card renders before any stored or configured view applies. */
     private _getNeutralMapView(): MapView {
         return { scale: 1, x: 0, y: 0, rotation: this._getConfiguredRotation(this._getCurrentPreset()) };
+    }
+
+    /**
+     * Converts a configured view into the pinch-zoom transform.
+     *
+     * A configured `x`/`y` is an offset from the centred view, so `map_view: {scale: 1.5}` opens
+     * exactly where one press of the zoom-in control leaves the map, at any card width. The
+     * transform, on the other hand, positions the content's top-left corner, so the centred view has
+     * to be expressed in that space: put the content centre in the viewport centre, then add the
+     * configured offset. Rotation needs no extra term because the CSS transform already pivots on
+     * the content centre, which makes the converted offsets screen offsets at any angle.
+     *
+     * Stored views are deliberately not passed through here: a gesture's offsets are already
+     * transform values.
+     */
+    private _centreConfiguredView(view: MapView): MapView {
+        const pinchZoom = this._getPinchZoom();
+        const content = this._getMapZoomerContent();
+        if (!pinchZoom || !content) {
+            return view;
+        }
+        const bounds = pinchZoom.getBoundingClientRect();
+        if (!bounds.width || !bounds.height) {
+            return view;
+        }
+        return {
+            ...view,
+            x: bounds.width / 2 - (view.scale * content.offsetWidth) / 2 + view.x,
+            y: bounds.height / 2 - (view.scale * content.offsetHeight) / 2 + view.y,
+        };
     }
 
     private _getCssProperty(property: string): string {
@@ -1923,9 +1957,29 @@ export class XiaomiVacuumMapCard extends LitElement {
         const preset = this._getCurrentPreset() ?? ({} as CardPresetConfig);
         const camera = preset.map_source?.camera ?? "";
         const image = preset.map_source?.image ?? "";
-        return [this._getMapViewCardKey(), this.presetIndex ?? 0, camera || image, this._getMapViewMapId(camera)].join(
-            "|",
-        );
+        // The configured default is part of the key. Without it a stored view—which almost always
+        // exists once the reset has run—would keep winning over an edited `map_view` forever, and
+        // the new default would only appear after another reset. A changed default is a changed
+        // starting point, so it gets its own entry. The explicit `map_view_storage_key` still
+        // replaces only the card part of the key.
+        const mapView = this.config?.map_view;
+        const mapViewSignature = mapView
+            ? hashString(
+                  JSON.stringify([
+                      mapView.scale ?? null,
+                      mapView.x ?? null,
+                      mapView.y ?? null,
+                      mapView.rotation ?? null,
+                  ]),
+              )
+            : "none";
+        return [
+            this._getMapViewCardKey(),
+            this.presetIndex ?? 0,
+            camera || image,
+            this._getMapViewMapId(camera),
+            mapViewSignature,
+        ].join("|");
     }
 
     /**
@@ -1935,6 +1989,13 @@ export class XiaomiVacuumMapCard extends LitElement {
      * The configured default is intentionally independent of `persist_map_view`: that flag controls
      * remembering what the user does, while `map_view` states where the card starts. A card with
      * persistence disabled therefore still opens at the configured view and simply never stores one.
+     *
+     * The default is also applied only at the start of a card or preset session (that is, the first
+     * time this card resolves any key since `setConfig`, a preset switch or the mount). A camera
+     * whose map id changes mid-session—a re-map, or the calibration-points fallback that some
+     * integrations only expose—produces a new key; a default applied there would yank the map away
+     * from whatever the user is looking at. On such a later key change the current view is kept
+     * unless the new key has a stored view of its own.
      */
     private _restoreMapView(): void {
         const pinchZoom = this._getPinchZoom();
@@ -1966,18 +2027,35 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (!contentRect.width || !contentRect.height) {
             return;
         }
+        // The mount, `setConfig` and a preset switch clear the key, so an undefined value is the
+        // start of a card or preset session: the only moment the configured default may take over.
+        const sessionStart = this.restoredMapViewKey === undefined;
         this.restoredMapViewKey = key;
         const stored = this._isMapViewPersistenceEnabled() ? getMapView(key) : undefined;
-        const view = resolveMapView(stored, this.config?.map_view, this._getNeutralMapView());
+        const view = resolveMapView(
+            stored,
+            sessionStart ? this.config?.map_view : undefined,
+            this._getNeutralMapView(),
+        );
         if (!view) {
+            // A later key change with nothing stored for it keeps the current view, which is exactly
+            // the pre-B9 behaviour when no default is configured.
             return;
         }
+        // Stored offsets are already pinch-zoom transform values; a configured view states its
+        // offsets from the centred view and has to be converted first.
+        const transformView = stored ? view : this._centreConfiguredView(view);
         if (this._isMapLockPersistenceEnabled() && typeof view.locked === "boolean") {
             this.mapLocked = view.locked;
         }
         // set directly rather than through _setRotation: the stored x/y already match this angle
-        this.mapRotation = view.rotation;
-        pinchZoom.setTransform({ scale: view.scale, x: view.x, y: view.y, allowChangeEvent: false });
+        this.mapRotation = transformView.rotation;
+        pinchZoom.setTransform({
+            scale: transformView.scale,
+            x: transformView.x,
+            y: transformView.y,
+            allowChangeEvent: false,
+        });
         this.mapScale = pinchZoom.scale;
         this.mapX = pinchZoom.x;
         this.mapY = pinchZoom.y;

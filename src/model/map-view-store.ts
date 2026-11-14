@@ -101,11 +101,16 @@ export function normalizeAngle(degrees: number): number {
  * The view to apply for one key, in fallback order: a stored view always wins, then the configured
  * default, and only when neither exists does `undefined` mean "leave the neutral view alone".
  *
- * A configured default is not stored: the card applies it on every restore, so it also remains the
- * target of the reset action after the user pans away. Missing fields of a partial `map_view` are
- * taken from `neutral` — scale 1, no offset and the preset's `map_rotation` — which keeps a
- * `map_view: {scale: 2.5}` from also moving or rotating the map. The rotation is normalized like a
- * stored one, so a configured 450° compares equal to 90°.
+ * A configured default is not stored, so it remains the target of the reset action after the user
+ * pans away. Missing fields of a partial `map_view` are taken from `neutral` — scale 1, no offset
+ * and the preset's `map_rotation` — which keeps a `map_view: {scale: 2.5}` from also moving or
+ * rotating the map. The rotation is normalized like a stored one, so a configured 450° compares
+ * equal to 90°.
+ *
+ * The two sources use different offset spaces: a stored `x`/`y` is already the pinch-zoom
+ * transform value of a gesture, while a configured `x`/`y` is an offset from the centred view. The
+ * card converts a configured view to the transform space only when it applies one — see
+ * `_centreConfiguredView` — so this resolver can stay pure.
  */
 export function resolveMapView(
     stored: MapView | undefined,
