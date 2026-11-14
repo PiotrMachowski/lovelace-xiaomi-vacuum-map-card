@@ -50,16 +50,15 @@ export class Room extends PredefinedMapObject {
             ? this._imageOutline.map(p => this.realScaled2Point(p))
             : (this._config?.outline ?? []).map(p => this.vacuumToScaledMap(p[0], p[1]));
         // Rooms are sent in click order, so a selected room shows its position in that order. Once
-        // a run has started and the selection is cleared, the rooms of that run keep their position
-        // until the vacuum is done; a new selection takes over the badges.
-        const runOrder =
-            !this._selected && this._context.selectedRooms().length === 0
-                ? this._context.activeRoomOrder().indexOf(String(this._config.id)) + 1
-                : 0;
+        // a run has started and the selection is cleared, the rooms of that run look exactly as they
+        // did when selected, numbers included, until the vacuum is done. Rooms are locked meanwhile
+        // (see `click`), so the two sources never mix.
+        const runOrder = this._selected ? 0 : this._context.activeRoomOrder().indexOf(String(this._config.id)) + 1;
         const order = this._selected ? this._context.selectedRooms().indexOf(this) + 1 : runOrder;
+        const highlighted = this._selected || runOrder > 0;
         const iconContent = order > 0 ? html`<span class="room-order">${order}</span>` : undefined;
         return svg`
-            <g class="room-wrapper ${this._selected ? "selected" : ""} ${runOrder > 0 ? "running" : ""} ${this._stale ? "room-stale" : ""}
+            <g class="room-wrapper ${highlighted ? "selected" : ""} ${runOrder > 0 ? "running" : ""} ${this._stale ? "room-stale" : ""}
             room-${`${this._config.id}`.replace(/[^a-zA-Z0-9_\-]/gm, "_")}-wrapper">
                 <polygon class="room-outline ${this._imageOutline || this._stale ? "" : "clickable"}"
                          points="${poly.map(p => p.join(", ")).join(" ")}"
@@ -126,6 +125,12 @@ export class Room extends PredefinedMapObject {
     public async click(): Promise<void> {
         // A stale room is a warning, not a target: its id is absent from the live camera metadata.
         if (this._stale) return;
+        // While a started run is in progress the map shows its order, and the rooms are locked so
+        // that order cannot be changed or mixed with a new selection until the vacuum is done.
+        if (this._context.activeRoomOrder().length > 0) {
+            forwardHaptic("failure");
+            return;
+        }
         if (!this._selected && this._context.selectedRooms().length >= this._context.maxSelections()) {
             forwardHaptic("failure");
             return;
@@ -273,13 +278,6 @@ export class Room extends PredefinedMapObject {
 
             .room-wrapper.selected > text.room-order {
                 fill: var(--map-card-internal-room-label-color-selected);
-            }
-
-            /* A room of the run in progress: outlined like a selection, but dashed, so it reads as
-               "being cleaned in this order" rather than "selected for the next run". */
-            .room-wrapper.running > .room-outline {
-                stroke: var(--map-card-internal-room-outline-line-color-selected);
-                stroke-dasharray: calc(6px / var(--map-scale)) calc(4px / var(--map-scale));
             }
         `;
     }

@@ -87,6 +87,12 @@ function running(card: CardHandle): string[] {
     );
 }
 
+function highlighted(card: CardHandle): string[] {
+    return ["0", "1", "2"].filter(id =>
+        card.shadowRoot.querySelector(`.room-${id}-wrapper`)?.classList.contains("selected"),
+    );
+}
+
 async function setVacuumState(card: CardHandle, state: string): Promise<void> {
     await card.updateHass(withState(card.hass, VACUUM, { state }).hass);
     await settle(card.element);
@@ -108,10 +114,12 @@ describe("cleaning order during a run", () => {
     it("keeps the order on the map after start, until the vacuum is done", async () => {
         const card = await startRun();
 
-        // The selection is cleared, but the started run keeps its numbers, drawn as running.
-        expect(card.shadowRoot.querySelectorAll(".room-wrapper.selected")).toHaveLength(0);
+        // The selection is cleared, but the started run keeps its numbers and looks exactly as the
+        // selection did: same highlight, same badges.
+        expect((card.element as unknown as { selectedRooms: unknown[] }).selectedRooms).toHaveLength(0);
         expect(badges(card)).toEqual({ "2": "1", "0": "2" });
         expect(running(card)).toEqual(["0", "2"]);
+        expect(highlighted(card)).toEqual(["0", "2"]);
 
         await setVacuumState(card, "cleaning");
         expect(badges(card)).toEqual({ "2": "1", "0": "2" });
@@ -121,17 +129,24 @@ describe("cleaning order during a run", () => {
         await setVacuumState(card, "docked");
         expect(badges(card)).toEqual({});
         expect(running(card)).toEqual([]);
+        expect(highlighted(card)).toEqual([]);
         expect(loadActiveRoomRun(VACUUM)).toBeUndefined();
     });
 
-    it("lets a new selection take over the badges while a run is shown", async () => {
+    it("locks the rooms while the run is in progress", async () => {
         const card = await startRun();
         await setVacuumState(card, "cleaning");
 
+        // Neither a new room nor a room of the run can change the order.
         await clickRoom(card, "1");
+        await clickRoom(card, "2");
+        expect(badges(card)).toEqual({ "2": "1", "0": "2" });
+        expect((card.element as unknown as { selectedRooms: unknown[] }).selectedRooms).toHaveLength(0);
 
+        // Once the vacuum is done the rooms can be picked again.
+        await setVacuumState(card, "docked");
+        await clickRoom(card, "1");
         expect(badges(card)).toEqual({ "1": "1" });
-        expect(running(card)).toEqual([]);
     });
 
     it("restores the run after a reload", async () => {

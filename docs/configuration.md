@@ -236,9 +236,10 @@ For `ROOM` selections, the card can use room IDs and names from the camera's `ro
 #### Cleaning order
 
 Rooms are sent in the order you tap them, and each selected room shows its number. After **Start**
-the numbers stay on the map, with a dashed outline, until the vacuum reports it is done (it leaves
-`cleaning`, `paused` and `returning`), or for three minutes if it never starts. A new selection
-replaces them. The run is remembered per vacuum in the browser, so a reload keeps it.
+the rooms stay highlighted with their numbers, exactly as they were selected, until the vacuum
+reports it is done (it leaves `cleaning`, `paused` and `returning`), or for three minutes if it
+never starts. Meanwhile the rooms are locked, so the order cannot change mid-run. The run is
+remembered per vacuum in the browser, so a reload keeps it.
 
 Some vacuums plan their own route and ignore the order of a multi-room command; the Viomi V8
 (`set_mode_withroom`) is one. For those, clean one room at a time with a script and start it from
