@@ -222,10 +222,6 @@ A few defaults differ, and each can be switched back:
 - Room outlines detected from the map replace configured outlines. Configured rooms are used when
   detection isn't available.
 
-If you installed this card before its rename from `Igloczek/lovelace-xiaomi-vacuum-map-card`,
-remove that custom repository and add the current URL. Only the resource URL changes.
-[FORK.md](FORK.md) records every difference from the original card.
-
 ## Credits and license
 
 Created by Piotr Machowski as
