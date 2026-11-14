@@ -299,3 +299,12 @@ This platform can be used to control vacuums connected to Home Assistant using D
     https://user-images.githubusercontent.com/6118709/141666931-48d1717f-96d0-461d-84f4-788c071f3a78.mp4
 
   </details>
+
+## Multiple maps
+
+If you use more than one saved map (e.g. multiple floors), create a separate preset for each map. See [FAQ](/README.md#faq) for details and an example configuration.
+
+Entities used by this integration:
+* `camera.<name>_map` shows the currently selected map, use it as `map_source` in all presets
+* `select.<name>_selected_map` holds the currently selected map, use it in presets' `conditions`
+* `camera.<name>_map_1`, `camera.<name>_map_2` etc. contain rooms of each saved map in the `rooms` attribute

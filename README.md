@@ -672,6 +672,102 @@ This card handles following actions:
 
   Yes, you just have to provide 4 calibration points.
 
+- **How to use the card with multiple maps (e.g. multiple floors)?**
+
+  Rooms are saved in the card's configuration, so they belong to a single map. With one preset, the map image changes
+  when the vacuum switches maps, but room outlines stay where they were on the previous map and their IDs still point
+  to the previous map's rooms.
+
+  Use one preset per map (`additional_presets`), each with its own rooms and a [condition](#condition-options) on the
+  entity that holds the currently selected map. Only the preset of the selected map is shown, and the card switches to
+  it automatically when the map is changed (in the vacuum's app, from Home Assistant or from the card).
+
+  Things to keep in mind:
+  - presets in `additional_presets` don't inherit anything from the main one, so each of them needs `entity`,
+    `map_source`, `vacuum_platform` etc.
+  - a preset without `conditions` is always shown, so add a condition to every preset
+  - if no preset matches, the main one is shown
+  - `value` of the condition has to be exactly the same as the option of the select entity
+  - "Generate rooms config" button in the editor reads rooms of the preset that is currently shown, but always saves
+    them in the main preset. Switch the vacuum to the right map, generate rooms and move `predefined_selections` to the
+    correct preset.
+
+  <details>
+  <summary>Example configuration</summary>
+
+  ```yaml
+  type: custom:xiaomi-vacuum-map-card
+  entity: vacuum.my_vacuum
+  vacuum_platform: Tasshack/dreame-vacuum
+  map_source: &map_source
+    camera: camera.my_vacuum_map
+  calibration_source: &calibration_source
+    camera: true
+  preset_name: Ground floor
+  conditions:
+    - entity: select.my_vacuum_selected_map
+      value: Ground floor
+  icons: &icons
+    - type: menu
+      menu_id: selected_map
+      icon_id: selected_map
+      entity: select.my_vacuum_selected_map
+      available_values_attribute: options
+      icon: mdi:map
+      tap_action:
+        action: call-service
+        service: select.select_option
+        service_data:
+          option: "[[value]]"
+          entity_id: "[[entity_id]]"
+  append_icons: true
+  map_modes:
+    - template: vacuum_clean_zone
+    - template: vacuum_clean_segment
+      predefined_selections:
+        - id: '1'
+          outline: [ [ 850, -5400 ], [ 3950, -5400 ], [ 3950, -500 ], [ 850, -500 ] ]
+          label:
+            text: Kitchen
+            x: 2400
+            y: -2950
+            offset_y: 35
+          icon:
+            name: mdi:chef-hat
+            x: 2400
+            y: -2950
+  additional_presets:
+    - entity: vacuum.my_vacuum
+      vacuum_platform: Tasshack/dreame-vacuum
+      map_source: *map_source
+      calibration_source: *calibration_source
+      preset_name: First floor
+      conditions:
+        - entity: select.my_vacuum_selected_map
+          value: First floor
+      icons: *icons
+      append_icons: true
+      map_modes:
+        - template: vacuum_clean_zone
+        - template: vacuum_clean_segment
+          predefined_selections:
+            - id: '1'
+              outline: [ [ -2650, -5250 ], [ 850, -5250 ], [ 850, 850 ], [ -2650, 850 ] ]
+              label:
+                text: Bedroom
+                x: -900
+                y: -2200
+                offset_y: 35
+              icon:
+                name: mdi:bed
+                x: -900
+                y: -2200
+  ```
+
+  The `selected_map` menu icon is optional, it only adds a way to switch maps from the card.
+
+  </details>
+
 ## Migrating from v1.x.x
 
 <details>
