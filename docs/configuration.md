@@ -237,14 +237,16 @@ For `ROOM` selections, the card can use room IDs and names from the camera's `ro
 
 Rooms are sent in the order you tap them, and each selected room shows its number. After **Start**
 the rooms stay highlighted with their numbers, exactly as they were selected, until the vacuum
-reports it is done (it leaves `cleaning`, `paused` and `returning`), or for three minutes if it
-never starts. Meanwhile the rooms are locked, so the order cannot change mid-run. The run is
-remembered per vacuum in the browser, so a reload keeps it.
+is done: it has stayed out of `cleaning`, `paused` and `returning` for 90 seconds (so a dock stop
+between rooms does not end the run), or it has not started within three minutes. Meanwhile the
+rooms are locked, so the order cannot change mid-run. The run is remembered per vacuum in the
+browser, so a reload keeps it.
 
 Some vacuums plan their own route and ignore the order of a multi-room command; the Viomi V8
 (`set_mode_withroom`) is one. For those, clean one room at a time with a script and start it from
-the card. The script below sends each room on its own and starts the next one when the vacuum
-heads home:
+the card. The script below sends each room on its own and starts the next one once the vacuum has
+docked. Do not send the next room while the vacuum is heading home: the V8 ignores it. A room that
+does not start is sent once more.
 
 ```yaml
 # scripts.yaml
@@ -264,13 +266,24 @@ vacuum_rooms_in_order:
               command: set_mode_withroom
               params: "{{ [1, 1, 1, repeat.item | int] }}"
           - wait_template: "{{ is_state(vacuum, 'cleaning') }}"
-            timeout: "00:03:00"
-            continue_on_timeout: false
+            timeout: "00:01:30"
+            continue_on_timeout: true
+          - if: "{{ not wait.completed }}"
+            then:
+              - action: vacuum.send_command
+                target: { entity_id: "{{ vacuum }}" }
+                data:
+                  command: set_mode_withroom
+                  params: "{{ [1, 1, 1, repeat.item | int] }}"
+              - wait_template: "{{ is_state(vacuum, 'cleaning') }}"
+                timeout: "00:01:30"
+                continue_on_timeout: false
           - if: "{{ not repeat.last }}"
             then:
-              - wait_template: "{{ not is_state(vacuum, 'cleaning') }}"
-              - condition: template
-                value_template: "{{ states(vacuum) in ['returning', 'docked'] }}"
+              - wait_template: "{{ is_state(vacuum, 'docked') }}"
+                timeout: "01:00:00"
+                continue_on_timeout: false
+              - delay: { seconds: 5 }
 ```
 
 ```yaml

@@ -77,6 +77,7 @@ import { Room } from "./model/map_objects/room";
 import { RoomColorDetection, RoomColorDetector } from "./model/room-color-detector";
 import { findStaleRoomIds } from "./model/room-config";
 import {
+    ACTIVE_ROOM_RUN_END_GRACE_MS,
     ActiveRoomRun,
     advanceActiveRoomRun,
     loadActiveRoomRun,
@@ -1216,6 +1217,10 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (next === current) return;
         this.activeRoomRun = next;
         saveActiveRoomRun(entity, next);
+        if (next?.inactiveSince !== undefined && current?.inactiveSince === undefined) {
+            // Without a later state change nothing would re-check the run, so end it on time.
+            this._scheduleDelayedCallback(() => this._advanceActiveRoomRun(), ACTIVE_ROOM_RUN_END_GRACE_MS + 1000);
+        }
         this.requestUpdate();
     }
 

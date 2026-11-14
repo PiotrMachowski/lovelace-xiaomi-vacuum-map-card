@@ -14,6 +14,11 @@ export interface ActiveRoomRun {
     startedAt: number;
     /** True once the vacuum has reported a working state after the start. */
     seenActive: boolean;
+    /**
+     * Epoch milliseconds when the vacuum, after working, was first seen outside the working states.
+     * Cleared when it works again.
+     */
+    inactiveSince?: number;
 }
 
 /** Vacuum states that mean a run is still in progress, including the trip back between rooms. */
@@ -27,10 +32,18 @@ export const ACTIVE_VACUUM_STATES: ReadonlySet<string> = new Set(["cleaning", "p
 export const ACTIVE_ROOM_RUN_START_GRACE_MS = 3 * 60 * 1000;
 
 /**
+ * How long the vacuum must stay out of the working states before the run counts as done. A run
+ * that cleans one room at a time (for a vacuum that ignores the order of a multi-room command)
+ * docks between rooms, and a polling integration can briefly report `docked` or `idle` there; the
+ * run must survive that stop rather than drop its order and unlock the rooms mid-run.
+ */
+export const ACTIVE_ROOM_RUN_END_GRACE_MS = 90 * 1000;
+
+/**
  * Advances a run with the vacuum's current state. Returns the same object when nothing changed,
- * an updated copy when the run first becomes active, and undefined when the run is over: the
- * vacuum left the working states after it was seen working, or it never started within the grace
- * period.
+ * an updated copy when its progress changed, and undefined when the run is over: the vacuum has
+ * stayed out of the working states for the end grace period after it was seen working, or it never
+ * started within the start grace period.
  */
 export function advanceActiveRoomRun(
     run: ActiveRoomRun | undefined,
@@ -39,10 +52,14 @@ export function advanceActiveRoomRun(
 ): ActiveRoomRun | undefined {
     if (!run) return undefined;
     if (vacuumState !== undefined && ACTIVE_VACUUM_STATES.has(vacuumState)) {
-        return run.seenActive ? run : { ...run, seenActive: true };
+        if (run.seenActive && run.inactiveSince === undefined) return run;
+        const working: ActiveRoomRun = { ...run, seenActive: true };
+        delete working.inactiveSince;
+        return working;
     }
-    if (run.seenActive) return undefined;
-    return now - run.startedAt > ACTIVE_ROOM_RUN_START_GRACE_MS ? undefined : run;
+    if (!run.seenActive) return now - run.startedAt > ACTIVE_ROOM_RUN_START_GRACE_MS ? undefined : run;
+    if (run.inactiveSince === undefined) return { ...run, inactiveSince: now };
+    return now - run.inactiveSince > ACTIVE_ROOM_RUN_END_GRACE_MS ? undefined : run;
 }
 
 type ActiveRoomRunStorage = Record<string, ActiveRoomRun>;
@@ -65,7 +82,8 @@ function isActiveRoomRun(value: unknown): value is ActiveRoomRun {
         Array.isArray(run.roomIds) &&
         run.roomIds.every(id => typeof id === "string") &&
         typeof run.startedAt === "number" &&
-        typeof run.seenActive === "boolean"
+        typeof run.seenActive === "boolean" &&
+        (run.inactiveSince === undefined || typeof run.inactiveSince === "number")
     );
 }
 

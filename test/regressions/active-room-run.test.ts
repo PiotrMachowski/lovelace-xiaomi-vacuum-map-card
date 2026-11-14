@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import { ACTIVE_ROOM_RUN_STORE_KEY } from "../../src/const";
 import {
+    ACTIVE_ROOM_RUN_END_GRACE_MS,
     ACTIVE_ROOM_RUN_START_GRACE_MS,
     ActiveRoomRun,
     advanceActiveRoomRun,
@@ -42,9 +43,23 @@ describe("advanceActiveRoomRun", () => {
         expect(advanceActiveRoomRun(active, "returning", 4_000)).toBe(active);
     });
 
-    it("ends the run when the vacuum leaves the working states after it was seen working", () => {
-        expect(advanceActiveRoomRun(run({ seenActive: true }), "docked", 5_000)).toBeUndefined();
-        expect(advanceActiveRoomRun(run({ seenActive: true }), "idle", 5_000)).toBeUndefined();
+    it("ends the run once the vacuum has stayed out of the working states for the end grace", () => {
+        for (const state of ["docked", "idle"]) {
+            const stopped = advanceActiveRoomRun(run({ seenActive: true }), state, 5_000);
+            expect(stopped).toMatchObject({ inactiveSince: 5_000 });
+            expect(advanceActiveRoomRun(stopped, state, 5_000 + ACTIVE_ROOM_RUN_END_GRACE_MS)).toBe(stopped);
+            expect(advanceActiveRoomRun(stopped, state, 5_000 + ACTIVE_ROOM_RUN_END_GRACE_MS + 1)).toBeUndefined();
+        }
+    });
+
+    it("survives a dock stop between rooms", () => {
+        // A one-room-at-a-time run docks before the next room starts.
+        const stopped = advanceActiveRoomRun(run({ seenActive: true }), "docked", 5_000);
+        const resumed = advanceActiveRoomRun(stopped, "cleaning", 40_000);
+        expect(resumed).toEqual(run({ seenActive: true }));
+        // The grace starts over at the next stop, not from the first one.
+        const stoppedAgain = advanceActiveRoomRun(resumed, "docked", 200_000);
+        expect(advanceActiveRoomRun(stoppedAgain, "docked", 200_000 + ACTIVE_ROOM_RUN_END_GRACE_MS)).toBe(stoppedAgain);
     });
 });
 
@@ -126,7 +141,15 @@ describe("cleaning order during a run", () => {
         await setVacuumState(card, "returning");
         expect(badges(card)).toEqual({ "2": "1", "0": "2" });
 
+        // A dock stop between rooms keeps the run; it ends once the vacuum stays docked.
         await setVacuumState(card, "docked");
+        expect(badges(card)).toEqual({ "2": "1", "0": "2" });
+        await setVacuumState(card, "cleaning");
+        await setVacuumState(card, "docked");
+        await settle(card.element, ACTIVE_ROOM_RUN_END_GRACE_MS - 1_000);
+        expect(badges(card)).toEqual({ "2": "1", "0": "2" });
+        // No further state change arrives: the card ends the run on its own timer.
+        await settle(card.element, 2_500);
         expect(badges(card)).toEqual({});
         expect(running(card)).toEqual([]);
         expect(highlighted(card)).toEqual([]);
@@ -145,6 +168,7 @@ describe("cleaning order during a run", () => {
 
         // Once the vacuum is done the rooms can be picked again.
         await setVacuumState(card, "docked");
+        await settle(card.element, ACTIVE_ROOM_RUN_END_GRACE_MS + 2_000);
         await clickRoom(card, "1");
         expect(badges(card)).toEqual({ "1": "1" });
     });
