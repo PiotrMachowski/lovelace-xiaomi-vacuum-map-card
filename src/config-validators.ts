@@ -8,6 +8,7 @@ import {
     Language,
     MapModeConfig,
     MapSourceConfig,
+    MapViewConfig,
     PredefinedPointConfig,
     PredefinedSelectionConfig,
     PredefinedZoneConfig,
@@ -272,10 +273,39 @@ function validatePreset(config: CardPresetConfig, nameRequired: boolean, languag
     return errors;
 }
 
+const MAP_VIEW_FIELDS = ["scale", "x", "y", "rotation"] as const;
+
+/**
+ * Validates the configured default map view (`map_view`).
+ *
+ * Every field is optional on purpose: a partial default keeps the neutral value for the fields it
+ * leaves out, so `map_view: {scale: 2.5}` is a complete configuration and is not an error. A field
+ * that is present must be a finite number, and `scale` must be positive, because a zero, negative,
+ * NaN or string value would otherwise reach the pinch-zoom transform. The message names the
+ * offending field so a typo in a four-key object does not need a bisect.
+ */
+export function validateMapViewConfig(mapView: MapViewConfig | undefined): TranslatableString[] {
+    if (mapView === undefined) {
+        return [];
+    }
+    if (!mapView || typeof mapView !== "object" || Array.isArray(mapView)) {
+        return [["validation.map_view.invalid", "{0}", "map_view"]];
+    }
+    const fields = mapView as unknown as Record<string, unknown>;
+    return MAP_VIEW_FIELDS.filter(field => {
+        const value = fields[field];
+        return (
+            value !== undefined &&
+            (typeof value !== "number" || !Number.isFinite(value) || (field === "scale" && value <= 0))
+        );
+    }).map(field => ["validation.map_view.invalid", "{0}", field] as TranslatableString);
+}
+
 export function validateConfig(config: XiaomiVacuumMapCardConfig): string[] {
     const errors: TranslatableString[] = [];
     const multiplePresets = (config.additional_presets?.length ?? 0) > 0;
     validatePreset(config, multiplePresets, config.language).forEach(e => errors.push(e));
+    validateMapViewConfig(config.map_view).forEach(e => errors.push(e));
     config.additional_presets
         ?.flatMap(preset => validatePreset(preset, multiplePresets, config.language))
         .forEach(e => errors.push(e));
