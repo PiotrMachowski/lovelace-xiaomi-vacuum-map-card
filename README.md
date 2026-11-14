@@ -36,11 +36,8 @@ set, this build offers:
 
 ## Install
 
-Install version 1.0.0. The older `v2.x-igloczek` tags are snapshots of the same code from before
-the fork restarted its numbering, so a version updater may not offer 1.0.0; in that case
-reinstall from the repository URL. Home Assistant 2026.11 blocks the HACS custom integration and
-ships the built-in **Marketplace**; upgrading an existing HACS install migrates its entries and
-resources.
+Install version 1.0.0. Home Assistant 2026.11 blocks the HACS custom integration and ships the
+built-in **Marketplace**; upgrading an existing HACS install migrates its entries and resources.
 
 ### Marketplace (Home Assistant 2026.11+)
 

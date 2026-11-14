@@ -84,9 +84,6 @@ Accepted for 1.0.0, each with what would fix it:
 
 ## Open questions and risks
 
-- **Version comparison across the rename.** The fork's own line starts at 1.0.0 while the previous
-  pre-versioning tag is `v2.5.0-igloczek.1`, so a strict version updater may not offer 1.0.0 as an
-  update. Watch how Marketplace and HACS handle that and document a migration if they do not.
 - **HACS to Marketplace.** Home Assistant 2026.11 blocks the HACS integration and migrates installs
   to the Marketplace. Keep `hacs.json` accurate for older releases while the Marketplace path is the
   one that gets exercised.
