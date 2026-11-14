@@ -42,6 +42,7 @@ https://user-images.githubusercontent.com/6118709/140251738-7fb06e81-34b0-4bf8-b
   - [Manual](#manual)
 - [Configuration](#configuration)
   - [Main options](#main-options)
+  - [Layout](#layout)
   - [Preset options](#preset-options)
   - [Map source options](#map-source-options)
     - [Cropping options](#cropping-options)
@@ -150,6 +151,13 @@ full_demo.mp4).
     <td>Card's title</td>
   </tr>
   <tr>
+    <td><code>layout</code></td>
+    <td>string</td>
+    <td>no</td>
+    <td><code>vertical</code></td>
+    <td>Arranges the map above the controls (<code>vertical</code>) or places the map and the mode, icon and tile controls side by side (<code>horizontal</code>). See <a href="#layout">layout</a></td>
+  </tr>
+  <tr>
     <td><code>language</code></td>
     <td>string</td>
     <td>no</td>
@@ -249,6 +257,31 @@ map_view: # optional starting view; a stored view wins over it
   y: -20
   rotation: 90
 ```
+
+#### Layout
+
+`layout: horizontal` puts the map beside the modes, icons and tiles instead of above them. The
+controls column scrolls inside the card when it is taller than the map, and the card never grows
+wider than its container. The default `vertical` arrangement is unchanged. An unknown string is
+reported as a configuration error so a typo does not silently fall back. The option is YAML-only
+for now — the visual editor does not expose it.
+
+```yaml
+type: custom:xiaomi-vacuum-map-card
+entity: vacuum.roborock_s7
+map_source:
+  camera: camera.vacuum_map
+calibration_source:
+  camera: true
+vacuum_platform: Xiaomi Miio
+layout: horizontal
+```
+
+In the sections view the card reports grid options with a 12-column default and numeric row spans,
+so it can be resized in both directions without `card-mod`. Horizontal asks for a wider minimum
+(`min_columns: 6` instead of `3`) because two columns of content need more room. Home Assistant's own
+[`grid_options`](https://www.home-assistant.io/dashboards/sections/#resizing-cards) still override
+these values per card.
 
 ### Preset options
 
