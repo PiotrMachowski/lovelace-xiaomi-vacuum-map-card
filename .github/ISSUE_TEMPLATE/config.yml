@@ -1,7 +1,7 @@
 blank_issues_enabled: false
 contact_links:
   - name: Ask a question about this fork
-    url: https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/issues?q=is%3Aissue
+    url: https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/issues?q=is%3Aissue
     about: This fork tracks its own questions, bugs and feature requests here. Search the existing reports first.
   - name: Read the upstream FAQ
     url: https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/categories/faq

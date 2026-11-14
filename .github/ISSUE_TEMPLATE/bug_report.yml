@@ -15,9 +15,9 @@ body:
         `xiaomi-vacuum-map-card.js`, so include which build you run below.
 
         Configuration options are in
-        [docs/configuration.md](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/blob/master/docs/configuration.md);
+        [docs/configuration.md](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/blob/master/docs/configuration.md);
         platform setup is in
-        [docs/platforms.md](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/blob/master/docs/platforms.md).
+        [docs/platforms.md](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/blob/master/docs/platforms.md).
 
         Questions and feature requests have their own form.
   - type: checkboxes

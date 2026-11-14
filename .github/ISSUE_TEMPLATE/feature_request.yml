@@ -10,7 +10,7 @@ body:
 
         If you have a bug or a question, please use the dedicated form. The fork's scope and the
         deliberately postponed items are in
-        [ROADMAP.md](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/blob/master/ROADMAP.md).
+        [ROADMAP.md](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/blob/master/ROADMAP.md).
   - type: textarea
     validations:
       required: true
