@@ -547,10 +547,286 @@ test("default vertical layout", async ({ page }) => {
     await expect(page.locator(CARD)).toHaveScreenshot("layout-vertical.png");
 });
 
-// Batch B10 (horizontal layout) has not landed, so there is no horizontal arrangement to render
-// and no configuration key to drive it. Keep the placeholder skipped: it documents the missing
-// scenario without turning an unimplemented feature into a passing screenshot.
-test.skip("horizontal layout once B10 exists", async () => {
-    // When B10 lands: mount the card with its horizontal layout option, assert the map and the
-    // controls sit side by side, and add a `layout-horizontal.png` baseline with the same options.
+// Batch B10: the horizontal arrangement at three widths, plus the geometry and resize checks.
+// The vertical screenshot above stays at the default 400 px harness width and must not change.
+
+/** Wraps a tile list long enough to overflow the controls column at the narrowest width. */
+const HORIZONTAL_TILES = Array.from({ length: 8 }, (_, index) => ({
+    tile_id: `b10-tile-${index}`,
+    entity: "sensor.roborock_s7_battery",
+    label: `Tile ${index}`,
+}));
+
+function horizontalConfig(overrides: Partial<XiaomiVacuumMapCardConfig> = {}): XiaomiVacuumMapCardConfig {
+    return cardConfig({
+        layout: "horizontal",
+        title: "Vacuum map",
+        // More than one mode renders the dropdown; the map-action buttons and the long tile list
+        // then exercise wrapping and scrolling in the clamped controls column.
+        map_modes: [
+            { template: "vacuum_clean_segment" },
+            { template: "vacuum_clean_zone" },
+            { template: "vacuum_goto" },
+        ],
+        icons: [
+            { icon: "mdi:robot-vacuum" },
+            { icon: "mdi:battery" },
+            { icon: "mdi:map-marker" },
+            { icon: "mdi:cog" },
+        ],
+        tiles: HORIZONTAL_TILES,
+        ...overrides,
+    });
+}
+
+const HORIZONTAL_WIDTHS = [400, 800, 1200] as const;
+
+/**
+ * Sets the harness card container to `width` CSS px and gives the page enough viewport to render it.
+ *
+ * `#card-root` is fixed at 400 px in `index.html`, so the viewport alone does not change the card
+ * width. The vertical baseline keeps that default; only the horizontal scenarios resize the root.
+ */
+async function setContainerWidth(page: Page, width: number): Promise<void> {
+    await page.setViewportSize({ width: Math.max(800, width + 40), height: 900 });
+    await page.evaluate(cardWidth => {
+        const root = document.getElementById("card-root");
+        if (root) root.style.width = `${cardWidth}px`;
+    }, width);
+}
+
+/** Lets the browser re-layout and paint after a viewport or container change. */
+function nextLayout(page: Page): Promise<void> {
+    return page.evaluate(
+        () =>
+            new Promise<void>(resolve =>
+                requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+            ),
+    );
+}
+
+interface LayoutBoxes {
+    card: Box;
+    map: Box;
+    controls: Box;
+}
+
+async function layoutBoxes(page: Page): Promise<LayoutBoxes> {
+    const card = await page.locator(CARD).boundingBox();
+    const map = await page.locator(`${CARD} #map-zoomer`).boundingBox();
+    const controls = await page.locator(`${CARD} .controls-wrapper`).boundingBox();
+    expect(card, "the card has a layout box").not.toBeNull();
+    expect(map, "the map has a layout box").not.toBeNull();
+    expect(controls, "the controls have a layout box").not.toBeNull();
+    return { card: card!, map: map!, controls: controls! };
+}
+
+/** The geometry every horizontal scenario must show: map left, controls right, same row. */
+function expectSideBySide(boxes: LayoutBoxes, label: string): void {
+    // Adjacent columns: the controls start at (or after) the map's right edge. One pixel absorbs
+    // sub-pixel grid rounding.
+    expect(
+        boxes.controls.x,
+        `${label}: controls x ${boxes.controls.x.toFixed(2)} must be at or after the map right edge ${(
+            boxes.map.x + boxes.map.width
+        ).toFixed(2)}`,
+    ).toBeGreaterThanOrEqual(boxes.map.x + boxes.map.width - 1);
+    // Same row, not stacked: the boxes overlap vertically.
+    const overlap =
+        Math.min(boxes.map.y + boxes.map.height, boxes.controls.y + boxes.controls.height) -
+        Math.max(boxes.map.y, boxes.controls.y);
+    expect(overlap, `${label}: map and controls must share vertical space`).toBeGreaterThan(0);
+    // Both stay inside the card box horizontally.
+    expect(boxes.map.x, `${label}: map must not start left of the card`).toBeGreaterThanOrEqual(boxes.card.x - 1);
+    expect(
+        boxes.controls.x + boxes.controls.width,
+        `${label}: controls must not extend past the card`,
+    ).toBeLessThanOrEqual(boxes.card.x + boxes.card.width + 1);
+}
+
+/**
+ * The largest screen-space gap between the Living room outline and where the fixture's 100..170 x
+ * 20..70 image rectangle should land after the image is CSS-scaled to its current box.
+ *
+ * Unlike `roomOutlineBox()`, this does not divide by the card's `realScale`: a stale scale is
+ * exactly what it has to catch after the container is resized.
+ */
+async function livingRoomAlignmentError(page: Page): Promise<number> {
+    return page.evaluate(() => {
+        const card = document.querySelector("xiaomi-vacuum-map-card") as unknown as {
+            shadowRoot: ShadowRoot;
+        };
+        const image = card.shadowRoot.getElementById("map-image") as HTMLElement;
+        const polygon = card.shadowRoot.querySelector(".room-1-wrapper polygon") as SVGGraphicsElement;
+        const imageBox = image.getBoundingClientRect();
+        const outline = polygon.getBoundingClientRect();
+        const expected = {
+            x: imageBox.x + imageBox.width * (100 / 200),
+            y: imageBox.y + imageBox.height * (20 / 150),
+            width: imageBox.width * (70 / 200),
+            height: imageBox.height * (50 / 150),
+        };
+        return Math.max(
+            Math.abs(outline.x - expected.x),
+            Math.abs(outline.y - expected.y),
+            Math.abs(outline.width - expected.width),
+            Math.abs(outline.height - expected.height),
+        );
+    });
+}
+
+// A real DOM layout check at two widths: vertical stacks, horizontal sits side by side. Kept
+// screenshot-free so it does not create a second vertical baseline to maintain.
+test("layout geometry at 400 and 800 px", async ({ page }) => {
+    for (const width of [400, 800] as const) {
+        await setContainerWidth(page, width);
+        await mount(page, cardConfig({ title: "Vertical" }));
+        const vertical = await layoutBoxes(page);
+        expect(
+            vertical.controls.y,
+            `vertical at ${width}px: controls must start below the map`,
+        ).toBeGreaterThanOrEqual(vertical.map.y + vertical.map.height - 1);
+        expect(
+            vertical.controls.y,
+            `vertical at ${width}px: controls must not overlap the map`,
+        ).toBeGreaterThanOrEqual(vertical.map.y);
+
+        await mount(page, horizontalConfig());
+        expectSideBySide(await layoutBoxes(page), `horizontal at ${width}px`);
+    }
 });
+
+for (const width of HORIZONTAL_WIDTHS) {
+    test(`horizontal layout at ${width} px`, async ({ page }) => {
+        await setContainerWidth(page, width);
+        await mount(page, horizontalConfig());
+
+        const boxes = await layoutBoxes(page);
+        expectSideBySide(boxes, `horizontal at ${width}px`);
+        // The map keeps a usable size at every width: the clamped controls column never squeezes
+        // it out, and the whole card stays inside the page.
+        expect(boxes.map.width).toBeGreaterThan(120);
+        const pageOverflow = await page.evaluate(
+            () => document.documentElement.scrollWidth - window.innerWidth,
+        );
+        expect(pageOverflow, `horizontal at ${width}px must not overflow the page`).toBeLessThanOrEqual(1);
+
+        const controlsMetrics = await page.locator(`${CARD} .controls-wrapper`).evaluate(element => ({
+            clientHeight: element.clientHeight,
+            scrollHeight: element.scrollHeight,
+            clientWidth: element.clientWidth,
+            scrollWidth: element.scrollWidth,
+        }));
+        // The controls never set the row height and never overflow sideways: they either fit or
+        // scroll vertically inside the column.
+        expect(controlsMetrics.scrollWidth).toBeLessThanOrEqual(controlsMetrics.clientWidth + 1);
+        expect(boxes.controls.height).toBeLessThanOrEqual(boxes.map.height + 1);
+        if (width === 400) {
+            // Eight tiles cannot fit in a 150 px-wide column beside a 165 px-tall map: scrolling
+            // there is the accepted escape hatch, and it must actually be available.
+            expect(controlsMetrics.scrollHeight).toBeGreaterThan(controlsMetrics.clientHeight);
+        }
+
+        await expect(page.locator(CARD)).toHaveScreenshot(`layout-horizontal-${width}.png`);
+    });
+}
+
+test("horizontal layout adapts when the container is resized", async ({ page }) => {
+    await setContainerWidth(page, 400);
+    await mount(page, horizontalConfig());
+    const before = await layoutBoxes(page);
+
+    await setContainerWidth(page, 1200);
+    await nextLayout(page);
+    const after = await layoutBoxes(page);
+
+    // Geometry, not only a screenshot: the map grew into the wider card and the controls moved
+    // right with it, while staying side by side and inside the card.
+    expect(after.map.width, "the map grows with the card").toBeGreaterThan(before.map.width + 100);
+    expect(after.card.width, "the card grows with its container").toBeGreaterThan(before.card.width + 100);
+    expect(after.controls.x, "the controls move right with the wider map").toBeGreaterThan(before.controls.x);
+    expectSideBySide(after, "after resizing to 1200px");
+    // The overlays ride the resized image: a stale `realScale` would leave the room outline at the
+    // old width while the image stretches. The observer recalculates it asynchronously.
+    await expect.poll(() => livingRoomAlignmentError(page)).toBeLessThanOrEqual(1.5);
+
+    // Shrinking back must restore the narrow arrangement rather than leaving a stale column width.
+    await setContainerWidth(page, 400);
+    await nextLayout(page);
+    const back = await layoutBoxes(page);
+    expect(back.map.width).toBeCloseTo(before.map.width, 0);
+    expectSideBySide(back, "after resizing back to 400px");
+    await expect.poll(() => livingRoomAlignmentError(page)).toBeLessThanOrEqual(1.5);
+});
+
+test("a sections-view grid cell makes the card fill its height and scroll", async ({ page }) => {
+    await page.setViewportSize({ width: 840, height: 900 });
+    await page.evaluate(() => {
+        const root = document.getElementById("card-root");
+        if (!root) return;
+        root.style.width = "800px";
+        // What the sections grid gives a card with numeric rows: a definite height on the cell.
+        root.style.height = "300px";
+        root.style.overflow = "hidden";
+    });
+    await mount(page, horizontalConfig());
+    // hui-card assigns this property after creating the element, exactly as in the sections view.
+    await page.evaluate(() => {
+        const card = document.querySelector("xiaomi-vacuum-map-card") as unknown as { layout?: string };
+        if (card) card.layout = "grid";
+    });
+    await expect(page.locator(CARD)).toHaveAttribute("layout", "grid");
+    await nextLayout(page);
+
+    const metrics = await page.locator(CARD).evaluate(element => {
+        const card = element as HTMLElement;
+        const haCard = card.shadowRoot?.querySelector("ha-card") as HTMLElement;
+        return {
+            hostHeight: card.getBoundingClientRect().height,
+            cardHeight: haCard.clientHeight,
+            scrollHeight: haCard.scrollHeight,
+        };
+    });
+    expect(metrics.hostHeight).toBeCloseTo(300, 0);
+    expect(metrics.cardHeight).toBeCloseTo(300, 0);
+    // The horizontal content is taller than 300 px at this width, so the card scrolls internally
+    // instead of letting content spill into the next grid row.
+    expect(metrics.scrollHeight).toBeGreaterThan(metrics.cardHeight);
+});
+
+test("horizontal layout keeps room, mode and tile interactions", async ({ page }) => {
+    await setContainerWidth(page, 800);
+    await mount(page, horizontalConfig());
+
+    // The controls live in the second column, and the room hit test still reaches the map.
+    expect(await page.locator(`${CARD} .controls-column xvmc-tile`).count()).toBe(8);
+    await expect(page.locator(`${CARD} xvmc-dropdown-menu .dropdown-menu-button`)).toBeVisible();
+    const point = await page.evaluate(() =>
+        (window as unknown as VisualWindow).visualHarness.roomPoint("1", 0.25, 0.5),
+    );
+    await page.mouse.click(point.x, point.y);
+    await expect.poll(() => page.evaluate(() => (window as unknown as VisualWindow).visualHarness.selectedRoomIds())).toEqual([
+        "1",
+    ]);
+    await expect(page.locator(`${CARD} .room-1-wrapper.selected`)).toHaveCount(1);
+
+    // Clicking a tile still runs its action path without an error (the page-error check in
+    // afterEach is the gate).
+    await page.locator(`${CARD} .controls-column xvmc-tile`).first().click();
+
+    // Focus order follows DOM order, which the layout does not reorder: the map and its controls
+    // come before the controls column. The card has no tabbable controls in either layout today, so
+    // this asserts the order a future keyboard implementation must preserve.
+    const order = await page.evaluate(() => {
+        const card = document.querySelector("xiaomi-vacuum-map-card");
+        const map = card?.shadowRoot?.querySelector(".map-wrapper");
+        const controls = card?.shadowRoot?.querySelector(".controls-column");
+        if (!map || !controls) return null;
+        return {
+            mapBeforeControls: (map.compareDocumentPosition(controls) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0,
+            mapTabIndex: map.getAttribute("tabindex"),
+        };
+    });
+    expect(order).toEqual({ mapBeforeControls: true, mapTabIndex: null });
+});
+

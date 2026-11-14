@@ -22,7 +22,18 @@ is involved: `index.html` plus `harness.js` mount the card element with a mock `
 | `a stored view beats the configured default after a remount` | a real browser pan/zoom is written to the store and read back over `map_view` |
 | `room hit-testing selects the clicked room at zoom 1` | clicking a room's colour selects that room, and the selected room's cleaning-order badge is centred above its label |
 | `default vertical layout` | header, preset selector, map and controls stack vertically |
-| `horizontal layout once B10 exists` | **skipped**: the horizontal layout is batch B10 and does not exist yet |
+| `layout geometry at 400 and 800 px` | vertical stacks the controls below the map; horizontal puts them beside it at both widths |
+| `horizontal layout at 400 px`, `... 800 px`, `... 1200 px` | side-by-side geometry at three widths, map and controls inside the card, the controls column wrapping and scrolling instead of overflowing, one screenshot each |
+| `horizontal layout adapts when the container is resized` | resizing the container to 1200 px widens the map and moves the controls, the room overlay is recalculated to the new scale, and resizing back restores the narrow geometry |
+| `a sections-view grid cell makes the card fill its height and scroll` | the reflected `layout="grid"` hook makes the card fill a fixed-height cell and scroll inside it instead of overflowing |
+| `horizontal layout keeps room, mode and tile interactions` | room hit-testing, the mode dropdown, a tile click and the map-before-controls DOM/focus order in the horizontal arrangement |
+
+The horizontal scenarios mount a fixture with three modes, four icons and eight tiles so the
+clamped controls column has to wrap and scroll. `#card-root` is 400 px wide by default, so each
+scenario sets the root width explicitly; the vertical baseline keeps the default width and is
+unchanged by B10. The resize scenario asserts the room overlay against the CSS-scaled image box as
+well as the map/control boxes, so a stale `realScale` after a resize fails the geometry instead of
+only the screenshot.
 
 The four overlay scenarios also assert numeric geometry, not just pixels: the framed room's
 outline bounding box, in source-image pixels, must equal the rectangle in
