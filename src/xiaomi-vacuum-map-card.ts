@@ -76,6 +76,12 @@ import { PredefinedMultiRectangle } from "./model/map_objects/predefined-multi-r
 import { Room } from "./model/map_objects/room";
 import { RoomColorDetection, RoomColorDetector } from "./model/room-color-detector";
 import { findStaleRoomIds } from "./model/room-config";
+import {
+    ActiveRoomRun,
+    advanceActiveRoomRun,
+    loadActiveRoomRun,
+    saveActiveRoomRun,
+} from "./model/active-room-run";
 import { calculateRealScale } from "./model/map-scale";
 import { areAllEntitiesDefined, isOldConfig, validateConfig } from "./config-validators";
 import { MapMode } from "./model/map_mode/map-mode";
@@ -156,6 +162,10 @@ export class XiaomiVacuumMapCard extends LitElement {
     private selectedManualPath: ManualPath = new ManualPath([], this._getContext());
     private selectedPredefinedRectangles: PredefinedMultiRectangle[] = [];
     private selectedRooms: Room[] = [];
+    /** The room run started from this card, shown on the map until the vacuum finishes it. */
+    private activeRoomRun?: ActiveRoomRun;
+    /** The vacuum whose stored run `activeRoomRun` was loaded for. */
+    private activeRoomRunEntity?: string;
     private selectedPredefinedPoints: PredefinedPoint[] = [];
     private selectablePredefinedRectangles: PredefinedMultiRectangle[] = [];
     private selectableRooms: Room[] = [];
@@ -211,6 +221,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (firstHass) {
             this._firstHass();
         }
+        if (this.config) this._advanceActiveRoomRun();
     }
 
     public static async getConfigElement(): Promise<LovelaceCardEditor> {
@@ -1054,6 +1065,7 @@ export class XiaomiVacuumMapCard extends LitElement {
             string => this._localize(string),
             entity => this._hass.states[entity].state,
             entity => this._hass.callService("homeassistant", "toggle", {"entity_id": entity}),
+            () => this._getActiveRoomOrder(),
         );
     }
 
@@ -1164,6 +1176,49 @@ export class XiaomiVacuumMapCard extends LitElement {
         return this.modes[this.selectedMode];
     }
 
+    /**
+     * The selected rooms that may be sent. The configured-id audit cannot see a room that was
+     * picked from the detected metadata in a template-only mode. Its `stale` flag was captured when
+     * the room was built, so the id is also checked against the live metadata here; otherwise a
+     * selection held across an id shift would still be sent. Undefined metadata means the camera
+     * reports no rooms, where the configured fallback must keep working.
+     */
+    private _getUsableSelectedRooms(mode: MapMode): Room[] {
+        const staleRoomIds = new Set(this._getStaleRoomIds(mode));
+        const liveRoomIds = this._getLiveRoomIds();
+        return this.selectedRooms.filter(room => {
+            const id = String(room.toVacuum());
+            return !room.stale && !staleRoomIds.has(id) && (!liveRoomIds || liveRoomIds.has(id));
+        });
+    }
+
+    /** The order of the run in progress for the current vacuum, while a ROOM mode is shown. */
+    private _getActiveRoomOrder(): string[] {
+        const run = this.activeRoomRun;
+        if (!run || this._getCurrentMode()?.selectionType !== SelectionType.ROOM) return [];
+        return run.entity === this._getCurrentPreset()?.entity ? run.roomIds : [];
+    }
+
+    /**
+     * Loads the stored run for the current vacuum and advances it with the vacuum's state, so the
+     * badges disappear once the vacuum is done. Called on every hass update.
+     */
+    private _advanceActiveRoomRun(): void {
+        const entity = this._getCurrentPreset()?.entity;
+        if (!entity) return;
+        if (this.activeRoomRunEntity !== entity) {
+            // Storage is read once per vacuum, so a reload keeps showing a run in progress.
+            this.activeRoomRunEntity = entity;
+            this.activeRoomRun = loadActiveRoomRun(entity);
+        }
+        const current = this.activeRoomRun;
+        const next = advanceActiveRoomRun(current, this._hass?.states[entity]?.state, Date.now());
+        if (next === current) return;
+        this.activeRoomRun = next;
+        saveActiveRoomRun(entity, next);
+        this.requestUpdate();
+    }
+
     public _getSelection(mode: MapMode | undefined): { selection: unknown[]; variables: VariablesStorage } {
         if (!mode) {
             return { selection: [], variables: {} };
@@ -1188,17 +1243,7 @@ export class XiaomiVacuumMapCard extends LitElement {
                 variables = variablesExtractor(this.selectedPredefinedRectangles);
                 break;
             case SelectionType.ROOM:
-                const staleRoomIds = new Set(this._getStaleRoomIds(mode));
-                // The configured-id audit cannot see a room that was picked from the detected
-                // metadata in a template-only mode. Its `stale` flag was captured when the room was
-                // built, so the id is also checked against the live metadata here; otherwise a
-                // selection held across an id shift would still be sent. Undefined metadata means
-                // the camera reports no rooms, where the configured fallback must keep working.
-                const liveRoomIds = this._getLiveRoomIds();
-                const usableRooms = this.selectedRooms.filter(room => {
-                    const id = String(room.toVacuum());
-                    return !room.stale && !staleRoomIds.has(id) && (!liveRoomIds || liveRoomIds.has(id));
-                });
+                const usableRooms = this._getUsableSelectedRooms(mode);
                 const selectedRooms = usableRooms
                     .map(r => r.toVacuum())
                     .map(r => XiaomiVacuumMapCard.adjustRoomId(r, mode));
@@ -1499,6 +1544,11 @@ export class XiaomiVacuumMapCard extends LitElement {
             forwardHaptic("failure");
         } else {
             const repeats = this.repeats;
+            const entity = currentPreset.entity;
+            const runRoomIds =
+                currentMode.selectionType === SelectionType.ROOM
+                    ? this._getUsableSelectedRooms(currentMode).map(room => String(room.toVacuum()))
+                    : [];
             let serviceCall: ServiceCall;
             try {
                 serviceCall = await currentMode.getServiceCall(this.hass, currentPreset.entity, selection, repeats, {
@@ -1524,6 +1574,17 @@ export class XiaomiVacuumMapCard extends LitElement {
                         () => {
                             this._showToast("popups.success", "mdi:check", true);
                             forwardHaptic("success");
+                            if (runRoomIds.length > 0) {
+                                this.activeRoomRunEntity = entity;
+                                this.activeRoomRun = {
+                                    entity,
+                                    roomIds: runRoomIds,
+                                    startedAt: Date.now(),
+                                    seenActive: false,
+                                };
+                                saveActiveRoomRun(entity, this.activeRoomRun);
+                                this.requestUpdate();
+                            }
                         },
                         e => {
                             this._showToast("popups.failed", "mdi:close", false, e.message);

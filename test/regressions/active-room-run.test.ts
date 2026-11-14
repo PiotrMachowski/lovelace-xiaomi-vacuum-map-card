@@ -1,0 +1,147 @@
+import { afterEach, describe, expect, it } from "vitest";
+
+import { ACTIVE_ROOM_RUN_STORE_KEY } from "../../src/const";
+import {
+    ACTIVE_ROOM_RUN_START_GRACE_MS,
+    ActiveRoomRun,
+    advanceActiveRoomRun,
+    loadActiveRoomRun,
+} from "../../src/model/active-room-run";
+import type { XiaomiVacuumMapCardConfig } from "../../src/types/types";
+import type { CardHandle } from "../harness";
+import { fixtureConfig, fixtureHass, loadSyntheticFixture, mountCard, settle, useHarnessClock, withState } from "../harness";
+
+/**
+ * The cleaning order stays on the map while the run it belongs to is in progress.
+ *
+ * `clean_selection_on_start` clears the selection when a run starts, which also removed the order
+ * badges, so the user could not see the order the vacuum was working through. The card now keeps
+ * the started run's order (dashed outline, same numbers) until the vacuum reports it is done.
+ */
+
+const VACUUM = "vacuum.roborock_s7";
+
+function run(overrides: Partial<ActiveRoomRun> = {}): ActiveRoomRun {
+    return { entity: VACUUM, roomIds: ["2", "0"], startedAt: 1_000, seenActive: false, ...overrides };
+}
+
+describe("advanceActiveRoomRun", () => {
+    it("keeps a run that has not started yet within the grace period", () => {
+        const pending = run();
+        expect(advanceActiveRoomRun(pending, "docked", 1_000 + 30_000)).toBe(pending);
+    });
+
+    it("drops a run the vacuum never started", () => {
+        expect(advanceActiveRoomRun(run(), "docked", 1_000 + ACTIVE_ROOM_RUN_START_GRACE_MS + 1)).toBeUndefined();
+    });
+
+    it("marks the run active once the vacuum works, and keeps it through pause and return", () => {
+        const active = advanceActiveRoomRun(run(), "cleaning", 2_000);
+        expect(active).toMatchObject({ seenActive: true, roomIds: ["2", "0"] });
+        expect(advanceActiveRoomRun(active, "paused", 3_000)).toBe(active);
+        expect(advanceActiveRoomRun(active, "returning", 4_000)).toBe(active);
+    });
+
+    it("ends the run when the vacuum leaves the working states after it was seen working", () => {
+        expect(advanceActiveRoomRun(run({ seenActive: true }), "docked", 5_000)).toBeUndefined();
+        expect(advanceActiveRoomRun(run({ seenActive: true }), "idle", 5_000)).toBeUndefined();
+    });
+});
+
+function cardConfig(): XiaomiVacuumMapCardConfig {
+    return {
+        ...fixtureConfig(loadSyntheticFixture()),
+        map_modes: [{ template: "vacuum_clean_segment" }],
+        tiles: [],
+        icons: [],
+        persist_map_view: false,
+    };
+}
+
+async function clickRoom(card: CardHandle, id: string): Promise<void> {
+    const polygon = card.shadowRoot.querySelector(`.room-${id}-wrapper .room-outline`);
+    if (!polygon) throw new Error(`room ${id} has no clickable outline`);
+    polygon.dispatchEvent(new MouseEvent("click", { bubbles: true, composed: true }));
+    await settle(card.element);
+}
+
+async function runSelection(card: CardHandle): Promise<void> {
+    const button = card.shadowRoot.querySelector(".map-actions-item.main");
+    if (!button) throw new Error("the card has no run button");
+    button.dispatchEvent(new MouseEvent("click", { bubbles: true, composed: true }));
+    await settle(card.element, 400);
+}
+
+function badges(card: CardHandle): Record<string, string> {
+    const entries: Array<[string, string]> = [];
+    for (const id of ["0", "1", "2"]) {
+        const value = card.shadowRoot.querySelector(`.room-${id}-wrapper .room-order`)?.textContent?.trim();
+        if (value) entries.push([id, value]);
+    }
+    return Object.fromEntries(entries);
+}
+
+function running(card: CardHandle): string[] {
+    return ["0", "1", "2"].filter(id =>
+        card.shadowRoot.querySelector(`.room-${id}-wrapper`)?.classList.contains("running"),
+    );
+}
+
+async function setVacuumState(card: CardHandle, state: string): Promise<void> {
+    await card.updateHass(withState(card.hass, VACUUM, { state }).hass);
+    await settle(card.element);
+}
+
+describe("cleaning order during a run", () => {
+    afterEach(() => window.localStorage.removeItem(ACTIVE_ROOM_RUN_STORE_KEY));
+
+    async function startRun(): Promise<CardHandle> {
+        useHarnessClock();
+        const card = await mountCard(cardConfig(), fixtureHass(loadSyntheticFixture()));
+        await card.fireMapLoad();
+        await clickRoom(card, "2");
+        await clickRoom(card, "0");
+        await runSelection(card);
+        return card;
+    }
+
+    it("keeps the order on the map after start, until the vacuum is done", async () => {
+        const card = await startRun();
+
+        // The selection is cleared, but the started run keeps its numbers, drawn as running.
+        expect(card.shadowRoot.querySelectorAll(".room-wrapper.selected")).toHaveLength(0);
+        expect(badges(card)).toEqual({ "2": "1", "0": "2" });
+        expect(running(card)).toEqual(["0", "2"]);
+
+        await setVacuumState(card, "cleaning");
+        expect(badges(card)).toEqual({ "2": "1", "0": "2" });
+        await setVacuumState(card, "returning");
+        expect(badges(card)).toEqual({ "2": "1", "0": "2" });
+
+        await setVacuumState(card, "docked");
+        expect(badges(card)).toEqual({});
+        expect(running(card)).toEqual([]);
+        expect(loadActiveRoomRun(VACUUM)).toBeUndefined();
+    });
+
+    it("lets a new selection take over the badges while a run is shown", async () => {
+        const card = await startRun();
+        await setVacuumState(card, "cleaning");
+
+        await clickRoom(card, "1");
+
+        expect(badges(card)).toEqual({ "1": "1" });
+        expect(running(card)).toEqual([]);
+    });
+
+    it("restores the run after a reload", async () => {
+        const card = await startRun();
+        await setVacuumState(card, "cleaning");
+        card.element.remove();
+
+        const reloaded = await mountCard(cardConfig(), withState(fixtureHass(loadSyntheticFixture()), VACUUM, { state: "cleaning" }).hass);
+        await reloaded.fireMapLoad();
+
+        expect(badges(reloaded)).toEqual({ "2": "1", "0": "2" });
+    });
+});

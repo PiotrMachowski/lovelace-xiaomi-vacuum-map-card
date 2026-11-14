@@ -233,6 +233,61 @@ supported way to get a live map with paths.
 
 For `ROOM` selections, the card can use room IDs and names from the camera's `rooms` attribute, then trace each room's colored region from the map image. Manual room definitions remain available as a fallback when the camera does not provide room metadata or the map has no distinct room colors.
 
+#### Cleaning order
+
+Rooms are sent in the order you tap them, and each selected room shows its number. After **Start**
+the numbers stay on the map, with a dashed outline, until the vacuum reports it is done (it leaves
+`cleaning`, `paused` and `returning`), or for three minutes if it never starts. A new selection
+replaces them. The run is remembered per vacuum in the browser, so a reload keeps it.
+
+Some vacuums plan their own route and ignore the order of a multi-room command; the Viomi V8
+(`set_mode_withroom`) is one. For those, clean one room at a time with a script and start it from
+the card. The script below sends each room on its own and starts the next one when the vacuum
+heads home:
+
+```yaml
+# scripts.yaml
+vacuum_rooms_in_order:
+  alias: Vacuum rooms in order
+  mode: restart
+  fields:
+    vacuum: { required: true, selector: { entity: { domain: vacuum } } }
+    rooms: { required: true, selector: { object: {} } }
+  sequence:
+    - repeat:
+        for_each: "{{ rooms }}"
+        sequence:
+          - action: vacuum.send_command
+            target: { entity_id: "{{ vacuum }}" }
+            data:
+              command: set_mode_withroom
+              params: "{{ [1, 1, 1, repeat.item | int] }}"
+          - wait_template: "{{ is_state(vacuum, 'cleaning') }}"
+            timeout: "00:03:00"
+            continue_on_timeout: false
+          - if: "{{ not repeat.last }}"
+            then:
+              - wait_template: "{{ not is_state(vacuum, 'cleaning') }}"
+              - condition: template
+                value_template: "{{ states(vacuum) in ['returning', 'docked'] }}"
+```
+
+```yaml
+# The card's ROOM mode
+service_call_schema:
+  service: script.turn_on
+  service_data:
+    entity_id: script.vacuum_rooms_in_order
+    variables:
+      vacuum: "[[entity_id]]"
+      rooms: "[[selection]]"
+```
+
+Use `script.turn_on` rather than calling the script directly, so the card does not wait for every
+room to finish. Sending the vacuum home also counts as "room done", so add an automation that turns
+the script off when `vacuum.stop`, `vacuum.pause` or `vacuum.return_to_base` is called (an `event`
+trigger on `call_service` with `domain: vacuum`).
+
 ### Cropping options
 
 | Key      | Type   | Required | Default | Description                                      |

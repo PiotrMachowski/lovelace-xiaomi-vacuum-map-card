@@ -26,6 +26,8 @@ export class Context {
         public readonly localize: (_: TranslatableString) => string,
         public readonly getState: (_: string) => string,
         public readonly toggleEntity: (_: string) => void,
+        /** Room ids of the run in progress, in cleaning order; empty when no run is shown. */
+        public readonly activeRoomOrder: () => string[] = () => [],
     ) {}
 
     public roundMap([x, y]: PointArrayNotation): PointArrayNotation {
