@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.6
+
+### Fixed
+
+- Tapping a cleaning path, or a small marker drawn over a room, selects that room. A path that
+  crossed a room no longer shrinks the room's highlight to one side of it: gaps up to 8 px that
+  the map draws over a room's colour are treated as part of the room.
+
 ## 1.0.5
 
 ### Fixed

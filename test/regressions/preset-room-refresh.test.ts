@@ -108,6 +108,8 @@ function stubDetection(): RoomColorDetection {
         imageData: { width: 0, height: 0, data: new Uint8ClampedArray(0) },
         regions: [],
         roomIdByColor: new Map(),
+        labels: new Int16Array(0),
+        labelRoomIds: [],
     };
 }
 
