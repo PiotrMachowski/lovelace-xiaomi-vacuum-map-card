@@ -11,7 +11,7 @@ import {
 import { localize } from "../../localize/localize";
 import { ServiceCall } from "./service-call";
 import { PlatformGenerator } from "../generators/platform-generator";
-import { evaluateJinjaTemplate, replaceInTarget } from "../../utils";
+import { evaluateJinjaTemplate, normalizeJinjaQuotes, replaceInTarget } from "../../utils";
 import { Modifier } from "./modifier";
 import { HomeAssistantFixed } from "../../types/fixes";
 
@@ -68,21 +68,25 @@ export class MapMode {
     ): Promise<ServiceCall> {
         let serviceCall = this._applyData(entityId, selection, repeats, selectionVariables);
         if (this.serviceCallSchema.evaluateDataAsTemplate) {
+            // A failed evaluation throws: sending the unevaluated `{{ }}` text to the vacuum would be
+            // wrong, and the caller reports the failure instead of doing nothing.
+            const template = normalizeJinjaQuotes(JSON.stringify(serviceCall.serviceData));
+            let output: string | Record<string, unknown>;
             try {
-                const output = await evaluateJinjaTemplate(hass, JSON.stringify(serviceCall.serviceData));
-                try {
-                    const serviceData = typeof output === "string" ? JSON.parse(output) : output;
-                    replaceInTarget(serviceData, v =>
-                        v.endsWith(Modifier.JSONIFY_JINJA) ? JSON.parse(v.replace(Modifier.JSONIFY_JINJA, "")) : v,
-                    );
-                    serviceCall = { ...serviceCall, serviceData: serviceData };
-                } catch (e) {
-                    console.error("Failed to parse template output", output);
-                    // noinspection ExceptionCaughtLocallyJS
-                    throw e;
-                }
-            } catch {
-                console.error("Failed to evaluate template", serviceCall.serviceData);
+                output = await evaluateJinjaTemplate(hass, template);
+            } catch (e) {
+                console.error("Failed to evaluate template", serviceCall.serviceData, e);
+                throw e;
+            }
+            try {
+                const serviceData = typeof output === "string" ? JSON.parse(output) : output;
+                replaceInTarget(serviceData, v =>
+                    v.endsWith(Modifier.JSONIFY_JINJA) ? JSON.parse(v.replace(Modifier.JSONIFY_JINJA, "")) : v,
+                );
+                serviceCall = { ...serviceCall, serviceData: serviceData };
+            } catch (e) {
+                console.error("Failed to parse template output", output);
+                throw e;
             }
         }
         return serviceCall;

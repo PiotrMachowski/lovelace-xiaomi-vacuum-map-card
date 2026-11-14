@@ -79,6 +79,7 @@ import { findStaleRoomIds } from "./model/room-config";
 import { calculateRealScale } from "./model/map-scale";
 import { areAllEntitiesDefined, isOldConfig, validateConfig } from "./config-validators";
 import { MapMode } from "./model/map_mode/map-mode";
+import type { ServiceCall } from "./model/map_mode/service-call";
 import { SelectionType } from "./model/map_mode/selection-type";
 import { RepeatsType } from "./model/map_mode/repeats-type";
 import { GeneratorWrapper } from "./model/generators/generator-wrapper";
@@ -1060,7 +1061,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         return getMousePosition(event, this._getSvgWrapper(), this.mapScale);
     }
 
-    private _setCurrentMode(newModeIndex: number, manual = true, preserveSelectedRoomIds?: Set<string>): void {
+    private _setCurrentMode(newModeIndex: number, manual = true, preserveSelectedRoomIds?: string[]): void {
         const newMode = this.modes[newModeIndex];
         this.selectedManualRectangles = [];
         this.selectedManualPoint = undefined;
@@ -1122,11 +1123,19 @@ export class XiaomiVacuumMapCard extends LitElement {
                     };
                     return new Room(config, this._getContext(), {
                         imageOutline: region?.outline,
-                        selected: preserveSelectedRoomIds?.has(String(room.id)),
+                        selected: preserveSelectedRoomIds?.includes(String(room.id)),
                         stale: staleRoomIds.has(String(room.id)),
                     });
                 });
-                this.selectedRooms = this.selectableRooms.filter(s => s.selected);
+                // A rebuild keeps the click order of the rooms it preserves: the order is the
+                // cleaning order sent to the platform, and the rebuilt list is in room-id order.
+                const preservedOrder = (room: Room): number => {
+                    const index = preserveSelectedRoomIds?.indexOf(String(room.toVacuum())) ?? -1;
+                    return index < 0 ? Number.MAX_SAFE_INTEGER : index;
+                };
+                this.selectedRooms = this.selectableRooms
+                    .filter(s => s.selected)
+                    .sort((a, b) => preservedOrder(a) - preservedOrder(b));
                 this.entitiesToManuallyUpdate = newMode.predefinedSelections
                     .filter(s => s.state_entity)
                     .map(s => s.state_entity as string);
@@ -1298,13 +1307,20 @@ export class XiaomiVacuumMapCard extends LitElement {
             this._showToast("popups.no_selection", "mdi:close", false);
             forwardHaptic("failure");
         } else {
-            const serviceCall = await currentMode.getServiceCall(
-                this.hass,
-                currentPreset.entity,
-                selection,
-                this.repeats,
-                { ...this.internalVariables, ...variables },
-            );
+            let serviceCall: ServiceCall;
+            try {
+                serviceCall = await currentMode.getServiceCall(
+                    this.hass,
+                    currentPreset.entity,
+                    selection,
+                    this.repeats,
+                    { ...this.internalVariables, ...variables },
+                );
+            } catch (e) {
+                this._showToast("popups.failed", "mdi:close", false, (e as Error)?.message);
+                forwardHaptic("failure");
+                return;
+            }
             const event = new Event(EVENT_SERVICE_CALL);
             (event as any).serviceCall = JSON.stringify(serviceCall, null, 2);
             window.dispatchEvent(event);
@@ -1483,10 +1499,18 @@ export class XiaomiVacuumMapCard extends LitElement {
             forwardHaptic("failure");
         } else {
             const repeats = this.repeats;
-            const serviceCall = await currentMode.getServiceCall(this.hass, currentPreset.entity, selection, repeats, {
-                ...this.internalVariables,
-                ...variables,
-            });
+            let serviceCall: ServiceCall;
+            try {
+                serviceCall = await currentMode.getServiceCall(this.hass, currentPreset.entity, selection, repeats, {
+                    ...this.internalVariables,
+                    ...variables,
+                });
+            } catch (e) {
+                // Nothing was sent, so the selection stays for another attempt.
+                this._showToast("popups.failed", "mdi:close", false, (e as Error)?.message);
+                forwardHaptic("failure");
+                return;
+            }
             if (debug || (this.config.debug ?? false)) {
                 const message = JSON.stringify(serviceCall, null, 2);
                 this._showToast("popups.success", "mdi:check", true);
@@ -1880,7 +1904,7 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _refreshRoomsAfterColorDetection(): void {
         if (this._getCurrentMode()?.selectionType === SelectionType.ROOM) {
-            const selectedRoomIds = new Set(this.selectedRooms.map(room => String(room.toVacuum())));
+            const selectedRoomIds = this.selectedRooms.map(room => String(room.toVacuum()));
             this._setCurrentMode(this.selectedMode, false, selectedRoomIds);
             this.requestUpdate();
         }
