@@ -25,6 +25,10 @@ reviewed before release. See [CONTRIBUTING.md](CONTRIBUTING.md) for the local wo
 - **Editor coverage on current frontends.** The editor already adapts to `ha-input` and to the
   removal of `ha-formfield`; keep watching Home Assistant frontend releases for the next element
   that disappears.
+- **Default Marketplace listing.** The README button adds the repository as a custom repository.
+  Getting into the Marketplace catalog needs a pull request to `hacs/default` adding the repository
+  to `plugin`. Once it merges, switch the install steps to a catalog search and add the default
+  badge.
 
 ## Next
 
@@ -66,7 +70,7 @@ reviewed before release. See [CONTRIBUTING.md](CONTRIBUTING.md) for the local wo
 
 ## Known limitations
 
-Accepted for 1.0.0, each with what would fix it:
+Accepted in the 1.0 line, each with what would fix it:
 
 - **Renamed entities in tiles.** A device, area or floor rename can leave a tile label stale until
   the card reloads, because the `entityNamesChanged` re-render hook is not carried. Watch the
