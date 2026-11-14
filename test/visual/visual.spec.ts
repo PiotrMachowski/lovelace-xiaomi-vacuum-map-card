@@ -3,7 +3,7 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
 import type { RoomConfig, XiaomiVacuumMapCardConfig } from "../../src/types/types";
 
 /**
- * Five visual scenarios for the built card plus the horizontal layout placeholder.
+ * The visual scenarios for the built card plus the horizontal layout placeholder.
  *
  * The page (`index.html` + `harness.js`) mounts the card element directly against the committed
  * synthetic fixture; there is no Home Assistant frontend on the page. Baselines live in
@@ -20,8 +20,11 @@ interface RoomDescription {
 
 interface VisualDescription {
     mapScale: number;
+    mapX: number;
+    mapY: number;
     realScale: number;
     mapRotation: number;
+    transform: string;
     rooms: RoomDescription[];
     imageRect: { x: number; y: number; width: number; height: number };
     selectedRooms: string[];
@@ -218,6 +221,48 @@ for (const zoom of [1, 2.5] as const) {
         });
     }
 }
+
+/**
+ * Splits a computed 2D transform matrix into the values a configured `map_view` states.
+ *
+ * At rotation 0 the card's transform is `translate(x, y) scale(s)` with the two 50 % translates
+ * cancelling, so the computed matrix carries the configured scale and offset directly (`a`/`d` =
+ * scale, `e`/`f` = offset). That makes the assertion independent of how the card stores the view:
+ * a value that never reached the CSS custom properties reads as `none` or the wrong matrix here.
+ */
+function computedTransform(transform: string): { scale: number; x: number; y: number } {
+    const match = /^matrix\(([^)]+)\)$/.exec(transform);
+    if (!match) throw new Error(`expected a computed matrix(), got "${transform}"`);
+    const [a, , , , e, f] = match[1].split(",").map(value => Number(value.trim()));
+    return { scale: a, x: e, y: f };
+}
+
+// The configured default view (batch B9, issue #873). A stored view still wins, but this scenario
+// has a fresh browser context and no stored view, so the card must open at `map_view`. Persistence
+// is disabled on purpose: `map_view` describes where the card starts, which is independent of
+// whether the user's later pan is remembered.
+test("a configured map_view is the rendered starting view", async ({ page }) => {
+    await mount(page, cardConfig({ map_view: { scale: 2.5, x: -60, y: -40, rotation: 0 } }));
+
+    const description = await harness(page);
+    const matrix = computedTransform(description.transform);
+    expect(matrix.scale).toBeCloseTo(2.5, 2);
+    expect(matrix.x).toBeCloseTo(-60, 1);
+    expect(matrix.y).toBeCloseTo(-40, 1);
+    // The map view state the card renders from agrees with the transform it produced.
+    expect(description.mapScale).toBeCloseTo(2.5, 5);
+    expect(description.mapRotation).toBe(0);
+
+    // A visible baseline of the configured view: zoomed and offset from the neutral map.
+    await expect(page.locator(CARD)).toHaveScreenshot("default-map-view.png");
+
+    // A user zoom after mount wins and replaces the configured view, like on any other card.
+    await setZoom(page, 1.25);
+    const after = await harness(page);
+    expect(after.mapScale).toBeCloseTo(1.25, 5);
+    expect(computedTransform(after.transform).scale).toBeCloseTo(1.25, 2);
+    expect(after.transform).not.toBe(description.transform);
+});
 
 test("room hit-testing selects the clicked room at zoom 1", async ({ page }) => {
     await mount(page, overlayConfig(0));

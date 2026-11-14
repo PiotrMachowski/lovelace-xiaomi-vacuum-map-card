@@ -306,10 +306,17 @@ function describe() {
     if (!card) throw new Error("visual harness: the card is not mounted");
     const image = card.shadowRoot.getElementById("map-image");
     const imageRect = image.getBoundingClientRect();
+    const content = card.shadowRoot.getElementById("map-zoomer-content");
     return {
         mapScale: card.mapScale,
+        mapX: card.mapX,
+        mapY: card.mapY,
         realScale: card.realScale,
         mapRotation: card.mapRotation,
+        // The transform the browser actually renders, not only the numbers the card holds: the
+        // custom properties feed `#map-zoomer-content`'s CSS, so a state value that never reached the
+        // stylesheet shows up here as a mismatch.
+        transform: content ? getComputedStyle(content).transform : "none",
         rooms: [...card.shadowRoot.querySelectorAll(".room-wrapper")].map(wrapper => ({
             className: wrapper.getAttribute("class"),
             selected: wrapper.classList.contains("selected"),
