@@ -1,8 +1,11 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Ask a question / read the FAQ
-    url: https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions
-    about: Questions, the FAQ and general card discussion stay in the upstream community, which covers both builds.
+  - name: Ask a question about this fork
+    url: https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/issues?q=is%3Aissue
+    about: This fork tracks its own questions, bugs and feature requests here. Search the existing reports first.
+  - name: Read the upstream FAQ
+    url: https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/categories/faq
+    about: The user-created FAQ is upstream documentation; it still applies here unless a fork row says otherwise.
   - name: Report a bug in the map camera (Xiaomi Cloud Map Extractor)
     url: https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor/issues
     about: The map camera is a separate project. Report camera issues in its own repository.

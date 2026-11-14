@@ -1,8 +1,9 @@
 # Configuration
 
 The configuration format is unchanged from the upstream card: no key was renamed and no option
-was removed, so existing YAML keeps working. This fork adds a few options on top, including
-[`layout`](#layout), [`map_view`](#map-view-options) and `transparent_background`.
+was removed, so existing YAML keeps working. This fork adds these options on top:
+[`layout`](#layout), [`map_view`](#map-view-options), `map_rotation`, `map_rotation_gesture`,
+`persist_map_view`, `persist_map_lock`, `map_view_storage_key` and `transparent_background`.
 
 The card has a visual editor for the basic options; everything else is YAML-only. The
 [demo config](demo_config.yaml) is a complete example.
@@ -298,12 +299,12 @@ map: # coordinates of a point in a map coordinate system (can be read using e.g.
 Examples:
 * Menu based on the `select` entity
   ```yaml
-  type: "menu",
-  menu_id: "water_box_mode",
-  icon_id: "water_box_mode",
+  type: "menu"
+  menu_id: "water_box_mode"
+  icon_id: "water_box_mode"
   entity: "select.water_box_mode"
   available_values_attribute: "options"
-  icon: "mdi:water",
+  icon: "mdi:water"
   icon_mapping:
       off: "mdi:water-remove"
       mild: "mdi:water-minus"

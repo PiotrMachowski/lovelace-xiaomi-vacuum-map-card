@@ -8,9 +8,10 @@ body:
       value: |
         This issue form is for bugs in **Better Xiaomi Vacuum Map Card**, the fork.
 
-        If the same configuration fails with the upstream card, the report belongs in the
-        [upstream tracker](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues).
-        The element is still `custom:xiaomi-vacuum-map-card` and the asset is still
+        This is the fork's tracker; file fork bugs and fork regressions here. If the same
+        configuration also fails with the upstream release, report it in the
+        [upstream tracker](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues)
+        too. The element is still `custom:xiaomi-vacuum-map-card` and the asset is still
         `xiaomi-vacuum-map-card.js`, so include which build you run below.
 
         Configuration options are in
@@ -61,7 +62,7 @@ body:
       required: true
     attributes:
       label: What version of the card has described problem?
-      placeholder: v2.4.2-igloczek.6
+      placeholder: v2.5.0-igloczek.1
       description: >-
         The release tag from the resource URL or the latest release page.
   - type: input

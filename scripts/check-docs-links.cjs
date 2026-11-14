@@ -3,8 +3,9 @@
  * Offline documentation link check.
  *
  * Verifies every relative link and anchor in README.md, CONTRIBUTING.md, FORK.md, docs/**\/*.md and
- * the GitHub issue forms. External URLs are not fetched; links that point back into this repository
- * through a github.com/blob/... URL are resolved against the working tree instead.
+ * the GitHub issue forms. External URLs are not fetched; links that point back into this fork
+ * through a github.com/Igloczek/.../blob/... URL are resolved against the working tree instead.
+ * Upstream PiotrMachowski URLs stay external and are not resolved against the fork tree.
  *
  * Usage: node scripts/check-docs-links.cjs
  */
@@ -14,7 +15,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const repoUrl = /^https?:\/\/github\.com\/(?:Igloczek\/lovelace-better-xiaomi-vacuum-map-card|Igloczek\/lovelace-xiaomi-vacuum-map-card|PiotrMachowski\/lovelace-xiaomi-vacuum-map-card)\/(?:blob|tree|raw)\/(?:master|main)\/(.+)$/;
+const repoUrl = /^https?:\/\/github\.com\/Igloczek\/(?:lovelace-better-xiaomi-vacuum-map-card|lovelace-xiaomi-vacuum-map-card)\/(?:blob|tree|raw)\/(?:master|main)\/(.+)$/;
 const external = /^(?:https?:)?\/\//i;
 
 function walk(directory) {
@@ -39,6 +40,8 @@ function withoutCodeBlocks(text) {
 
 function headings(text) {
     const anchors = new Map();
+    // A '#' line inside a fenced block is code, not a heading, so strip fences first.
+    text = withoutCodeBlocks(text);
     const add = (name) => {
         const count = anchors.get(name) || 0;
         anchors.set(count === 0 ? name : `${name}-${count}`, true);
@@ -52,7 +55,8 @@ function headings(text) {
                 .replace(/<[^>]+>/g, '')
                 .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
                 .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
-                .replace(/[`*_~]/g, '')
+                // GitHub keeps underscores in heading slugs; strip only other inline markers.
+                .replace(/[`*~]/g, '')
                 .trim()
                 .toLowerCase()
                 .replace(/[^\p{L}\p{N}\- _]/gu, '')

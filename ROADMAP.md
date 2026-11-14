@@ -400,7 +400,8 @@ Definition of done for each batch:
 2. All gates are green.
 3. `FORK.md` row added or updated: what changed, why, upstream PR/commit, and whether it is a
    cherry-pick or fork-only.
-4. README updated when user-facing configuration changes.
+4. `docs/configuration.md` and `docs/platforms.md` updated when user-facing configuration changes;
+   the README keeps only the What-is-better table and the migration notes.
 5. A one-line manual verification on the real instance, stated in the PR body
    (`verified on HA 2026.x, <integration>`).
 6. Map-rendering PRs: zoom 2.5 and rotation 90 checked on the device.

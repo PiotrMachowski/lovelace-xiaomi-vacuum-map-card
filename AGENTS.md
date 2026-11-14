@@ -11,7 +11,7 @@
 
 - This is a TypeScript/Lit custom card for Home Assistant. The main card is `src/xiaomi-vacuum-map-card.ts`.
 - Map models and geometry live in `src/model/`; configuration types are in `src/types/` and validation is in `src/config-validators.ts`.
-- Read `CONTRIBUTING.md` for platform-template and translation workflows. Update the README when user-facing configuration or behavior changes.
+- Read `CONTRIBUTING.md` for platform-template and translation workflows. Update `docs/configuration.md` and `docs/platforms.md` when user-facing configuration or behavior changes; the README keeps only the What-is-better table and the migration notes.
 
 ## Map geometry
 
