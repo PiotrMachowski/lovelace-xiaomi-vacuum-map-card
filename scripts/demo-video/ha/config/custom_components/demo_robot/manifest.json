@@ -1,0 +1,10 @@
+{
+  "domain": "demo_robot",
+  "name": "Demo robot (README video only)",
+  "codeowners": [],
+  "dependencies": ["http"],
+  "documentation": "https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card",
+  "iot_class": "local_push",
+  "requirements": [],
+  "version": "1.0.0"
+}

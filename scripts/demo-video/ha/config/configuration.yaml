@@ -1,0 +1,28 @@
+# Home Assistant used only to record the README demo video. See scripts/demo-video/README.md.
+default_config:
+
+http:
+  server_port: 8123
+
+logger:
+  default: warning
+
+frontend:
+
+lovelace:
+  mode: storage
+
+demo_robot:
+
+script:
+  # The card's "follow path" template calls this script, as the Xiaomi Miio docs describe.
+  vacuum_follow_path:
+    fields:
+      path:
+      service:
+      mode:
+      entity_id:
+    sequence:
+      - action: demo_robot.follow_path
+        data:
+          path: "{{ path }}"

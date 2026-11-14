@@ -28,3 +28,10 @@
 # Python bytecode
 __pycache__/
 *.pyc
+
+# Demo-video Home Assistant (scripts/demo-video): only the authored config is committed
+/scripts/demo-video/.auth/
+/scripts/demo-video/out/
+/scripts/demo-video/ha/config/*
+!/scripts/demo-video/ha/config/configuration.yaml
+!/scripts/demo-video/ha/config/custom_components/

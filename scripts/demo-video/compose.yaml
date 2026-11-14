@@ -1,0 +1,11 @@
+services:
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:2026.11.0
+    container_name: ${DEMO_CONTAINER:-xvmc-demo-ha}
+    restart: "no"
+    ports:
+      - "${DEMO_HA_PORT:-8130}:8123"
+    volumes:
+      - ./ha/config:/config
+    environment:
+      TZ: UTC

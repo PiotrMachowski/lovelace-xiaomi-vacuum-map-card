@@ -1,0 +1,6 @@
+follow_path:
+  fields:
+    path:
+      required: true
+      selector:
+        object:
