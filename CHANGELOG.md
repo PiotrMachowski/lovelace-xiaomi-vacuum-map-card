@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.0.5
+
+### Fixed
+
+- A run that docks between rooms keeps its order and lock: the run ends only once the vacuum has
+  stayed out of `cleaning`, `paused` and `returning` for 90 seconds, and the card ends it on time
+  even without a further state change.
+
+### Documentation
+
+- The one-room-at-a-time script waits until the vacuum has docked before sending the next room
+  (the Viomi V8 ignores a room command while heading home) and resends a room that does not start.
+
 ## 1.0.4
 
 ### Changed
