@@ -23,7 +23,7 @@ suite passes against the release candidate; screenshots are written to the gitig
 - HACS itself: Home Assistant 2026.11 blocks the HACS custom integration and ships the Marketplace.
   The card's `hacs.json` metadata is unchanged and the HACS action in CI still validates it, but the
   HACS UI install can only be exercised on an older Home Assistant release.
-- Hardware-specific behaviour: the Roborock status/battery templates (B4) need the integration's
+- Hardware-specific behaviour: the Roborock status/battery templates need the integration's
   runtime registry, and vendor service semantics need the device. Those stay postponed.
 - Real phone scrolling and a real drag-resize: the resize uses the grid options the handle writes,
   and the hidden-tab check overrides `document.hidden` rather than moving the page to a background

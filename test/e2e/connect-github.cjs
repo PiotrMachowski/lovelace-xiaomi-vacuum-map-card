@@ -13,7 +13,6 @@
  * Usage: GITHUB_TOKEN=... node test/e2e/connect-github.cjs [--restart]
  */
 const fs = require("node:fs");
-const os = require("node:os");
 const path = require("node:path");
 const { execFileSync } = require("node:child_process");
 
@@ -34,6 +33,16 @@ function main() {
         throw new Error(`${ENTRIES} does not exist; start Home Assistant and run test/e2e/setup.cjs first`);
     }
     const token = tokenFromEnvironment();
+
+    const wantsRestart = process.argv.includes("--restart");
+    const composeArgs = ["compose", "-f", path.join(__dirname, "compose.yaml")];
+    const project = process.env.COMPOSE_PROJECT_NAME;
+    if (project) composeArgs.push("-p", project);
+    // Stop first: Home Assistant rewrites the config-entry store while it runs, so a token written
+    // under a live instance can be overwritten on shutdown. Read the store only after it stopped,
+    // otherwise the shutdown write is lost.
+    if (wantsRestart) execFileSync("docker", [...composeArgs, "stop"], { stdio: "inherit" });
+
     const data = JSON.parse(fs.readFileSync(ENTRIES, "utf8"));
     const entries = data.data.entries;
     const marketplace = entries.find(entry => entry.domain === "marketplace");
@@ -41,14 +50,6 @@ function main() {
         throw new Error("no marketplace config entry; Home Assistant 2026.11 creates one on first start");
     }
     marketplace.data = { ...(marketplace.data ?? {}), token };
-
-    const wantsRestart = process.argv.includes("--restart");
-    const composeArgs = ["compose", "-f", path.join(__dirname, "compose.yaml")];
-    const project = process.env.COMPOSE_PROJECT_NAME;
-    if (project) composeArgs.push("-p", project);
-    // Stop first: Home Assistant rewrites the config-entry store while it runs, so a token written
-    // under a live instance can be overwritten on shutdown.
-    if (wantsRestart) execFileSync("docker", [...composeArgs, "stop"], { stdio: "inherit" });
 
     fs.writeFileSync(ENTRIES, JSON.stringify(data, null, 2));
     // Keep the token off disk anywhere else, including logs.
@@ -58,8 +59,6 @@ function main() {
         execFileSync("docker", [...composeArgs, "start"], { stdio: "inherit" });
         console.log("Home Assistant restarted; wait for /api/ before running the install");
     }
-    // Best-effort hygiene: no token is left in the shell history or a tracked file by this script.
-    void os;
 }
 
 main();
