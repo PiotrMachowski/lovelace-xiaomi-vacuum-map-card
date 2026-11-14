@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.4
+
+### Changed
+
+- During a run the rooms keep exactly the look they had when selected; the separate dashed style is
+  gone.
+
+### Fixed
+
+- Rooms cannot be tapped while a run is in progress, so the cleaning order on the map cannot change
+  until the vacuum is done.
+
 ## 1.0.3
 
 ### Fixed

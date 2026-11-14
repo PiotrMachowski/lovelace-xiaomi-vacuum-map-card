@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import type { XiaomiVacuumMapCardConfig } from "../../src/types/types";
 import type { CardHandle, MockHass } from "../harness";
-import { fixtureConfig, fixtureHass, loadSyntheticFixture, mountCard, settle, useHarnessClock } from "../harness";
+import { fixtureConfig, fixtureHass, loadSyntheticFixture, mountCard, settle, useHarnessClock, withState } from "../harness";
 
 /**
  * Cleaning-order badges (upstream #959, issue #866).
@@ -163,10 +163,15 @@ describe("cleaning-order badges (#866, upstream #959)", () => {
         expect(card.element._getSelection(card.element._getCurrentMode()).selection).toEqual([]);
         card.element.requestUpdate();
         await card.element.updateComplete;
-        // The started run keeps its order on the map until the vacuum is done
-        // (test/regressions/active-room-run.test.ts); none of the rooms is selected any more.
+        // The started run keeps its order on the map, in the same style, and the rooms are locked
+        // until the vacuum is done (test/regressions/active-room-run.test.ts).
         expect(badges(card)).toEqual({ "2": "1", "0": "2", "1": "3" });
-        expect(card.shadowRoot.querySelectorAll(".room-wrapper.selected")).toHaveLength(0);
+        const vacuum = fixtureConfig(loadSyntheticFixture()).entity as string;
+        for (const state of ["cleaning", "docked"]) {
+            await card.updateHass(withState(card.hass, vacuum, { state }).hass);
+            await settle(card.element);
+        }
+        expect(badges(card)).toEqual({});
         await clickRooms(card, ["2", "0", "1"]);
         await clickRoom(card, "0");
         const badgesBeforeSecondRun = roomsByBadge(card);
