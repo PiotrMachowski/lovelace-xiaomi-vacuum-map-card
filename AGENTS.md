@@ -3,8 +3,9 @@
 ## Fork relationship
 
 - This repository is Igloczek's fork of `PiotrMachowski/lovelace-xiaomi-vacuum-map-card`; upstream remains the base for general development.
-- Keep the active differences, intended scope, and upstream-sync notes in [`FORK.md`](FORK.md). Read it before changing fork-specific behavior or syncing upstream.
-- Add every intentional fork-only feature or fix to `FORK.md`, including its reason, scope, and originating issue/PR/commit. When upstream absorbs it, mark it superseded with the upstream commit.
+- Keep the active differences, intended scope, and upstream-sync notes in [`FORK.md`](FORK.md). Read it before changing fork-specific behavior or syncing upstream. Every active difference is a preservation criterion for an upstream import.
+- Add every intentional fork-only feature or fix to `FORK.md`, including its reason, scope, and originating issue/PR/commit. When upstream absorbs it, move it to `FORK.md`'s superseded section with the upstream commit.
+- For an upstream sync, follow [`.agents/skills/sync-upstream/SKILL.md`](.agents/skills/sync-upstream/SKILL.md). Its [fork-differences checklist](.agents/skills/sync-upstream/fork-differences.md) maps each active difference to the files that implement it and the test that proves it. Never delete a fork test, `FORK.md` row, or the sync skill to make an import pass.
 - In a fresh clone, configure the original repository as `upstream` before attempting a sync; this checkout already has that remote configured.
 
 ## Project map
