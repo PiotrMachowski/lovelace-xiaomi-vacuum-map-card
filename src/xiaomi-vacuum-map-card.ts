@@ -1599,9 +1599,8 @@ export class XiaomiVacuumMapCard extends LitElement {
         if (zoomerContent) {
             zoomerContent.style.transitionDuration = this._getCssProperty("--map-card-internal-transitions-duration");
         }
-        const view = resolveMapView(undefined, this.config?.map_view, this._getNeutralMapView()) ??
-            this._getNeutralMapView();
-        // Set the angle before the transform: the transform's change event persists the view, and it
+        const neutral = this._getNeutralMapView();
+        const view = resolveMapView(undefined, this.config?.map_view, neutral) ?? neutral;        // Set the angle before the transform: the transform's change event persists the view, and it
         // must persist the angle the reset is going to, not the one it is leaving.
         this.mapRotation = view.rotation;
         const pinchZoom = this._getPinchZoom();

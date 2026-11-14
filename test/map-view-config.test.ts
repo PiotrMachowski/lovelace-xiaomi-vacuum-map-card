@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { validateConfig } from "../src/config-validators";
-import { validateMapViewConfig } from "../src/config-validators";
+import { validateConfig, validateMapViewConfig } from "../src/config-validators";
 import type { MapViewConfig, XiaomiVacuumMapCardConfig } from "../src/types/types";
 import { fixtureConfig, loadSyntheticFixture } from "./harness";
 
@@ -21,6 +20,12 @@ describe("map_view validation", () => {
         expect(validateConfig(validConfig(undefined))).toEqual([]);
     });
 
+    it("accepts the whole supported zoom range", () => {
+        expect(validateMapViewConfig({ scale: 0.5 })).toEqual([]);
+        expect(validateMapViewConfig({ scale: 1 })).toEqual([]);
+        expect(validateMapViewConfig({ scale: 100 })).toEqual([]);
+    });
+
     it("reports a scale that is not a positive finite number", () => {
         expect(validateMapViewConfig({ scale: 0 })).toEqual([["validation.map_view.invalid", "{0}", "scale"]]);
         expect(validateMapViewConfig({ scale: -1 })).toEqual([["validation.map_view.invalid", "{0}", "scale"]]);
@@ -28,6 +33,11 @@ describe("map_view validation", () => {
         expect(validateMapViewConfig({ scale: Number.POSITIVE_INFINITY })).toEqual([
             ["validation.map_view.invalid", "{0}", "scale"],
         ]);
+    });
+
+    it("reports a scale pinch-zoom would refuse, instead of leaving the neutral view without a word", () => {
+        expect(validateMapViewConfig({ scale: 0.2 })).toEqual([["validation.map_view.invalid", "{0}", "scale"]]);
+        expect(validateMapViewConfig({ scale: 100.5 })).toEqual([["validation.map_view.invalid", "{0}", "scale"]]);
     });
 
     it("reports a non-numeric offset or rotation instead of applying it", () => {

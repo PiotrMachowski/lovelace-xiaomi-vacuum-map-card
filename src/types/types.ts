@@ -62,8 +62,8 @@ export interface XiaomiVacuumMapCardConfig extends LovelaceCardConfig, CardPrese
  *
  * Every field is optional. An omitted field keeps its neutral value — scale 1, no offset, the
  * preset's `map_rotation` — so `map_view: {scale: 2.5}` is a complete configuration. A field that
- * is present must be a finite number and `scale` must be positive; anything else is reported by
- * the config validation instead of being applied.
+ * is present must be a finite number and `scale` must be inside the card's zoom range; anything
+ * else is reported by the config validation instead of being applied.
  */
 export interface MapViewConfig {
     readonly scale?: number;

@@ -28,6 +28,11 @@ export const EMPTY_MAP_MODE: MapModeConfig = {
 export const MAP_VIEW_STORE_KEY = "xiaomi-vacuum-map-card.map-view";
 export const MAP_VIEW_STORE_LIMIT = 300;
 export const MAP_VIEW_SAVE_DEBOUNCE = 350;
+// The zoom range the card offers: the pinch-zoom element's `min-scale` and the zoom-out floor in
+// `_updateScale` for the lower bound, and the vendored pinch-zoom's `MAX_SCALE` for the upper one.
+// A configured `map_view.scale` outside it would be refused by pinch-zoom and silently do nothing.
+export const MAP_VIEW_MIN_SCALE = 0.5;
+export const MAP_VIEW_MAX_SCALE = 100;
 export const MAP_ROTATION_STEP = 90;
 // a two finger pinch always wobbles a little - only treat it as a rotation past this
 export const MAP_ROTATION_GESTURE_DEADZONE = 8;

@@ -214,16 +214,17 @@ action return to it.
 
 | Key        | Type   | Required | Default        | Description                                                         |
 |------------|--------|----------|----------------|---------------------------------------------------------------------|
-| `scale`    | number | no       | `1`            | Zoom level, a positive number (`1` is the map fitted to the card)   |
+| `scale`    | number | no       | `1`            | Zoom level, from `0.5` to `100` (`1` is the map fitted to the card) |
 | `x`        | number | no       | `0`            | Horizontal offset in layout pixels; `0` is the untransformed position |
 | `y`        | number | no       | `0`            | Vertical offset in layout pixels; `0` is the untransformed position |
 | `rotation` | number | no       | `map_rotation` | Angle in degrees the map opens at and returns to when reset         |
 
 Every key is optional, and a key that is left out keeps its neutral value, so
-`map_view: {scale: 2.5}` only changes the zoom. A value that is not a number, or a `scale` that is
-not positive, is reported as a configuration error instead of being applied. Unlike
-`persist_map_view`, which decides whether the user's view is remembered, `map_view` also applies
-with `persist_map_view: false`.
+`map_view: {scale: 2.5}` only changes the zoom. A value that is not a number, or a `scale` outside
+`0.5`–`100` (the range the zoom controls offer), is reported as a configuration error instead of
+being applied. The configured view applies to the whole card: each preset uses it where that preset
+has no stored view. Unlike `persist_map_view`, which decides whether the user's view is remembered,
+`map_view` also applies with `persist_map_view: false`.
 
 ```yaml
 type: custom:xiaomi-vacuum-map-card

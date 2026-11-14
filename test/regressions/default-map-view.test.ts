@@ -135,7 +135,7 @@ async function panAndZoom(card: CardHandle, scale: number, x: number, y: number)
 }
 
 /** The one stored entry, keyed the way the card keys it. */
-function storedView(): { key: string; view: ReturnType<typeof getMapView> } {
+function storedView(): { key: string | undefined; view: ReturnType<typeof getMapView> } {
     const storage = JSON.parse(window.localStorage.getItem(MAP_VIEW_STORE_KEY) ?? "{}") as Record<string, unknown>;
     const key = Object.keys(storage)[0];
     return { key, view: key ? getMapView(key) : undefined };
