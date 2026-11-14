@@ -39,6 +39,11 @@ set, this build offers:
 Install version 1.0.0. Home Assistant 2026.11 blocks the HACS custom integration and ships the
 built-in **Marketplace**; upgrading an existing HACS install migrates its entries and resources.
 
+[![Open your Home Assistant instance and open this repository in the Marketplace.](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=Igloczek&repository=lovelace-better-xiaomi-vacuum-map-card&category=dashboard)
+
+The button opens this repository in the Marketplace, or in HACS on older Home Assistant, and offers
+to add it as a custom repository. Follow the steps below if it does not open.
+
 ### Marketplace (Home Assistant 2026.11+)
 
 1. Open **Settings → Marketplace** and accept the first-run warning.
