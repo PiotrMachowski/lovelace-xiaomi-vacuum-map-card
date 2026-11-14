@@ -65,4 +65,4 @@ and paste the redacted values.
 
 A bundle is only useful if it becomes a test or a documented limitation. See the triage skill's
 `For maintainers` section: copy the fixture, reproduce with the Vitest harness, add the regression
-test, and record device-specific gaps in `FORK.md` and `ROADMAP.md` rather than claiming coverage.
+test, and record device-specific gaps in `ROADMAP.md` rather than claiming coverage.

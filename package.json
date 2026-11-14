@@ -1,6 +1,6 @@
 {
     "name": "lovelace-better-xiaomi-vacuum-map-card",
-    "version": "v0.0.0-dev",
+    "version": "1.0.0",
     "description": "Better Xiaomi Vacuum Map Card",
     "keywords": [
         "home-assistant",
@@ -75,6 +75,8 @@
         "check:docs": "node scripts/check-docs-links.cjs",
         "add-version": "cross-var replace-in-file \"@VACUUM_MAP_CARD_VERSION_PLACEHOLDER@\" \"$npm_package_version\" \"dist/xiaomi-vacuum-map-card.js\"",
         "lint": "eslint src/*.ts",
-        "rollup": "rollup -c"
+        "rollup": "rollup -c",
+        "test:e2e": "playwright test -c test/e2e/playwright.config.ts",
+        "e2e:install": "node test/e2e/marketplace-install.cjs"
     }
 }

@@ -1,0 +1,14 @@
+services:
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:2026.11.0
+    container_name: ${E2E_CONTAINER:-xvmc-e2e-ha}
+    restart: "no"
+    ports:
+      - "${E2E_HA_PORT:-8123}:8123"
+    volumes:
+      - ./ha/config:/config
+      - ./artifacts:/artifacts
+    environment:
+      TZ: UTC
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

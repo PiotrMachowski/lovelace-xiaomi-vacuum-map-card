@@ -34,6 +34,21 @@ npm install
 npm run build
 ```
 
+## Local checks
+
+Run these before opening a pull request:
+
+```sh
+npm test
+npx tsc --noEmit
+npm run build
+npm run check:docs
+npm run check:map-scale
+```
+
+When Docker is available, `npm run test:e2e` drives a real Home Assistant instance; see
+[the end-to-end suite](test/e2e/README.md) for the setup steps.
+
 ## Building and hosting with [devcontainer](https://code.visualstudio.com/docs/remote/containers)
 
 Note: this is available only in vscode ensure you have the [Remote Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension installed.

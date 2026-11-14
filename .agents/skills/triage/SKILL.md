@@ -295,7 +295,7 @@ Show the complete redacted report and the attachment list. Ask for an explicit y
 4. If the bug is in the map/overlay/zoom path, add a Playwright scenario or extend the visual
    fixture; do not rely on a screenshot alone.
 5. Fix test-first. If the fix is device-specific and cannot be generalized, record the limitation in
-   `FORK.md` and `ROADMAP.md` rather than pretending the device is covered.
+   `ROADMAP.md` rather than pretending the device is covered.
 6. Add a row to the issue with the test path and the fixture provenance.
 
 ## Red flags

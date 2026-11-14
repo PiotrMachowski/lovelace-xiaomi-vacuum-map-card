@@ -224,6 +224,13 @@ these values per card.
 
 <sup>1</sup> Exactly one of `camera` or `image` must be provided
 
+A static image works as a floorplan background: point `image` at a same-origin picture such as
+`/local/floorplan.png` and add `transparent_background: true` to blend near-white areas into the
+card. Transparency reads the image's pixels, so an image from another origin needs CORS headers or
+the browser blocks the read and the option silently does nothing. Drawing a live robot path on
+top of a static image is not supported (upstream #503 / #922 overlap here); the camera source is the
+supported way to get a live map with paths.
+
 For `ROOM` selections, the card can use room IDs and names from the camera's `rooms` attribute, then trace each room's colored region from the map image. Manual room definitions remain available as a fallback when the camera does not provide room metadata or the map has no distinct room colors.
 
 ### Cropping options
@@ -670,7 +677,7 @@ This card handles following actions:
 
   Yes, you just have to provide 4 calibration points.
 
-## Migrating from v1.x.x
+## Migrating from upstream v1.x.x
 
 <details>
 <summary>Configuration with <code>map_image</code></summary>

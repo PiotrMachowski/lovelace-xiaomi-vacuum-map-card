@@ -36,7 +36,7 @@ const supportsEntityNames = (hass: HomeAssistantFixed | undefined): boolean => {
  *
  * Adapted from upstream PR #957. Its `entityNamesChanged` re-render hook is not carried here;
  * without it, a registry-only rename can leave a tile label stale until an unrelated entity update
- * renders the card (see `ROADMAP.md`, batch B3).
+ * renders the card (see `ROADMAP.md`, known limitations).
  */
 export function computeEntityName(
     hass: HomeAssistantFixed | undefined,

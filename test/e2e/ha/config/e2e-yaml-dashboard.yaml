@@ -1,0 +1,26 @@
+title: E2E YAML dashboard
+views:
+  - title: YAML mode
+    path: yaml
+    cards:
+      # The unquoted `y:` key inside map_view is the YAML 1.1 boolean-key case from upstream #952.
+      # If the parser turns it into `true`, the card must still open at y: 30; the suite asserts the
+      # rendered offset, so this file is both the repro and the regression test.
+      - type: custom:xiaomi-vacuum-map-card
+        entity: vacuum.demo_vacuum_0_ground_floor
+        vacuum_platform: default
+        map_source:
+          camera: camera.vacuum_map
+        calibration_source:
+          calibration_points:
+            - map: {x: 0, y: 0}
+              vacuum: {x: 0, y: 0}
+            - map: {x: 200, y: 0}
+              vacuum: {x: 2000, y: 0}
+            - map: {x: 0, y: 150}
+              vacuum: {x: 0, y: 1500}
+        map_modes:
+          - template: vacuum_clean_zone
+        map_view:
+          scale: 1.5
+          y: 30

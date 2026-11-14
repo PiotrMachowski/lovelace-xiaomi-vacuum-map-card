@@ -3,16 +3,17 @@
 ## Fork relationship
 
 - This repository is Igloczek's fork of `PiotrMachowski/lovelace-xiaomi-vacuum-map-card`; upstream remains the base for general development.
-- Keep the active differences, intended scope, and upstream-sync notes in [`FORK.md`](FORK.md). Read it before changing fork-specific behavior or syncing upstream. Every active difference is a preservation criterion for an upstream import.
-- Add every intentional fork-only feature or fix to `FORK.md`, including its reason, scope, and originating issue/PR/commit. When upstream absorbs it, move it to `FORK.md`'s superseded section with the upstream commit.
-- For an upstream sync, follow [`.agents/skills/sync-upstream/SKILL.md`](.agents/skills/sync-upstream/SKILL.md). Its [fork-differences checklist](.agents/skills/sync-upstream/fork-differences.md) maps each active difference to the files that implement it and the test that proves it. Never delete a fork test, `FORK.md` row, or the sync skill to make an import pass.
+- Keep the current differences from upstream and the upstream-sync instructions in [`FORK.md`](FORK.md). Read it before changing fork-specific behavior or syncing upstream. Every row under **Active differences** is a preservation criterion for an upstream import.
+- Add every intentional fork-only feature or fix to `FORK.md`, including what it changes and why. When upstream absorbs it, prove equivalence with the tests and move the row to **Superseded differences** with the upstream commit.
+- [`ROADMAP.md`](ROADMAP.md) holds planned work and postponed items; [`CHANGELOG.md`](CHANGELOG.md) holds released changes. Do not keep a record of completed work in a standing document.
+- For an upstream sync, follow [`.agents/skills/sync-upstream/SKILL.md`](.agents/skills/sync-upstream/SKILL.md). Its [fork-differences checklist](.agents/skills/sync-upstream/fork-differences.md) maps each active difference to the files that implement it and the test that proves it. Never delete a fork test, `FORK.md` row, a documentation anchor, or the sync skill to make an import pass.
 - In a fresh clone, configure the original repository as `upstream` before attempting a sync; this checkout already has that remote configured.
 
 ## Project map
 
 - This is a TypeScript/Lit custom card for Home Assistant. The main card is `src/xiaomi-vacuum-map-card.ts`.
 - Map models and geometry live in `src/model/`; configuration types are in `src/types/` and validation is in `src/config-validators.ts`.
-- Read `CONTRIBUTING.md` for platform-template and translation workflows. Update `docs/configuration.md` and `docs/platforms.md` when user-facing configuration or behavior changes; the README keeps only the What-is-better table and the migration notes.
+- Read `CONTRIBUTING.md` for platform-template and translation workflows. Update `docs/configuration.md` and `docs/platforms.md` when user-facing configuration or behavior changes; the README describes the card's current capabilities, install and usage.
 
 ## Map geometry
 
@@ -24,7 +25,8 @@
 
 ## Local checks
 
-- Run `npm run check:map-scale` for the zoom/rotation scale regression check.
+- Run `npm test` (Vitest with a happy-dom harness) for unit and DOM tests, and `npm run test:e2e` for the real-Home-Assistant suite (see `test/e2e/README.md`).
+- Run `npm run check:map-scale` for the zoom/rotation scale regression check and `npm run check:docs` for documentation links.
 - Run `npm run build` for linting and the production bundle; `npx tsc --noEmit` is an additional type check.
 - Use `npm start` for the development bundle. `CONTRIBUTING.md` documents loading it into a Home Assistant instance.
 

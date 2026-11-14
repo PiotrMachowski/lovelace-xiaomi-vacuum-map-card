@@ -2709,6 +2709,8 @@ export class XiaomiVacuumMapCard extends LitElement {
             }
 
             .layout-content.horizontal .dropdown-menu-button-text {
+                /* text-overflow only renders on a block container; the shared rule is inline-flex. */
+                display: block;
                 min-width: 0;
                 overflow: hidden;
                 text-overflow: ellipsis;
