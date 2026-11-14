@@ -61,9 +61,8 @@ export async function login(page: Page): Promise<void> {
     );
 }
 
-export async function openDashboard(page: Page, pathname: string): Promise<void> {
-    await page.goto(pathname);
-    await page.waitForSelector("home-assistant-main", { timeout: 120_000 });
+/** Waits until Home Assistant's launch screen is gone and the dashboard is usable. */
+export async function waitForHaReady(page: Page): Promise<void> {
     // Home Assistant shows a launch screen over the dashboard while it hydrates; measuring or
     // screenshotting through it would produce misleading evidence.
     await page
@@ -72,6 +71,12 @@ export async function openDashboard(page: Page, pathname: string): Promise<void>
         .waitFor({ state: "detached", timeout: 120_000 })
         .catch(() => undefined);
     await page.waitForTimeout(300);
+}
+
+export async function openDashboard(page: Page, pathname: string): Promise<void> {
+    await page.goto(pathname);
+    await page.waitForSelector("home-assistant-main", { timeout: 120_000 });
+    await waitForHaReady(page);
 }
 
 /** Waits for the card element to be defined and rendered inside the dashboard view. */

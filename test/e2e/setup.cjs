@@ -191,9 +191,21 @@ function card(overrides = {}) {
                     service_data: { command: "app_segment_clean", params: "[[selection]]" },
                 },
                 predefined_selections: [
-                    { id: "0", label: { text: "Kitchen", x: 500, y: 450 } },
-                    { id: "1", label: { text: "Living room", x: 1350, y: 450 } },
-                    { id: "2", label: { text: "Bedroom", x: 500, y: 1100 } },
+                    {
+                        id: "0",
+                        label: { text: "Kitchen", x: 500, y: 450 },
+                        outline: [[200, 200], [800, 200], [800, 700], [200, 700]],
+                    },
+                    {
+                        id: "1",
+                        label: { text: "Living room", x: 1350, y: 450 },
+                        outline: [[1000, 200], [1700, 200], [1700, 700], [1000, 700]],
+                    },
+                    {
+                        id: "2",
+                        label: { text: "Bedroom", x: 500, y: 1100 },
+                        outline: [[200, 900], [800, 900], [800, 1300], [200, 1300]],
+                    },
                 ],
             },
             { template: "vacuum_clean_zone" },

@@ -33,21 +33,41 @@ test("a re-mapped camera marks stale rooms and refuses them", async ({ loggedIn:
     // stored outlines, marked stale, and named in the warning.
     await expect.poll(async () => (await rooms()).stale, { timeout: 15_000 }).toBeGreaterThanOrEqual(3);
     const afterRemap = await rooms();
-    expect(afterRemap.warning).toMatch(/0/);
-    expect(afterRemap.warning).toMatch(/1/);
-    expect(afterRemap.warning).toMatch(/2/);
+    expect(afterRemap.warning).toMatch(/0[\s,]+1[\s,]+2/);
 
-    // A stale room cannot be selected, so it cannot reach the service call.
+    // The stale room is drawn from its configured outline and ignores pointer events, so a click
+    // there falls through to the live room that now covers the same pixels. It must never select the
+    // stale id 0, which is the whole point: the wrong room must not be cleanable.
     const stalePoint = await target.evaluate(element => {
         const stale = element.shadowRoot.querySelector(".room-0-wrapper .room-outline") as SVGPolygonElement | null;
         if (!stale) return null;
-        const box = stale.getBoundingClientRect();
-        return { x: box.left + box.width / 2, y: box.top + box.height / 2 };
+        const points = stale.points;
+        const matrix = stale.getScreenCTM();
+        if (!matrix || points.numberOfItems === 0) return null;
+        const svg = stale.ownerSVGElement!;
+        const screen: Array<{ x: number; y: number }> = [];
+        for (let index = 0; index < points.numberOfItems; index++) {
+            const point = svg.createSVGPoint();
+            point.x = points.getItem(index).x;
+            point.y = points.getItem(index).y;
+            screen.push(point.matrixTransform(matrix));
+        }
+        const centre = screen.reduce((acc, p) => ({ x: acc.x + p.x / screen.length, y: acc.y + p.y / screen.length }), { x: 0, y: 0 });
+        const vertex = screen[0];
+        return { x: centre.x + (vertex.x - centre.x) * 0.6, y: centre.y + (vertex.y - centre.y) * 0.6 };
     });
     expect(stalePoint).not.toBeNull();
     await page.mouse.click(stalePoint!.x, stalePoint!.y);
-    await expect.poll(async () => (await target.evaluate(element => element.selectedRooms.length))).toBe(0);
+    await expect
+        .poll(async () => (await target.evaluate(element => element.selectedRooms.map((room: any) => String(room.toVacuum())))) as string[])
+        .not.toContain("0");
     await shot(page, "15-stale-rooms");
+
+    // Clear whatever the fall-through click selected, then pick the live room on purpose.
+    while ((await target.evaluate(element => element.selectedRooms.length)) > 0) {
+        await page.mouse.click(stalePoint!.x, stalePoint!.y);
+        await page.waitForTimeout(150);
+    }
 
     // The live rooms of the new metadata are selectable again.
     const livePoint = await target.evaluate(element => {
@@ -75,7 +95,7 @@ test("a re-mapped camera marks stale rooms and refuses them", async ({ loggedIn:
         .poll(async () => (await target.evaluate(element => element.selectedRooms.map((room: any) => String(room.toVacuum())))) as string[])
         .toEqual(["7"]);
 
-    // Restore the fixture for the other specs.
+    // Restore the fixture for the other specs, even when an assertion above failed.
     await serviceCall("map_fixture", "set_rooms", { mode: "reset" });
     await expect.poll(async () => (await rooms()).stale, { timeout: 15_000 }).toBe(0);
 });

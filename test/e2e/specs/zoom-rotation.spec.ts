@@ -117,7 +117,8 @@ test("zoom 2.5 and rotation 90 keep the overlays on the rooms", async ({ loggedI
         throw new Error(`could not bring room ${roomId} into view`);
     };
 
-    // A deliberate overlay shift, used to prove this spec would catch one.
+    // A deliberate overlay shift, used to prove this spec would catch one. The shift is applied
+    // inside the zoomed/rotated map content, so "20,0" moves the overlay by ~50 screen px at 2.5x.
     const [shiftX, shiftY] = (process.env.E2E_OVERLAY_SHIFT ?? "0,0").split(",").map(Number);
     if (shiftX !== 0 || shiftY !== 0) {
         await target.evaluate(
@@ -175,10 +176,10 @@ test("zoom 2.5 and rotation 90 keep the overlays on the rooms", async ({ loggedI
         }
         expect(minX, `room ${roomId} must paint its colour inside the outline box`).toBeLessThan(Infinity);
         const painted = { left: minX, top: minY, right: maxX, bottom: maxY };
-        expect(Math.abs(painted.left - expected.left), `room ${roomId} left edge`).toBeLessThanOrEqual(8);
-        expect(Math.abs(painted.top - expected.top), `room ${roomId} top edge`).toBeLessThanOrEqual(8);
-        expect(Math.abs(painted.right - expected.right), `room ${roomId} right edge`).toBeLessThanOrEqual(8);
-        expect(Math.abs(painted.bottom - expected.bottom), `room ${roomId} bottom edge`).toBeLessThanOrEqual(8);
+        expect(Math.abs(painted.left - expected.left), `room ${roomId} left edge`).toBeLessThanOrEqual(4);
+        expect(Math.abs(painted.top - expected.top), `room ${roomId} top edge`).toBeLessThanOrEqual(4);
+        expect(Math.abs(painted.right - expected.right), `room ${roomId} right edge`).toBeLessThanOrEqual(4);
+        expect(Math.abs(painted.bottom - expected.bottom), `room ${roomId} bottom edge`).toBeLessThanOrEqual(4);
     }
 
     // The hit test agrees with what is drawn: clicking each outline selects that room.

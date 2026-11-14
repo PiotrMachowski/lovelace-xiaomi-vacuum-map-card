@@ -7,7 +7,7 @@ long time fixed under a test-first process.
 
 The card element (`custom:xiaomi-vacuum-map-card`) and the release asset (`xiaomi-vacuum-map-card.js`)
 keep their upstream names, so this is a drop-in replacement: your YAML does not change. Install
-[`v2.5.0-igloczek.1`](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/releases/tag/v2.5.0-igloczek.1)
+[`v1.0.0`](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/releases/tag/v1.0.0)
 or newer, the first fork release with every shipped row below. Maintained by [Igloczek](https://github.com/Igloczek),
 based on [PiotrMachowski/lovelace-xiaomi-vacuum-map-card](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card).
 
@@ -58,7 +58,8 @@ hardware or a fixture. Evidence links to the fork's record in [FORK.md](FORK.md)
 Install `v1.0.0` or newer. It is the fork's first release under its own version number: the fork
 starts its own line at 1.0.0 instead of continuing upstream's 2.x numbers. The earlier
 `v2.5.0-igloczek.1` tag was a pre-versioning snapshot and differs from 1.0.0 only by the editor
-switch-label fix.
+switch-label fix; because 1.0.0 sorts below that tag, HACS/Marketplace may not offer it as an update,
+so reinstall from the repository URL once.
 
 Home Assistant 2026.11 blocks the HACS custom integration and ships the built-in **Marketplace**
 instead; upgrading an existing HACS install migrates its entries and resources to the Marketplace.

@@ -111,7 +111,7 @@ This fixture is the difference between "tests pass in a mock" and "tests describ
 
 ### B1 - Config robustness (S, parallel with B2/B3)
 
-Upstream: PR #937, #940, #938; PR #952 only after a repro.
+Upstream: PR #937, #940, #938. #952 is closed as not reproducible (see the postpone list).
 
 - #937: `config.id.toString()` crashes when a room has no id
   (`src/config-validators.ts:161`).
@@ -119,15 +119,13 @@ Upstream: PR #937, #940, #938; PR #952 only after a repro.
   (`src/config-validators.ts:45`).
 - #938: invalid dynamic predefined selections should be ignored, not throw. The current dynamic
   parsing in `src/model/map_objects/predefined-multi-rectangle.ts` assumes the entity exists.
-- #952: HA YAML 1.1 parses an unquoted `y:` key as boolean `true`. Add `config-normalizer.ts`
-  only if the bug reproduces on the current HA version. Normalize the boolean key back to `y`
-  inside coordinate objects only, and do not mutate the input config.
+
 
 Files: `config-validators.ts`, dynamic selection objects, new `config-normalizer.ts`.
 
 Tests (unit): each upstream crash config yields a validation error or an ignored selection,
-never an exception. For #952 add a normalizer fixture with `{true: 31175}` and one with a valid
-`y` to prove it is untouched.
+never an exception. #952 is closed as not reproducible: `test/e2e/specs/yaml-y-key.spec.ts`
+parses an unquoted `y:` through a real Home Assistant YAML dashboard and the offset is applied.
 
 Acceptance: no throw for missing room id, `calibration_points: [{map: {x: 1}}]`, or a dynamic
 selection whose entity/attribute is absent.
@@ -154,8 +152,8 @@ Upstream: PR #956, #944; fork: duplicate-mode cleanup (#928 observation); PR #95
 
 Tests (DOM): frozen config + generate; two cards with two editors on one page, asserting card B
 never answers editor A; generate twice and assert one ROOM mode; assert the fallback element
-choice with and without an `ha-input` stub. Manual check on the real HA for the actual element
-API.
+choice with and without an `ha-input` stub. Verified on the real HA 2026.11 frontend by
+`test/e2e/specs/editor.spec.ts`.
 
 Acceptance: generation is idempotent and never mutates the input config; multi-vacuum isolation
 is proven by test; the editor's Title field renders on current HA.
@@ -268,7 +266,8 @@ generators.
   would silently target the wrong room.
 
 Tests: pure room-config builder with before/after camera fixtures; a stale ID never reaches the
-service call. Manual: the second fixture capture from P0d, if a re-map is acceptable.
+service call. Verified on the real instance by `test/e2e/specs/stale-rooms.spec.ts`, which
+renumbers the fixture camera's segments without moving the geometry.
 
 ### B9 - Default map view (S-M, after B6)
 
@@ -332,8 +331,8 @@ README rewrite, target roughly 150 lines instead of the current upstream manual:
   choosing the card, installing it and getting it running.
 
 Verification: markdown link check, the HACS validation workflow, `npm run build`, and a manual
-render check. The final manual check is installing from the HACS custom repository on the real
-instance.
+render check. The HACS/Marketplace install and every runtime behaviour are verified by
+`test/e2e` against a real Home Assistant in Docker.
 
 ### R2 - GitHub repository rename and release surface (S, LAST)
 
@@ -352,8 +351,7 @@ instance.
 | Item | Why postponed | Unblocks when |
 |---|---|---|
 | #964 Roborock status/battery tiles | Needs a real Roborock-core registry; contract tests cannot prove the regexes | The real instance runs that integration, or a scrubbed fixture is supplied |
-| #952 YAML `y:` normalization | Depends on an actual repro on the current HA parser | A config with an unquoted `y:` fails on the real instance |
-| #958 beyond the element fallback | The stub only proves the branch, not HA's real element API | Manual check on the current HA |
+
 | #549 templated `predefined_selections` | No concrete case that `state_entity` cannot serve; Jinja subscription is a large change | A real use case and a fixture |
 | #503 + #922 live path overlay on a static floorplan | A static image already works as the map source (`map_source.image` plus `transparent_background`); what is missing is drawing the live robot path on top of it | A fixture with a path entity and a decision on how paths overlay a static image |
 | #134 rotated zone rectangle | Roborock's zone API is axis-aligned; no evidence the target platform accepts 4 arbitrary points | Vendor documentation or a working integration call |
@@ -410,9 +408,10 @@ Definition of done for each batch:
 ## Immediate next moves
 
 1. **P0a** - move CI to Node 22, add `tsc --noEmit`, regenerate the lockfile, verify the build.
-2. **P0d** - capture the real fixture and answer two questions: which vacuum integration and
-   platform template are in use, and which Home Assistant version is running. Those answer
-   whether B4, #952 and the #958 manual check are in scope now.
+2. **P0d** - superseded: the committed synthetic fixture plus the `test/e2e` real-instance suite
+   replace the capture. The two questions it was meant to answer (integration and HA version) are
+   answered in code: the suite pins HA 2026.11.0; B4 remains hardware-bound, #952 is not
+   reproducible and the #958 element question is verified.
 3. **P0b** - add Vitest + happy-dom and the harness, then write the first two failing tests:
    the frozen `map_modes` TypeError (#956) and the cross-card room-config leak (#944). Both fail
    on current `master`, which proves the harness catches real bugs before B2 fixes them.

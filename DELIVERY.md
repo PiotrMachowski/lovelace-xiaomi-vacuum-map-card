@@ -69,10 +69,10 @@ change, not a card rename.
 ## Postponed
 
 Exactly the items in [`ROADMAP.md`](ROADMAP.md#postpone-list), with the reason recorded there:
-#964 (Roborock status/battery tiles), #952 (YAML `y:` normalization), #958 beyond the element
-fallback, #549 (templated `predefined_selections`), #503 + #922 (live path overlay on a static floorplan),
-#134 (rotated zone rectangle), #967 + #960 (Valetudo icons / JSON map source), #715 + #600
-(Ecovacs SVG viewbox), #916 (delayed start), #966 (non-admin MQTT), #821 (collapse map).
+#964 (Roborock status/battery tiles), #549 (templated `predefined_selections`),
+#503 + #922 (live path overlay on a static floorplan), #134 (rotated zone rectangle),
+#967 + #960 (Valetudo icons / JSON map source), #715 + #600 (Ecovacs SVG viewbox),
+#916 (delayed start), #966 (non-admin MQTT), #821 (collapse map).
 
 The references above are upstream GitHub issue and pull-request numbers. Earlier revisions of this
 file quoted an internal backlog numbering that did not correspond to GitHub; it has been corrected.
@@ -168,7 +168,9 @@ Checked on master at `4a24b23` on 2026-11-14 (the audit commit; `6a32a8e` is the
   not load.
 - **Release.** `v2.5.0-igloczek.1` is published (not a draft or prerelease), targets `6196002`, and
   attaches `xiaomi-vacuum-map-card.js` (484,990 bytes, state `uploaded`); the asset download returns
-  the file and the old repository URLs redirect with 301.
+  the file and the old repository URLs redirect with 301. `v1.0.0` is cut from this branch after
+  merge; it restarts the numbering at the fork's own 1.0.0, so a version-based updater on the older
+  tag may not offer it and those users reinstall from the repository URL.
 - **Identity.** `gh repo view` reports `Igloczek/lovelace-better-xiaomi-vacuum-map-card` with the
   fork description, topics, enabled issues and the README homepage; `hacs.json` keeps
   `filename: xiaomi-vacuum-map-card.js`; `package.json` points `repository`, `homepage` and `bugs` at
@@ -198,8 +200,9 @@ of becoming a task for the owner.
 
 ### Evidence (branch build overlaid on the Marketplace install, real Home Assistant)
 
-Every row is a spec in `test/e2e/specs/` and passes against the installed artifact. Screenshots are
-committed under [`docs/evidence/e2e/`](docs/evidence/e2e).
+Every spec passes against the branch build overlaid on the Marketplace install; the last row is the
+install script, not a spec. Screenshots are committed under
+[`docs/evidence/e2e/`](docs/evidence/e2e).
 
 | Verification | Proves | Evidence |
 |---|---|---|
@@ -207,7 +210,7 @@ committed under [`docs/evidence/e2e/`](docs/evidence/e2e).
 | Card editor | The visual editor opens in edit mode, the Title field is the real `ha-input` this frontend provides, typing reaches the config, and **Generate rooms config** produces rooms from the camera metadata with no page error. | `editor.spec.ts`, [title](docs/evidence/e2e/13-editor-title.png), [generated rooms](docs/evidence/e2e/14-editor-generated-rooms.png) |
 | Default map view (#873) | `map_view` opens the configured view, a gesture changes it, the reset control returns to it, and the view survives a reload. | `map-view.spec.ts`, [reset](docs/evidence/e2e/03-map-view-reset.png), [persisted](docs/evidence/e2e/04-map-view-persisted.png) |
 | Horizontal layout (#183/#943) | In a real **sections** view the map sits beside the controls, a long mode name ellipsizes (the text element is a block container and its text is wider than its box), controls stay inside the card, and changing the card's grid options (what the resize handle causes) resizes the card. A real drag of the handle is not automated. | `layout.spec.ts`, [horizontal](docs/evidence/e2e/05-layout-horizontal-1280.png), [narrow cell](docs/evidence/e2e/06-layout-horizontal-cell-6.png), [vertical](docs/evidence/e2e/09-layout-vertical.png) |
-| Zoom 2.5 + rotation 90 | At 2.5x and 90 degrees, screenshot pixels inside each outline are the room colour and pixels beyond it are not (so a shifted overlay fails), and clicking each outline selects that room. | `zoom-rotation.spec.ts`, [screenshot](docs/evidence/e2e/10-zoom-2-5-rotation-90.png) |
+| Zoom 2.5 + rotation 90 | At 2.5x and 90 degrees the painted room colour's screen box matches the outline's screen box within 4 px on every edge (a deliberate shift is rejected; `E2E_OVERLAY_SHIFT` proves it), and clicking each outline selects that room. | `zoom-rotation.spec.ts`, [screenshot](docs/evidence/e2e/10-zoom-2-5-rotation-90.png) |
 | Camera request rate (#704/#357) | Inside the refresh window, vacuum state changes cause no snapshot request; at most one interval refresh lands; a camera change causes exactly one; a hidden tab causes none; becoming visible again causes one. The hidden state is simulated by overriding `document.hidden`. | `camera-rate.spec.ts`, [screenshot](docs/evidence/e2e/11-camera-rate.png) |
 | YAML `y:` (#952) | A YAML dashboard with an unquoted `y:` key applies the offset, so Home Assistant 2026.11 does not reproduce the boolean-key bug. | `yaml-y-key.spec.ts`, [screenshot](docs/evidence/e2e/12-yaml-y-key.png) |
 | Stale rooms after a re-map (B8) | The fixture camera renumbers its segments while keeping the geometry; the card marks the configured rooms stale, names them in the warning, refuses to select them, and still selects the new live id. | `stale-rooms.spec.ts`, [screenshot](docs/evidence/e2e/15-stale-rooms.png) |
