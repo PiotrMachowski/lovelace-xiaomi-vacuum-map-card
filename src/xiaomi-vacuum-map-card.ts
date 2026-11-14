@@ -1985,16 +1985,9 @@ export class XiaomiVacuumMapCard extends LitElement {
         const point = this._getMousePosition(event);
         const x = Math.floor(point.x / this.realScale);
         const y = Math.floor(point.y / this.realScale);
-        const imageData = this.roomColorDetection.imageData;
-        if (x < 0 || y < 0 || x >= imageData.width || y >= imageData.height) return;
-
-        const offset = (y * imageData.width + x) * 4;
-        const colorKey = RoomColorDetector.getColorKey(
-            imageData.data[offset],
-            imageData.data[offset + 1],
-            imageData.data[offset + 2],
-        );
-        const roomId = this.roomColorDetection.roomIdByColor.get(colorKey);
+        // The label map, not the pixel's colour: a tap on a cleaning path or the robot drawn over a
+        // room still selects that room.
+        const roomId = RoomColorDetector.roomIdAt(this.roomColorDetection, x, y);
         if (roomId === undefined) return;
         const room = this.selectableRooms.find(candidate => String(candidate.toVacuum()) === roomId);
         if (room) void room.click();

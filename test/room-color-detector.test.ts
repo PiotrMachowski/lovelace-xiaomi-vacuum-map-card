@@ -89,3 +89,67 @@ describe("RoomColorDetector.detectFromImageData", () => {
         expect(detection?.regions.map(region => region.id).sort()).toEqual(["0", "1", "2"]);
     });
 });
+
+/** Paints a filled rectangle (inclusive bounds) over decoded pixels. */
+function paint(
+    imageData: ImageDataLike,
+    [left, top, right, bottom]: [number, number, number, number],
+    [red, green, blue]: [number, number, number],
+): void {
+    for (let y = top; y <= bottom; y++) {
+        for (let x = left; x <= right; x++) {
+            const offset = (y * imageData.width + x) * 4;
+            imageData.data.set([red, green, blue, 255], offset);
+        }
+    }
+}
+
+describe("rooms with cleaning paths and the robot drawn over them", () => {
+    /** The light path colour and the dark robot body the map extractors draw over room fills. */
+    const PATH: [number, number, number] = [235, 240, 255];
+    const ROBOT: [number, number, number] = [70, 70, 70];
+
+    function detectWithOverlays() {
+        const imageData = syntheticImageData();
+        // Paths crossing room 0 completely, vertically and horizontally: the room's colour falls
+        // apart into four pieces.
+        paint(imageData, [40, 20, 41, 69], PATH);
+        paint(imageData, [20, 50, 79, 51], PATH);
+        // The robot icon in the middle of room 1.
+        paint(imageData, [130, 40, 137, 47], ROBOT);
+        const converter = new CoordinatesConverter(syntheticCalibrationPoints());
+        const clean = RoomColorDetector.detectFromImageData(syntheticImageData(), syntheticRooms(), converter)!;
+        const detection = RoomColorDetector.detectFromImageData(imageData, syntheticRooms(), converter)!;
+        return { clean, detection };
+    }
+
+    it("keeps each room's full outline", () => {
+        const { clean, detection } = detectWithOverlays();
+        for (const id of ["0", "1", "2"]) {
+            const before = clean.regions.find(region => region.id === id)!;
+            const after = detection.regions.find(region => region.id === id)!;
+            expect(boundsOf(after.outline)).toEqual(boundsOf(before.outline));
+            expect(after.center[0]).toBeCloseTo(before.center[0], 0);
+            expect(after.center[1]).toBeCloseTo(before.center[1], 0);
+        }
+    });
+
+    it("maps a tap on a path or the robot to the room under it", () => {
+        const { detection } = detectWithOverlays();
+        expect(RoomColorDetector.roomIdAt(detection, 40, 30)).toBe("0");
+        expect(RoomColorDetector.roomIdAt(detection, 41, 50)).toBe("0");
+        expect(RoomColorDetector.roomIdAt(detection, 133, 43)).toBe("1");
+        // Plain fill still maps to its room.
+        expect(RoomColorDetector.roomIdAt(detection, 25, 25)).toBe("0");
+        expect(RoomColorDetector.roomIdAt(detection, 50, 110)).toBe("2");
+    });
+
+    it("does not grow rooms into the space around them", () => {
+        const { detection } = detectWithOverlays();
+        // Background outside every room and the 20 px gap between rooms 0 and 1.
+        expect(RoomColorDetector.roomIdAt(detection, 10, 10)).toBeUndefined();
+        expect(RoomColorDetector.roomIdAt(detection, 85, 40)).toBeUndefined();
+        expect(RoomColorDetector.roomIdAt(detection, 18, 40)).toBeUndefined();
+        expect(RoomColorDetector.roomIdAt(detection, -1, 40)).toBeUndefined();
+    });
+});
