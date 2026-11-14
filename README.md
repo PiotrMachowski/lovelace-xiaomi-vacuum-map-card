@@ -36,8 +36,9 @@ set, this build offers:
 
 ## Install
 
-Install version 1.0.0. Home Assistant 2026.11 blocks the HACS custom integration and ships the
-built-in **Marketplace**; upgrading an existing HACS install migrates its entries and resources.
+Install the [latest release](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/releases/latest).
+Home Assistant 2026.11 blocks the HACS custom integration and ships the built-in **Marketplace**;
+upgrading an existing HACS install migrates its entries and resources.
 
 [![Open your Home Assistant instance and open this repository in the Marketplace.](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=Igloczek&repository=lovelace-better-xiaomi-vacuum-map-card&category=dashboard)
 
