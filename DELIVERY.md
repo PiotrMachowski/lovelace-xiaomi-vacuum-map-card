@@ -152,7 +152,7 @@ Every follow-up is either resolved or explicitly accepted. Nothing in this table
 
 ## Final audit evidence
 
-Checked on master at `6a32a8e` on 2026-11-14:
+Checked on master at `4a24b23` on 2026-11-14 (the audit commit; `6a32a8e` is the commit before it):
 
 - **Council verdicts.** Every batch pull request (#2, #3, #4, #5, #6, #7, #8, #9, #10, #11, #12,
   #13, #14, #15, #16) carries a comment recording `VERDICT: APPROVE` from the independent Claude
@@ -162,8 +162,10 @@ Checked on master at `6a32a8e` on 2026-11-14:
   `683c07a` P0c, `a8b3a39` B1, `c8042b9` B2, `6fe6307` B3, `f3a27f1` B5, `03a9420` B6, `5939551`
   B7, `09ebc6e` B8, `a4477c5` B9, `ceacbdd` B10, `966d348` gate fix, `6433e8c` R1, `70ebe0d` R2
   (all verified with `git merge-base --is-ancestor`).
-- **CI.** The latest master runs at `6a32a8e` are green: Build, Validate HACS, the
-  `workflow_dispatch` Visual (Playwright) run, and the master→dev automerge job.
+- **CI.** The latest master runs at `4a24b23` are green: Build, Validate HACS and the master→dev
+  automerge job. The `workflow_dispatch` Visual (Playwright) run is green at `6a32a8e`; the two
+  commits after it change only `DELIVERY.md` and `test/visual/README.md`, which the visual suite does
+  not load.
 - **Release.** `v2.5.0-igloczek.1` is published (not a draft or prerelease), targets `6196002`, and
   attaches `xiaomi-vacuum-map-card.js` (484,990 bytes, state `uploaded`); the asset download returns
   the file and the old repository URLs redirect with 301.
