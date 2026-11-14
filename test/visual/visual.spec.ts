@@ -1,6 +1,6 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
-import type { XiaomiVacuumMapCardConfig } from "../../src/types/types";
+import type { RoomConfig, XiaomiVacuumMapCardConfig } from "../../src/types/types";
 
 /**
  * Five visual scenarios for the built card plus the horizontal layout placeholder.
@@ -281,6 +281,102 @@ test("room hit-testing selects the clicked room at zoom 1", async ({ page }) => 
     expect(badgeBox.stroke).not.toBe("none");
 
     await expect(page.locator(CARD)).toHaveScreenshot("room-hit-test.png");
+});
+
+/**
+ * A configured room whose id vanished from the camera metadata after a re-map, drawn from its
+ * stored outline on top of the live room with the same geometry (the id shift B8 exists for).
+ *
+ * Room 9 is not in `camera.json`'s `rooms`, so it is stale: the card keeps its outline as a warning
+ * but must not let it become a click target. It covers room 1 completely and its configured icon
+ * sits on room 1's centre, which is exactly where the first council round found both the polygon
+ * and the icon swallowing the click.
+ */
+const STALE_ROOM_OVER_LIVE_ONE: RoomConfig = {
+    id: "9",
+    label: { text: "Old living room", x: 1350, y: 450, offset_y: 35 },
+    icon: { name: "mdi:broom", x: 1350, y: 450 },
+    outline: [
+        [1000, 200],
+        [1700, 200],
+        [1700, 700],
+        [1000, 700],
+    ],
+};
+
+function staleRoomConfig(): XiaomiVacuumMapCardConfig {
+    return cardConfig({
+        map_modes: [{ template: "vacuum_clean_segment", predefined_selections: [STALE_ROOM_OVER_LIVE_ONE] }],
+    });
+}
+
+function selectedIds(page: Page): Promise<string[]> {
+    return page.evaluate(() => (window as unknown as VisualWindow).visualHarness.selectedRoomIds());
+}
+
+async function clickRoomPoint(page: Page, roomId: string, fractionX: number, fractionY: number): Promise<void> {
+    const point = await page.evaluate(
+        input =>
+            (window as unknown as VisualWindow).visualHarness.roomPoint(input.roomId, input.fractionX, input.fractionY),
+        { roomId, fractionX, fractionY },
+    );
+    await page.mouse.click(point.x, point.y);
+}
+
+test("a stale room's icon does not block the live room it overlaps", async ({ page }) => {
+    await mount(page, staleRoomConfig());
+
+    // The stale room is drawn from its stored outline and marked; the live room underneath it is
+    // still rendered.
+    await expect(page.locator(`${CARD} .room-9-wrapper.room-stale`)).toHaveCount(1);
+    await expect(page.locator(`${CARD} .room-9-wrapper text.room-stale-marker`)).toHaveText("!");
+    await expect(page.locator(`${CARD} .room-1-wrapper`)).toHaveCount(1);
+    await expect(page.locator(`${CARD} .room-9-wrapper.selected`)).toHaveCount(0);
+
+    // The centre of the live room is where the stale room's configured icon sits. Colour detection
+    // is running in this browser, so a click here also has to reach the image-colour hit test.
+    await clickRoomPoint(page, "1", 0.5, 0.5);
+    await expect.poll(() => selectedIds(page)).toEqual(["1"]);
+    await expect(page.locator(`${CARD} .room-1-wrapper.selected`)).toHaveCount(1);
+
+    // The stale outline and the icon are pointer-transparent, and the icon is not a `.clickable`
+    // element: either one alone was enough to swallow the click in the first review round.
+    expect(
+        await page
+            .locator(`${CARD} .room-9-wrapper`)
+            .evaluate(element => getComputedStyle(element).pointerEvents),
+    ).toBe("none");
+    expect(
+        await page
+            .locator(`${CARD} .room-9-wrapper .map-icon-wrapper`)
+            .evaluate(element => getComputedStyle(element).pointerEvents),
+    ).toBe("none");
+    await expect(page.locator(`${CARD} .room-9-wrapper .clickable`)).toHaveCount(0);
+
+    await expect(page.locator(CARD)).toHaveScreenshot("stale-room-hit-test.png");
+});
+
+test("a stale room's fill does not block a live room when colour detection is unavailable", async ({ page }) => {
+    // Camera images can be unreadable (a cross-origin camera taints the canvas and `detect`
+    // returns undefined). Then the live rooms are clickable SVG polygons, and a stale outline drawn
+    // over one of them would intercept the pointer before its click handler runs.
+    await page.evaluate(() => {
+        const prototype = CanvasRenderingContext2D.prototype as unknown as {
+            getImageData: (...args: unknown[]) => unknown;
+        };
+        prototype.getImageData = () => {
+            throw new Error("colour detection disabled for this scenario");
+        };
+    });
+    await mount(page, staleRoomConfig());
+
+    await expect(page.locator(`${CARD} .room-9-wrapper.room-stale`)).toHaveCount(1);
+    await expect(page.locator(`${CARD} .room-1-wrapper .room-outline.clickable`)).toHaveCount(1);
+
+    // Off-centre, away from the label and the stale icon: the stale polygon covers this point.
+    await clickRoomPoint(page, "1", 0.25, 0.5);
+    await expect.poll(() => selectedIds(page)).toEqual(["1"]);
+    await expect(page.locator(`${CARD} .room-1-wrapper.selected`)).toHaveCount(1);
 });
 
 test("default vertical layout", async ({ page }) => {

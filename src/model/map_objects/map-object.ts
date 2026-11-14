@@ -117,6 +117,7 @@ export abstract class MapObject {
         click: () => void,
         htmlClass: string,
         content?: TemplateResult,
+        clickable = true,
     ): SVGTemplateResult {
         const mapped = config ? this.vacuumToScaledMap(config.x, config.y) : [];
         return svg`${conditional(
@@ -126,7 +127,8 @@ export abstract class MapObject {
                                style="--x-icon: ${mapped[0]}px; --y-icon: ${mapped[1]}px;"
                                x="${mapped[0]}px" y="${mapped[1]}px" width="36px" height="36px">         
                     <body xmlns="http://www.w3.org/1999/xhtml">
-                      <div class="map-icon-wrapper ${htmlClass} clickable" @click="${click}" >
+                      <div class="map-icon-wrapper ${htmlClass} ${clickable ? "clickable" : ""}"
+                           @click="${clickable ? click : undefined}">
                           ${content ?? html`<ha-icon icon="${config?.name}" style="background: transparent;"></ha-icon>`}
                       </div>
                     </body>

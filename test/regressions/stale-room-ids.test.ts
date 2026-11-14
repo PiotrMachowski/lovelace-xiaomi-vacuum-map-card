@@ -106,6 +106,19 @@ function roomConfigWarning(card: CardHandle): string | undefined {
     return card.shadowRoot.querySelector(".room-config-warning")?.textContent?.trim() || undefined;
 }
 
+/**
+ * The stale ids the warning names, parsed from its `camera map: <ids>.` sentence. A `toContain("0")`
+ * would also pass on a message naming `10` or an unrelated `0` elsewhere, so the tests assert the
+ * exact list instead.
+ */
+function warnedStaleIds(card: CardHandle): string[] | undefined {
+    const warning = roomConfigWarning(card);
+    if (warning === undefined) return undefined;
+    const match = /no longer exist on the camera map: ([^.]+)\./.exec(warning);
+    if (!match) throw new Error(`the stale-room warning does not name ids: ${warning}`);
+    return match[1].split(", ");
+}
+
 describe("stale ROOM selections (#928)", () => {
     it("marks a stale room, warns with its id and never sends it", async () => {
         // The old Kitchen id (0) no longer exists; the shifted metadata calls the same room id 3.
@@ -113,9 +126,7 @@ describe("stale ROOM selections (#928)", () => {
 
         expect(roomElement(card, "0")?.classList.contains("room-stale")).toBe(true);
         expect(roomElement(card, "0")?.querySelector(".room-stale-marker")?.textContent?.trim()).toBe("!");
-        const warning = roomConfigWarning(card);
-        expect(warning).toContain("0");
-        expect(warning).toBeTruthy();
+        expect(warnedStaleIds(card)).toEqual(["0"]);
 
         // `default_state: selected` on the stale room is ignored; the live rooms stay selectable.
         expect(card.element._getSelection(card.element._getCurrentMode()).selection).toEqual([]);
@@ -143,7 +154,17 @@ describe("stale ROOM selections (#928)", () => {
         await runSelection(card);
 
         expect(calledSegments(hass)).toEqual([3, 5]);
-        expect(roomConfigWarning(card)).toContain("0");
+        expect(warnedStaleIds(card)).toEqual(["0"]);
+    });
+
+    it("names every stale id once, in configured order", async () => {
+        const { card } = await mountAfterRemap([
+            configuredRoom("3", "Kitchen"),
+            configuredRoom("0", "Old kitchen"),
+            configuredRoom("9", "Old office"),
+        ]);
+
+        expect(warnedStaleIds(card)).toEqual(["0", "9"]);
     });
 
     it("does not warn when every configured id is still live", async () => {
@@ -204,6 +225,45 @@ describe("stale ROOM selections (#928)", () => {
         // No call at all is correct: the only selected room was stale, so the card reports "no
         // selection" instead of cleaning an id that now belongs to nothing (or another room).
         expect(vi.mocked(hassAfter.callService)).not.toHaveBeenCalled();
-        expect(roomConfigWarning(card)).toContain("0");
+        expect(warnedStaleIds(card)).toEqual(["0"]);
+    });
+
+    it("drops a room picked from the metadata when a template-only mode's ids shift", async () => {
+        useHarnessClock();
+        const hassBefore = fixtureHass(BEFORE_FIXTURE);
+        // A template-only mode has no `predefined_selections`, so the audit has no configured id to
+        // check. Room 0 was live when it was clicked, but the id shift is only visible in the live
+        // metadata: without that check the stale id survives in `selectedRooms` and is sent.
+        const card = await mountCard(
+            {
+                ...fixtureConfig(BEFORE_FIXTURE),
+                map_modes: [{ template: "vacuum_clean_segment" }],
+                tiles: [],
+                icons: [],
+                persist_map_view: false,
+            },
+            hassBefore,
+        );
+        await card.fireMapLoad();
+
+        await clickRoom(card, "0");
+        expect(card.element._getSelection(card.element._getCurrentMode()).selection).toEqual([0]);
+
+        const hassAfter = withState(hassBefore, SHIFTED_CAMERA.entity_id, {
+            attributes: SHIFTED_CAMERA.attributes,
+            last_updated: SHIFTED_CAMERA.last_updated,
+            last_changed: SHIFTED_CAMERA.last_changed,
+        }).hass;
+        await card.updateHass(hassAfter);
+
+        // The rooms were never rebuilt for this camera: without colour detection (there is no
+        // canvas in happy-dom) only `_getSelection`'s live-metadata guard can catch the shift, and
+        // the configured-id audit has no entry to compare.
+        expect(card.element._getSelection(card.element._getCurrentMode()).selection).toEqual([]);
+        await card.fireMapLoad();
+        expect(card.element._getSelection(card.element._getCurrentMode()).selection).toEqual([]);
+
+        await runSelection(card);
+        expect(vi.mocked(hassAfter.callService)).not.toHaveBeenCalled();
     });
 });

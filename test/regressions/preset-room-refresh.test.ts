@@ -1,6 +1,7 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import type { XiaomiVacuumMapCardConfig } from "../../src/types/types";
+import { RoomColorDetector, type RoomColorDetection } from "../../src/model/room-color-detector";
 import type { CardHandle } from "../harness";
 import {
     cameraEntity,
@@ -8,6 +9,7 @@ import {
     fixtureConfig,
     fixtureHass,
     loadSyntheticFixture,
+    loadSyntheticShiftedRoomIdsCamera,
     mountCard,
     selectPreset,
     syntheticCalibrationPoints,
@@ -23,14 +25,16 @@ import {
  * `entity_picture`) and rebuilds the selectable rooms when that identity changes, so switching the
  * preset must show the new map's rooms without toggling map modes as the old workaround required.
  *
- * The second preset here uses its own camera entity, which is the strongest form of the same bug:
- * every room id and label differs, so a stale selection cannot accidentally look correct.
+ * Two tests cover the two shapes of the bug: a second preset with its own camera entity (every id
+ * and label differs, so a stale selection cannot accidentally look correct), and the same camera
+ * entity reporting a new map (`load_multi_map`), which only the camera-identity refresh can catch.
  */
 
 const SECOND_CAMERA = "camera.vacuum_upstairs";
 
 const FIRST_ROOM_IDS = ["0", "1", "2"];
 const SECOND_ROOM_IDS = ["7", "8", "9"];
+const SHIFTED_ROOM_IDS = ["3", "4", "5"];
 
 function upstairsRooms(): Record<string, ReturnType<typeof extractorRoom>> {
     return {
@@ -71,6 +75,42 @@ function roomIds(card: CardHandle): string[] {
         .filter((id): id is string => id !== undefined);
 }
 
+/** The same config with a second preset that keeps the first preset's camera entity. */
+function sameCameraConfig(): XiaomiVacuumMapCardConfig {
+    const fixture = loadSyntheticFixture();
+    const base = fixtureConfig(fixture);
+    return {
+        ...base,
+        preset_name: "Downstairs",
+        map_modes: [{ template: "vacuum_clean_segment" }],
+        tiles: [],
+        icons: [],
+        persist_map_view: false,
+        additional_presets: [
+            {
+                ...base,
+                preset_name: "Upstairs",
+                map_modes: [{ template: "vacuum_clean_segment" }],
+                tiles: [],
+                icons: [],
+            },
+        ],
+    };
+}
+
+/**
+ * A detection the card can hold without a canvas. happy-dom returns no 2D context, so
+ * `RoomColorDetector.detect` yields nothing there and the refresh below it never runs; the test
+ * stubs exactly that pixel step and leaves the camera-identity decision around it real.
+ */
+function stubDetection(): RoomColorDetection {
+    return {
+        imageData: { width: 0, height: 0, data: new Uint8ClampedArray(0) },
+        regions: [],
+        roomIdByColor: new Map(),
+    };
+}
+
 function roomLabel(card: CardHandle, id: string): string | undefined {
     return card.shadowRoot.querySelector(`.room-${id}-wrapper .room-label`)?.textContent?.trim() || undefined;
 }
@@ -103,6 +143,49 @@ describe("room refresh on preset switch (#385)", () => {
         expect(roomLabel(card, "7")).toBe("Office");
         expect(roomLabel(card, "8")).toBe("Loft");
         // No room from the preset that was left behind survives on the map.
+        for (const id of FIRST_ROOM_IDS) expect(roomLabel(card, id)).toBeUndefined();
+    });
+
+    it("refreshes the rooms when the same camera reports a new map", async () => {
+        useHarnessClock();
+        const fixture = loadSyntheticFixture();
+        const detect = vi.spyOn(RoomColorDetector, "detect").mockReturnValue(stubDetection());
+        const card = await mountCard(sameCameraConfig(), fixtureHass(fixture));
+        await card.fireMapLoad();
+
+        expect(roomIds(card)).toEqual(FIRST_ROOM_IDS);
+        expect(detect).toHaveBeenCalledTimes(1);
+
+        // Both presets point at the same camera entity, so the preset switch rebuilds the rooms
+        // from unchanged metadata. Anything that changes after this point came from the camera
+        // identity refresh, not from `_setPresetIndex`.
+        await selectPreset(card, 1);
+        await card.fireMapLoad();
+        expect(card.element._getCurrentPreset().map_source.camera).toBe(fixture.camera.entity_id);
+        expect(roomIds(card)).toEqual(FIRST_ROOM_IDS);
+
+        // The camera keeps its entity id but reports a new map: new rooms, new `last_updated` and a
+        // new `entity_picture`, which is what `load_multi_map` does on a multi-map vacuum.
+        const shifted = loadSyntheticShiftedRoomIdsCamera();
+        const shiftedAttributes = {
+            ...shifted.attributes,
+            entity_picture: `${String(shifted.attributes.entity_picture)}&map=second`,
+        };
+        const next = withState(card.hass, fixture.camera.entity_id, {
+            attributes: shiftedAttributes,
+            last_updated: shifted.last_updated,
+            last_changed: shifted.last_changed,
+        }).hass;
+        await card.updateHass(next);
+        // The new map's URL only loads in a browser; dispatching the load is what runs the
+        // detection that decides whether the rooms need rebuilding.
+        await card.fireMapLoad();
+
+        expect(detect).toHaveBeenCalledTimes(2);
+        expect(Object.keys(detect.mock.calls[1][1] as Record<string, unknown>)).toEqual(SHIFTED_ROOM_IDS);
+        expect(roomIds(card)).toEqual(SHIFTED_ROOM_IDS);
+        expect(roomLabel(card, "3")).toBe("Kitchen");
+        expect(roomLabel(card, "4")).toBe("Living room");
         for (const id of FIRST_ROOM_IDS) expect(roomLabel(card, id)).toBeUndefined();
     });
 });

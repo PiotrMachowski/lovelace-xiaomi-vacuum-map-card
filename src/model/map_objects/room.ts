@@ -61,7 +61,7 @@ export class Room extends PredefinedMapObject {
                              ? undefined
                              : async (): Promise<void> => this.click()}">
                 </polygon>
-                ${this.renderIcon(this._config.icon, () => this.click(), "room-icon-wrapper", iconContent)}
+                ${this.renderIcon(this._config.icon, () => this.click(), "room-icon-wrapper", iconContent, !this._stale)}
                 ${this.renderOrderBadge(order)}
                 ${this.renderStaleMarker()}
                 ${this.renderLabel(this._config.label, "room-label", this._config.icon)}
@@ -221,6 +221,16 @@ export class Room extends PredefinedMapObject {
             .room-wrapper.room-stale > .room-outline {
                 stroke: var(--map-card-internal-room-outline-line-color-stale, var(--error-color, #db4437));
                 fill: var(--map-card-internal-room-outline-fill-color-stale, rgba(219, 68, 55, 0.12));
+            }
+
+            /* A stale room is a warning, not a hit target. After an id shift its stored outline can
+               cover a live room with the same geometry, and its fill would swallow the click meant
+               for the room underneath. The pointer-events property inherits, so the outline, label and
+               marker are all transparent; the icon's own pointer-events: auto rule in .map-icon-wrapper
+               needs the more specific rule below to be covered too. */
+            .room-wrapper.room-stale,
+            .room-wrapper.room-stale .map-icon-wrapper {
+                pointer-events: none;
             }
 
             .room-wrapper.room-stale > .room-label {
