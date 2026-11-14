@@ -1,10 +1,12 @@
 # Changelog
 
-## 2.6.0
+## 1.0.0
 
-The fork's first release under its own version number and the "Better Xiaomi Vacuum Map Card"
-name; earlier fork tags used a local `-igloczek.N` suffix for the same code, so treat the items below
-as the state of 2.6.0 rather than as changes since `v2.5.0-igloczek.1`. The
+The first release of this project under its own name and version line. The fork starts at 1.0.0
+rather than continuing the upstream 2.x numbers, because it is now a separately named product; it is
+based on upstream `v2.4.2`. The older `v2.5.0-igloczek.1` tag is a pre-versioning snapshot of the
+same code, apart from the editor switch-label fix listed below, so the items here describe the state
+of 1.0.0 rather than a diff from that tag. The
 custom element (`custom:xiaomi-vacuum-map-card`), the release asset (`xiaomi-vacuum-map-card.js`) and
 every existing configuration are unchanged.
 

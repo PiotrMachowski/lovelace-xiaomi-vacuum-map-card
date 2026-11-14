@@ -55,8 +55,9 @@ hardware or a fixture. Evidence links to the fork's record in [FORK.md](FORK.md)
 
 ## Install
 
-Install `v2.6.0` or newer. It is the first release with the fork's own version number; earlier fork
-tags used a local `-igloczek.N` suffix, and `v2.5.0-igloczek.1` differs from 2.6.0 only by the editor
+Install `v1.0.0` or newer. It is the fork's first release under its own version number: the fork
+starts its own line at 1.0.0 instead of continuing upstream's 2.x numbers. The earlier
+`v2.5.0-igloczek.1` tag was a pre-versioning snapshot and differs from 1.0.0 only by the editor
 switch-label fix.
 
 Home Assistant 2026.11 blocks the HACS custom integration and ships the built-in **Marketplace**
