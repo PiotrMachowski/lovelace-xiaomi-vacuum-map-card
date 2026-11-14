@@ -1,8 +1,8 @@
 # Configuration
 
 The configuration format is unchanged from the upstream card: no key was renamed and no option
-was removed, so existing YAML keeps working. This fork adds [`layout`](#layout) and
-[`map_view`](#map-view-options).
+was removed, so existing YAML keeps working. This fork adds a few options on top, including
+[`layout`](#layout), [`map_view`](#map-view-options) and `transparent_background`.
 
 The card has a visual editor for the basic options; everything else is YAML-only. The
 [demo config](demo_config.yaml) is a complete example.
