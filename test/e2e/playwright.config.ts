@@ -24,5 +24,11 @@ export default defineConfig({
         ...devices["Desktop Chrome"],
         viewport: { width: 1280, height: 900 },
     },
-    projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+    projects: [
+        {
+            name: "chromium",
+            // Keep the viewport from `use`; re-spreading the device here would reset it to 1280x720.
+            use: { browserName: "chromium" },
+        },
+    ],
 });

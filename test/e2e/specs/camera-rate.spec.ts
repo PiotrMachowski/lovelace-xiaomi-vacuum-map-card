@@ -25,14 +25,20 @@ test("camera requests follow the refresh policy on a real instance", async ({ lo
         await serviceCall("vacuum", index % 2 === 0 ? "start" : "stop", { entity_id: "vacuum.demo_vacuum_0_ground_floor" });
         await page.waitForTimeout(200);
     }
+    // The policy reloads on a camera change or once per 5 s window, so a burst of ordinary entity
+    // updates must not request anything inside the window. Allow the one interval refresh that may
+    // land if the window happened to turn over during the burst.
     await page.waitForTimeout(1200);
-    const duringUpdates = await cameraRequests(page);
-    expect(duringUpdates.total ?? 0).toBeLessThanOrEqual(1);
+    const duringUpdates = (await cameraRequests(page)).total ?? 0;
+    expect(duringUpdates).toBeLessThanOrEqual(1);
 
-    // A camera state change is a real new map: exactly one new request.
-    const beforeBump = (await cameraRequests(page)).total ?? 0;
+    // A camera state change is a real new map: exactly one new request, measured from a fresh count.
+    await resetCameraRequests(page);
     await bumpCamera(page);
-    await expect.poll(async () => ((await cameraRequests(page)).total ?? 0) - beforeBump, { timeout: 10_000 }).toBe(1);
+    await expect.poll(async () => (await cameraRequests(page)).total ?? 0, { timeout: 10_000 }).toBe(1);
+    const beforeInterval = (await cameraRequests(page)).total ?? 0;
+    await page.waitForTimeout(6000);
+    expect((await cameraRequests(page)).total ?? 0).toBeLessThanOrEqual(beforeInterval + 1);
 
     // A hidden tab must not request snapshots, even when the camera changes.
     await page.evaluate(() => {

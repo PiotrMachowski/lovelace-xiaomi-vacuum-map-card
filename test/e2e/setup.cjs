@@ -49,8 +49,8 @@ async function waitForOnboarding() {
 }
 
 async function onboard() {
-    // A saved token is the normal case on a persistent instance; validate it before anything else,
-    // because Home Assistant 404s the onboarding API once the instance is set up.
+    // 1. A saved token is the normal case on a persistent instance. Validate it first: Home Assistant
+    //    answers 404 to the onboarding API once the instance is set up.
     if (fs.existsSync(TOKEN_FILE)) {
         const saved = JSON.parse(fs.readFileSync(TOKEN_FILE, "utf8")).access_token;
         const check = await api("/api/", { headers: { authorization: `Bearer ${saved}` } }).catch(() => ({ status: 0 }));
@@ -60,39 +60,25 @@ async function onboard() {
         }
         fs.rmSync(TOKEN_FILE, { force: true });
     }
-    const steps = await waitForOnboarding();
-    const userStep = steps.find(step => step.step === "user");
-    if (userStep && userStep.done) {
-        if (fs.existsSync(TOKEN_FILE)) {
-            console.log("onboarding already completed, reusing the saved token");
-            return JSON.parse(fs.readFileSync(TOKEN_FILE, "utf8")).access_token;
-        }
-        // The instance survives restarts and its token file may be gone; log in with the same
-        // credentials through the normal login flow instead of re-onboarding.
-        console.log("instance already onboarded, logging in with the e2e credentials");
-        const flow = await api("/auth/login_flow", {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({ client_id: CLIENT_ID, handler: ["homeassistant", "credentials"], redirect_uri: `${BASE}/?auth_callback=1` }),
-        });
-        if (flow.status !== 200) throw new Error(`login_flow failed: ${flow.status} ${JSON.stringify(flow.body)}`);
-        const step = await api(`/auth/login_flow/${flow.body.flow_id}`, {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({ client_id: CLIENT_ID, username: USERNAME, password: PASSWORD }),
-        });
-        if (step.status !== 200 || !step.body.result) throw new Error(`login failed: ${step.status} ${JSON.stringify(step.body)}`);
-        const tokenResponse = await api("/auth/token", {
-            method: "POST",
-            headers: { "content-type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({ grant_type: "authorization_code", code: step.body.result, client_id: CLIENT_ID }).toString(),
-        });
-        if (tokenResponse.status !== 200) throw new Error(`auth/token failed: ${tokenResponse.status}`);
-        fs.mkdirSync(AUTH_DIR, { recursive: true });
-        fs.writeFileSync(TOKEN_FILE, JSON.stringify({ access_token: tokenResponse.body.access_token, refresh_token: tokenResponse.body.refresh_token }, null, 2));
-        return tokenResponse.body.access_token;
+
+    // 2. A fresh instance: create the owner through the onboarding API.
+    let steps;
+    try {
+        steps = await api("/api/onboarding");
+    } catch {
+        steps = { status: 0 };
+    }
+    const userStep = steps.status === 200 && Array.isArray(steps.body) ? steps.body.find(step => step.step === "user") : undefined;
+    if (userStep && !userStep.done) {
+        return await createOwner();
     }
 
+    // 3. An instance that is already set up but whose token file was lost: log in with the known
+    //    credentials, which yields a fresh authorization code.
+    return await loginWithCredentials();
+}
+
+async function createOwner() {
     const created = await api("/api/onboarding/users", {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -100,20 +86,14 @@ async function onboard() {
     });
     if (created.status !== 200) throw new Error(`onboarding/users failed: ${created.status} ${JSON.stringify(created.body)}`);
 
-    const form = new URLSearchParams({
-        grant_type: "authorization_code",
-        code: created.body.auth_code,
-        client_id: CLIENT_ID,
-    });
     const token = await api("/auth/token", {
         method: "POST",
         headers: { "content-type": "application/x-www-form-urlencoded" },
-        body: form.toString(),
+        body: new URLSearchParams({ grant_type: "authorization_code", code: created.body.auth_code, client_id: CLIENT_ID }).toString(),
     });
     if (token.status !== 200) throw new Error(`auth/token failed: ${token.status} ${JSON.stringify(token.body)}`);
-    const accessToken = token.body.access_token;
 
-    const auth = { headers: { authorization: `Bearer ${accessToken}`, "content-type": "application/json" } };
+    const auth = { headers: { authorization: `Bearer ${token.body.access_token}`, "content-type": "application/json" } };
     await api("/api/onboarding/core_config", { method: "POST", ...auth, body: "{}" });
     await api("/api/onboarding/analytics", { method: "POST", ...auth, body: "{}" });
     await api("/api/onboarding/integration", {
@@ -121,11 +101,38 @@ async function onboard() {
         ...auth,
         body: JSON.stringify({ client_id: CLIENT_ID, redirect_uri: `${BASE}/?auth_callback=1` }),
     });
-
-    fs.mkdirSync(AUTH_DIR, { recursive: true });
-    fs.writeFileSync(TOKEN_FILE, JSON.stringify({ access_token: accessToken, refresh_token: token.body.refresh_token }, null, 2));
+    saveToken(token.body);
     console.log("onboarding complete");
-    return accessToken;
+    return token.body.access_token;
+}
+
+async function loginWithCredentials() {
+    const flow = await api("/auth/login_flow", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ client_id: CLIENT_ID, handler: ["homeassistant", null], redirect_uri: `${BASE}/?auth_callback=1` }),
+    });
+    if (flow.status !== 200) throw new Error(`login_flow failed: ${flow.status} ${JSON.stringify(flow.body)}`);
+    const step = await api(`/auth/login_flow/${flow.body.flow_id}`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ client_id: CLIENT_ID, username: USERNAME, password: PASSWORD }),
+    });
+    if (step.status !== 200 || !step.body.result) throw new Error(`login failed: ${step.status} ${JSON.stringify(step.body)}`);
+    const token = await api("/auth/token", {
+        method: "POST",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({ grant_type: "authorization_code", code: step.body.result, client_id: CLIENT_ID }).toString(),
+    });
+    if (token.status !== 200) throw new Error(`auth/token failed: ${token.status}`);
+    saveToken(token.body);
+    console.log("logged in with the e2e credentials");
+    return token.body.access_token;
+}
+
+function saveToken(body) {
+    fs.mkdirSync(AUTH_DIR, { recursive: true });
+    fs.writeFileSync(TOKEN_FILE, JSON.stringify({ access_token: body.access_token, refresh_token: body.refresh_token }, null, 2));
 }
 
 function connectWebSocket(token) {
@@ -218,6 +225,38 @@ async function main() {
                         title: "Map",
                         path: "map",
                         cards: [card({ map_view: { scale: 2, x: 0, y: 0, rotation: 0 } })],
+                    },
+                ],
+            },
+        },
+        {
+            url_path: "e2e-editor",
+            title: "E2E editor",
+            config: {
+                title: "E2E editor",
+                views: [
+                    {
+                        title: "Editor",
+                        path: "editor",
+                        cards: [
+                            card({
+                                map_modes: [
+                                    {
+                                        // A ROOM mode with no rooms yet: the editor's "Generate rooms
+                                        // config" is the only thing that can fill it, so the test can
+                                        // prove the button did the work.
+                                        name: "Rooms",
+                                        icon: "mdi:floor-plan",
+                                        selection_type: "ROOM",
+                                        service_call_schema: {
+                                            service: "vacuum.send_command",
+                                            service_data: { command: "app_segment_clean", params: "[[selection]]" },
+                                        },
+                                        predefined_selections: [],
+                                    },
+                                ],
+                            }),
+                        ],
                     },
                 ],
             },

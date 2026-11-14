@@ -2,43 +2,55 @@
 
 These tests drive a real Home Assistant instance in Docker, install the card the way a user does,
 and exercise the behaviours the mock harness cannot prove. The delivery owns this verification: a
-failure here blocks a release, and the screenshots under `artifacts/` are the evidence.
+release is only published after this suite passes against the release candidate, and the screenshots
+under `docs/evidence/e2e/` are the evidence.
 
 ## What it covers
 
 | Spec | What it proves |
 |---|---|
 | `render.spec.ts` | The card renders from the installed Lovelace resource against a real camera entity. |
-| `editor.spec.ts` | The visual editor opens in edit mode, the Title field is the element the frontend provides, typing it reaches the config, and **Generate rooms config** produces rooms from the camera metadata without a page error. |
-| `map-view.spec.ts` | `map_view` opens at the configured view, a gesture changes it, the reset control returns to it, and the view persists across reloads. |
-| `layout.spec.ts` | `layout: horizontal` places the map beside the controls in a real **sections** view, a long mode name ellipsizes inside the column, and changing the card's grid options (what the resize handle does) resizes the card. The vertical layout stays stacked. |
-| `zoom-rotation.spec.ts` | At zoom 2.5 and rotation 90, clicking each room outline selects that room, which only works when the overlay sits on the image. |
-| `camera-rate.spec.ts` | With a camera fixture that counts requests: vacuum state updates cause no new snapshot, a camera change causes exactly one, a hidden tab causes none, and becoming visible again causes one. |
-| `yaml-y-key.spec.ts` | A YAML dashboard with an unquoted `y:` key is applied, not parsed as a boolean (upstream #952). |
+| `editor.spec.ts` | The visual editor opens in edit mode on a card whose ROOM mode starts empty; the Title field is the element the frontend provides and real keyboard typing reaches Home Assistant's edit-dialog config; **Generate rooms config** is the only way the room ids appear, and it does. The four switch labels are visible even though this frontend no longer defines `ha-formfield`. |
+| `map-view.spec.ts` | `map_view` opens at the configured view, a real wheel gesture changes scale and offsets, the reset control returns to the default, and the view persists across reloads. |
+| `layout.spec.ts` | `layout: horizontal` places the map beside the controls in a real **sections** view, a long mode name ellipsizes inside the column, and changing the card's grid options (what the resize handle causes) resizes the card. The vertical layout stays stacked. |
+| `zoom-rotation.spec.ts` | At zoom 2.5 and rotation 90, screenshot pixels inside each room outline are that room's colour and pixels just beyond it are not, so a shifted overlay fails. Clicking each outline then selects that room. |
+| `camera-rate.spec.ts` | Vacuum state changes cause no snapshot request inside the refresh window (at most the one interval refresh); a camera change causes exactly one; a hidden tab causes none; becoming visible again causes one. |
+| `yaml-y-key.spec.ts` | A YAML dashboard with an unquoted `y:` key applies the offset, so Home Assistant 2026.11 does not reproduce the boolean-key bug (upstream #952). |
 
-`marketplace-install.cjs` installs the card from the repository URL through Home Assistant's own
-installer and asserts the asset and the Lovelace resource.
+## What it does not cover
 
-## Install path note
+- HACS itself: Home Assistant 2026.11 blocks the HACS custom integration and ships the Marketplace.
+  The card's `hacs.json` metadata is unchanged and the HACS action in CI still validates it, but the
+  HACS UI install can only be exercised on an older Home Assistant release.
+- Hardware-specific behaviour: the Roborock status/battery templates (B4) need the integration's
+  runtime registry, and vendor service semantics need the device. Those stay postponed.
+- Real phone scrolling and a real drag-resize: the resize uses the grid options the handle writes,
+  and the hidden-tab check overrides `document.hidden` rather than moving the page to a background
+  window. Both are documented limitations of a headless run.
 
-Home Assistant 2026.11 ships the core **marketplace** integration and removes a HACS config entry as
-a duplicate (`Removing duplicate configuration entry … is kept` in the log), so HACS cannot run on
-this version. The suite therefore installs through the Marketplace, which is the current equivalent;
-the card's HACS metadata (`hacs.json`, `filename`) is unchanged and still validated by the HACS
-action in CI for releases that use HACS.
+## Install path
+
+Home Assistant 2026.11 ships the core **marketplace** integration and blocks the `hacs` custom
+integration (`loader.py`: built into Home Assistant as the Marketplace); upgrading migrates an
+existing HACS install. `marketplace-install.cjs` therefore installs from the repository URL through
+Marketplace, and `install-local-build.cjs` then overlays the branch build so the behaviour specs test
+the pull request rather than the last release (it also removes the installer's stale `.gz`/`.br`
+siblings, which Home Assistant would otherwise serve instead).
 
 ## Running it
 
 ```sh
-npm run build                                   # the installer downloads releases, so build before a manual copy
-docker compose -f test/e2e/compose.yaml up -d   # Home Assistant 2026.11.0 on :8123
-node test/e2e/setup.cjs                         # onboarding + storage dashboards
-node test/e2e/marketplace-install.cjs           # install the card from the repository URL
-npx playwright test -c test/e2e/playwright.config.ts
+npm run build
+docker compose -f test/e2e/compose.yaml up -d      # Home Assistant 2026.11.0 on :8123
+node test/e2e/setup.cjs                            # onboarding + storage dashboards
+node test/e2e/connect-github.cjs --restart         # Marketplace GitHub token (GITHUB_TOKEN or gh auth)
+node test/e2e/marketplace-install.cjs              # install from the repository URL (proves the path)
+node test/e2e/install-local-build.cjs              # put this checkout's build in front of the specs
+npm run test:e2e
 ```
 
-Screenshots are written to `test/e2e/artifacts/`. They are gitignored; attach the relevant ones to
-the release notes or the pull request when a behaviour changes.
+Screenshots are written to `test/e2e/artifacts/` (gitignored); copy the relevant ones to
+`docs/evidence/e2e/` when a behaviour changes.
 
 ## Fixture camera
 
@@ -47,6 +59,6 @@ committed synthetic map through `/api/map_fixture/image`, counts every request, 
 metadata the card reads, and offers `map_fixture.bump` (a new map, like an integration would push)
 and `map_fixture.set_image`. It is never part of the released card.
 
-The first run needs a GitHub token for the installer, injected into the Home Assistant config entry
-by the bootstrap step described in the release evidence; the token is never committed (`.auth/` and
-`ha/config/.storage/` are gitignored).
+`connect-github.cjs` writes the token into the ignored Home Assistant state file
+(`test/e2e/ha/config/.storage`), because the Marketplace device flow cannot run headless. Nothing
+under `.storage`, `.auth` or `artifacts` is committed.

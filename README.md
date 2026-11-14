@@ -55,19 +55,21 @@ hardware or a fixture. Evidence links to the fork's record in [FORK.md](FORK.md)
 
 ## Install
 
-Install `v2.6.0` or newer; earlier fork releases predate the work above (`v2.4.2-igloczek.6`, for
-example, has neither `map_view` nor `layout`).
+Install `v2.6.0` or newer. It is the first release with the fork's own version number; earlier fork
+tags used a local `-igloczek.N` suffix for the same code.
 
-Home Assistant 2026.11 replaced HACS with the built-in **Marketplace**, which installs dashboard
-resources from GitHub and removes a HACS entry as a duplicate when both are present. Use Marketplace
-on 2026.11 or newer, HACS on older releases, or install the release asset by hand.
+Home Assistant 2026.11 blocks the HACS custom integration and ships the built-in **Marketplace**
+instead; upgrading an existing HACS install migrates its entries and resources to the Marketplace.
+Use Marketplace on 2026.11 or newer, HACS on older releases, or install the release asset by hand.
 
 ### Marketplace (Home Assistant 2026.11+)
 
 1. Open **Settings → Marketplace** and accept the first-run warning if it appears.
-2. Add the custom repository `https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card` as a
+2. **Connect GitHub** when prompted; without an account the Marketplace cannot add a custom
+   repository.
+3. Add the custom repository `https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card` as a
    **Dashboard resource** and install it.
-3. Marketplace registers the Lovelace resource itself; reload the browser.
+4. Marketplace registers the Lovelace resource itself; reload the browser.
 
 ### HACS (older Home Assistant)
 
@@ -177,9 +179,12 @@ Every change goes through the same gates:
 - The Playwright visual suite runs in its own job for map-rendering pull requests and checks overlay
   alignment at zoom and rotation, room hit-testing and the vertical/horizontal layout at three
   widths ([visual suite](test/visual/README.md)).
-- A real Home Assistant, Marketplace/HACS and Playwright end-to-end suite (`test/e2e`) proves the
-  editor, map view, layouts, zoom/rotation, camera request rate and YAML parsing; the delivery owns
-  that verification and publishes the screenshots as evidence.
+- A real Home Assistant, Marketplace-installed and Playwright end-to-end suite (`test/e2e`) proves
+  the editor, map view, layouts, zoom/rotation, camera request rate and YAML parsing before a
+  release; the delivery owns that verification and publishes the screenshots as evidence. The suite
+  is not part of the pull-request CI job (it needs Docker and a Home Assistant container), so a
+  release is only published after it passes. The HACS metadata is still validated by the HACS action
+  in CI for releases that use HACS.
 - A delivery review and a Claude Opus 5.5 council review must both approve before merge. The
   council audits the diff against the issue and the tests, not just the style.
 

@@ -209,41 +209,19 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
                     ></ha-select>
                 </div>
                 <div class="values">
-                    <ha-formfield class="switch-wrapper" .label="${this._localize("editor.label.map_locked")}">
-                        <ha-switch
-                            .checked="${this._map_locked}"
-                            .configValue="${"map_locked"}"
-                            @change="${this._valueChanged}"></ha-switch>
-                    </ha-formfield>
+                    ${this._renderSwitch(this._localize("editor.label.map_locked"), this._map_locked, "map_locked")}
                 </div>
                 <div class="values">
-                    <ha-formfield class="switch-wrapper" .label="${this._localize("editor.label.two_finger_pan")}">
-                        <ha-switch
-                            .checked="${this._two_finger_pan}"
-                            .configValue="${"two_finger_pan"}"
-                            @change="${this._valueChanged}"></ha-switch>
-                    </ha-formfield>
+                    ${this._renderSwitch(this._localize("editor.label.two_finger_pan"), this._two_finger_pan, "two_finger_pan")}
                 </div>
                 <div class="values">
-                    <ha-formfield class="switch-wrapper" .label="${this._localize("editor.label.persist_map_view")}">
-                        <ha-switch
-                            .checked="${this._persist_map_view}"
-                            .configValue="${"persist_map_view"}"
-                            @change="${this._valueChanged}"></ha-switch>
-                    </ha-formfield>
+                    ${this._renderSwitch(this._localize("editor.label.persist_map_view"), this._persist_map_view, "persist_map_view")}
                 </div>
                 ${conditional(
                     this._persist_map_view,
                     () => html`
                         <div class="values">
-                            <ha-formfield
-                                class="switch-wrapper"
-                                .label="${this._localize("editor.label.persist_map_lock")}">
-                                <ha-switch
-                                    .checked="${this._persist_map_lock}"
-                                    .configValue="${"persist_map_lock"}"
-                                    @change="${this._valueChanged}"></ha-switch>
-                            </ha-formfield>
+                            ${this._renderSwitch(this._localize("editor.label.persist_map_lock"), this._persist_map_lock, "persist_map_lock")}
                         </div>
                         <div class="values">
                             ${this._renderTextInput(
@@ -286,6 +264,26 @@ export class XiaomiVacuumMapCardEditor extends LitElement implements Omit<Lovela
                 ${ToastRenderer.render("editor")}
             </div>
         `;
+    }
+
+    /**
+     * A labelled switch, using `ha-formfield` when the frontend still provides it.
+     *
+     * Home Assistant 2026.11 no longer defines `ha-formfield`, so a template that assumes it renders
+     * an unknown element and the label silently disappears. This renders a plain labelled row in that
+     * case, which keeps every switch readable on current frontends while leaving older ones on the
+     * upstream element.
+     */
+    private _renderSwitch(label: string, checked: boolean, configValue: string): TemplateResult {
+        const element = html`<ha-switch
+            .checked="${checked}"
+            .configValue="${configValue}"
+            @change="${this._valueChanged}"></ha-switch>`;
+        return customElements.get("ha-formfield")
+            ? html`<ha-formfield class="switch-wrapper" .label="${label}">${element}</ha-formfield>`
+            : html`<label class="switch-wrapper switch-fallback"
+                  ><span class="switch-fallback-label">${label}</span>${element}</label
+              >`;
     }
 
     private _renderTextInput(

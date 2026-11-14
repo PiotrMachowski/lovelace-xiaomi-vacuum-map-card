@@ -224,8 +224,10 @@ these values per card.
 
 <sup>1</sup> Exactly one of `camera` or `image` must be provided
 
-A static image works as a floorplan background: point `image` at any picture and add
-`transparent_background: true` to blend near-white areas into the card. Drawing a live robot path on
+A static image works as a floorplan background: point `image` at a same-origin picture such as
+`/local/floorplan.png` and add `transparent_background: true` to blend near-white areas into the
+card. Transparency reads the image's pixels, so an image from another origin needs CORS headers or
+the browser blocks the read and the option silently does nothing. Drawing a live robot path on
 top of a static image is not supported (upstream #503 / #922 overlap here); the camera source is the
 supported way to get a live map with paths.
 
