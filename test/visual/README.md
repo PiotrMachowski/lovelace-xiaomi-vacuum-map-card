@@ -17,6 +17,9 @@ is involved: `index.html` plus `harness.js` mount the card element with a mock `
 | `overlay alignment at zoom 1 and rotation 90` | rotation is applied once, to image and overlay together |
 | `overlay alignment at zoom 2.5 and rotation 0` | `realScale` stays in untransformed layout pixels when zoomed |
 | `overlay alignment at zoom 2.5 and rotation 90` | both at once, the case that historically drifted |
+| `a configured map_view is the rendered starting view` | a configured default opens the card at its centred scale and offset, and a later user zoom still wins |
+| `a configured map_view is centred at rotation 90` | rotation pivots on the content centre, so a scale-only default keeps the map centred and overlays aligned |
+| `a stored view beats the configured default after a remount` | a real browser pan/zoom is written to the store and read back over `map_view` |
 | `room hit-testing selects the clicked room at zoom 1` | clicking a room's colour selects that room, and the selected room's cleaning-order badge is centred above its label |
 | `default vertical layout` | header, preset selector, map and controls stack vertically |
 | `horizontal layout once B10 exists` | **skipped**: the horizontal layout is batch B10 and does not exist yet |

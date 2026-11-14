@@ -3,7 +3,7 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
 import type { RoomConfig, XiaomiVacuumMapCardConfig } from "../../src/types/types";
 
 /**
- * Five visual scenarios for the built card plus the horizontal layout placeholder.
+ * The visual scenarios for the built card plus the horizontal layout placeholder.
  *
  * The page (`index.html` + `harness.js`) mounts the card element directly against the committed
  * synthetic fixture; there is no Home Assistant frontend on the page. Baselines live in
@@ -20,10 +20,16 @@ interface RoomDescription {
 
 interface VisualDescription {
     mapScale: number;
+    mapX: number;
+    mapY: number;
     realScale: number;
     mapRotation: number;
+    transform: string;
     rooms: RoomDescription[];
     imageRect: { x: number; y: number; width: number; height: number };
+    contentRect: { x: number; y: number; width: number; height: number };
+    viewport: { x: number; y: number; width: number; height: number };
+    content: { width: number; height: number };
     selectedRooms: string[];
 }
 
@@ -218,6 +224,136 @@ for (const zoom of [1, 2.5] as const) {
         });
     }
 }
+
+/**
+ * Splits a computed 2D transform matrix into the values a configured `map_view` states.
+ *
+ * A configured `x`/`y` is an offset from the centred view, while the computed matrix carries the
+ * pinch-zoom offset of the content's top-left corner. At rotation 0 the card's transform is
+ * `translate(x, y) scale(s)` with the two 50 % translates cancelling, so `a` is the scale and
+ * `e`/`f` are the converted offsets. That makes the assertion independent of how the card stores
+ * the view: a value that never reached the CSS custom properties reads as `none` or the wrong
+ * matrix here.
+ */
+function computedTransform(transform: string): { a: number; b: number; scale: number; x: number; y: number } {
+    const match = /^matrix\(([^)]+)\)$/.exec(transform);
+    if (!match) throw new Error(`expected a computed matrix(), got "${transform}"`);
+    const [a, b, , , e, f] = match[1].split(",").map(value => Number(value.trim()));
+    return { a, b, scale: a, x: e, y: f };
+}
+
+/**
+ * The transform offset a configured view with `x`/`y` from the centred view produces at rotation 0.
+ *
+ * Mirrors the card's conversion: put the content centre in the viewport centre, then add the
+ * configured offset. It is written with the measured layout boxes, so it shows that the configured
+ * view is centred at this card's width instead of anchored to the top-left corner.
+ */
+function centredOffset(description: VisualDescription, scale: number, x: number, y: number): { x: number; y: number } {
+    return {
+        x: description.viewport.width / 2 - (scale * description.content.width) / 2 + x,
+        y: description.viewport.height / 2 - (scale * description.content.height) / 2 + y,
+    };
+}
+
+// The configured default view (batch B9, issue #873). A stored view still wins, but this scenario
+// has a fresh browser context and no stored view, so the card must open at `map_view`. Persistence
+// is disabled on purpose: `map_view` describes where the card starts, which is independent of
+// whether the user's later pan is remembered.
+test("a configured map_view is the rendered starting view", async ({ page }) => {
+    await mount(page, cardConfig({ map_view: { scale: 2.5, x: -60, y: -40, rotation: 0 } }));
+
+    const description = await harness(page);
+    const matrix = computedTransform(description.transform);
+    const expected = centredOffset(description, 2.5, -60, -40);
+    expect(matrix.scale).toBeCloseTo(2.5, 2);
+    expect(matrix.x).toBeCloseTo(expected.x, 1);
+    expect(matrix.y).toBeCloseTo(expected.y, 1);
+    // The offsets describe a view around the map's centre, not a crop from its top-left corner:
+    // the content centre is where the card's own zoom control would leave it, plus the configured
+    // offset. A top-left anchored scale would fail both of these.
+    expect(description.mapX).toBeCloseTo(expected.x, 5);
+    expect(description.mapY).toBeCloseTo(expected.y, 5);
+    // The map view state the card renders from agrees with the transform it produced.
+    expect(description.mapScale).toBeCloseTo(2.5, 5);
+    expect(description.mapRotation).toBe(0);
+
+    // A visible baseline of the configured view: zoomed and offset from the neutral map.
+    await expect(page.locator(CARD)).toHaveScreenshot("default-map-view.png");
+
+    // A user zoom after mount wins and replaces the configured view, like on any other card.
+    await setZoom(page, 1.25);
+    const after = await harness(page);
+    expect(after.mapScale).toBeCloseTo(1.25, 5);
+    expect(computedTransform(after.transform).scale).toBeCloseTo(1.25, 2);
+    expect(after.transform).not.toBe(description.transform);
+});
+
+// The rotation half of the configured view: rotation pivots on the content centre, so a view with
+// no x/y must put that centre in the middle of the viewport. A top-left scale would leave the map
+// corner at the viewport corner even at 90°.
+test("a configured map_view is centred at rotation 90", async ({ page }) => {
+    await mount(page, cardConfig({ map_view: { scale: 2.5, rotation: 90 } }));
+
+    const description = await harness(page);
+    expect(description.mapScale).toBeCloseTo(2.5, 5);
+    expect(description.mapRotation).toBe(90);
+
+    // A rotation matrix's linear part is `scale * [[cos, -sin], [sin, cos]]`, so its magnitude is
+    // the scale whatever the angle (the CSS rotation makes `a` ~ 0 and `b` ~ 2.5 here).
+    const matrix = computedTransform(description.transform);
+    expect(Math.hypot(matrix.a, matrix.b)).toBeCloseTo(2.5, 2);
+
+    const contentCentre = {
+        x: description.contentRect.x + description.contentRect.width / 2,
+        y: description.contentRect.y + description.contentRect.height / 2,
+    };
+    const viewportCentre = {
+        x: description.viewport.x + description.viewport.width / 2,
+        y: description.viewport.y + description.viewport.height / 2,
+    };
+    expect(Math.abs(contentCentre.x - viewportCentre.x)).toBeLessThanOrEqual(1);
+    expect(Math.abs(contentCentre.y - viewportCentre.y)).toBeLessThanOrEqual(1);
+
+    // The overlays ride the same transform as the image: the room outline still describes its
+    // rectangle in the fixture image at this angle and scale.
+    const outline = await page.evaluate(() => (window as unknown as VisualWindow).visualHarness.roomOutlineBox("1"));
+    expectImageRect(outline, LIVING_ROOM_IMAGE_RECT, "Living room outline (configured view, rotation 90)");
+});
+
+// The roadmap promise: a user's pan/zoom still beats the configured default. This has to hold in a
+// browser too, where the stored entry is written by the real transform and read back after a
+// remount, not only through the happy-dom harness.
+test("a stored view beats the configured default after a remount", async ({ page }) => {
+    const config = cardConfig({
+        map_view: { scale: 2.5, x: 40, y: -20, rotation: 0 },
+        persist_map_view: true,
+    });
+    await mount(page, config);
+    const initial = await harness(page);
+    expect(initial.mapScale).toBeCloseTo(2.5, 5);
+
+    // Pan and zoom away from the configured view, then wait for the debounced write. The harness
+    // is not part of the app, so poll the card's own store key instead of sleeping a fixed time.
+    await setZoom(page, 1.5, { x: 0.3, y: 0.6 });
+    const panned = await harness(page);
+    const storedEntryCount = (): Promise<number> =>
+        page.evaluate(
+            () =>
+                Object.keys(
+                    JSON.parse(window.localStorage.getItem("xiaomi-vacuum-map-card.map-view") ?? "{}"),
+                ).length,
+        );
+    await expect.poll(storedEntryCount).toBeGreaterThan(0);
+
+    // Remounting with the same config re-reads the same card/preset/map/default key: the stored
+    // gesture wins over `map_view`, which is where the card starts only when nothing is stored.
+    await mount(page, config);
+    const reloaded = await harness(page);
+    expect(reloaded.mapScale).toBeCloseTo(1.5, 5);
+    expect(reloaded.mapX).toBeCloseTo(panned.mapX, 3);
+    expect(reloaded.mapY).toBeCloseTo(panned.mapY, 3);
+});
 
 test("room hit-testing selects the clicked room at zoom 1", async ({ page }) => {
     await mount(page, overlayConfig(0));

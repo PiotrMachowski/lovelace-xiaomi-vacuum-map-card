@@ -306,15 +306,35 @@ function describe() {
     if (!card) throw new Error("visual harness: the card is not mounted");
     const image = card.shadowRoot.getElementById("map-image");
     const imageRect = image.getBoundingClientRect();
+    const content = card.shadowRoot.getElementById("map-zoomer-content");
+    const zoomer = card.shadowRoot.getElementById("map-zoomer");
+    const contentRect = content.getBoundingClientRect();
+    const viewport = zoomer.getBoundingClientRect();
     return {
         mapScale: card.mapScale,
+        mapX: card.mapX,
+        mapY: card.mapY,
         realScale: card.realScale,
         mapRotation: card.mapRotation,
+        // The transform the browser actually renders, not only the numbers the card holds: the
+        // custom properties feed `#map-zoomer-content`'s CSS, so a state value that never reached the
+        // stylesheet shows up here as a mismatch.
+        transform: content ? getComputedStyle(content).transform : "none",
         rooms: [...card.shadowRoot.querySelectorAll(".room-wrapper")].map(wrapper => ({
             className: wrapper.getAttribute("class"),
             selected: wrapper.classList.contains("selected"),
         })),
         imageRect: { x: imageRect.x, y: imageRect.y, width: imageRect.width, height: imageRect.height },
+        // The transformed content box (where the map ended up) and the untransformed layout boxes
+        // the configured view's centring maths uses.
+        contentRect: {
+            x: contentRect.x,
+            y: contentRect.y,
+            width: contentRect.width,
+            height: contentRect.height,
+        },
+        viewport: { x: viewport.x, y: viewport.y, width: viewport.width, height: viewport.height },
+        content: { width: content.offsetWidth, height: content.offsetHeight },
         selectedRooms: selectedRoomIds(),
     };
 }
