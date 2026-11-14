@@ -17,6 +17,8 @@ reviewed before release. See [CONTRIBUTING.md](CONTRIBUTING.md) for the local wo
 
 ## Now
 
+- **Stale-room warning readability.** In a narrow card the warning truncates after the first stale
+  id and an order badge can cover a stale marker; let the warning wrap and keep the marker visible.
 - **Horizontal layout at narrow widths.** The map and controls sit side by side, but at the smallest
   sections-view spans the controls column is short and the map is small. Decide whether to stack
   below a width threshold and where the breakpoint sits.

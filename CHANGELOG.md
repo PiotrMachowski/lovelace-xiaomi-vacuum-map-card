@@ -4,8 +4,8 @@
 
 First release of this fork under its own name and version line. It is based on upstream `v2.4.2`;
 the numbering restarts at 1.0.0 because this is a separately named project. The earlier
-`v2.5.0-igloczek.1` tag was a pre-versioning snapshot and differs only by the editor switch-label
-fix below.
+`v2.5.0-igloczek.1` tag was a pre-versioning snapshot and differs by the editor switch-label fix
+and the horizontal mode-name ellipsis below.
 
 ### Added
 
@@ -35,3 +35,5 @@ fix below.
 ### Fixed
 
 - Zoom and rotation are applied once to the image and its overlays, so room outlines stay aligned.
+- A long mode name in the horizontal layout ellipsizes inside the controls column instead of being
+  clipped without an ellipsis.

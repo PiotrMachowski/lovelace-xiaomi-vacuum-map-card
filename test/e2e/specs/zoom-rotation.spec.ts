@@ -135,7 +135,7 @@ test("zoom 2.5 and rotation 90 keep the overlays on the rooms", async ({ loggedI
     // Alignment: the painted room and its outline must occupy the same screen box. The painted box
     // comes from the screenshot's room-colour pixels inside the map viewport; the outline box comes
     // from the polygon, clipped to the same viewport. A shift in any direction moves the outline box
-    // away from the painted one, so the tolerance is 8 screen px.
+    // away from the painted one, so the tolerance is 4 screen px.
     for (const roomId of ["0", "1", "2"]) {
         await bringIntoView(roomId);
         const outline = await roomEdgeSamples(roomId);

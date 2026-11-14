@@ -677,7 +677,7 @@ This card handles following actions:
 
   Yes, you just have to provide 4 calibration points.
 
-## Migrating from v1.x.x
+## Migrating from upstream v1.x.x
 
 <details>
 <summary>Configuration with <code>map_image</code></summary>

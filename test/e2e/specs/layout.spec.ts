@@ -1,4 +1,4 @@
-import { expect, openDashboard, card, shot, test, waitForCard, getDashboardConfig, saveDashboardConfig } from "./helpers";
+import { expect, openDashboard, card, shot, test, waitForCard, waitForHaReady, getDashboardConfig, saveDashboardConfig } from "./helpers";
 
 /**
  * `layout: horizontal` in a real sections view: the card must place the map beside the controls, a
@@ -94,6 +94,7 @@ test("horizontal layout in a real sections view, with resize and a long mode nam
         await saveDashboardConfig("e2e-layout", narrowed);
         await page.reload();
         await waitForCard(page);
+        await waitForHaReady(page);
         await expect.poll(async () => (await geometry())?.map.width ?? 0).toBeLessThan(wide.map.width);
         const narrow = (await geometry())!;
         expect(narrow.map.right).toBeLessThanOrEqual(narrow.controls.left + 1);
@@ -106,6 +107,7 @@ test("horizontal layout in a real sections view, with resize and a long mode nam
         await saveDashboardConfig("e2e-layout", widened);
         await page.reload();
         await waitForCard(page);
+        await waitForHaReady(page);
         await expect.poll(async () => (await geometry())?.map.width ?? 0).toBeGreaterThan(narrow.map.width);
         await shot(page, "07-layout-horizontal-cell-12");
     } finally {

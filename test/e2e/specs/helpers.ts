@@ -65,11 +65,7 @@ export async function login(page: Page): Promise<void> {
 export async function waitForHaReady(page: Page): Promise<void> {
     // Home Assistant shows a launch screen over the dashboard while it hydrates; measuring or
     // screenshotting through it would produce misleading evidence.
-    await page
-        .locator("ha-launch-screen")
-        .first()
-        .waitFor({ state: "detached", timeout: 120_000 })
-        .catch(() => undefined);
+    await page.locator("#ha-launch-screen").waitFor({ state: "detached", timeout: 120_000 });
     await page.waitForTimeout(300);
 }
 

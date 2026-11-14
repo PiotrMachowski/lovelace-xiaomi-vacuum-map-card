@@ -1,4 +1,4 @@
-import { expect, openDashboard, card, shot, test, waitForCard, viewState } from "./helpers";
+import { expect, openDashboard, card, shot, test, waitForCard, waitForHaReady, viewState } from "./helpers";
 
 /**
  * The configured default view on the real frontend (fetch + storage + Lit render).
@@ -64,6 +64,7 @@ test("map_view opens, resets and persists on a real dashboard", async ({ loggedI
     // Reload: the stored view for this key was written by the reset, which equals the default here.
     await page.reload();
     await waitForCard(page);
+    await waitForHaReady(page);
     const reloaded = await card(page);
     await expect.poll(async () => Math.abs((await viewState(reloaded)).scale - defaultView.scale)).toBeLessThan(0.05);
     await expect.poll(async () => Math.abs((await viewState(reloaded)).rotation - defaultView.rotation)).toBeLessThan(0.5);
@@ -87,6 +88,7 @@ test("map_view opens, resets and persists on a real dashboard", async ({ loggedI
     await page.waitForTimeout(700);
     await page.reload();
     await waitForCard(page);
+    await waitForHaReady(page);
     const afterReload = await card(page);
     await expect.poll(async () => (await viewState(afterReload)).scale).toBeCloseTo(gestures.scale, 1);
     await expect.poll(async () => Math.abs((await viewState(afterReload)).x - gestures.x)).toBeLessThan(4);
