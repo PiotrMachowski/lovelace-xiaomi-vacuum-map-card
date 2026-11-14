@@ -32,14 +32,19 @@ test("zoom 2.5 and rotation 90 keep the overlays on the rooms", async ({ loggedI
     await page.waitForTimeout(500);
     expect(await target.evaluate(element => !!element.roomColorDetection)).toBe(true);
 
-    /** Inside and outside sample points for a room, in page coordinates. */
-    const roomSample = (roomId: string) =>
+    /**
+     * Inside and outside sample points for every edge of a room, in page coordinates.
+     *
+     * Sampling only the centre-to-vertex ray hides a shift along that ray, so each edge midpoint is
+     * tested separately: 6 px inside must be the room colour, 6 px outside must not be.
+     */
+    const roomEdgeSamples = (roomId: string) =>
         target.evaluate((element, id) => {
             const polygon = element.shadowRoot.querySelector(`.room-${id}-wrapper .room-outline`) as SVGPolygonElement | null;
             if (!polygon) return null;
             const points = polygon.points;
             const matrix = polygon.getScreenCTM();
-            if (!matrix || points.numberOfItems === 0) return null;
+            if (!matrix || points.numberOfItems < 3) return null;
             const svg = polygon.ownerSVGElement!;
             const screen: Array<{ x: number; y: number }> = [];
             for (let index = 0; index < points.numberOfItems; index++) {
@@ -49,29 +54,36 @@ test("zoom 2.5 and rotation 90 keep the overlays on the rooms", async ({ loggedI
                 screen.push(point.matrixTransform(matrix));
             }
             const centre = screen.reduce((acc, p) => ({ x: acc.x + p.x / screen.length, y: acc.y + p.y / screen.length }), { x: 0, y: 0 });
-            const vertex = screen[0];
-            // 60% of the way to a vertex is inside the convex room and clear of the centred label.
-            // The outside sample is 12 px beyond the farthest vertex, along the same ray.
-            const maxRadius = Math.max(...screen.map(p => Math.hypot(p.x - centre.x, p.y - centre.y)));
-            const radius = Math.hypot(vertex.x - centre.x, vertex.y - centre.y) || 1;
-            const ux = (vertex.x - centre.x) / radius;
-            const uy = (vertex.y - centre.y) / radius;
-            return {
-                inside: { x: centre.x + (vertex.x - centre.x) * 0.6, y: centre.y + (vertex.y - centre.y) * 0.6 },
-                outside: { x: centre.x + ux * (maxRadius + 12), y: centre.y + uy * (maxRadius + 12) },
-            };
+            const inside: Array<{ x: number; y: number }> = [];
+            const outside: Array<{ x: number; y: number }> = [];
+            for (let index = 0; index < screen.length; index++) {
+                const a = screen[index];
+                const b = screen[(index + 1) % screen.length];
+                const mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+                const nx = centre.x - mid.x;
+                const ny = centre.y - mid.y;
+                const length = Math.hypot(nx, ny) || 1;
+                inside.push({ x: mid.x + (nx / length) * 6, y: mid.y + (ny / length) * 6 });
+                outside.push({ x: mid.x - (nx / length) * 6, y: mid.y - (ny / length) * 6 });
+            }
+            return { centre, inside, outside };
         }, roomId);
 
     const cardBox = await target.locator.boundingBox();
     expect(cardBox).not.toBeNull();
+    const mapBox = await target.evaluate(element => {
+        const rect = (element.shadowRoot.getElementById("map-zoomer") as HTMLElement).getBoundingClientRect();
+        return { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom };
+    });
 
-    const sample = (png: PNG, point: { x: number; y: number }): [number, number, number] => {
+    /** The pixel at a page point, or null when the point is outside the captured card. */
+    const sample = (png: PNG, point: { x: number; y: number }): [number, number, number] | null => {
         const x = point.x - cardBox!.x;
         const y = point.y - cardBox!.y;
-        expect(x, `sample x inside the card (${x})`).toBeGreaterThanOrEqual(0);
-        expect(x, `sample x inside the card (${x})`).toBeLessThan(png.width);
-        expect(y, `sample y inside the card (${y})`).toBeGreaterThanOrEqual(0);
-        expect(y, `sample y inside the card (${y})`).toBeLessThan(png.height);
+        if (x < 2 || y < 2 || x >= png.width - 2 || y >= png.height - 2) return null;
+        // A room can extend past the map viewport into the controls area, where the pixels are not
+        // the map: only points inside both the map and the captured card are meaningful.
+        if (point.x < mapBox.left + 2 || point.x > mapBox.right - 2 || point.y < mapBox.top + 2 || point.y > mapBox.bottom - 2) return null;
         const offset = (png.width * Math.round(y) + Math.round(x)) * 4;
         return [png.data[offset], png.data[offset + 1], png.data[offset + 2]];
     };
@@ -83,16 +95,16 @@ test("zoom 2.5 and rotation 90 keep the overlays on the rooms", async ({ loggedI
 
     const bringIntoView = async (roomId: string): Promise<{ x: number; y: number }> => {
         for (let attempt = 0; attempt < 5; attempt++) {
-            const points = await roomSample(roomId);
+            const points = await roomEdgeSamples(roomId);
             expect(points, `room ${roomId} must be rendered`).not.toBeNull();
             const box = await target.evaluate(element => {
                 const rect = (element.shadowRoot.getElementById("map-zoomer") as HTMLElement).getBoundingClientRect();
                 return { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom, cx: rect.left + rect.width / 2, cy: rect.top + rect.height / 2 };
             });
-            const point = points!.inside;
+            const point = points!.centre;
             const inside =
                 point.x > box.left + 40 && point.x < box.right - 40 && point.y > box.top + 40 && point.y < box.bottom - 40;
-            if (inside) return point;
+            if (inside) return points!.inside[0];
             await target.evaluate(
                 (element, delta) => {
                     const zoomer = element.shadowRoot.getElementById("map-zoomer");
@@ -105,17 +117,68 @@ test("zoom 2.5 and rotation 90 keep the overlays on the rooms", async ({ loggedI
         throw new Error(`could not bring room ${roomId} into view`);
     };
 
-    // Alignment: the rendered pixels inside the outline must be the room colour, and the pixels just
-    // beyond the outline must not be. An overlay shifted off the room fails the inside sample.
+    // A deliberate overlay shift, used to prove this spec would catch one.
+    const [shiftX, shiftY] = (process.env.E2E_OVERLAY_SHIFT ?? "0,0").split(",").map(Number);
+    if (shiftX !== 0 || shiftY !== 0) {
+        await target.evaluate(
+            (element, delta) => {
+                element.shadowRoot.querySelectorAll(".room-wrapper").forEach((wrapper: HTMLElement) => {
+                    wrapper.style.transform = `translate(${delta.x}px, ${delta.y}px)`;
+                });
+            },
+            { x: shiftX || 0, y: shiftY || 0 },
+        );
+        await page.waitForTimeout(300);
+    }
+
+    // Alignment: the painted room and its outline must occupy the same screen box. The painted box
+    // comes from the screenshot's room-colour pixels inside the map viewport; the outline box comes
+    // from the polygon, clipped to the same viewport. A shift in any direction moves the outline box
+    // away from the painted one, so the tolerance is 8 screen px.
     for (const roomId of ["0", "1", "2"]) {
         await bringIntoView(roomId);
-        const points = await roomSample(roomId);
-        expect(points).not.toBeNull();
+        const outline = await roomEdgeSamples(roomId);
+        expect(outline).not.toBeNull();
         const png = PNG.sync.read(await target.locator.screenshot());
-        const inside = sample(png, points!.inside);
-        const outside = sample(png, points!.outside);
-        expect(distance(inside, ROOM_COLOURS[roomId]), `inside room ${roomId} must be its colour`).toBeLessThan(70);
-        expect(distance(outside, ROOM_COLOURS[roomId]), `outside room ${roomId} must not be its colour`).toBeGreaterThan(80);
+
+        const clip = (rect: { left: number; top: number; right: number; bottom: number }) => ({
+            left: Math.max(rect.left, mapBox.left) - cardBox!.x,
+            top: Math.max(rect.top, mapBox.top) - cardBox!.y,
+            right: Math.min(rect.right, mapBox.right) - cardBox!.x,
+            bottom: Math.min(rect.bottom, mapBox.bottom) - cardBox!.y,
+        });
+
+        const polygonBox = await target.evaluate((element, id) => {
+            const polygon = element.shadowRoot.querySelector(`.room-${id}-wrapper .room-outline`) as SVGPolygonElement | null;
+            if (!polygon) return null;
+            const rect = polygon.getBoundingClientRect();
+            return { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom };
+        }, roomId);
+        expect(polygonBox).not.toBeNull();
+        const expected = clip(polygonBox!);
+
+        const colour = ROOM_COLOURS[roomId];
+        let minX = Infinity;
+        let minY = Infinity;
+        let maxX = -Infinity;
+        let maxY = -Infinity;
+        for (let y = Math.max(0, Math.floor(expected.top)); y < Math.min(png.height, Math.ceil(expected.bottom)); y++) {
+            for (let x = Math.max(0, Math.floor(expected.left)); x < Math.min(png.width, Math.ceil(expected.right)); x++) {
+                const offset = (png.width * y + x) * 4;
+                const pixel: [number, number, number] = [png.data[offset], png.data[offset + 1], png.data[offset + 2]];
+                if (distance(pixel, colour) > 60) continue;
+                if (x < minX) minX = x;
+                if (x > maxX) maxX = x;
+                if (y < minY) minY = y;
+                if (y > maxY) maxY = y;
+            }
+        }
+        expect(minX, `room ${roomId} must paint its colour inside the outline box`).toBeLessThan(Infinity);
+        const painted = { left: minX, top: minY, right: maxX, bottom: maxY };
+        expect(Math.abs(painted.left - expected.left), `room ${roomId} left edge`).toBeLessThanOrEqual(8);
+        expect(Math.abs(painted.top - expected.top), `room ${roomId} top edge`).toBeLessThanOrEqual(8);
+        expect(Math.abs(painted.right - expected.right), `room ${roomId} right edge`).toBeLessThanOrEqual(8);
+        expect(Math.abs(painted.bottom - expected.bottom), `room ${roomId} bottom edge`).toBeLessThanOrEqual(8);
     }
 
     // The hit test agrees with what is drawn: clicking each outline selects that room.

@@ -39,11 +39,48 @@ test("horizontal layout in a real sections view, with resize and a long mode nam
     expect(wide.map.right).toBeLessThanOrEqual(wide.controls.left + 1); // side by side
     expect(wide.controls.width).toBeGreaterThan(150);
 
-    // The long mode name must stay inside the controls column, not overflow or clip on both sides.
+    // The long mode name must stay inside the controls column, not overflow or clip on both sides,
+    // and it must actually be ellipsized: the text is wider than its box and the box is clipped with
+    // an ellipsis, rather than being hard-cut by the scroll container.
     expect(wide.scrollWidth).toBeLessThanOrEqual(wide.clientWidth + 1);
     expect(wide.buttonLeft).toBeGreaterThanOrEqual(wide.controls.left - 1);
     expect(wide.buttonRight).toBeLessThanOrEqual(wide.controls.right + 1);
-    expect(wide.textOverflow).toBe("ellipsis");
+    const nameBox = await target.evaluate(element => {
+        const label = element.shadowRoot.querySelector(".dropdown-menu-button-text") as HTMLElement | null;
+        if (!label) return null;
+        const style = getComputedStyle(label);
+        return {
+            scrollWidth: label.scrollWidth,
+            clientWidth: label.clientWidth,
+            overflow: style.overflow,
+            textOverflow: style.textOverflow,
+            whiteSpace: style.whiteSpace,
+            display: style.display,
+        };
+    });
+    expect(nameBox).not.toBeNull();
+    expect(nameBox!.scrollWidth).toBeGreaterThan(nameBox!.clientWidth);
+    expect(nameBox!.overflow).toBe("hidden");
+    expect(nameBox!.textOverflow).toBe("ellipsis");
+    expect(nameBox!.whiteSpace).toBe("nowrap");
+    // text-overflow does not render on a flex container, which is how the long name used to be
+    // hard-clipped. The rendered display mode is part of the check for that reason.
+    expect(nameBox!.display).toBe("block");
+
+    // Every control stays inside the card horizontally; the controls column scrolls vertically when
+    // the cell is shorter than the content, which is allowed.
+    const containment = await target.evaluate(element => {
+        const cardRect = element.getBoundingClientRect();
+        const controls = [...element.shadowRoot.querySelectorAll(".layout-content.horizontal .map-controls, .layout-content.horizontal .dropdown-menu-button")];
+        return controls.map(control => {
+            const rect = control.getBoundingClientRect();
+            return {
+                cls: control.className,
+                inside: rect.left >= cardRect.left - 1 && rect.right <= cardRect.right + 1,
+            };
+        });
+    });
+    for (const entry of containment) expect(entry.inside, `${entry.cls} must stay inside the card`).toBe(true);
     await shot(page, "05-layout-horizontal-1280");
 
     // Home Assistant caps a sections column at a fixed width, so a browser resize does not resize the

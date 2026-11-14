@@ -15,7 +15,6 @@ const BASE = process.env.E2E_HA_URL || "http://localhost:8123";
 const REPO_URL = "https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card";
 const REPO_NAME = "Igloczek/lovelace-better-xiaomi-vacuum-map-card";
 const AUTH = path.join(__dirname, ".auth", "token.json");
-const CONFIG = path.join(__dirname, "ha", "config");
 
 const { access_token: accessToken } = JSON.parse(fs.readFileSync(AUTH, "utf8"));
 
@@ -70,12 +69,21 @@ async function main() {
 
     await ws.send("marketplace/repository/install", { repository: repository.id });
 
-    const installedFile = path.join(CONFIG, "www", "community", "lovelace-better-xiaomi-vacuum-map-card", "xiaomi-vacuum-map-card.js");
-    for (let attempt = 0; attempt < 60 && !fs.existsSync(installedFile); attempt++) {
+    // Verify through the same URL a browser uses, so the check works against an instance mounted
+    // from another checkout or on another host.
+    const assetUrl = `${BASE}/local/community/lovelace-better-xiaomi-vacuum-map-card/xiaomi-vacuum-map-card.js`;
+    let bytes = 0;
+    for (let attempt = 0; attempt < 60; attempt++) {
+        const response = await fetch(assetUrl);
+        if (response.ok) {
+            const body = await response.text();
+            bytes = body.length;
+            if (bytes > 100_000) break;
+        }
         await new Promise(resolve => setTimeout(resolve, 1000));
     }
-    if (!fs.existsSync(installedFile)) throw new Error(`marketplace did not install ${installedFile}`);
-    console.log(`installed ${installedFile} (${fs.statSync(installedFile).size} bytes)`);
+    if (bytes <= 100_000) throw new Error(`marketplace did not serve the installed card at ${assetUrl}`);
+    console.log(`installed asset served at ${assetUrl} (${bytes} bytes)`);
 
     const after = (await ws.send("marketplace/repositories/list", { categories: ["plugin"] })).find(
         entry => entry.full_name === REPO_NAME,

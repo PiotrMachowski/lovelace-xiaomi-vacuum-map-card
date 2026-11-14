@@ -22,6 +22,8 @@ every existing configuration are unchanged.
   `duration_unit` for sensor tiles, and the core `return_to_base` icon.
 - Stale room ids after a re-map are marked, named in a warning and excluded from service calls.
 - Zoom alignment and overlay scaling are covered by the local scale check and the visual suite.
+- Editor switch labels stay visible on Home Assistant 2026.11, which no longer defines
+  `ha-formfield` (the only source change since `v2.5.0-igloczek.1`).
 
 ### Added
 

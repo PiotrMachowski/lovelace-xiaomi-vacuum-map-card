@@ -51,12 +51,13 @@ hardware or a fixture. Evidence links to the fork's record in [FORK.md](FORK.md)
 | Zoom alignment | `shipped` | Zoom and rotation are applied once to the image and the overlays, so room outlines stay on the map; the local regression check covers both. | [FORK.md](FORK.md#zoom-alignment) · `2d5d439` |
 | Test and CI gates | `shipped` | Vitest with happy-dom, a Playwright visual suite at zoom, rotation, room hit-testing and layout, Node 22 and a `tsc --noEmit` gate on every pull request. | [FORK.md](FORK.md#p0-test-infrastructure), [CI baseline](FORK.md#ci-baseline), [visual harness](FORK.md#visual-regression-harness) · PR [#2](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/2), [#3](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/3), [#7](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/7) |
 | Roborock status/battery tiles | `postponed` | The generic `duration_unit` field of [#964](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/pull/964) shipped in the platform tile templates; the Roborock-specific templates need a real Roborock-core registry fixture. | [FORK.md](FORK.md#b3-tiles-labels-icons) · [ROADMAP.md](ROADMAP.md#postpone-list) |
-| Deferred upstream items | `postponed` | Templated predefined selections, static floorplan background, rotated zone rectangles, Valetudo JSON maps, Ecovacs SVG viewbox, delayed start, non-admin MQTT, collapse map, YAML `y:` normalization ([#952](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/952)) and the [#958 editor-element check beyond the fallback](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/pull/958). | [ROADMAP.md](ROADMAP.md#postpone-list) |
+| Deferred upstream items | `postponed` | Templated predefined selections, live path overlay on a static floorplan, rotated zone rectangles, Valetudo JSON maps, Ecovacs SVG viewbox, delayed start, non-admin MQTT and collapse map. | [ROADMAP.md](ROADMAP.md#postpone-list) |
 
 ## Install
 
 Install `v2.6.0` or newer. It is the first release with the fork's own version number; earlier fork
-tags used a local `-igloczek.N` suffix for the same code.
+tags used a local `-igloczek.N` suffix, and `v2.5.0-igloczek.1` differs from 2.6.0 only by the editor
+switch-label fix.
 
 Home Assistant 2026.11 blocks the HACS custom integration and ships the built-in **Marketplace**
 instead; upgrading an existing HACS install migrates its entries and resources to the Marketplace.

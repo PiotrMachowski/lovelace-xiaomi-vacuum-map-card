@@ -8,3 +8,10 @@ set_image:
     path:
       description: Absolute path inside the HA container.
       example: /config/map_fixture.png
+set_rooms:
+  name: Set fixture rooms
+  description: Swaps the room metadata between the original ids and a re-mapped set.
+  fields:
+    mode:
+      description: shift for the re-mapped ids, reset for the original ids.
+      example: shift

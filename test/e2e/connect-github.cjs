@@ -46,9 +46,13 @@ function main() {
     console.log(`marketplace GitHub token written to the ignored state file for entry ${marketplace.entry_id}`);
 
     if (process.argv.includes("--restart")) {
-        execFileSync("docker", ["compose", "-f", path.join(__dirname, "compose.yaml"), "restart"], {
-            stdio: "inherit",
-        });
+        const composeArgs = ["compose", "-f", path.join(__dirname, "compose.yaml")];
+        const project = process.env.COMPOSE_PROJECT_NAME;
+        if (project) composeArgs.push("-p", project);
+        // Stop first: Home Assistant rewrites the config-entry store while it runs, so a token
+        // written under a live instance can be overwritten on shutdown.
+        execFileSync("docker", [...composeArgs, "stop"], { stdio: "inherit" });
+        execFileSync("docker", [...composeArgs, "start"], { stdio: "inherit" });
         console.log("Home Assistant restarted; wait for /api/ before running the install");
     }
     // Best-effort hygiene: no token is left in the shell history or a tracked file by this script.

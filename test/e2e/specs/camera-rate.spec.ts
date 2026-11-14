@@ -32,6 +32,17 @@ test("camera requests follow the refresh policy on a real instance", async ({ lo
     const duringUpdates = (await cameraRequests(page)).total ?? 0;
     expect(duringUpdates).toBeLessThanOrEqual(1);
 
+    // The interval: twelve seconds of vacuum updates with no camera change must produce one refresh
+    // per interval (about two), never one per update.
+    await resetCameraRequests(page);
+    for (let index = 0; index < 24; index++) {
+        await serviceCall("vacuum", index % 2 === 0 ? "start" : "stop", { entity_id: "vacuum.demo_vacuum_0_ground_floor" });
+        await page.waitForTimeout(500);
+    }
+    const intervalCount = (await cameraRequests(page)).total ?? 0;
+    expect(intervalCount, "the interval must refresh, and only once per window").toBeGreaterThanOrEqual(1);
+    expect(intervalCount, "vacuum updates must not trigger a request each").toBeLessThanOrEqual(4);
+
     // A camera state change is a real new map: exactly one new request, measured from a fresh count.
     await resetCameraRequests(page);
     await bumpCamera(page);

@@ -29,7 +29,9 @@ function hassTokens(): Record<string, unknown> {
         expires_in: 1800,
         hassUrl,
         clientId: `${hassUrl}/`,
-        expires: Date.now() + 1_500_000,
+        // Expired on purpose: the frontend then refreshes with the refresh token, exactly like a real
+        // session, instead of trusting a stale access token for the whole run.
+        expires: Date.now() - 60_000,
     };
 }
 
@@ -62,6 +64,14 @@ export async function login(page: Page): Promise<void> {
 export async function openDashboard(page: Page, pathname: string): Promise<void> {
     await page.goto(pathname);
     await page.waitForSelector("home-assistant-main", { timeout: 120_000 });
+    // Home Assistant shows a launch screen over the dashboard while it hydrates; measuring or
+    // screenshotting through it would produce misleading evidence.
+    await page
+        .locator("ha-launch-screen")
+        .first()
+        .waitFor({ state: "detached", timeout: 120_000 })
+        .catch(() => undefined);
+    await page.waitForTimeout(300);
 }
 
 /** Waits for the card element to be defined and rendered inside the dashboard view. */

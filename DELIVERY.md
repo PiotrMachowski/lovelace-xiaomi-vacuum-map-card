@@ -14,8 +14,8 @@ Opus 5.5) returned `VERDICT: APPROVE` on the PR.
 | P0a | Node 22 CI, `actions/checkout@v4`, lockfile v3, `tsc --noEmit` in CI | merged | [#2](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/2) | APPROVE (round 2) | `deb2555` | - |
 | P0b | Vitest 3 + happy-dom harness, fixtures, `detectFromImageData`, first two failing tests, `npm test` in CI | merged | [#3](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/3) | APPROVE (round 2) | `4a0dcc9` | - |
 | P0c | Playwright visual harness (separate job, `visual` label) | merged | [#7](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/7) | APPROVE (round 2) | `683c07a` | - |
-| P0d | Real-HA fixture and integration test | merged | [#17](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/17) | under review | - | replaced by the synthetic fixture + `test/e2e`; no user capture needed |
-| B1 | Config robustness (#937, #940, #938; #952 postponed) | merged | [#4](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/4) | APPROVE | `a8b3a39` | - |
+| P0d | Real-HA fixture and integration test | in review | [#17](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/17) | re-check running | - | replaced by the synthetic fixture + `test/e2e`; no user capture needed |
+| B1 | Config robustness (#937, #940, #938; #952 closed as not reproducible) | merged | [#4](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/4) | APPROVE | `a8b3a39` | - |
 | B2 | Editor room-config path (#956, #944, duplicate cleanup, #958) | merged | [#5](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/5) | APPROVE (round 3) | `c8042b9` | - |
 | B3 | Tiles, labels and icons (#723, #957, #965, #961) | merged | [#6](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/6) | APPROVE (round 2) | `6fe6307` | - |
 | B4 | Roborock status/battery templates (#964) | postponed | - | - | - | needs a real Roborock-core registry fixture |
@@ -95,10 +95,10 @@ table above; P0d is a user-captured fixture, not an upstream item.
 | #937 | Validation crash: predefined selection without `id`/`zones` | B1 | merged, PR #4 |
 | #940 | Validation crash: incomplete calibration point | B1 | merged, PR #4 |
 | #938 | Invalid dynamic predefined selections throw | B1 | merged, PR #4 |
-| #952 | YAML 1.1 unquoted `y:` normalization | B1 | postponed: no repro on the real parser |
+| #952 | YAML 1.1 unquoted `y:` normalization | B1 | **closed as not reproducible**: the real-HA YAML test proves `y:` applies on 2026.11, so no normalizer is needed |
 | #956 | Frozen `map_modes` mutation in the room config generator | B2 | merged, PR #5 |
 | #944 | Room-config events not scoped to the requesting card | B2 | merged, PR #5 (extended with camera + request id) |
-| #958 | Editor text fields on frontends without `ha-textfield` | B2 | merged, PR #5 (fallback order reversed; real frontend element API still a manual check) |
+| #958 | Editor text fields on frontends without `ha-textfield` | B2 | merged, PR #5; **verified** on 2026.11 (the frontend provides `ha-input`, and the switch labels are covered by the new `ha-formfield` fallback) |
 | #723 | Tile translations lower-case the value but not the keys | B3 | merged, PR #6 |
 | #957 | Resolve tile labels via `hass.formatEntityName` | B3 | merged, PR #6 (the `entityNamesChanged` re-render hook is an open follow-up) |
 | #965 | Duration tiles for sensors reporting hours/minutes | B3 | merged, PR #6 |
@@ -196,7 +196,7 @@ of becoming a task for the owner.
   run on this version; Marketplace is the current equivalent, and the card's `hacs.json` metadata is
   unchanged and still validated by the HACS action in CI for releases that use HACS.
 
-### Evidence (real Home Assistant, installer-created build)
+### Evidence (branch build overlaid on the Marketplace install, real Home Assistant)
 
 Every row is a spec in `test/e2e/specs/` and passes against the installed artifact. Screenshots are
 committed under [`docs/evidence/e2e/`](docs/evidence/e2e).
@@ -206,10 +206,11 @@ committed under [`docs/evidence/e2e/`](docs/evidence/e2e).
 | Card render | The card renders from the installed Lovelace resource against a real camera entity, with the committed map decoded. | `render.spec.ts`, [dashboard](docs/evidence/e2e/01-real-dashboard.png) |
 | Card editor | The visual editor opens in edit mode, the Title field is the real `ha-input` this frontend provides, typing reaches the config, and **Generate rooms config** produces rooms from the camera metadata with no page error. | `editor.spec.ts`, [title](docs/evidence/e2e/13-editor-title.png), [generated rooms](docs/evidence/e2e/14-editor-generated-rooms.png) |
 | Default map view (#873) | `map_view` opens the configured view, a gesture changes it, the reset control returns to it, and the view survives a reload. | `map-view.spec.ts`, [reset](docs/evidence/e2e/03-map-view-reset.png), [persisted](docs/evidence/e2e/04-map-view-persisted.png) |
-| Horizontal layout (#183/#943) | In a real **sections** view the map sits beside the controls, a long mode name ellipsizes with no sideways overflow, and changing the card's grid options (what the resize handle causes) resizes the card; the vertical layout stays stacked. A real drag of the resize handle is not automated. | `layout.spec.ts`, [horizontal](docs/evidence/e2e/05-layout-horizontal-1280.png), [narrow cell](docs/evidence/e2e/06-layout-horizontal-cell-6.png), [vertical](docs/evidence/e2e/09-layout-vertical.png) |
+| Horizontal layout (#183/#943) | In a real **sections** view the map sits beside the controls, a long mode name ellipsizes (the text element is a block container and its text is wider than its box), controls stay inside the card, and changing the card's grid options (what the resize handle causes) resizes the card. A real drag of the handle is not automated. | `layout.spec.ts`, [horizontal](docs/evidence/e2e/05-layout-horizontal-1280.png), [narrow cell](docs/evidence/e2e/06-layout-horizontal-cell-6.png), [vertical](docs/evidence/e2e/09-layout-vertical.png) |
 | Zoom 2.5 + rotation 90 | At 2.5x and 90 degrees, screenshot pixels inside each outline are the room colour and pixels beyond it are not (so a shifted overlay fails), and clicking each outline selects that room. | `zoom-rotation.spec.ts`, [screenshot](docs/evidence/e2e/10-zoom-2-5-rotation-90.png) |
 | Camera request rate (#704/#357) | Inside the refresh window, vacuum state changes cause no snapshot request; at most one interval refresh lands; a camera change causes exactly one; a hidden tab causes none; becoming visible again causes one. The hidden state is simulated by overriding `document.hidden`. | `camera-rate.spec.ts`, [screenshot](docs/evidence/e2e/11-camera-rate.png) |
 | YAML `y:` (#952) | A YAML dashboard with an unquoted `y:` key applies the offset, so Home Assistant 2026.11 does not reproduce the boolean-key bug. | `yaml-y-key.spec.ts`, [screenshot](docs/evidence/e2e/12-yaml-y-key.png) |
+| Stale rooms after a re-map (B8) | The fixture camera renumbers its segments while keeping the geometry; the card marks the configured rooms stale, names them in the warning, refuses to select them, and still selects the new live id. | `stale-rooms.spec.ts`, [screenshot](docs/evidence/e2e/15-stale-rooms.png) |
 | Install from the repository URL | Home Assistant's installer registers the repository, installs the release asset and creates the Lovelace resource. | `marketplace-install.cjs` |
 
 ### Reproducing it
@@ -249,12 +250,10 @@ These are not user tasks; they are limits of a headless, hardware-free environme
 gates the shipped rows above:
 
 - The HACS UI install. Home Assistant 2026.11 blocks the HACS integration and migrates to Marketplace;
-  the suite proves Marketplace and the manual asset path, and CI validates the HACS metadata.
+  the suite proves the Marketplace install, and CI validates the HACS metadata.
 - Roborock status/battery templates (B4): needs the integration's runtime registry and the device.
 - A real drag of the sections resize handle (the grid-options write it performs is covered) and
   scrolling on a phone.
-- A second camera capture after a re-map for B8: stale ids are covered by unit and DOM tests with
-  before/after fixtures, but the suite does not perform a real re-map.
 - `map_view` at `{scale: 2.5, rotation: 90}` on the default-map-view card and the `map_view.reset`
   action: the suite covers `{scale: 2}, rotation 0` plus the toolbar reset, and rotation 90 is
   covered separately by the zoom/rotation spec.

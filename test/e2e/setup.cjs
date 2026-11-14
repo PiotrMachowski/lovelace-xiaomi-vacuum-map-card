@@ -224,9 +224,17 @@ async function main() {
                     {
                         title: "Map",
                         path: "map",
-                        cards: [card({ map_view: { scale: 2, x: 0, y: 0, rotation: 0 } })],
+                        cards: [card({ map_view: { scale: 2.5, x: 40, y: -20, rotation: 90 } })],
                     },
                 ],
+            },
+        },
+        {
+            url_path: "e2e-stale",
+            title: "E2E stale rooms",
+            config: {
+                title: "E2E stale rooms",
+                views: [{ title: "Rooms", path: "rooms", cards: [card()] }],
             },
         },
         {

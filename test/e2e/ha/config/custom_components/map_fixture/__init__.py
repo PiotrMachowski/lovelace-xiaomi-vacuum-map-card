@@ -33,6 +33,14 @@ FIXTURE_ROOMS: dict[str, dict[str, Any]] = {
     "2": {"x0": 200, "y0": 900, "x1": 800, "y1": 1300, "name": "Bedroom"},
 }
 
+# A re-map that keeps the geometry but renumbers the segments, which is what makes a configured
+# selection stale without looking different on the map.
+SHIFTED_ROOMS: dict[str, dict[str, Any]] = {
+    "7": {"x0": 200, "y0": 200, "x1": 800, "y1": 700, "name": "Kitchen"},
+    "8": {"x0": 1000, "y0": 200, "x1": 1700, "y1": 700, "name": "Living room"},
+    "9": {"x0": 200, "y0": 900, "x1": 800, "y1": 1300, "name": "Bedroom"},
+}
+
 
 class MapFixtureImageView(HomeAssistantView):
     """Serves the fixture map and counts each request."""
@@ -92,4 +100,14 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         hass.data[DATA_IMAGE] = call.data.get("path", DEFAULT_IMAGE)
 
     hass.services.async_register(DOMAIN, "set_image", set_image)
+
+    async def set_rooms(call: ServiceCall) -> None:
+        """Swap the room metadata between the original ids and a re-mapped set."""
+        shift = call.data.get("mode", "shift") == "shift"
+        rooms = SHIFTED_ROOMS if shift else FIXTURE_ROOMS
+        for entities in hass.data.get("map_fixture_entities", {}).values():
+            for entity in entities:
+                entity.set_rooms(rooms)
+
+    hass.services.async_register(DOMAIN, "set_rooms", set_rooms)
     return True

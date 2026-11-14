@@ -34,6 +34,13 @@ class MapFixtureCamera(Camera):
         self._attr_name = name
         self._attr_unique_id = "map_fixture_camera"
         self._version = 1
+        self._rooms = FIXTURE_ROOMS
+
+    def set_rooms(self, rooms: dict[str, Any]) -> None:
+        """Simulate a re-map that renumbers the segments."""
+        self._rooms = rooms
+        self._version += 1
+        self.async_write_ha_state()
 
     def bump(self) -> None:
         """Simulate the integration pushing a new map image."""
@@ -49,7 +56,7 @@ class MapFixtureCamera(Camera):
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         return {
-            "rooms": FIXTURE_ROOMS,
+            "rooms": self._rooms,
             "last_update_timestamp": self._version,
             "access_token": "fixture-token",
         }

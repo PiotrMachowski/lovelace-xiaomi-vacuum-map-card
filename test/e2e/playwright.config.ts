@@ -14,8 +14,8 @@ export default defineConfig({
     fullyParallel: false,
     workers: 1,
     retries: 0,
-    reporter: [["list"], ["html", { open: "never", outputFolder: "../artifacts/playwright-report" }]],
-    outputDir: "../artifacts/test-results",
+    reporter: [["list"], ["html", { open: "never", outputFolder: "./artifacts/playwright-report" }]],
+    outputDir: "./artifacts/test-results",
     use: {
         baseURL: process.env.E2E_HA_URL || "http://localhost:8123",
         trace: "retain-on-failure",

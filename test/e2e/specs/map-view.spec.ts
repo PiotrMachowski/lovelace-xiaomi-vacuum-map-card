@@ -11,10 +11,13 @@ test("map_view opens, resets and persists on a real dashboard", async ({ loggedI
     await waitForCard(page);
     const target = await card(page);
 
-    // The card config sets map_view {scale: 2, x: 0, y: 0, rotation: 0}. x/y are offsets from the
-    // centred view, so the neutral expectation is the values the card computes for that placement.
-    await expect.poll(async () => (await viewState(target)).scale).toBeCloseTo(2, 1);
+    // The card config sets map_view {scale: 2.5, x: 40, y: -20, rotation: 90}: every field must be
+    // applied, including the rotation, not only the scale.
+    await expect.poll(async () => (await viewState(target)).scale).toBeCloseTo(2.5, 1);
+    await expect.poll(async () => (await viewState(target)).rotation).toBe(90);
     const defaultView = await viewState(target);
+    expect(defaultView.scale).toBeCloseTo(2.5, 1);
+    expect(defaultView.rotation).toBe(90);
 
     const mapBox = await target.evaluate(element => {
         const rect = (element.shadowRoot.getElementById("map-zoomer") as HTMLElement).getBoundingClientRect();
@@ -33,21 +36,37 @@ test("map_view opens, resets and persists on a real dashboard", async ({ loggedI
     expect(Math.abs(wheeled.x) + Math.abs(wheeled.y)).toBeGreaterThan(0);
     await shot(page, "02-map-view-panned");
 
-    // The card's reset control returns to the configured default, offsets included.
+    // The card's reset control returns to the configured default: all four values, not only scale.
     await target.evaluate(element => {
         const reset = element.shadowRoot.querySelector(".icon-on-map.clickable") as HTMLElement;
         reset.click();
     });
-    await expect.poll(async () => (await viewState(target)).scale).toBeCloseTo(2, 1);
+    await expect.poll(async () => Math.abs((await viewState(target)).scale - defaultView.scale)).toBeLessThan(0.05);
+    await expect.poll(async () => Math.abs((await viewState(target)).rotation - defaultView.rotation)).toBeLessThan(0.5);
     await expect.poll(async () => Math.abs((await viewState(target)).x - defaultView.x)).toBeLessThan(3);
     await expect.poll(async () => Math.abs((await viewState(target)).y - defaultView.y)).toBeLessThan(3);
     await shot(page, "03-map-view-reset");
+
+    // The map_view.reset action (fire-dom-event) must do the same from a changed view.
+    await page.mouse.move(mapBox.x, mapBox.y);
+    await page.mouse.wheel(0, -600);
+    await page.waitForTimeout(300);
+    await page.evaluate(() => {
+        document.dispatchEvent(
+            new CustomEvent("ll-custom", {
+                detail: { xiaomi_vacuum_map_card: { action_handler_id: "this", action: "map_view.reset" } },
+            }),
+        );
+    });
+    await expect.poll(async () => Math.abs((await viewState(target)).scale - defaultView.scale)).toBeLessThan(0.05);
+    await expect.poll(async () => Math.abs((await viewState(target)).rotation - defaultView.rotation)).toBeLessThan(0.5);
 
     // Reload: the stored view for this key was written by the reset, which equals the default here.
     await page.reload();
     await waitForCard(page);
     const reloaded = await card(page);
-    await expect.poll(async () => (await viewState(reloaded)).scale).toBeCloseTo(2, 1);
+    await expect.poll(async () => Math.abs((await viewState(reloaded)).scale - defaultView.scale)).toBeLessThan(0.05);
+    await expect.poll(async () => Math.abs((await viewState(reloaded)).rotation - defaultView.rotation)).toBeLessThan(0.5);
 
     // A wheel gesture after the reset persists across another reload.
     // Give the reloaded card a moment to attach its gesture handlers, then zoom with the wheel.
