@@ -137,20 +137,22 @@ upstream, so those requests go to the
 
 ## Reporting a problem
 
-A screenshot rarely explains a map, room or tile bug: the card version, the vacuum integration, the
-camera metadata and the console errors all matter. The repository includes a triage skill that
-collects exactly that, locally and with your approval.
+Let an AI agent report it. You describe the problem; the agent collects the card setup, removes
+private data, diagnoses what it can and files the report. Agent reports are labelled
+`agent-report` and handled first, because they arrive with everything needed to reproduce the bug.
 
-1. Tell your agent: **“Run the triage skill for this repository and prepare a report I can send.”**
-2. Answer its questions, then review the redacted bundle. It does not upload anything, read secrets,
-   or publish your map, room names or coordinates without asking.
-3. Attach `triage-report.md`, `triage-data.json` and the attachments to the
-   [triage report form](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/issues/new?template=triage_report.yml).
+Give your agent (Claude Code, Codex, Cursor or similar) this instruction, with your problem at the end:
 
-The same bundle can become a regression fixture, which is how device-specific gaps get covered
-without the maintainer owning the same robot: attach the generated `fixture/` folder too. The full
-guide, including a manual checklist for when you have no agent or no local access, is
-[getting help with a card problem](docs/triage.md).
+```text
+Read https://raw.githubusercontent.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/master/.agents/skills/report-problem/SKILL.md
+and follow it to report this problem with my vacuum map card:
+
+<what is wrong, e.g. "the room outlines are shifted after I rotate the map">
+```
+
+It asks once for a temporary Home Assistant token, only reads, and never publishes secrets, network
+addresses, device names or the map image. The [step-by-step guide](docs/report-a-problem.md)
+explains the token, what the report contains, and how to answer follow-up questions.
 
 ## Project
 

@@ -6,7 +6,11 @@ body:
   - type: markdown
     attributes:
       value: |
-        This issue form is for bugs in **Better Xiaomi Vacuum Map Card**, the fork.
+        **Faster: let an AI agent report it.** Describe the problem to your agent and it collects
+        the details, removes private data and files the report for you; agent reports are handled
+        first. See [Report a problem](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/blob/master/docs/report-a-problem.md).
+
+        This issue form is for bugs in **Better Xiaomi Vacuum Map Card**, the fork, reported by hand.
 
         This is the fork's tracker; file fork bugs and fork regressions here. If the same
         configuration also fails with the upstream release, report it in the
@@ -62,7 +66,7 @@ body:
       required: true
     attributes:
       label: What version of the card has described problem?
-      placeholder: v2.5.0-igloczek.1
+      placeholder: v1.0.1
       description: >-
         The release tag from the resource URL or the latest release page.
   - type: input

@@ -1,0 +1,19 @@
+name: Agent report
+description: A problem report collected and redacted by an AI agent with the report-problem skill. Your agent fills this in.
+title: ""
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **This form is filled in by an AI agent.** Do not write a report here by hand: give your
+        agent the instruction from [Report a problem](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/blob/master/docs/report-a-problem.md),
+        and it opens this form with everything filled in. You only press **Create**.
+
+        Reports that validate are labelled `agent-report` automatically.
+  - type: textarea
+    id: report
+    attributes:
+      label: Report
+      description: The output of `node scripts/agent-report/cli.mjs render`, unchanged.
+    validations:
+      required: true

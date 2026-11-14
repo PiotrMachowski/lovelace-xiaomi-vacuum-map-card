@@ -1,0 +1,36 @@
+name: Agent reports
+
+# Labels agent-filed problem reports, strips leaked secrets and asks human reports for an agent
+# report. Runs the default branch's script; the issue text is only read as data.
+on:
+  issues:
+    types: [opened, edited, reopened]
+  issue_comment:
+    types: [created, edited]
+
+permissions:
+  issues: write
+  contents: read
+
+concurrency:
+  group: agent-report-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  review:
+    # Pull request comments also arrive as issue_comment events; only issues are reports.
+    if: ${{ !github.event.issue.pull_request && github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts/agent-report
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Review the report
+        run: node scripts/agent-report/ci-issue.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

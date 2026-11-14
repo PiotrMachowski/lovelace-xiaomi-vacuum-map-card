@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Agent problem reports: a user's AI agent collects, redacts and files a card problem with the
+  [report-problem skill](.agents/skills/report-problem/SKILL.md); valid reports are labelled
+  `agent-report`, and leaked tokens are removed from issues and comments automatically. See
+  [Report a problem](docs/report-a-problem.md).
+
 ## 1.0.1
 
 ### Fixed
