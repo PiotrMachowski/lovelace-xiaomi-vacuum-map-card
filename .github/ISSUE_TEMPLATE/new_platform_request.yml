@@ -14,7 +14,7 @@ body:
         as well belongs in the
         [upstream tracker](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues).
         The fork only adds a template when a state/registry dump from a real instance can back it;
-        see [Adding a new platform](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/blob/master/CONTRIBUTING.md#adding-new-platform).
+        see [Adding a new platform](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/blob/master/CONTRIBUTING.md#adding-new-platform).
   - type: input
     validations:
       required: true
