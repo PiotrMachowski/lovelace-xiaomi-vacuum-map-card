@@ -20,6 +20,11 @@ lovelace:
       show_in_sidebar: true
       filename: e2e-yaml-dashboard.yaml
 
+# Backs the selection-lifecycle spec's `state_entity` room; an automation would flip it the same way.
+input_boolean:
+  e2e_clean_living_room:
+    name: E2E clean living room
+
 camera:
   - platform: map_fixture
     name: Vacuum Map

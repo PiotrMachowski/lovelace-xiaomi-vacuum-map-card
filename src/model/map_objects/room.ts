@@ -15,7 +15,6 @@ const ORDER_BADGE_LABEL_OFFSET = 20;
 
 export interface RoomRenderOptions {
     readonly imageOutline?: Array<[number, number]>;
-    readonly selected?: boolean;
     /** The configured id is absent from the live camera metadata (issue #928). */
     readonly stale?: boolean;
 }
@@ -35,9 +34,16 @@ export class Room extends PredefinedMapObject {
         // call would clean a room id the camera no longer reports (issue #928).
         if (this._stale) {
             this._selected = false;
-        } else if (options.selected !== undefined && !config.state_entity) {
-            this._selected = options.selected;
         }
+    }
+
+    public selectionKey(): string {
+        return String(this._config.id);
+    }
+
+    public restoreSelected(selected: boolean): void {
+        if (this._stale) return;
+        super.restoreSelected(selected);
     }
 
     /** True when the configured id is absent from the live camera metadata. */

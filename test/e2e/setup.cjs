@@ -250,6 +250,54 @@ async function main() {
             },
         },
         {
+            url_path: "e2e-selection",
+            title: "E2E selection",
+            config: {
+                title: "E2E selection",
+                views: [
+                    {
+                        title: "Rooms",
+                        path: "rooms",
+                        cards: [
+                            card({
+                                map_modes: [
+                                    {
+                                        // Room 1 follows an input_boolean, so a change made outside
+                                        // the card rebuilds the rooms while the user holds a selection.
+                                        name: "Rooms",
+                                        icon: "mdi:floor-plan",
+                                        selection_type: "ROOM",
+                                        service_call_schema: {
+                                            service: "vacuum.send_command",
+                                            service_data: { command: "app_segment_clean", params: "[[selection]]" },
+                                        },
+                                        predefined_selections: [
+                                            {
+                                                id: "0",
+                                                label: { text: "Kitchen", x: 500, y: 450 },
+                                                outline: [[200, 200], [800, 200], [800, 700], [200, 700]],
+                                            },
+                                            {
+                                                id: "1",
+                                                label: { text: "Living room", x: 1350, y: 450 },
+                                                outline: [[1000, 200], [1700, 200], [1700, 700], [1000, 700]],
+                                                state_entity: "input_boolean.e2e_clean_living_room",
+                                            },
+                                            {
+                                                id: "2",
+                                                label: { text: "Bedroom", x: 500, y: 1100 },
+                                                outline: [[200, 900], [800, 900], [800, 1300], [200, 1300]],
+                                            },
+                                        ],
+                                    },
+                                ],
+                            }),
+                        ],
+                    },
+                ],
+            },
+        },
+        {
             url_path: "e2e-editor",
             title: "E2E editor",
             config: {

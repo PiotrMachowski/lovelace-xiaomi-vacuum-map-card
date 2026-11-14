@@ -1,5 +1,23 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- A selection stays as the user made it: rooms, zones, points and drawn shapes, with their order
+  and numbers, survive the card rebuilding them. An item drops out only when it disappears from the
+  map or the configuration, and the rest keep their order.
+  - A room, zone or point with a `state_entity` that changes outside the card no longer clears the
+    rest of the selection or re-selects a `default_state` item the user deselected. It now joins
+    the selection at the end when its entity turns on, and leaves when it turns off.
+  - Zones and points read from an entity (`zones: sensor.x.attributes.zones`) follow that entity
+    instead of staying as they were when the mode opened.
+  - A room the camera stops reporting leaves the selection and its badge even when the map colours
+    cannot be read, and a new room appears.
+  - Setting the card configuration again (editor preview, dashboard re-render) keeps the current
+    mode and selection instead of returning to the first mode with nothing selected.
+  - After a run clears the selection, the map shows it cleared right away.
+
 ## 1.0.7
 
 ### Fixed

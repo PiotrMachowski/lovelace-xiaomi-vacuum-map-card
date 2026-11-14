@@ -550,6 +550,21 @@ Format of data depends on selected `selection_type`:
 
   `predefined_selections` may be omitted when the map camera provides a `rooms` attribute. The card will use the names and identifiers from that attribute and, when the image has distinct room fill colors, detect the room shapes and centers from the image.
 
+### Selection lifetime
+
+A selection changes only when you change it: a tap, switching mode or preset, the
+`selection.clear` action, or starting a run with `clean_selection_on_start` (the default). Map and
+camera refreshes, Home Assistant updates and setting the card configuration again keep the
+selected items and their order, which is the cleaning order.
+
+- An item whose room, zone or point disappears (from the camera `rooms` metadata, from an entity
+  that supplies zones or points, or from the configuration) leaves the selection; the others keep
+  their order.
+- An item with a `state_entity` follows that entity. When the entity turns on outside the card, the
+  item joins the end of the selection; when it turns off, the item leaves.
+- `default_state: selected` applies when an item first appears and after the selection is cleared,
+  not on every refresh: an item you deselected stays deselected.
+
 ### Icon options
 
 | Key    | Type   | Required | Default | Description                                                       |

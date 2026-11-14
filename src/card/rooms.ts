@@ -7,7 +7,7 @@ import { findStaleRoomIds } from "../model/room-config";
 import { MapMode } from "../model/map_mode/map-mode";
 import { SelectionType } from "../model/map_mode/selection-type";
 import type { XiaomiVacuumMapCard } from "../xiaomi-vacuum-map-card";
-import { setCurrentMode } from "./selection";
+import { rebuildSelection } from "./selection";
 
 /** The live `rooms` attribute of the preset's camera, or undefined when it exposes none. */
 export function getLiveRooms(card: XiaomiVacuumMapCard): Record<string, MapExtractorRoom> | undefined {
@@ -143,9 +143,7 @@ export function detectRoomColors(card: XiaomiVacuumMapCard): void {
 
 export function refreshRoomsAfterColorDetection(card: XiaomiVacuumMapCard): void {
     if (card._getCurrentMode()?.selectionType === SelectionType.ROOM) {
-        const selectedRoomIds = card.selectedRooms.map(room => String(room.toVacuum()));
-        setCurrentMode(card, card.selectedMode, false, selectedRoomIds);
-        card.requestUpdate();
+        rebuildSelection(card);
     }
 }
 

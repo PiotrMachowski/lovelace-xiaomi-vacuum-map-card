@@ -157,12 +157,9 @@ describe("cleaning-order badges (#866, upstream #959)", () => {
         // array the card sends, so rendering it can never reorder that array.
         expect(badgesBeforeFirstRun).toEqual(calledSegments(hass).map(String));
 
-        // The default `clean_selection_on_start` clears the card's selection but leaves the rendered
-        // overlay to the next update (Home Assistant pushes hass updates continuously); refresh it
-        // here so the second round of clicks reaches the current room objects.
+        // The default `clean_selection_on_start` clears the card's selection and redraws the map
+        // right away, so the second round of clicks reaches the current room objects.
         expect(card.element._getSelection(card.element._getCurrentMode()).selection).toEqual([]);
-        card.element.requestUpdate();
-        await card.element.updateComplete;
         // The started run keeps its order on the map, in the same style, and the rooms are locked
         // until the vacuum is done (test/regressions/active-room-run.test.ts).
         expect(badges(card)).toEqual({ "2": "1", "0": "2", "1": "3" });

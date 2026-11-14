@@ -66,6 +66,10 @@ export class PredefinedPoint extends PredefinedMapObject {
         `;
     }
 
+    public selectionKey(): string {
+        return JSON.stringify(this._config.position);
+    }
+
     public toVacuum(repeats: number | null = null): PointType | PointWithRepeatsType {
         if (typeof this._config.position === "string") {
             return [0, 0];
