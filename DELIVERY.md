@@ -24,8 +24,8 @@ Opus 5.5) returned `VERDICT: APPROVE` on the PR.
 | B7 | Registry payload and caching (#864) | merged | [#8](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/8) | APPROVE (round 2) | `5939551` | - |
 | B8 | Preset rooms and stale room IDs (#385, #928) | merged | [#12](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/12) | APPROVE (round 2) | `09ebc6e` | - |
 | B9 | Default map view (#873) | merged | [#13](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/13) | APPROVE (round 2) | `a4477c5` | manual check pending (see below) |
-| B10 | Horizontal layout and card height (#183, #943) | in progress | - | - | - | - |
-| R1 | In-repo rebrand and README rewrite | planned | - | - | - | after code batches |
+| B10 | Horizontal layout and card height (#183, #943) | merged | [#14](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/14) | APPROVE (round 2) | `ceacbdd` | manual sections-view check pending |
+| R1 | In-repo rebrand and README rewrite | in progress | - | - | - | - |
 | R2 | GitHub repository rename and release surface | planned | - | - | - | last, after every code PR merges |
 
 ## Delivery fixes that are not roadmap batches
@@ -71,7 +71,7 @@ table above; P0d is a user-captured fixture, not an upstream item.
 | #385 | Preset switch does not refresh rooms | B8 | merged, PR #12 — closed as already fixed, proven by a same-camera refresh test |
 | #928 | Room IDs shift after a map edit | B8 | merged, PR #12 |
 | #873 | Configured default map view | B9 | merged, PR #13 |
-| #183 + #943 | Horizontal layout and card height | B10 | in progress |
+| #183 + #943 | Horizontal layout and card height | B10 | merged, PR #14 — #821 collapse-map declined as not nearly free |
 | #549 | Templated `predefined_selections` | - | postponed: no concrete case; Jinja subscription is a large change |
 | #503 + #922 | Static floorplan background | - | postponed: needs a floorplan, calibration fixture and alignment decision |
 | #134 | Rotated zone rectangle | - | postponed: Roborock zone API is axis-aligned |
@@ -124,5 +124,6 @@ table above; P0d is a user-captured fixture, not an upstream item.
 | Zoom 2.5 / rotation 90 on the device | any map-rendering PR | Real dashboard rendering |
 | Second camera capture after a re-map (room ID drift) | B8 | Needs an acceptable re-map on the real instance |
 | `map_view` on a real dashboard: opens at `{scale: 2.5, rotation: 90}`, pan/zoom away, reset control and `map_view.reset` return to 2.5/90, reload keeps the view; plus the device check at zoom 2.5 and rotation 90 | B9 | No Home Assistant instance in this environment; merged with the check explicitly pending |
+| `layout: horizontal` in a real sections view: resize by dragging, two column spans, a long mode name in HA's real `ha-dropdown`, scrolling on a phone | B10 | Simulated cell + HA source only; no HA instance in this environment |
 | Install from the HACS custom repository | R1/R2 | Needs the real HACS instance |
 | Clean install from the renamed repository URL | R2 | Needs HACS cache behaviour on the real instance |
