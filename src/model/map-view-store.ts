@@ -1,4 +1,5 @@
 import { MAP_VIEW_STORE_KEY, MAP_VIEW_STORE_LIMIT } from "../const";
+import type { MapViewConfig } from "../types/types";
 
 export interface MapView {
     scale: number;
@@ -94,4 +95,33 @@ export function setMapView(key: string, view: MapView): void {
 export function normalizeAngle(degrees: number): number {
     const normalized = degrees % 360;
     return normalized < 0 ? normalized + 360 : normalized;
+}
+
+/**
+ * The view to apply for one key, in fallback order: a stored view always wins, then the configured
+ * default, and only when neither exists does `undefined` mean "leave the neutral view alone".
+ *
+ * A configured default is not stored: the card applies it on every restore, so it also remains the
+ * target of the reset action after the user pans away. Missing fields of a partial `map_view` are
+ * taken from `neutral` — scale 1, no offset and the preset's `map_rotation` — which keeps a
+ * `map_view: {scale: 2.5}` from also moving or rotating the map. The rotation is normalized like a
+ * stored one, so a configured 450° compares equal to 90°.
+ */
+export function resolveMapView(
+    stored: MapView | undefined,
+    configured: MapViewConfig | undefined,
+    neutral: MapView,
+): MapView | undefined {
+    if (stored) {
+        return stored;
+    }
+    if (!configured) {
+        return undefined;
+    }
+    return {
+        scale: configured.scale ?? neutral.scale,
+        x: configured.x ?? neutral.x,
+        y: configured.y ?? neutral.y,
+        rotation: normalizeAngle(configured.rotation ?? neutral.rotation),
+    };
 }

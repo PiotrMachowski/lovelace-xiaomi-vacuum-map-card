@@ -54,6 +54,22 @@ export interface XiaomiVacuumMapCardConfig extends LovelaceCardConfig, CardPrese
     readonly persist_map_view?: boolean;
     readonly persist_map_lock?: boolean;
     readonly map_view_storage_key?: string;
+    readonly map_view?: MapViewConfig;
+}
+
+/**
+ * The view the card starts at when nothing is stored for it, and returns to on reset.
+ *
+ * Every field is optional. An omitted field keeps its neutral value — scale 1, no offset, the
+ * preset's `map_rotation` — so `map_view: {scale: 2.5}` is a complete configuration. A field that
+ * is present must be a finite number and `scale` must be positive; anything else is reported by
+ * the config validation instead of being applied.
+ */
+export interface MapViewConfig {
+    readonly scale?: number;
+    readonly x?: number;
+    readonly y?: number;
+    readonly rotation?: number;
 }
 
 export interface CardPresetConfig extends ConditionalObjectConfig {
