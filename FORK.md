@@ -16,9 +16,11 @@ meaning. The fork adds options; it does not rename or remove them.
 
 - Upstream baseline: `045c3ac` (`upstream/master`), the revision the differences below were last
   reviewed against on 2026-11-14.
-- Refresh this snapshot in the same pull request as an upstream sync. The ahead/behind counts belong
-  to that pull request (`git log --left-right --cherry-pick --oneline upstream/master...master`), not
-  to this file.
+- Fork head at that review: `63f5ada` (`master`), 172 commits ahead and 0 behind the fetched upstream
+  branch.
+- Refresh this snapshot in the same pull request as an upstream sync. The ahead/behind counts are a
+  snapshot, not a live number; recompute them with
+  `git log --left-right --cherry-pick --oneline upstream/master...master`.
 
 ## Active differences
 
