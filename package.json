@@ -1,14 +1,19 @@
 {
-    "name": "xiaomi-vacuum-map-card",
+    "name": "lovelace-better-xiaomi-vacuum-map-card",
     "version": "v0.0.0-dev",
-    "description": "Xiaomi Vacuum Map Card",
+    "description": "Better Xiaomi Vacuum Map Card",
     "keywords": [
         "home-assistant",
         "homeassistant",
         "hass",
-        "automation",
         "lovelace",
-        "custom-cards"
+        "custom-cards",
+        "vacuum",
+        "map-card",
+        "xiaomi",
+        "roborock",
+        "valetudo",
+        "hacs"
     ],
     "module": "xiaomi-vacuum-map-card.js",
     "repository": "git@github.com:PiotrMachowski/lovelace-xiaomi-vacuum-map-card.git",
@@ -60,6 +65,7 @@
         "test:visual": "playwright test",
         "test:visual:update": "playwright test --update-snapshots",
         "check:map-scale": "vitest run test/map-scale.test.ts",
+        "check:docs": "node scripts/check-docs-links.cjs",
         "add-version": "cross-var replace-in-file \"@VACUUM_MAP_CARD_VERSION_PLACEHOLDER@\" \"$npm_package_version\" \"dist/xiaomi-vacuum-map-card.js\"",
         "lint": "eslint src/*.ts",
         "rollup": "rollup -c"
