@@ -1,0 +1,10 @@
+bump:
+  name: Bump fixture camera
+  description: Pushes a new map image and state update from the fixture camera.
+set_image:
+  name: Set fixture image
+  description: Changes the PNG the fixture camera serves.
+  fields:
+    path:
+      description: Absolute path inside the HA container.
+      example: /config/map_fixture.png

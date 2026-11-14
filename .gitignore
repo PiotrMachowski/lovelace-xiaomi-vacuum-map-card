@@ -8,3 +8,23 @@
 /test-results/
 /.playwright/
 /ms-playwright/
+
+# End-to-end Home Assistant instance
+/test/e2e/ha/config/.storage/
+/test/e2e/ha/config/home-assistant*.log*
+/test/e2e/ha/config/.cloud/
+/test/e2e/.auth/
+/test/e2e/artifacts/
+/test/artifacts/
+
+# Home Assistant runtime state (the authored fixture files are re-included below)
+/test/e2e/ha/config/*
+!/test/e2e/ha/config/configuration.yaml
+!/test/e2e/ha/config/e2e-yaml-dashboard.yaml
+!/test/e2e/ha/config/map_fixture.png
+!/test/e2e/ha/config/custom_components/
+/test/e2e/ha/config/custom_components/*
+!/test/e2e/ha/config/custom_components/map_fixture/
+# Python bytecode
+__pycache__/
+*.pyc

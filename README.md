@@ -55,11 +55,21 @@ hardware or a fixture. Evidence links to the fork's record in [FORK.md](FORK.md)
 
 ## Install
 
-This card is **not** in the HACS default repositories; add it as a custom repository. Earlier fork
-releases predate the work above — `v2.4.2-igloczek.6`, for example, has neither `map_view` nor
-`layout` — so do not expect those rows in an older build.
+Install `v2.6.0` or newer; earlier fork releases predate the work above (`v2.4.2-igloczek.6`, for
+example, has neither `map_view` nor `layout`).
 
-### HACS (custom repository)
+Home Assistant 2026.11 replaced HACS with the built-in **Marketplace**, which installs dashboard
+resources from GitHub and removes a HACS entry as a duplicate when both are present. Use Marketplace
+on 2026.11 or newer, HACS on older releases, or install the release asset by hand.
+
+### Marketplace (Home Assistant 2026.11+)
+
+1. Open **Settings → Marketplace** and accept the first-run warning if it appears.
+2. Add the custom repository `https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card` as a
+   **Dashboard resource** and install it.
+3. Marketplace registers the Lovelace resource itself; reload the browser.
+
+### HACS (older Home Assistant)
 
 1. Open HACS → **Frontend** → three-dot menu → **Custom repositories**.
 2. Add `https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card` with category **Dashboard**.
@@ -164,6 +174,9 @@ Every change goes through the same gates:
 - The Playwright visual suite runs in its own job for map-rendering pull requests and checks overlay
   alignment at zoom and rotation, room hit-testing and the vertical/horizontal layout at three
   widths ([visual suite](test/visual/README.md)).
+- A real Home Assistant, Marketplace/HACS and Playwright end-to-end suite (`test/e2e`) proves the
+  editor, map view, layouts, zoom/rotation, camera request rate and YAML parsing; the delivery owns
+  that verification and publishes the screenshots as evidence.
 - A delivery review and a Claude Opus 5.5 council review must both approve before merge. The
   council audits the diff against the issue and the tests, not just the style.
 

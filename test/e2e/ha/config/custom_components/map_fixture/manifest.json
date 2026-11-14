@@ -1,0 +1,10 @@
+{
+    "domain": "map_fixture",
+    "name": "Map Fixture Camera",
+    "version": "1.0.0",
+    "documentation": "https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card",
+    "dependencies": ["camera", "http", "frontend"],
+    "codeowners": ["@Igloczek"],
+    "requirements": [],
+    "iot_class": "local_polling"
+}

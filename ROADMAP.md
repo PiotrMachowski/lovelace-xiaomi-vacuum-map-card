@@ -355,7 +355,7 @@ instance.
 | #952 YAML `y:` normalization | Depends on an actual repro on the current HA parser | A config with an unquoted `y:` fails on the real instance |
 | #958 beyond the element fallback | The stub only proves the branch, not HA's real element API | Manual check on the current HA |
 | #549 templated `predefined_selections` | No concrete case that `state_entity` cannot serve; Jinja subscription is a large change | A real use case and a fixture |
-| #503 + #922 static floorplan background | Needs a floorplan, calibration fixture and a decision on transparency/alignment | A concrete floorplan setup |
+| #503 + #922 live path overlay on a static floorplan | A static image already works as the map source (`map_source.image` plus `transparent_background`); what is missing is drawing the live robot path on top of it | A fixture with a path entity and a decision on how paths overlay a static image |
 | #134 rotated zone rectangle | Roborock's zone API is axis-aligned; no evidence the target platform accepts 4 arbitrary points | Vendor documentation or a working integration call |
 | #967 + #960 Valetudo icons / JSON map source | Large (945 LOC), platform-specific, no Valetudo instance to verify | Upstream lands it first, or a Valetudo fixture is available |
 | #715 + #600 Ecovacs SVG viewbox | Needs an Ecovacs SVG camera fixture | A fixture and an Ecovacs instance |

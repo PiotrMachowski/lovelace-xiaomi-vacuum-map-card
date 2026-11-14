@@ -1,0 +1,25 @@
+default_config:
+
+demo:
+
+http:
+  server_port: 8123
+
+logger:
+  default: warning
+  logs:
+    custom_components.map_fixture: info
+
+lovelace:
+  mode: storage
+  dashboards:
+    e2e-yaml:
+      mode: yaml
+      title: E2E YAML
+      icon: mdi:test-tube
+      show_in_sidebar: true
+      filename: e2e-yaml-dashboard.yaml
+
+camera:
+  - platform: map_fixture
+    name: Vacuum Map
