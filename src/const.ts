@@ -27,6 +27,7 @@ export const EMPTY_MAP_MODE: MapModeConfig = {
 
 export const MAP_VIEW_STORE_KEY = "xiaomi-vacuum-map-card.map-view";
 export const MAP_VIEW_STORE_LIMIT = 300;
+export const ACTIVE_ROOM_RUN_STORE_KEY = "xiaomi-vacuum-map-card.active-room-run";
 export const MAP_VIEW_SAVE_DEBOUNCE = 350;
 // The zoom range the card offers: the pinch-zoom element's `min-scale` and the zoom-out floor in
 // `_updateScale` for the lower bound, and the vendored pinch-zoom's `MAX_SCALE` for the upper one.

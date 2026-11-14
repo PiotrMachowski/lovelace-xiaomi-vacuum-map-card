@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.3
+
+### Fixed
+
+- The cleaning order stays on the map after **Start**: the rooms of the run keep their numbers,
+  with a dashed outline, until the vacuum is done. A reload keeps them.
+
+### Documentation
+
+- How to clean rooms in a fixed order on vacuums that plan their own route (Viomi V8): a script
+  that sends one room at a time, started from the card.
+
 ## 1.0.2
 
 ### Added

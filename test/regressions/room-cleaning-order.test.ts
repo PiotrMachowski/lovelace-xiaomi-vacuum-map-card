@@ -163,7 +163,10 @@ describe("cleaning-order badges (#866, upstream #959)", () => {
         expect(card.element._getSelection(card.element._getCurrentMode()).selection).toEqual([]);
         card.element.requestUpdate();
         await card.element.updateComplete;
-        expect(badges(card)).toEqual({});
+        // The started run keeps its order on the map until the vacuum is done
+        // (test/regressions/active-room-run.test.ts); none of the rooms is selected any more.
+        expect(badges(card)).toEqual({ "2": "1", "0": "2", "1": "3" });
+        expect(card.shadowRoot.querySelectorAll(".room-wrapper.selected")).toHaveLength(0);
         await clickRooms(card, ["2", "0", "1"]);
         await clickRoom(card, "0");
         const badgesBeforeSecondRun = roomsByBadge(card);
