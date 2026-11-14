@@ -277,9 +277,14 @@ vacuum_platform: Xiaomi Miio
 layout: horizontal
 ```
 
-In the sections view the card reports grid options with a 12-column default and numeric row spans,
-so it can be resized in both directions without `card-mod`. Horizontal asks for a wider minimum
-(`min_columns: 6` instead of `3`) because two columns of content need more room. Home Assistant's own
+In the sections view the card uses Home Assistant's default grid size for the vertical layout: 12
+columns wide with `rows: "auto"`, so the cell fits the card's content as it always has. The
+horizontal layout is a new arrangement and reports a numeric default height (6 rows) with
+`min_columns: 9`, because at the permissive half-width minimum the controls column would leave the
+map too narrow to use. It does not set `max_rows`, so a `grid_options: {rows: ...}` override can make
+it as tall as you need. A sections-view cell shorter than the card's content scrolls the card rather
+than shrinking the map. Prefer the horizontal layout for wide cells: at 320–400 px the map is only
+about 140–220 px wide. Home Assistant's own
 [`grid_options`](https://www.home-assistant.io/dashboards/sections/#resizing-cards) still override
 these values per card.
 

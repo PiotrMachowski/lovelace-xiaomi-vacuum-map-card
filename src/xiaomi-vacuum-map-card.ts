@@ -276,12 +276,20 @@ export class XiaomiVacuumMapCard extends LitElement {
      * `home-assistant/frontend/src/panels/lovelace/types.ts` (`columns` 1–12 or `"full"`, `rows` a
      * count or `"auto"`, plus `min_*`/`max_*` clamps), applied by `computeCardGridSize` in
      * `src/panels/lovelace/common/compute-card-grid-size.ts`; the custom-card docs add that a
-     * section is 12 columns, one row is 56 px plus an 8 px gap, and a column value that is a
-     * multiple of 3 lines cards up (`columns: 12` here). Numeric `rows` is deliberate: with
-     * `rows: "auto"` Home Assistant follows the content and the user cannot resize the height,
-     * which is the problem issue #943 reports. Horizontal needs more width than vertical, hence
-     * the higher `min_columns` and the shorter default height (its map column is usually wider, so
-     * the map row is shorter than the same map stacked above its controls).
+     * section is 12 columns and one row is 56 px plus an 8 px gap.
+     *
+     * Vertical keeps Home Assistant's default grid size: `columns: 12` and `rows: "auto"`, which
+     * sizes the cell to the card's content. That must stay the default because a numeric `rows`
+     * replaces the content-sized cell with a fixed one, so a tall vertical card would scroll inside
+     * its cell even though it used to fit; a `max_rows` would additionally cap a user's own
+     * `grid_options: {rows: N}` override, because HA merges the element and config options before
+     * clamping. Issue #943 (the card not following the cell height) is fixed by the
+     * `:host([layout="grid"])` rules below, for an auto or numeric cell alike.
+     *
+     * Horizontal is a new arrangement, so it can ask for a numeric default height. `min_columns: 9`
+     * keeps at least three quarters of a section: at the permissive half-width minimum (~250 px in
+     * a 500 px section) the 180 px controls column would leave the map about 66 px. There is no
+     * `max_rows`, so a user can size the card as tall as they like.
      *
      * HA invokes this as an instance method (`hui-card.getElementGridOptions` calls
      * `this._element.getGridOptions()`), so the instance method below delegates here with the
@@ -293,18 +301,12 @@ export class XiaomiVacuumMapCard extends LitElement {
             return {
                 columns: 12,
                 rows: 6,
-                min_columns: 6,
+                min_columns: 9,
                 min_rows: 3,
-                max_rows: 12,
             };
         }
-        return {
-            columns: 12,
-            rows: 8,
-            min_columns: 3,
-            min_rows: 4,
-            max_rows: 12,
-        };
+        // `rows` is omitted deliberately: HA fills it with its default `"auto"` (fit content).
+        return { columns: 12 };
     }
 
     /** The grid options for the card's configured layout, as `hui-card` reads them. */
@@ -2611,10 +2613,12 @@ export class XiaomiVacuumMapCard extends LitElement {
             }
 
             /*
-             * Sections view: hui-card sets layout = "grid" and the grid section gives the cell a
-             * fixed height when getGridOptions() returns numeric rows. Fill that cell instead of
-             * letting the content overflow into the next card, and scroll inside the card when the
-             * map and controls need more height than the user picked (issue #943).
+             * Sections view: hui-card sets layout = "grid" and the cell has the height the section
+             * gives it - content-sized for the default rows: "auto", or fixed when the user picks
+             * a row count. Fill that cell instead of letting the content overflow into the next
+             * card, and scroll inside the card when the map and controls need more height than the
+             * cell allows (issue #943). In an auto-height cell height:100% resolves against the
+             * content height, so a vertical card renders exactly as it did before this rule.
              */
             :host([layout="grid"]) {
                 display: block;
@@ -2682,15 +2686,37 @@ export class XiaomiVacuumMapCard extends LitElement {
                 justify-content: center;
             }
 
-            .layout-content.horizontal .dropdown-menu-button {
-                max-width: 100%;
+            /*
+             * A long mode name must ellipsize inside the controls column instead of widening the
+             * dropdown and having the column's overflow-x: hidden clip the mode icon. The chain
+             * from the flex item down to the text has to be allowed to shrink at every level:
+             * xvmc-dropdown-menu and ha-dropdown are block boxes clamped to the column, the button
+             * is the flex row, the text is the one shrinkable child and the icon keeps its size.
+             * max-width: 100% on the button alone was measured against those content-sized
+             * parents, so the button stayed as wide as its text and nothing ellipsized.
+             */
+            .layout-content.horizontal .map-controls > xvmc-dropdown-menu,
+            .layout-content.horizontal .dropdown-menu {
+                display: block;
                 min-width: 0;
+                max-width: 100%;
+            }
+
+            .layout-content.horizontal .dropdown-menu-button {
+                display: flex;
+                min-width: 0;
+                max-width: 100%;
             }
 
             .layout-content.horizontal .dropdown-menu-button-text {
+                min-width: 0;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
+            }
+
+            .layout-content.horizontal .dropdown-menu-button-button {
+                flex-shrink: 0;
             }
 
             .clickable {

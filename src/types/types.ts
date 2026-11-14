@@ -61,8 +61,11 @@ export type CardLayout = "vertical" | "horizontal";
  * `columns?: number | "full"`, `rows?: number | "auto"`, `max_columns?`, `min_columns?`,
  * `min_rows?` and `max_rows?`. Sections divide a section into 12 columns, and `computeCardGridSize`
  * in `src/panels/lovelace/common/compute-card-grid-size.ts` defaults a missing `columns` to 12 and
- * a missing `rows` to `"auto"`. The card returns numeric rows so the height can be resized in the
- * sections view, which issue #943 reported as impossible.
+ * a missing `rows` to `"auto"`, so an auto-height cell fits the card's content. The vertical layout
+ * omits `rows` and the row clamps, keeping that default (issue #943 is fixed by the card filling
+ * the cell it is given, not by requesting a numeric height). Only the horizontal layout asks for a
+ * numeric default height; it deliberately has no `max_rows`, so a user's `grid_options` override
+ * can make the card as tall as they need.
  */
 export interface CardGridOptions {
     columns?: number | "full";

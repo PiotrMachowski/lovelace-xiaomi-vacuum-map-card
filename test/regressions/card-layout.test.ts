@@ -110,7 +110,7 @@ describe("layout: horizontal", () => {
         }
     });
 
-    it("keeps the controls wrapper when the card is mounted without modes", async () => {
+    it("omits the horizontal wrapper when there are no controls", async () => {
         // A `layout: horizontal` card with no controls has nothing to place beside the map; it must
         // still render the map normally instead of an empty second column.
         const card = await mount({ layout: "horizontal", map_modes: [] });
@@ -121,23 +121,35 @@ describe("layout: horizontal", () => {
 });
 
 describe("getGridOptions", () => {
+    it("returns no numeric rows for the vertical layout, so the cell fits the content", () => {
+        const vertical = XiaomiVacuumMapCard.getGridOptions();
+
+        // HA's default grid size is `{columns: 12, rows: "auto"}`. A numeric `rows` would replace the
+        // content-sized cell with a fixed, too-short one and a `max_rows` would cap a user override.
+        expect(vertical.columns).toBe(12);
+        expect(vertical.rows).toBeUndefined();
+        expect(vertical.min_rows).toBeUndefined();
+        expect(vertical.max_rows).toBeUndefined();
+    });
+
     it("returns a valid sections-view table for both layouts and differs in min_columns", () => {
         const vertical = XiaomiVacuumMapCard.getGridOptions();
         const horizontal = XiaomiVacuumMapCard.getGridOptions("horizontal");
 
-        expect(vertical).toEqual({ columns: 12, rows: 8, min_columns: 3, min_rows: 4, max_rows: 12 });
-        expect(horizontal).toEqual({ columns: 12, rows: 6, min_columns: 6, min_rows: 3, max_rows: 12 });
+        expect(vertical).toEqual({ columns: 12 });
+        // Horizontal is a new arrangement: numeric rows are its default, but no max_rows may cap
+        // the user's own height. 9 columns is the "three quarters of a section" minimum.
+        expect(horizontal).toEqual({ columns: 12, rows: 6, min_columns: 9, min_rows: 3 });
 
         for (const options of [vertical, horizontal]) {
-            // HA clamps with these pairs; a table where the default sits outside its own range would
-            // silently open at the clamped size instead.
-            expect(options.min_columns!).toBeLessThanOrEqual(options.columns as number);
-            expect(options.min_rows!).toBeLessThanOrEqual(options.rows as number);
-            expect(options.rows as number).toBeLessThanOrEqual(options.max_rows!);
             expect((options.columns as number) % 3).toBe(0);
+            expect(options.min_columns ?? 1).toBeLessThanOrEqual(options.columns as number);
         }
+        // HA clamps with these pairs; a table where the default sits outside its own range would
+        // silently open at the clamped size instead.
+        expect(horizontal.min_rows!).toBeLessThanOrEqual(horizontal.rows as number);
         // Horizontal is the width-hungry arrangement: it must not be resized as narrow as vertical.
-        expect(horizontal.min_columns!).toBeGreaterThan(vertical.min_columns!);
+        expect(horizontal.min_columns!).toBeGreaterThan(vertical.min_columns ?? 1);
     });
 
     it("uses the configured layout on the element, as hui-card reads it", async () => {

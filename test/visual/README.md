@@ -24,9 +24,10 @@ is involved: `index.html` plus `harness.js` mount the card element with a mock `
 | `default vertical layout` | header, preset selector, map and controls stack vertically |
 | `layout geometry at 400 and 800 px` | vertical stacks the controls below the map; horizontal puts them beside it at both widths |
 | `horizontal layout at 400 px`, `... 800 px`, `... 1200 px` | side-by-side geometry at three widths, map and controls inside the card, the controls column wrapping and scrolling instead of overflowing, one screenshot each |
+| `a long mode name ellipsizes inside the controls column at 400 px` | a 42-character mode name does not widen the dropdown or clip the mode icon: the controls column does not scroll sideways, the icon stays inside it, and the collapsed name is ellipsized |
 | `horizontal layout adapts when the container is resized` | resizing the container to 1200 px widens the map and moves the controls, the room overlay is recalculated to the new scale, and resizing back restores the narrow geometry |
 | `a sections-view grid cell makes the card fill its height and scroll` | the reflected `layout="grid"` hook makes the card fill a fixed-height cell and scroll inside it instead of overflowing |
-| `horizontal layout keeps room, mode and tile interactions` | room hit-testing, the mode dropdown, a tile click and the map-before-controls DOM/focus order in the horizontal arrangement |
+| `horizontal layout keeps room, mode and tile interactions` | room hit-testing, opening the mode dropdown and selecting a mode (the mode changes), a tile click and the map-before-controls DOM/focus order in the horizontal arrangement |
 
 The horizontal scenarios mount a fixture with three modes, four icons and eight tiles so the
 clamped controls column has to wrap and scroll. `#card-root` is 400 px wide by default, so each

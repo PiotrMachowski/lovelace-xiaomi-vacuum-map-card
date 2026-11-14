@@ -731,6 +731,67 @@ for (const width of HORIZONTAL_WIDTHS) {
     });
 }
 
+/**
+ * A mode name long enough to overrun the 180 px controls column at the narrowest supported width.
+ * The template still supplies the icon, selection type and service call; only the display name is
+ * overridden, which is exactly what a user with a descriptive mode name configures.
+ */
+const LONG_MODE_NAME = "Clean selected rooms and the whole hallway";
+
+test("a long mode name ellipsizes inside the controls column at 400 px", async ({ page }) => {
+    await setContainerWidth(page, 400);
+    await mount(
+        page,
+        horizontalConfig({
+            map_modes: [
+                { template: "vacuum_clean_segment", name: LONG_MODE_NAME },
+                { template: "vacuum_clean_zone" },
+            ],
+        }),
+    );
+    await expect(page.locator(`${CARD} .dropdown-menu-button-text`)).toHaveText(LONG_MODE_NAME);
+
+    const metrics = await page.evaluate(() => {
+        const card = document.querySelector("xiaomi-vacuum-map-card") as unknown as {
+            shadowRoot: ShadowRoot;
+        };
+        const controls = card.shadowRoot.querySelector(".controls-wrapper") as HTMLElement;
+        const column = card.shadowRoot.querySelector(".controls-column") as HTMLElement;
+        const button = card.shadowRoot.querySelector(".dropdown-menu-button") as HTMLElement;
+        const icon = card.shadowRoot.querySelector(".dropdown-menu-button .dropdown-icon") as HTMLElement;
+        const text = card.shadowRoot.querySelector(".dropdown-menu-button-text") as HTMLElement;
+        const columnBox = column.getBoundingClientRect();
+        const buttonBox = button.getBoundingClientRect();
+        const iconBox = icon.getBoundingClientRect();
+        const textStyle = getComputedStyle(text);
+        return {
+            controls: { clientWidth: controls.clientWidth, scrollWidth: controls.scrollWidth },
+            column: { left: columnBox.left, right: columnBox.right },
+            button: { left: buttonBox.left, right: buttonBox.right },
+            icon: { left: iconBox.left, right: iconBox.right },
+            text: {
+                clientWidth: text.clientWidth,
+                scrollWidth: text.scrollWidth,
+                textOverflow: textStyle.textOverflow,
+                whiteSpace: textStyle.whiteSpace,
+            },
+        };
+    });
+
+    // Nothing inside the controls column may stick out sideways. `overflow-x: hidden` would clip
+    // the overrun, which is how the old CSS cut the mode icon off instead of ellipsizing the name.
+    expect(metrics.controls.scrollWidth).toBeLessThanOrEqual(metrics.controls.clientWidth + 1);
+    // The mode button and its 50 px icon stay wholly inside the column.
+    expect(metrics.icon.left).toBeGreaterThanOrEqual(metrics.column.left - 0.5);
+    expect(metrics.icon.right).toBeLessThanOrEqual(metrics.column.right + 0.5);
+    expect(metrics.button.left).toBeGreaterThanOrEqual(metrics.column.left - 0.5);
+    expect(metrics.button.right).toBeLessThanOrEqual(metrics.column.right + 0.5);
+    // The name is wider than the space left for it and is clamped with an ellipsis.
+    expect(metrics.text.scrollWidth).toBeGreaterThan(metrics.text.clientWidth);
+    expect(metrics.text.textOverflow).toBe("ellipsis");
+    expect(metrics.text.whiteSpace).toBe("nowrap");
+});
+
 test("horizontal layout adapts when the container is resized", async ({ page }) => {
     await setContainerWidth(page, 400);
     await mount(page, horizontalConfig());
@@ -800,7 +861,8 @@ test("horizontal layout keeps room, mode and tile interactions", async ({ page }
 
     // The controls live in the second column, and the room hit test still reaches the map.
     expect(await page.locator(`${CARD} .controls-column xvmc-tile`).count()).toBe(8);
-    await expect(page.locator(`${CARD} xvmc-dropdown-menu .dropdown-menu-button`)).toBeVisible();
+    const dropdown = page.locator(`${CARD} xvmc-dropdown-menu`);
+    await expect(dropdown.locator(".dropdown-menu-button")).toBeVisible();
     const point = await page.evaluate(() =>
         (window as unknown as VisualWindow).visualHarness.roomPoint("1", 0.25, 0.5),
     );
@@ -828,5 +890,24 @@ test("horizontal layout keeps room, mode and tile interactions", async ({ page }
         };
     });
     expect(order).toEqual({ mapBeforeControls: true, mapTabIndex: null });
+
+    // Opening the mode dropdown and choosing the second mode changes the card's mode and the
+    // collapsed label, not just the trigger's visibility.
+    const entries = dropdown.locator(".dropdown-list-item");
+    await expect(entries).toHaveCount(3);
+    const firstModeName = (await dropdown.locator(".dropdown-menu-button-text").innerText()).trim();
+    await dropdown.locator(".dropdown-menu-button").click();
+    const secondEntry = entries.nth(1);
+    const secondModeName = (await secondEntry.locator(".dropdown-menu-entry-text").innerText()).trim();
+    expect(secondModeName).not.toBe(firstModeName);
+    await secondEntry.click();
+    await expect(dropdown.locator(".dropdown-menu-button-text")).toHaveText(secondModeName);
+    await expect(secondEntry).toHaveAttribute("activated", "");
+    expect(
+        await page.evaluate(() => {
+            const card = document.querySelector("xiaomi-vacuum-map-card") as unknown as { selectedMode?: number };
+            return card.selectedMode;
+        }),
+    ).toBe(1);
 });
 
