@@ -78,8 +78,12 @@ repository URL it was added with, so remove the old entry, add the new URL from 
 Only the resource URL changes, to
 `/hacsfiles/lovelace-better-xiaomi-vacuum-map-card/xiaomi-vacuum-map-card.js`; the element
 (`custom:xiaomi-vacuum-map-card`), the asset name (`xiaomi-vacuum-map-card.js`) and your YAML stay
-exactly as they are. GitHub redirects the old repository URL, but a cached HACS entry is not worth
-relying on the redirect.
+exactly as they are. GitHub redirects the old repository URL, but do not rely on that for a HACS
+entry cached against the old one.
+
+Removing the old download in HACS also removes its resource. Keep only one resource entry:
+an old `/hacsfiles/lovelace-xiaomi-vacuum-map-card/...` entry left next to the new one registers
+the element twice, which logs a console error and may load the old build first.
 
 ### Manual
 

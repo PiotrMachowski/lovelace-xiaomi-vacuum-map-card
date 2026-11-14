@@ -11,28 +11,60 @@ Opus 5.5) returned `VERDICT: APPROVE` on the PR.
 
 | Batch | Scope | Status | PR | Council | Merge SHA | Blocker |
 |---|---|---|---|---|---|---|
-| P0a | Node 22 CI, `actions/checkout@v4`, lockfile v3, `tsc --noEmit` in CI | merged | [#2](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/2) | APPROVE (round 2) | `deb2555` | - |
-| P0b | Vitest 3 + happy-dom harness, fixtures, `detectFromImageData`, first two failing tests, `npm test` in CI | merged | [#3](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/3) | APPROVE (round 2) | `4a0dcc9` | - |
-| P0c | Playwright visual harness (separate job, `visual` label) | merged | [#7](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/7) | APPROVE (round 2) | `683c07a` | - |
+| P0a | Node 22 CI, `actions/checkout@v4`, lockfile v3, `tsc --noEmit` in CI | merged | [#2](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/2) | APPROVE (round 2) | `deb2555` | - |
+| P0b | Vitest 3 + happy-dom harness, fixtures, `detectFromImageData`, first two failing tests, `npm test` in CI | merged | [#3](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/3) | APPROVE (round 2) | `4a0dcc9` | - |
+| P0c | Playwright visual harness (separate job, `visual` label) | merged | [#7](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/7) | APPROVE (round 2) | `683c07a` | - |
 | P0d | Capture the real Home Assistant fixture | blocked | - | - | - | needs the user's HA instance (see Manual checks) |
-| B1 | Config robustness (#937, #940, #938; #952 postponed) | merged | [#4](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/4) | APPROVE | `a8b3a39` | - |
-| B2 | Editor room-config path (#956, #944, duplicate cleanup, #958) | merged | [#5](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/5) | APPROVE (round 3) | `c8042b9` | - |
-| B3 | Tiles, labels and icons (#723, #957, #965, #961) | merged | [#6](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/6) | APPROVE (round 2) | `6fe6307` | - |
+| B1 | Config robustness (#937, #940, #938; #952 postponed) | merged | [#4](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/4) | APPROVE | `a8b3a39` | - |
+| B2 | Editor room-config path (#956, #944, duplicate cleanup, #958) | merged | [#5](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/5) | APPROVE (round 3) | `c8042b9` | - |
+| B3 | Tiles, labels and icons (#723, #957, #965, #961) | merged | [#6](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/6) | APPROVE (round 2) | `6fe6307` | - |
 | B4 | Roborock status/battery templates (#964) | postponed | - | - | - | needs a real Roborock-core registry fixture |
-| B5 | Cleaning-order badges (#959) | merged | [#10](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/10) | APPROVE (round 3) | `f3a27f1` | - |
-| B6 | Map refresh policy (#704, #357) | merged | [#11](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/11) | APPROVE (round 2) | `03a9420` | - |
-| B7 | Registry payload and caching (#864) | merged | [#8](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/8) | APPROVE (round 2) | `5939551` | - |
-| B8 | Preset rooms and stale room IDs (#385, #928) | merged | [#12](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/12) | APPROVE (round 2) | `09ebc6e` | - |
-| B9 | Default map view (#873) | merged | [#13](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/13) | APPROVE (round 2) | `a4477c5` | manual check pending (see below) |
-| B10 | Horizontal layout and card height (#183, #943) | merged | [#14](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/14) | APPROVE (round 2) | `ceacbdd` | manual sections-view check pending |
-| R1 | In-repo rebrand and README rewrite | merged | [#15](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/15) | APPROVE (round 3) | `6433e8c` | - |
-| R2 | GitHub repository rename and release surface | in progress | - | - | - | - |
+| B5 | Cleaning-order badges (#959) | merged | [#10](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/10) | APPROVE (round 3) | `f3a27f1` | - |
+| B6 | Map refresh policy (#704, #357) | merged | [#11](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/11) | APPROVE (round 2) | `03a9420` | - |
+| B7 | Registry payload and caching (#864) | merged | [#8](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/8) | APPROVE (round 2) | `5939551` | - |
+| B8 | Preset rooms and stale room IDs (#385, #928) | merged | [#12](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/12) | APPROVE (round 2) | `09ebc6e` | - |
+| B9 | Default map view (#873) | merged | [#13](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/13) | APPROVE (round 2) | `a4477c5` | manual check pending (see below) |
+| B10 | Horizontal layout and card height (#183, #943) | merged | [#14](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/14) | APPROVE (round 2) | `ceacbdd` | manual sections-view check pending |
+| R1 | In-repo rebrand and README rewrite | merged | [#15](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/15) | APPROVE (round 3) | `6433e8c` | - |
+| R2 | GitHub repository rename and release surface | merged | [#16](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/16) | APPROVE | `70ebe0d` | - |
 
 ## Delivery fixes that are not roadmap batches
 
 | Fix | Why | PR | Council | Merge SHA |
 |---|---|---|---|---|
-| Deterministic test gate: cancelling delayed card work on disconnect | The 100 ms delayed update could outlive the element and throw `ReferenceError: window is not defined` after happy-dom teardown (~1 in 15 runs), reddening an otherwise green build. Also finishes a cancelled 300 ms transition reset and defers a map-image load that lands while detached. | [#9](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/9) | APPROVE (round 3) | `966d348` |
+| Deterministic test gate: cancelling delayed card work on disconnect | The 100 ms delayed update could outlive the element and throw `ReferenceError: window is not defined` after happy-dom teardown (~1 in 15 runs), reddening an otherwise green build. Also finishes a cancelled 300 ms transition reset and defers a map-image load that lands while detached. | [#9](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/9) | APPROVE (round 3) | `966d348` |
+
+## Final state
+
+All roadmap batches that do not depend on hardware are merged. The card element
+(`custom:xiaomi-vacuum-map-card`), the release asset (`xiaomi-vacuum-map-card.js`), the HACS
+`filename` and every existing YAML key are unchanged: this was a project and repository identity
+change, not a card rename.
+
+- Repository: [Igloczek/lovelace-better-xiaomi-vacuum-map-card](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card)
+  (renamed from `Igloczek/lovelace-xiaomi-vacuum-map-card`; the old URLs redirect with 301).
+- Latest release: [`v2.5.0-igloczek.1`](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/releases/tag/v2.5.0-igloczek.1),
+  the first release containing every shipped row; it attaches `xiaomi-vacuum-map-card.js`.
+- Pull requests: [#2](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/2) P0a,
+  [#3](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/3) P0b,
+  [#7](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/7) P0c,
+  [#4](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/4) B1,
+  [#5](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/5) B2,
+  [#6](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/6) B3,
+  [#10](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/10) B5,
+  [#11](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/11) B6,
+  [#8](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/8) B7,
+  [#12](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/12) B8,
+  [#13](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/13) B9,
+  [#14](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/14) B10,
+  [#15](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/15) R1,
+  [#16](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/16) R2, and
+  [#9](https://github.com/Igloczek/lovelace-better-xiaomi-vacuum-map-card/pull/9) the gate fix.
+- Every PR was merged with a merge commit after green CI and an independent Claude Opus 5.5 council
+  verdict; the verdict is recorded as a PR comment on each one.
+- An audit-polish commit after R2 applied four documentation and metadata notes from the last council
+  review (npm `author` person format, README migration grammar, the "keep only one resource entry"
+  warning, and the repository homepage). No behaviour change; gates re-run green.
 
 ## Postponed
 
@@ -110,6 +142,7 @@ table above; P0d is a user-captured fixture, not an upstream item.
 | The stale room icon sits over the live room label in `stale-room-hit-test.png` (cosmetic); fading or hiding the stale icon is a cheap improvement. The visual spec header still says "five visual scenarios" when there are eight. | No | audit pass |
 | `map_view.reset` fired while the card is connected but hidden can hit the top-left fallback (no measurable map size) and persist it. Deferring the reset or skipping the save there would close it. | No | audit pass |
 | The two-width centring match for a configured scale is proven by a browser probe, not a committed Playwright case; adding one would lock it in. | No | audit pass |
+| Audit polish from the R2 review was applied directly on master (documentation and metadata only, gates re-run), not through a PR, because every roadmap batch had already merged. | No | done |
 | **Flaky Vitest gate** (high priority): `_updateElements` schedules an uncancelled `delay(100).then(...)`; after happy-dom teardown the callback throws `ReferenceError: window is not defined` in `_restoreMapView`, which reddened one P0c Build run. Reproduced locally: **1 in 15** `npm test` runs (unhandled rejection at `src/xiaomi-vacuum-map-card.ts:1565` `_getMapViewDashboardPath` via `_restoreMapView`, after the test environment is torn down; Vitest exits non-zero, so the gate can go red on an otherwise green branch). Fix: track the timer in the card and cancel it in `disconnectedCallback`, plus a test that disconnects before the delay elapses. | No (but flaky gates are not acceptable long-term) | the batch that next touches the card (B6), or a small dedicated PR once B2 merges |
 
 ## Manual checks owed by the user
