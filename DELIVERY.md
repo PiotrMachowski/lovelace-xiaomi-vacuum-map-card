@@ -25,8 +25,8 @@ Opus 5.5) returned `VERDICT: APPROVE` on the PR.
 | B8 | Preset rooms and stale room IDs (#385, #928) | merged | [#12](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/12) | APPROVE (round 2) | `09ebc6e` | - |
 | B9 | Default map view (#873) | merged | [#13](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/13) | APPROVE (round 2) | `a4477c5` | manual check pending (see below) |
 | B10 | Horizontal layout and card height (#183, #943) | merged | [#14](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/14) | APPROVE (round 2) | `ceacbdd` | manual sections-view check pending |
-| R1 | In-repo rebrand and README rewrite | in progress | - | - | - | - |
-| R2 | GitHub repository rename and release surface | planned | - | - | - | last, after every code PR merges |
+| R1 | In-repo rebrand and README rewrite | merged | [#15](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/15) | APPROVE (round 3) | `6433e8c` | - |
+| R2 | GitHub repository rename and release surface | in progress | - | - | - | - |
 
 ## Delivery fixes that are not roadmap batches
 
