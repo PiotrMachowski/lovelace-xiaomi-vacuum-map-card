@@ -25,6 +25,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Check documentation links
+        run: npm run check:docs
+
       - name: Type check
         run: npx tsc --noEmit
 
