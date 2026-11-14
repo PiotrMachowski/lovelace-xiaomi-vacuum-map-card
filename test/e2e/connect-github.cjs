@@ -41,17 +41,20 @@ function main() {
         throw new Error("no marketplace config entry; Home Assistant 2026.11 creates one on first start");
     }
     marketplace.data = { ...(marketplace.data ?? {}), token };
+
+    const wantsRestart = process.argv.includes("--restart");
+    const composeArgs = ["compose", "-f", path.join(__dirname, "compose.yaml")];
+    const project = process.env.COMPOSE_PROJECT_NAME;
+    if (project) composeArgs.push("-p", project);
+    // Stop first: Home Assistant rewrites the config-entry store while it runs, so a token written
+    // under a live instance can be overwritten on shutdown.
+    if (wantsRestart) execFileSync("docker", [...composeArgs, "stop"], { stdio: "inherit" });
+
     fs.writeFileSync(ENTRIES, JSON.stringify(data, null, 2));
     // Keep the token off disk anywhere else, including logs.
     console.log(`marketplace GitHub token written to the ignored state file for entry ${marketplace.entry_id}`);
 
-    if (process.argv.includes("--restart")) {
-        const composeArgs = ["compose", "-f", path.join(__dirname, "compose.yaml")];
-        const project = process.env.COMPOSE_PROJECT_NAME;
-        if (project) composeArgs.push("-p", project);
-        // Stop first: Home Assistant rewrites the config-entry store while it runs, so a token
-        // written under a live instance can be overwritten on shutdown.
-        execFileSync("docker", [...composeArgs, "stop"], { stdio: "inherit" });
+    if (wantsRestart) {
         execFileSync("docker", [...composeArgs, "start"], { stdio: "inherit" });
         console.log("Home Assistant restarted; wait for /api/ before running the install");
     }

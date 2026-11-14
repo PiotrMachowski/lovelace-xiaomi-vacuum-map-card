@@ -1,9 +1,9 @@
 # End-to-end suite (real Home Assistant)
 
 These tests drive a real Home Assistant instance in Docker, install the card the way a user does,
-and exercise the behaviours the mock harness cannot prove. The delivery owns this verification: a
-release is only published after this suite passes against the release candidate; screenshots are
-written to the gitignored `test/e2e/artifacts/`.
+and exercise the behaviours the mock harness cannot prove. A release is published only after this
+suite passes against the release candidate; screenshots are written to the gitignored
+`test/e2e/artifacts/`.
 
 ## What it covers
 

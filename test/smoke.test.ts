@@ -106,14 +106,14 @@ describe("editor renders", () => {
     });
 });
 
-// Batch P0d is a manual capture on the real Home Assistant instance; until it lands the fixture
-// directory only has README.md. The skip is announced so it cannot be mistaken for coverage.
+// The real-instance fixture is optional; while it is absent the smoke test skips with a visible
+// message so the skip cannot be mistaken for coverage.
 const ownSetupMissing = ownSetupMissingFiles();
 if (ownSetupMissing.length > 0) {
     console.warn(
         `[own-setup] Skipping the real-instance smoke test: missing ${ownSetupMissing.join(", ")} ` +
-            "in test/fixtures/own-setup/. Batch P0d (manual user capture) fills these in; " +
-            "see test/fixtures/own-setup/README.md.",
+            "in test/fixtures/own-setup/. See test/fixtures/own-setup/README.md for how to " +
+            "capture and scrub them.",
     );
 }
 

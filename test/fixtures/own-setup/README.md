@@ -1,10 +1,9 @@
-# own-setup fixture (batch P0d, user action)
+# Real-instance fixture (optional)
 
-This directory is intentionally empty of captured data. It will hold a scrubbed snapshot of the
-real Home Assistant instance so the tests describe the actual vacuum instead of only a mock.
-
-**Status:** waiting on batch P0d. The smoke test in `test/smoke.test.ts` skips with a visible
-message while any of the files below is missing, so P0d only has to drop the files in.
+This directory can hold a scrubbed snapshot of a real Home Assistant instance, so a test can
+describe an actual vacuum instead of only a mock. It is optional and empty by default: the smoke
+test in `test/smoke.test.ts` skips with a visible message while any of the files below is missing.
+The committed test suites run on the synthetic fixture and the real instance in `test/e2e/`.
 
 **`map.png` is the home's floor plan.** Committing it to this public repository needs the user's
 explicit approval, separately from the rest of the capture. A redacted or cropped version is
@@ -39,7 +38,7 @@ The fixture is committed to a public repository. Before copying, replace:
   pseudonym such as `device-roborock-s7`.
 - **Home layout:** GPS coordinates, zone names that reveal the address, room names if they are
   personal. Keep room IDs stable; renaming a room is fine, changing an ID makes the fixture lie
-  about the ID-drift work in batch B8.
+  about how the card follows re-mapped rooms.
 - **Account data:** usernames, e-mail addresses, user IDs, area/floor names.
 
 Do not reorder or reshape anything else. The point is a truthful capture with only the
@@ -49,4 +48,4 @@ identifying values replaced.
 
 - Do not invent a capture and do not present the synthetic fixture as real.
 - If a re-map is acceptable later, a second `camera.json` captured after it is the fixture for the
-  room-ID drift work in B8. Record that as `camera-after-remap.json` next to this file.
+  stale-room behaviour. Record that as `camera-after-remap.json` next to this file.

@@ -26,14 +26,16 @@ test("map_view opens, resets and persists on a real dashboard", async ({ loggedI
 
     // A real wheel gesture over the map. The card's pinch-zoom handles the wheel event; a retry
     // keeps the test stable while the card finishes attaching its gesture handlers after load.
-    for (let attempt = 0; attempt < 4 && (await viewState(target)).scale <= 2.05; attempt++) {
+    for (let attempt = 0; attempt < 4 && (await viewState(target)).scale <= defaultView.scale + 0.1; attempt++) {
         await page.mouse.move(mapBox.x, mapBox.y);
         await page.mouse.wheel(0, -600);
         await page.waitForTimeout(300);
     }
-    await expect.poll(async () => (await viewState(target)).scale).toBeGreaterThan(2.05);
+    // Compare with the configured view, not a constant: the card opens at 2.5, so a fixed 2.05
+    // threshold would skip the gesture entirely and the rest of the test would assert nothing.
+    await expect.poll(async () => (await viewState(target)).scale).toBeGreaterThan(defaultView.scale + 0.1);
     const wheeled = await viewState(target);
-    expect(Math.abs(wheeled.x) + Math.abs(wheeled.y)).toBeGreaterThan(0);
+    expect(Math.abs(wheeled.x - defaultView.x) + Math.abs(wheeled.y - defaultView.y)).toBeGreaterThan(1);
     await shot(page, "02-map-view-panned");
 
     // The card's reset control returns to the configured default: all four values, not only scale.
@@ -78,13 +80,16 @@ test("map_view opens, resets and persists on a real dashboard", async ({ loggedI
         const rect = (element.shadowRoot.getElementById("map-zoomer") as HTMLElement).getBoundingClientRect();
         return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
     });
-    for (let attempt = 0; attempt < 3 && (await viewState(reloaded)).scale <= 2.05; attempt++) {
+    for (let attempt = 0; attempt < 3 && (await viewState(reloaded)).scale <= defaultView.scale + 0.1; attempt++) {
         await page.mouse.move(mapBox2.x, mapBox2.y);
         await page.mouse.wheel(0, -600);
         await page.waitForTimeout(300);
     }
-    await expect.poll(async () => (await viewState(reloaded)).scale).toBeGreaterThan(2.05);
+    await expect.poll(async () => (await viewState(reloaded)).scale).toBeGreaterThan(defaultView.scale + 0.1);
     const gestures = await viewState(reloaded);
+    // The gesture must really have moved away from the reset view, or the reload below proves
+    // nothing about persistence.
+    expect(Math.abs(gestures.x - defaultView.x) + Math.abs(gestures.y - defaultView.y)).toBeGreaterThan(1);
     await page.waitForTimeout(700);
     await page.reload();
     await waitForCard(page);

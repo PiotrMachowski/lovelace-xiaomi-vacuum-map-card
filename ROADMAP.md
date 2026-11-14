@@ -62,6 +62,24 @@ reviewed before release. See [CONTRIBUTING.md](CONTRIBUTING.md) for the local wo
 | Ecovacs SVG viewbox | No Ecovacs fixture | An Ecovacs SVG camera capture |
 | Delayed start | A script or automation is the better place | A product reason that belongs in the card |
 | Collapse map | `card-mod` and conditional cards already cover it | It becomes free alongside another layout change |
+| Non-admin MQTT (#966) | Needs a non-admin Home Assistant user and an MQTT broker to verify | A report with that setup |
+
+## Known limitations
+
+Accepted for 1.0.0, each with what would fix it:
+
+- **Renamed entities in tiles.** A device, area or floor rename can leave a tile label stale until
+  the card reloads, because the `entityNamesChanged` re-render hook is not carried. Watch the
+  registry for name changes and re-render.
+- **Empty YAML keys.** An empty `id:` or `map:` is treated as missing rather than reported, so the
+  card can show an error instead of a validation message. Normalize empty scalars before validation.
+- **Renamed entities in icons.** The device registry lookup is cached for the page session, so an
+  icon changed in the registry appears after a reload. Invalidate the cache on registry updates.
+- **Template-only ROOM modes.** Without colour-detected rooms, a predefined selection can look
+  selected while the template sends nothing, and the warning only covers stale configured ids.
+  Report an empty selection.
+- **Reset while hidden.** `map_view.reset` on a card in a hidden tab can store a top-left view
+  because the map has no layout size. Apply the reset once the card is visible.
 
 ## Open questions and risks
 
