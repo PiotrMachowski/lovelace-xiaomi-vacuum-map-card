@@ -1,904 +1,123 @@
-[![HACS Default][hacs_shield]][hacs]
-[![GitHub Latest Release][releases_shield]][latest_release]
-[![GitHub All Releases][downloads_total_shield]][releases]
-[![Community Forum][community_forum_shield]][community_forum]<!-- piotrmachowski_support_badges_start -->
-[![Ko-Fi][ko_fi_shield]][ko_fi]
-[![buycoffee.to][buycoffee_to_shield]][buycoffee_to]
-[![PayPal.Me][paypal_me_shield]][paypal_me]
-[![Revolut.Me][revolut_me_shield]][revolut_me]
-<!-- piotrmachowski_support_badges_end -->
+# Better Xiaomi Vacuum Map Card
 
+Map-based cleaning controls for Home Assistant, with the upstream bugs that were left open for a
+long time fixed under a test-first process.
 
-[hacs_shield]: https://img.shields.io/static/v1.svg?label=HACS&message=Default&style=popout&color=green&labelColor=41bdf5&logo=HomeAssistantCommunityStore&logoColor=white
+![Better Xiaomi Vacuum Map Card in a dashboard](docs/media/screenshot.png)
 
-[hacs]: https://hacs.xyz/docs/default_repositories
+The card element (`custom:xiaomi-vacuum-map-card`) and the release asset (`xiaomi-vacuum-map-card.js`)
+keep their upstream names, so this is a drop-in replacement: your YAML does not change. Install
+[`v2.5.0-igloczek.1`](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/releases/tag/v2.5.0-igloczek.1)
+or newer, the first fork release with every shipped row below. Maintained by [Igloczek](https://github.com/Igloczek),
+based on [PiotrMachowski/lovelace-xiaomi-vacuum-map-card](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card).
 
-[latest_release]: https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/releases/latest
+Full option reference: [configuration](docs/configuration.md) · platforms: [supported platforms](docs/platforms.md) · styling: [CSS variables](docs/css_variables.md)
 
-[releases_shield]: https://img.shields.io/github/release/PiotrMachowski/lovelace-xiaomi-vacuum-map-card.svg?style=popout
+## Why this fork
 
-[releases]: https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/releases
+Upstream issues and pull requests sat unresolved for a long time: the camera snapshot reload storm
+([#704](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/704),
+[#357](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/357)), rooms
+cleaning the wrong room after a re-map
+([#928](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/928)), the
+horizontal layout
+([#183](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/183)) and several
+crash-on-bad-config reports are all older than this fork.
 
-[downloads_total_shield]: https://img.shields.io/github/downloads/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/total
+AI agents work those specific issues and PRs test-first: a failing test or a real fixture comes
+first, then the fix, and nothing is claimed as fixed without one. Vendor and hardware behaviour that
+cannot be reproduced is postponed instead of guessed at.
 
-[community_forum_shield]: https://img.shields.io/static/v1.svg?label=%20&message=Forum&style=popout&color=41bdf5&logo=HomeAssistant&logoColor=white
+## What is better
 
-[community_forum]: https://community.home-assistant.io/t/xiaomi-vacuum-interactive-map-card/123901
+Statuses are literal: `shipped` means merged to `master` with the gates green, `postponed` waits for
+hardware or a fixture. Evidence links to the fork's record in [FORK.md](FORK.md) or to the plan in
+[ROADMAP.md](ROADMAP.md).
 
-# Lovelace Vacuum Map card
+| Change | Status | What it does | Evidence |
+|---|---|---|---|
+| Map refresh policy | `shipped` | The camera image reloads on a camera change or once per interval, not on every vacuum, tile or icon update; a hidden tab stops reloading. | [#704, #357](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/704) · [FORK.md](FORK.md#b6-map-refresh) · PR [#11](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/11) |
+| Registry lookup | `shipped` | One scoped `config/entity_registry/get_entries` call, cached per device, instead of downloading the whole entity registry and fetching every entry. | [#864](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/864) · [FORK.md](FORK.md#b7-registry-cache) · PR [#8](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/8) |
+| Tile labels, durations and icons | `shipped` | Case-insensitive tile translations, `formatEntityName` labels behind a frontend-version gate, a `duration_unit` field in platform tile templates so sensor tiles show the right duration, and the core `return_to_base` icon. | [#723](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/723), [#957](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/pull/957), [#965](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/pull/965), [#961](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/pull/961) · [FORK.md](FORK.md#b3-tiles-labels-icons) · PR [#6](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/6) |
+| Config robustness | `shipped` | An incomplete configuration reports the missing field instead of throwing; invalid dynamic predefined selections are ignored. | [#937](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/pull/937), [#940](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/pull/940), [#938](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/pull/938) · [FORK.md](FORK.md#b1-config-robustness) · PR [#4](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/4) |
+| Editor room config | `shipped` | Generating rooms no longer mutates Home Assistant's frozen Lovelace config and no longer answers another card's request; repeated generation leaves one ROOM mode. | [#956](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/pull/956), [#944](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/pull/944), [#958](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/pull/958) · [FORK.md](FORK.md#b2-editor-room-config) · PR [#5](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/5) |
+| Cleaning-order badges | `shipped` | A selected room shows the position it will be cleaned in, and the numbers renumber when a room is deselected. | [#959](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/pull/959) · [FORK.md](FORK.md#b5-cleaning-order-badges) · PR [#10](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/10) |
+| Stale room IDs | `shipped` | Rooms a re-map removed are marked, named in a warning and excluded from service calls, so a stale selection cannot clean the wrong room. | [#928](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/928), [#385](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/385) · [FORK.md](FORK.md#b8-stale-room-selections) · PR [#12](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/12) |
+| Default map view | `shipped` | `map_view` sets the view the map opens at, and the reset control and `map_view.reset` action return to it. Real-dashboard check pending ([DELIVERY.md](DELIVERY.md#manual-checks-owed-by-the-user)). | [#873](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/873) · [FORK.md](FORK.md#b9-default-map-view) · PR [#13](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/13) |
+| Horizontal layout | `shipped` | `layout: horizontal` puts the map beside the controls, and sections-view grid sizing lets the card be resized without `card-mod`. Real-dashboard check pending ([DELIVERY.md](DELIVERY.md#manual-checks-owed-by-the-user)). | [#183](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/183), [#943](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/943) · [FORK.md](FORK.md#b10-horizontal-layout) · PR [#14](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/14) |
+| Automatic room mapping | `shipped` | Room outlines, names and hit targets come from the camera's `rooms` metadata and the map colours; hand-configured room outlines stay as the fallback when detection is unavailable. | [FORK.md](FORK.md#automatic-room-mapping) · `5276b9b` |
+| Persisted view and rotation | `shipped` | Carries upstream PR [#949](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/pull/949): the zoom, position and rotation are remembered per card, preset and map, and rotation gestures work; the toolbar's manual rotate button that came with it was dropped again in `62e339f`. | [FORK.md](FORK.md#persistent-map-view-and-rotation), [rotation controls](FORK.md#rotation-controls) · `badf9b2`, `e57bb8d` |
+| Near-white transparency | `shipped` | `transparent_background: true` makes near-white map pixels transparent so the map blends into a dark dashboard. | [FORK.md](FORK.md#map-appearance) · `5276b9b`, `36b890b` |
+| Zoom alignment | `shipped` | Zoom and rotation are applied once to the image and the overlays, so room outlines stay on the map; the local regression check covers both. | [FORK.md](FORK.md#zoom-alignment) · `2d5d439` |
+| Test and CI gates | `shipped` | Vitest with happy-dom, a Playwright visual suite at zoom, rotation, room hit-testing and layout, Node 22 and a `tsc --noEmit` gate on every pull request. | [FORK.md](FORK.md#p0-test-infrastructure), [CI baseline](FORK.md#ci-baseline), [visual harness](FORK.md#visual-regression-harness) · PR [#2](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/2), [#3](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/3), [#7](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/pull/7) |
+| Roborock status/battery tiles | `postponed` | The generic `duration_unit` field of [#964](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/pull/964) shipped in the platform tile templates; the Roborock-specific templates need a real Roborock-core registry fixture. | [FORK.md](FORK.md#b3-tiles-labels-icons) · [ROADMAP.md](ROADMAP.md#postpone-list) |
+| Deferred upstream items | `postponed` | Templated predefined selections, static floorplan background, rotated zone rectangles, Valetudo JSON maps, Ecovacs SVG viewbox, delayed start, non-admin MQTT, collapse map, YAML `y:` normalization ([#952](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/952)) and the [#958 editor-element check beyond the fallback](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/pull/958). | [ROADMAP.md](ROADMAP.md#postpone-list) |
 
-This card provides a user-friendly way to fully control map-based vacuums
-in [Home Assistant](https://www.home-assistant.io/).
-Supported brands include Xiaomi (Roborock/Viomi/Dreame/Roidmi/Valetudo/Valetudo RE), Neato, Wyze, Roomba, Ecovacs (and
-probably more).
+## Install
 
-https://user-images.githubusercontent.com/6118709/140251738-7fb06e81-34b0-4bf8-b7b1-2221d0062331.mp4
+This card is **not** in the HACS default repositories; add it as a custom repository. Earlier fork
+releases predate the work above — `v2.4.2-igloczek.6`, for example, has neither `map_view` nor
+`layout` — so do not expect those rows in an older build.
 
-## Table of contents
+### HACS (custom repository)
 
-- [Features](#features)
-- [Installation](#installation)
-  - [HACS](#hacs)
-  - [Manual](#manual)
-- [Configuration](#configuration)
-  - [Main options](#main-options)
-  - [Layout](#layout)
-  - [Preset options](#preset-options)
-  - [Map source options](#map-source-options)
-    - [Cropping options](#cropping-options)
-  - [Calibration source options](#calibration-source-options)
-    - [Calibration points options](#calibration-points-options)
-  - [Supported vacuum platforms](#supported-vacuum-platforms)
-  - [Icon list entry options](#icon-list-entry-options)
-  - [Tile list entry options](#tile-list-entry-options)
-  - [Condition options](#condition-options)
-  - [Map modes options](#map-modes-options)
-    - [Supported templates](#supported-templates)
-    - [Supported selection types](#supported-selection-types)
-    - [Service call schema options](#service-call-schema-options)
-    - [Supported repeats types](#supported-repeats-types)
-    - [Predefined selection options](#predefined-selection-options)
-    - [Icon options](#icon-options)
-    - [Label options](#label-options)
-  - [Available actions](#available-actions)
-- [FAQ](#faq)
-- [Migrating from v1.x.x](#migrating-from-v1xx)
-- [Translations](#translations)
-- [Special thanks](#special-thanks)
-- [Support](#support)
+1. Open HACS → **Frontend** → three-dot menu → **Custom repositories**.
+2. Add `https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card` with category **Dashboard**.
+3. Install **Better Xiaomi Vacuum Map Card**.
+4. Check that the Lovelace resource exists; HACS normally adds it for you:
+   ```yaml
+   url: /hacsfiles/lovelace-xiaomi-vacuum-map-card/xiaomi-vacuum-map-card.js
+   type: module
+   ```
+5. Reload the browser.
 
-## Features
-
-Features include:
-
-- Map-based controls:
-  - Zoned cleaning (manual and saved)
-  - Going to target (manual and saved)
-  - Room cleaning
-  - Following path
-  - Custom services
-- Icon controls:
-  - Conditional visibility
-  - Customizable service calls
-- Value tiles:
-  - Customizable content
-  - Conditional visibility
-  - Customizable service calls
-- General:
-  - Multiple vacuums support
-  - Multiple maps (camera/image) support
-  - Fully customizable styling
-
-## Installation
-
-### HACS
-
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=PiotrMachowski&repository=lovelace-xiaomi-vacuum-map-card&category=dashboard)
-
-- Open HACS
-- Go to "Frontend" section
-- Click button with "+" icon
-- Search for "Xiaomi Vacuum Map"
-- Install repository in HACS
-- Make sure you have added this card to [Lovelace resources](https://my.home-assistant.io/redirect/lovelace_resources/)
-  ```yaml
-  url: /hacsfiles/lovelace-xiaomi-vacuum-map-card/xiaomi-vacuum-map-card.js
-  type: module
-  ```
-- Refresh your browser
+The HACS folder follows the repository name. A later rename
+([ROADMAP.md](ROADMAP.md#phase-4-project-identity-and-readme)) means re-adding the custom repository
+and updating only the resource URL; the asset name stays the same.
 
 ### Manual
 
-- Download `xiaomi-vacuum-map-card.js` file from
-  the [latest release](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/releases/latest)
-- Save downloaded file somewhere in `<ha config>/www/` directory,
-  e.g. `/config/www/custom_lovelace/xiaomi-vacuum-map-card.js`
-- Add saved file to [Lovelace resources](https://my.home-assistant.io/redirect/lovelace_resources/)
-  ```yaml
-  url: /local/custom_lovelace/xiaomi-vacuum-map-card.js
-  type: module
-  ```
-- Restart HA if you had to create `www` directory
-- Refresh your browser
+1. Download the `xiaomi-vacuum-map-card.js` asset from the
+   [latest release](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/releases/latest).
+2. Save it under `<ha config>/www/`, for example
+   `/config/www/custom_lovelace/xiaomi-vacuum-map-card.js`.
+3. Add it to [Lovelace resources](https://my.home-assistant.io/redirect/lovelace_resources/):
+   ```yaml
+   url: /local/custom_lovelace/xiaomi-vacuum-map-card.js
+   type: module
+   ```
+4. Restart Home Assistant if you had to create `www`, then reload the browser.
 
-## Configuration
+## Migrating from upstream
 
-This card contains UI configuration editor, but it is limited to only basic set of features.
-Its full potential can be achieved by manual yaml adjustments.
+Your YAML needs no edit and the element stays `custom:xiaomi-vacuum-map-card`, so only the resource
+URL changes: point the existing resource at the new `xiaomi-vacuum-map-card.js` and reload. Both
+builds register the same custom element and the first registration wins, so load one build at a
+time; keep the old file on disk until your dashboard checks out, so rolling back is one line.
 
-:warning::warning::warning:
+A few behaviours differ from upstream with no YAML edit:
 
-You can use this configuration as an example: [demo config](/docs/demo_config.yaml) (configuration used in
-full_demo.mp4).
+- `persist_map_view` defaults to `true`, so the card remembers the zoom, position and rotation per
+  card, preset and map across reloads. Upstream does not persist the view; set
+  `persist_map_view: false` for the upstream behaviour.
+- Twisting two fingers rotates the map (`map_rotation_gesture`, default `true`). Upstream only zooms
+  and pans; set it to `false` for upstream zoom-and-pan-only gestures.
+- The lock button state is remembered with the view (`persist_map_lock`, default `true`) and takes
+  precedence over `map_locked` after the first toggle; set `persist_map_lock: false` to always start
+  from `map_locked`.
+- When the camera reports `rooms` metadata and the map has distinct room colours, the detected
+  outlines, labels and hit targets replace hand-configured room outlines. Configured rooms remain
+  the fallback when detection is unavailable
+  ([`5276b9b`](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/commit/5276b9b)).
 
-:warning::warning::warning:
+## Quick start
 
-### Main options
-
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Required</th>
-    <th>Default</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td><code>title</code></td>
-    <td>string</td>
-    <td>no</td>
-    <td><i>empty</i></td>
-    <td>Card's title</td>
-  </tr>
-  <tr>
-    <td><code>layout</code></td>
-    <td>string</td>
-    <td>no</td>
-    <td><code>vertical</code></td>
-    <td>Arranges the map above the controls (<code>vertical</code>) or places the map and the mode, icon and tile controls side by side (<code>horizontal</code>). See <a href="#layout">layout</a></td>
-  </tr>
-  <tr>
-    <td><code>language</code></td>
-    <td>string</td>
-    <td>no</td>
-    <td><i>autodetected</i></td>
-    <td>Overrides autodetected language (<a href="#translations">supported languages</a>)</td>
-  </tr>
-  <tr>
-    <td><code>action_handler_id</code></td>
-    <td>string</td>
-    <td>no</td>
-    <td>-</td>
-    <td>Enables <a href="#action-handling">action handling</a></td>
-  </tr>
-  <tr>
-    <td><code>additional_presets</code></td>
-    <td>list</td>
-    <td>no</td>
-    <td><i>empty</i></td>
-    <td>A list of additional <a href="#preset-options">presets</a> (e.g. with different map/vacuum)</td>
-  </tr>
-  <tr>
-    <td><code>persist_map_view</code></td>
-    <td>boolean</td>
-    <td>no</td>
-    <td><code>true</code></td>
-    <td>Remembers zoom level and map position across page reloads, separately per card, per preset and per map id</td>
-  </tr>
-  <tr>
-    <td><code>persist_map_lock</code></td>
-    <td>boolean</td>
-    <td>no</td>
-    <td><code>true</code></td>
-    <td>Remembers the state of the lock button together with the map view</td>
-  </tr>
-  <tr>
-    <td><code>map_view_storage_key</code></td>
-    <td>string</td>
-    <td>no</td>
-    <td><i>autogenerated</i></td>
-    <td>Overrides the autogenerated storage key. The generated one includes the dashboard path, so the same card on two views keeps a view per view; set this to survive a dashboard rename, or to the same value on several cards to share one view between them. Cards that share a key also share their <code>map_view</code>, because a configured default is part of the generated key</td>
-  </tr>
-  <tr>
-    <td><code>map_view</code></td>
-    <td>object</td>
-    <td>no</td>
-    <td><i>neutral view</i></td>
-    <td>View the map opens at when nothing is stored for it, and returns to when the map is reset. See <a href="#map-view-options">map view options</a></td>
-  </tr>
-  <tr>
-    <td colspan="5" style="text-align: center">
-      All values from <a href="#preset-options">preset options</a> section
-    </td>
-  </tr>
-</table>
-
-#### Map view options
-
-`map_view` is the card's starting view. A view stored by `persist_map_view` still wins over it; the
-card uses the configured view only when nothing is stored for the current card, preset and map. The
-map reset control (the centre-focus icon on the map) and the [`map_view.reset`](#action-handling)
-action return to it.
-
-The scale is applied around the centre of the map area, exactly like the zoom-in control, and `x`/`y`
-are offsets from that centred view: `map_view: {scale: 2.5}` changes the zoom and keeps the map
-centred at any card width, while `x: 40` moves it 40 layout pixels to the right of the centred
-position. Rotation pivots on the same centre, so the offsets stay screen offsets at every angle.
-
-| Key        | Type   | Required | Default        | Description                                                                                  |
-|------------|--------|----------|----------------|----------------------------------------------------------------------------------------------|
-| `scale`    | number | no       | `1`            | Zoom level, from `0.5` to `100` (`1` is the map fitted to the card)                          |
-| `x`        | number | no       | `0`            | Horizontal offset in layout pixels from the centred view; `0` keeps the map horizontally centred |
-| `y`        | number | no       | `0`            | Vertical offset in layout pixels from the centred view; `0` keeps the map vertically centred |
-| `rotation` | number | no       | `map_rotation` | Angle in degrees the map opens at and returns to when reset                                  |
-
-Every key is optional, and a key that is left out keeps its neutral value, so
-`map_view: {scale: 2.5}` only changes the zoom. A value that is not a number, or a `scale` outside
-`0.5`–`100` (the range the zoom controls offer), is reported as a configuration error instead of
-being applied. The configured view applies to the whole card: each preset uses it where that preset
-has no stored view. `map_view` is a main-configuration option only; a value inside
-`additional_presets` is ignored. Unlike `persist_map_view`, which decides whether the user's view is
-remembered, `map_view` also applies with `persist_map_view: false`.
-
-The configured view is part of the stored view's lookup, so editing `map_view` starts from the new
-default instead of keeping the view remembered for the old one.
+A minimal card for a Xiaomi/Roborock vacuum with a map camera:
 
 ```yaml
 type: custom:xiaomi-vacuum-map-card
 entity: vacuum.roborock_s7
-map_source:
-  camera: camera.vacuum_map
-calibration_source:
-  camera: true
 vacuum_platform: Xiaomi Miio
-map_view: # optional starting view; a stored view wins over it
-  scale: 2.5
-  x: 40
-  y: -20
-  rotation: 90
-```
-
-#### Layout
-
-`layout: horizontal` puts the map beside the modes, icons and tiles instead of above them. The
-controls column scrolls inside the card when it is taller than the map, and the card never grows
-wider than its container. The default `vertical` arrangement is unchanged. An unknown string is
-reported as a configuration error so a typo does not silently fall back. The option is YAML-only
-for now — the visual editor does not expose it.
-
-```yaml
-type: custom:xiaomi-vacuum-map-card
-entity: vacuum.roborock_s7
-map_source:
-  camera: camera.vacuum_map
-calibration_source:
-  camera: true
-vacuum_platform: Xiaomi Miio
-layout: horizontal
-```
-
-In the sections view the card uses Home Assistant's default grid size for the vertical layout: 12
-columns wide with `rows: "auto"`, so the cell fits the card's content as it always has. The
-horizontal layout is a new arrangement and reports a numeric default height (6 rows) with
-`min_columns: 9`, because at the permissive half-width minimum the controls column would leave the
-map too narrow to use. It does not set `max_rows`, so a `grid_options: {rows: ...}` override can make
-it as tall as you need. A sections-view cell shorter than the card's content scrolls the card rather
-than shrinking the map. Prefer the horizontal layout for wide cells: at 320–400 px the map is only
-about 140–220 px wide. Home Assistant's own
-[`grid_options`](https://www.home-assistant.io/dashboards/sections/#resizing-cards) still override
-these values per card.
-
-### Preset options
-
-| Key                        | Type    | Required        | Default         | Description                                                                                       |
-|----------------------------|---------|-----------------|-----------------|---------------------------------------------------------------------------------------------------|
-| `preset_name`              | string  | yes<sup>1</sup> | -               | Name of the preset                                                                                |
-| `entity`                   | string  | yes             | -               | Vacuum entity                                                                                     |
-| `map_source`               | string  | yes             | -               | Preset's [map source](#map-source-options)                                                        |
-| `calibration_source`       | object  | yes<sup>2</sup> | -               | Preset's [calibration source](#calibration-source-options)                                        |
-| `vacuum_platform`          | string  | no              | `default`       | Preset's [vacuum platform](#supported-vacuum-platforms)                                           |
-| `map_locked`               | boolean | no              | `false`         | Default state of pan/zoom                                                                         |
-| `two_finger_pan`           | string  | no              | `false`         | Enables two finger map panning                                                                    |
-| `map_rotation`             | number  | no              | `0`             | Angle in degrees the map starts at, and returns to when the map is reset                          |
-| `map_rotation_gesture`     | boolean | no              | `true`          | Enables rotating the map by twisting two fingers                                                  |
-| `icons`                    | list    | no              | _autogenerated_ | Preset's [icons](#icon-list-entry-options)                                                        |
-| `append_icons`             | boolean | no              | `false`         | Enables appending configured icons to autogenerated ones instead of replacing them                |
-| `tiles`                    | list    | no              | _autogenerated_ | Preset's [tiles](#tile-list-entry-options)                                                        |
-| `append_tiles`             | boolean | no              | `false`         | Enables appending configured tiles to autogenerated ones instead of replacing them                |
-| `map_modes`                | list    | no              | _autogenerated_ | Preset's [map modes](#map-modes-options)                                                          |
-| `activate`                 | object  | no              | -               | [Service call](#service-call-schema-options) that should be executed after clicking preset name   |
-| `activate_on_switch`       | boolean | no              | `false`         | Enables executing `activate` service call after switching map preset                              |
-| `conditions`               | list    | no              | -               | List of [conditions](#condition-options) that need to be (all of them) met for preset to be shown |
-| `clean_selection_on_start` | boolean | no              | `true`          | Allows to disable cleaning selection on cleanup start                                             |
-| `internal_variables`       | object  | no              | -               | Allows to specify default values for internal variables                                           |
-
-<sup>1</sup> If multiple presets are configured
-
-<sup>2</sup> Not mandatory when used with a platform that support a default calibration
-
-### Map source options
-
-| Key      | Type   | Required       | Default       | Description                                  |
-|----------|--------|----------------|---------------|----------------------------------------------|
-| `camera` | string | no<sup>1</sup> | -             | Entity id of map camera                      |
-| `image`  | string | no<sup>1</sup> | -             | URL of map image                             |
-| `crop`   | object | no             | _no cropping_ | Images [cropping options](#cropping-options) |
-| `transparent_background` | boolean | no | `false` | Makes near-white map pixels transparent so the map blends into the card |
-
-<sup>1</sup> Exactly one of `camera` or `image` must be provided
-
-For `ROOM` selections, the card can use room IDs and names from the camera's `rooms` attribute, then trace each room's colored region from the map image. Manual room definitions remain available as a fallback when the camera does not provide room metadata or the map has no distinct room colors.
-
-#### Cropping options
-
-| Key      | Type   | Required | Default | Description                                      |
-|----------|--------|----------|---------|--------------------------------------------------|
-| `top`    | number | no       | 0       | Image cropping value from the top (in pixels)    |
-| `bottom` | number | no       | 0       | Image cropping value from the bottom (in pixels) |
-| `left`   | number | no       | 0       | Image cropping value from the left (in pixels)   |
-| `right`  | number | no       | 0       | Image cropping value from the right (in pixels)  |
-
-### Calibration source options
-
-| Key                  | Type    | Required       | Default | Description                                                                                                                                                                                      |
-|----------------------|---------|----------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `camera`             | boolean | no<sup>1</sup> | -       | Enables retrieving calibration from camera defined in `map_source` ([Xiaomi Cloud Map Extractor](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor)) |
-| `entity`             | string  | no<sup>1</sup> | -       | Entity with calibration returned as a state                                                                                                                                                      |
-| `attribute`          | string  | no             | -       | Enables usage of a configured attribute instead of state of given entity                                                                                                                         |
-| `calibration_points` | list    | no<sup>1</sup> | -       | List of 3 or 4 [calibration points](#calibration-points-options)                                                                                                                                 |
-| `identity`           | boolean | no<sup>1</sup> | -       | Enables using image coordinates on map (e.g. when map is used just for rooms)                                                                                                                    |
-| `platform`           | string  | no<sup>1</sup> | -       | Enables using a default calibration from a chosen platform (provided that it supports it)                                                                                                        |
-
-<sup>1</sup> Exactly one of `camera`, `entity`, `calibration_points`, `identity` or `platform` must be provided
-
-#### Calibration points options
-
-Each of calibration points must have a following structure:
-
-```yaml
-vacuum: # coordinates of a point in a vacuum coordinate system
-  x: 25500
-  y: 25500
-map: # coordinates of a point in a map coordinate system (can be read using e.g. Paint or Gimp)
-  x: 466
-  y: 1889
-```
-
-[Manual calibration guide](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/wiki)
-
-### Supported vacuum platforms
-
-Following vacuum platforms are supported out of the box at this moment:
-
-- [`Xiaomi Miio`](/docs/templates/xiaomiMiio.md)
-- [`Roborock`](/docs/templates/Roborock.md)
-- [`humbertogontijo/homeassistant-roborock`](/docs/templates/humbertogontijoHomeassistantRoborock.md)
-- [`Tasshack/dreame-vacuum`](/docs/templates/tasshackDreameVacuum.md)
-- [`rand256/ValetudoRE`](/docs/templates/rand256ValetudoRe.md)
-- [`Hypfer/Valetudo`](/docs/templates/hypferValetudo.md)
-- [`marotoweb/viomi SE`](/docs/templates/marotowebViomise.md)
-- [`tykarol/ViomiVacuumV8`](/docs/templates/tykarolViomiVacuumV8.md)
-- [`KrzysztofHajdamowicz/miio2`](/docs/templates/krzysztofHajdamowiczMiio2.md)
-- [`send_command`](/docs/templates/sendCommand.md)
-- [`al-one/Xiaomi MIoT`](/docs/templates/alOneHassXiaomiMiot.md) (additional manual configuration required)
-- [`Neato`](/docs/templates/neato.md)
-- [`Roomba`](/docs/templates/roomba.md)
-- [`DeebotUniverse/Deebot-4-Home-Assistant`](/docs/templates/DeebotUniverseDeebot4homeAssistant.md)
-- [`romedtino/simple-wyze-vac`](/docs/templates/romedtinoSimpleWyze.md)
-- [`BenjaminPaap/home-assistant-myneato`](/docs/templates/BenjaminPaapMyNeato.md)
-- [`CoderAS-ru/hass-neatsvor`](/docs/templates/CoderASruNeatsvor.md)
-- [`johnnyh1975/ha_roomba_plus`](/docs/templates/johnnyh1975RoombaPlus.md)
-
-[Create a request for a new built-in platform](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/new?assignees=PiotrMachowski&labels=new+platform&template=new_platform_request.yml)
-
-[Adding a new platform](CONTRIBUTING.md#adding-new-platform)
-
-### Icon list entry options
-
-![icons image](/docs/media/icons.png)
-
-| Key                 | Type    | Required | Default     | Description                                                                                                                                                               |
-|---------------------|---------|----------|-------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `icon`              | string  | yes      | -           | An icon to be displayed ([mdi](https://materialdesignicons.com/))                                                                                                         |
-| `icon_id`           | string  | no       | -           | Icon ID that can be used to override the configuration                                                                                                                    |
-| `tap_action`        | action  | no       | _more-info_ | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when an icon is tapped. </br>**Warning:** use `service_data` instead of `data`            |
-| `hold_action`       | action  | no       | -           | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when an icon is held and released. </br>**Warning:** use `service_data` instead of `data` |
-| `double_tap_action` | action  | no       | -           | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when an icon is double-tapped. </br>**Warning:** use `service_data` instead of `data`     |
-| `conditions`        | list    | no       | -           | List of [conditions](#condition-options) that need to be (all of them) met for an icon to be shown                                                                        |
-| `tooltip`           | string  | no       | -           | Tooltip to be displayed on hoover                                                                                                                                         |
-| `order`             | number  | no       | -           | Used to sort the icons                                                                                                                                                    |
-| `replace_config`    | boolean | no       | `false`     | Marks that this icon should override the config of an already existing icon with the same `icon_id`                                                                       |
-| `menu_id`           | string  | no       | -           | Adds this icon to the menu with given ID                                                                                                                                  |
-| `label`             | string  | no       | -           | Label that should be displayed in the menu                                                                                                                                |
-| `variables`         | object  | no       | -           | Variables that should be passed to to service calls                                                                                                                       |
-| `remove`            | boolean | no       | `false`     | Allows to remove specific pre-defined icon (when combined with `icon_id` and `replace_config: true`                                                                       |
-
-#### Menu icon additional options
-
-| Key                          | Type   | Required | Default | Description                                                                   |
-|------------------------------|--------|----------|---------|-------------------------------------------------------------------------------|
-| `type`                       | string | yes      | -       | Has to be set to `menu`                                                       |
-| `menu_id`                    | string | yes      | -       | A menu ID                                                                     |
-| `entity`                     | string | yes      | -       | Entity that should be used to generate the menu                               |
-| `current_value_attribute`    | string | no       | -       | Changes the source of the selected value to given attribute                   |
-| `available_values_attribute` | string | yes      | -       | Configures an attribute that contains all available values for the menu       |
-| `icon_mapping`               | object | no       | -       | A mapping of possible entity value -> icon that should be used for the value  |
-| `value_translation_keys`     | object | no       | -       | A mapping of possible entity value -> label that should be used for the value |
-| `tap_action`                 | object | no       | -       | Action that should enable a specific value                                    |
-
-Examples:
-* Menu based on the `select` entity
-  ```yaml
-  type: "menu",
-  menu_id: "water_box_mode",
-  icon_id: "water_box_mode",
-  entity: "select.water_box_mode"
-  available_values_attribute: "options"
-  icon: "mdi:water",
-  icon_mapping:
-      off: "mdi:water-remove"
-      mild: "mdi:water-minus"
-      moderate: "mdi:water"
-      intense: "mdi:water-plus"
-      custom: "mdi:water-sync"
-  tap_action:
-      action: "call-service"
-      service: "select.select_option"
-      service_data:
-          option: "[[value]]"
-          entity_id: "[[entity_id]]"
-  ```
-
-### Tile list entry options
-
-![tiles image](/docs/media/tiles.png)
-
-| Key                 | Type    | Required | Default     | Description                                                                                                                                                              |
-|---------------------|---------|----------|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `label`             | string  | no       | -           | Label of a tile                                                                                                                                                          |
-| `entity`            | string  | no       | -           | Entity which should be shown on a tile                                                                                                                                   |
-| `internal_variable` | string  | no       | -           | Internal variable which should be shown on a tile                                                                                                                        |
-| `icon`              | string  | no       | -           | An icon to be displayed ([mdi](https://materialdesignicons.com/))                                                                                                        |
-| `icon_source`       | string  | no       | -           | Source of an icon, e.g: `vacuum.xiaomi.attributes.battery_icon`                                                                                                          |
-| `attribute`         | string  | no       | -           | Attribute that should be shown on a tile                                                                                                                                 |
-| `multiplier`        | number  | no       | -           | Multiplier that should be used to calculate value shown on a tile                                                                                                        |
-| `precision`         | number  | no       | -           | Precision that should be used to present value on a tile                                                                                                                 |
-| `unit`              | string  | no       | -           | Unit to be used                                                                                                                                                          |
-| `tap_action`        | action  | no       | _more-info_ | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is tapped. </br>**Warning:** use `service_data` instead of `data`            |
-| `hold_action`       | action  | no       | -           | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is held and released. </br>**Warning:** use `service_data` instead of `data` |
-| `double_tap_action` | action  | no       | -           | [Action](https://www.home-assistant.io/lovelace/actions) that will be triggered when a tile is double-tapped. </br>**Warning:** use `service_data` instead of `data`     |
-| `conditions`        | list    | no       | -           | List of [conditions](#condition-options) that need to be (all of them) met for a tile to be shown                                                                        |
-| `tooltip`           | string  | no       | -           | Tooltip to be displayed on hoover                                                                                                                                        |
-| `translations`      | map     | no       | -           | Translations that should be applied to tile's value                                                                                                                      |
-| `tile_id`           | string  | no       | -           | ID of an autogenerated tile that should be replaced with this one                                                                                                        |
-| `order`             | number  | no       | -           | Used to sort the tiles                                                                                                                                                   |
-| `replace_config`    | boolean | no       | `false`     | Marks that this tile should override the config of an already existing tile with the same `tile_id`                                                                      |
-| `variables`         | object  | no       | -           | Variables that should be passed to to service calls                                                                                                                      |
-| `remove`            | boolean | no       | `false`     | Allows to remove specific pre-defined tile (when combined with `icon_id` and `replace_config: true`                                                                      |
-
-### Condition options
-
-| Key                 | Type   | Required       | Default | Description                                              |
-|---------------------|--------|----------------|---------|----------------------------------------------------------|
-| `entity`            | string | no             | -       | Entity ID                                                |
-| `attribute`         | string | no             | -       | Attribute to use instead of entity state                 |
-| `internal_variable` | string | no             | -       | Name of internal variable to use instead of entity state |
-| `value`             | string | no<sup>1</sup> | -       | Entity state/attribute has to be equal to this value     |
-| `value_not`         | string | no<sup>1</sup> | -       | Entity state/attribute has to be unequal to this value   |
-
-<sup>1</sup> Exactly one of them has to be provided
-
-### Map modes options
-
-![map modes image](/docs/media/map_modes.png)
-
-| Key                     | Type    | Required        | Default | Description                                                                          |
-|-------------------------|---------|-----------------|---------|--------------------------------------------------------------------------------------|
-| `template`              | string  | no<sup>1</sup>  | -       | Map mode template to be used ([supported templates](#supported-templates))           |
-| `name`                  | string  | yes<sup>2</sup> | -       | Name of map mode                                                                     |
-| `icon`                  | string  | yes<sup>2</sup> | -       | Icon of map mode ([mdi](https://materialdesignicons.com/))                           |
-| `selection_type`        | string  | yes<sup>2</sup> | -       | Type of selection, one of [supported ones](#supported-selection-types)               |
-| `service_call_schema`   | object  | yes<sup>2</sup> | -       | [Service call schema](#service-call-schema-options) that should be used in this mode |
-| `run_immediately`       | boolean | no              | `false` | Enables calling service immediately after choosing a selection                       |
-| `coordinates_rounding`  | boolean | no              | `true`  | Enables coordinates rounding                                                         |
-| `max_selections`        | integer | no              | 1       | Maximal number of selections                                                         |
-| `repeats_type`          | string  | no              | `NONE`  | Type of repeats inclusion, one of [supported ones](#supported-repeats-types)         |
-| `max_repeats`           | integer | no              | 1       | Maximal value of repeats                                                             |
-| `variables`             | object  | no              | -       | Variables that should be passed to `service_call_schema`                             |
-| `predefined_selections` | list    | no<sup>3</sup>  | -       |                                                                                      |
-
-> You can override any value from built-in template by providing it in your configuration
-
-<sup>1</sup> Not required if all parameters with (<sup>2</sup>) are provided
-
-<sup>2</sup> Required if `template` is not provided
-
-<sup>3</sup> Required if `template` is not provided and `selection_type` is one
-of: `PREDEFINED_RECTANGLE`, `PREDEFINED_POINT`. `ROOM` selections can be read automatically from the map camera's `rooms` attribute.
-
-#### Supported templates
-
-List of supported templates depends on selected [`vacuum_platform`](#supported-vacuum-platforms)
-
-#### Supported selection types
-
-Following selection types are supported at this moment:
-
-- `MANUAL_RECTANGLE`: Free-drawn rectangular zones on the map
-  <details>
-  <summary>Example video</summary>
-
-  https://user-images.githubusercontent.com/6118709/141666913-d95f082d-f5bf-4ab5-a478-ba44effe6f34.mp4
-
-  </details>
-- `PREDEFINED_RECTANGLE`: Rectangular zones that can be selected on the map from `predefined_selections`
-  <details>
-  <summary>Example video</summary>
-
-  https://user-images.githubusercontent.com/6118709/141666920-492a000c-9a78-4c20-b4f5-9343928140c7.mp4
-
-  </details>
-- `MANUAL_POINT`: Point selected by clicking in an arbitrary place on the map
-  <details>
-  <summary>Example video</summary>
-
-  https://user-images.githubusercontent.com/6118709/141666921-2f3d66da-6ffc-492a-8439-625da97651bd.mp4
-
-  </details>
-- `PREDEFINED_POINT`: Point selected on the map from `predefined_selections`
-  <details>
-  <summary>Example video</summary>
-
-  https://user-images.githubusercontent.com/6118709/141666923-965679e9-25fb-44cd-be08-fc63e5c85ce0.mp4
-
-  </details>
-- `ROOM`: Identifier-based selection. When the map camera exposes room metadata and the map uses distinct solid room colors, the card can detect each colored area, draw its outline, and use the room name from camera metadata. If color detection is unavailable, configured room selections are used.
-  <details>
-  <summary>Example video</summary>
-
-  https://user-images.githubusercontent.com/6118709/141666925-34b01cde-82ff-447b-aecc-e9ced402b1ed.mp4
-
-  </details>
-- `MANUAL_PATH`: Path selected by clicking on the map
-  <details>
-  <summary>Example video</summary>
-
-  https://user-images.githubusercontent.com/6118709/141666931-48d1717f-96d0-461d-84f4-788c071f3a78.mp4
-
-  </details>
-
-#### Service call schema options
-
-| Key                         | Type    | Required | Default | Description                                          |
-|-----------------------------|---------|----------|---------|------------------------------------------------------|
-| `service`                   | string  | yes      | -       | Service that should be called in a given mode        |
-| `service_data`              | object  | no       | -       | Data that should be passed to service call           |
-| `target`                    | object  | no       | -       | Target that should be passed to service call         |
-| `evaluate_data_as_template` | boolean | no       | `false` | Enables support for jinja templates in service calls |  
-
-It is possible to use several built-in placeholders in `service_data` section. They will be replaced by:
-
-- `[[entity_id]]`: `entity_id` defined in preset's config
-- `[[selection]]`: selection made on the map (zone, point or path)
-- `[[selection_size]]`: number of selections made on the map
-- `[[selection_unwrapped]]`: the same as `[[selection]]`, but passed as string unwrapped from brackets
-- `[[repeats]]`: selected number of repeats
-- `[[point_x]]`: x coordinate of selected point (for `MANUAL_POINT` and `PREDEFINED_POINT` selection types)
-- `[[point_y]]`: y coordinate of selected point (for `MANUAL_POINT` and `PREDEFINED_POINT` selection types)
-- `[[variables]]`: a list of variables for all selections
-
-It is possible to use any value from `variables` section (wrapped with double rectangular brackets):
-
-```yaml
-variables:
-  test_variable: 123
-service_call_schema:
-  service: fake.service
-  service_data:
-    var: "[[test_variable]]"
-```
-
-It is possible to use following modifiers in `service_data` section:
-
-- `|[[jsonify]]`: if value ends with this modifier it will be decoded as a JSON and attached to service call in
-  unwrapped form
-- `|[[jsonify_jinja]]`: behaves in the same way as `|[[jsonify]]`, but is executed after jinja templating
-
-#### Supported repeats types
-
-Following repeats types are supported at this moment:
-
-- `NONE`: No repeats
-- `INTERNAL`: Repeats number included in coordinates array (`[25500, 25000, 26500, 26500, 2]`)
-- `EXTERNAL`: Repeats number used as a separate attribute in `service_call_schema`
-- `REPEAT`: Repeats selection (repeats: `2`, selection: `[5,6]` => `[5,6,5,6]`)
-
-#### Predefined selection options
-
-Format of data depends on selected `selection_type`:
-
-* `PREDEFINED_RECTANGLE`
-
-  | Key             | Type                    | Required | Default      | Description                                                                                                        |
-  |-----------------|-------------------------|----------|--------------|--------------------------------------------------------------------------------------------------------------------|
-  | `zones`         | list                    | yes      | -            | List of lists containing zone's coordinates in `[x,y,width,height]` format (e.g. `[[25500, 25000, 26500, 26500]]`) |
-  | `icon`          | object                  | no       | -            | [Icon definition](#icon-options)                                                                                   |
-  | `label`         | object                  | no       | -            | [Label definition](#label-options)                                                                                 |
-  | `variables`     | object                  | no       | -            | Variables that should be passed to `service_call_schema`                                                           |
-  | `default_state` | `selected`/`unselected` | no       | `unselected` | Default state of selection                                                                                         |
-  | `state_entity`  | entity id               | no       | -            | Entity that should be used to store the state of selection                                                         |
-
-  > See [this page](/docs/templates/setup.md#getting-coordinates) to check how to easily retrieve zone coordinates.
-
-* `PREDEFINED_POINT`
-
-  | Key             | Type                    | Required | Default      | Description                                                       |
-  |-----------------|-------------------------|----------|--------------|-------------------------------------------------------------------|
-  | `position`      | list                    | yes      | -            | Point's coordinates in `[x,y]` format (e.g. `[25500, 25000]`)     |
-  | `icon`          | object                  | no       | -            | [Icon definition](#icon-options)                                  |
-  | `label`         | object                  | no       | -            | [Label definition](#label-options)                                |
-  | `variables`     | object                  | no       | -            | Variables that should be passed to `service_call_schema`          |
-  | `default_state` | `selected`/`unselected` | no       | `unselected` | Default state of selection                                        |
-  | `state_entity`  | entity id               | no       | -            | Entity that should be used to store the state of selection        |
-
-  > See [this page](/docs/templates/setup.md#getting-coordinates) to check how to easily retrieve point coordinates.
-
-* `ROOM`
-
- | Key             | Type                    | Required | Default      | Description                                                                                     |
- |-----------------|-------------------------|----------|--------------|-------------------------------------------------------------------------------------------------|
- | `id`            | string or number        | yes      | -            | Room's identifier                                                                               |
- | `outline`       | list                    | no       | -            | List of points forming an outline of a room (e.g. `[[25500,25500],[26500,25500],[25500,26500]]` |
- | `icon`          | object                  | no       | -            | [Icon definition](#icon-options)                                                                |
- | `label`         | object                  | no       | -            | [Label definition](#label-options)                                                              |
- | `variables`     | object                  | no       | -            | Variables that should be passed to `service_call_schema`                                        |
- | `default_state` | `selected`/`unselected` | no       | `unselected` | Default state of selection                                                                      |
- | `state_entity`  | entity id               | no       | -            | Entity that should be used to store the state of selection (e.g. `switch.bathroom`)             |
-
-  > See [this page](/docs/templates/setup.md#getting-coordinates) to check how to easily create outline.
-
-  `predefined_selections` may be omitted when the map camera provides a `rooms` attribute. The card will use the names and identifiers from that attribute and, when the image has distinct room fill colors, detect the room shapes and centers from the image.
-
-#### Icon options
-
-| Key    | Type   | Required | Default | Description                                                       |
-|--------|--------|----------|---------|-------------------------------------------------------------------|
-| `name` | string | yes      | -       | An icon to be displayed ([mdi](https://materialdesignicons.com/)) |
-| `x`    | number | yes      | -       | X coordinate of an icon (in vacuum's coordinate system)           |
-| `y`    | number | yes      | -       | Y coordinate of an icon (in vacuum's coordinate system)           |
-
-#### Label options
-
-| Key        | Type   | Required | Default | Description                                                       |
-|------------|--------|----------|---------|-------------------------------------------------------------------|
-| `text`     | string | yes      | -       | Text to be displayed                                              |
-| `x`        | number | yes      | -       | X coordinate of a label (in vacuum's coordinate system)           |
-| `y`        | number | yes      | -       | Y coordinate of a label (in vacuum's coordinate system)           |
-| `offset_x` | number | no       | -       | Offset that should be applied to label in X direction (in pixels) |
-| `offset_y` | number | no       | -       | Offset that should be applied to label in Y direction (in pixels) |
-
-### Action handling
-
-To enable handling actions you have to configure `action_handler_id` in [Main options](#main-options).
-This card handles following actions:
-
-- Starts cleaning
-  ```yaml
-    tap_action:
-      action: fire-dom-event
-      xiaomi_vacuum_map_card:
-        action_handler_id: xiaomi_vacuum_map_card_id_1
-        action: cleaning.start
-  ```
-
-- Set a value of internal variable
-  ```yaml
-    tap_action:
-      action: fire-dom-event
-      xiaomi_vacuum_map_card:
-        action_handler_id: xiaomi_vacuum_map_card_id_1
-        action: internal_variable.set
-        data:
-          variable: variable_1
-          value: "some value"
-  ```
-
-- Selects next map mode
-  ```yaml
-    tap_action:
-      action: fire-dom-event
-      xiaomi_vacuum_map_card:
-        action_handler_id: xiaomi_vacuum_map_card_id_1
-        action: map_mode.next
-  ```
-
-- Selects previous map mode
-  ```yaml
-    tap_action:
-      action: fire-dom-event
-      xiaomi_vacuum_map_card:
-        action_handler_id: xiaomi_vacuum_map_card_id_1
-        action: map_mode.previous
-  ```
-
-- Selects a specific map mode
-  ```yaml
-    tap_action:
-      action: fire-dom-event
-      xiaomi_vacuum_map_card:
-        action_handler_id: xiaomi_vacuum_map_card_id_1
-        action: map_mode.set
-        data:
-          index: 2 
-  ```
-
-- Resets the map to its default view — the configured [`map_view`](#map-view-options), or the neutral
-  view (scale `1`, no offset, `map_rotation`) when none is configured
-  ```yaml
-    tap_action:
-      action: fire-dom-event
-      xiaomi_vacuum_map_card:
-        action_handler_id: xiaomi_vacuum_map_card_id_1
-        action: map_view.reset
-  ```
-
-- Decrements a number of repeats
-  ```yaml
-    tap_action:
-      action: fire-dom-event
-      xiaomi_vacuum_map_card:
-        action_handler_id: xiaomi_vacuum_map_card_id_1
-        action: repeats.decrement
-  ```
-
-- Increments a number of repeats
-  ```yaml
-    tap_action:
-      action: fire-dom-event
-      xiaomi_vacuum_map_card:
-        action_handler_id: xiaomi_vacuum_map_card_id_1
-        action: repeats.increment
-  ```
-
-- Set a number of repeats
-  ```yaml
-    tap_action:
-      action: fire-dom-event
-      xiaomi_vacuum_map_card:
-        action_handler_id: xiaomi_vacuum_map_card_id_1
-        action: repeats.set
-        data:
-          value: 2
-  ```
-
-- Clears current selection
-  ```yaml
-    tap_action:
-      action: fire-dom-event
-      xiaomi_vacuum_map_card:
-        action_handler_id: xiaomi_vacuum_map_card_id_1
-        action: selection.clear
-  ```
-
-## FAQ
-
-- **Make sure to check
-  out [FAQ section in Discussions](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/categories/faq),
-  it contains a lot of useful information**
-
-- **Does this card require rooted device?**
-
-  No, it only utilizes features of Home Assistant.
-
-- **How to create a map?**
-
-  The easiest way is to
-  use [Xiaomi Cloud Map Extractor](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor),
-  but you can use any image (e.g., a screenshot from Mi Home/FloleVac).
-
-- **Can I use image that has a perspective distortion?**
-
-  Yes, you just have to provide 4 calibration points.
-
-## Migrating from v1.x.x
-
-<details>
-<summary>Configuration with <code>map_image</code></summary>
-<table>
-<tr>
-<th>Old config (<code>v1.x.x</code>)</th><th>New config (<code>v2.x.x)</code></th>
-</tr>
-<tr>
-<td>
-<pre>
-type: custom:xiaomi-vacuum-map-card
-entity: vacuum.xiaomi_vacuum
-map_image: '/local/custom_lovelace/xiaomi_vacuum_map_card/map.png'
-calibration_points:
-  - vacuum:
-      x: 25500
-      y: 25500
-    map:
-      x: 466
-      y: 1889
-  - vacuum:
-      x: 26500
-      y: 26500
-    map:
-      x: 730
-      y: 1625
-  - vacuum:
-      x: 25500
-      y: 26500
-    map:
-      x: 466
-      y: 1625
-zones:
-  - [[25500, 25500, 26500, 26500]]
-  - [[24245, 25190, 27495, 27940], [27492, 26789, 28942, 27889]]
-</pre>
-</td>
-<td>
-<pre>
-type: custom:xiaomi-vacuum-map-card
-entity: vacuum.xiaomi_vacuum
-map_source:
-  image: '/local/custom_lovelace/xiaomi_vacuum_map_card/map.png'
-calibration_source:
-  calibration_points:
-    - vacuum:
-        x: 25500
-        y: 25500
-      map:
-        x: 466
-        y: 1889
-    - vacuum:
-        x: 26500
-        y: 26500
-      map:
-        x: 730
-        y: 1625
-    - vacuum:
-        x: 25500
-        y: 26500
-      map:
-        x: 466
-        y: 1625
-map_modes:
-  - template: vacuum_clean_zone
-  - template: vacuum_goto
-  - template: vacuum_clean_zone_predefined
-    predefined_selections:
-      - zones: [[25500, 25500, 26500, 26500]]
-      - zones: [[24245, 25190, 27495, 27940], [27492, 26789, 28942, 27889]]
-</pre>
-</td>
-</tr>
-</table>
-</details>
-<br/>
-<details>
-<summary>Configuration with <code>map_camera</code></summary>
-<table>
-<tr>
-<th>Old config (<code>v1.x.x</code>)</th><th>New config (<code>v2.x.x)</code></th>
-</tr>
-<tr>
-<td>
-<pre>
-type: custom:xiaomi-vacuum-map-card
-entity: vacuum.xiaomi_vacuum
-map_camera: camera.xiaomi_cloud_map_extractor
-camera_calibration: true
-zones:
-  - [[25500, 25500, 26500, 26500]]
-  - [[24245, 25190, 27495, 27940], [27492, 26789, 28942, 27889]]
-</pre>
-</td>
-<td>
-<pre>
-type: custom:xiaomi-vacuum-map-card
-entity: vacuum.xiaomi_vacuum
 map_source:
   camera: camera.xiaomi_cloud_map_extractor
 calibration_source:
@@ -908,143 +127,56 @@ map_modes:
   - template: vacuum_goto
   - template: vacuum_clean_zone_predefined
     predefined_selections:
-      - zones: [[25500, 25500, 26500, 26500]]
-      - zones: [[24245, 25190, 27495, 27940], [27492, 26789, 28942, 27889]]
-</pre>
-</td>
-</tr>
-</table>
-</details>
+      - zones: [[25500, 25000, 26500, 26500]]
+        label: {text: Kitchen, x: 26000, y: 25750}
+```
 
-## Translations
+Replace the entity ids and the platform. Every option, template and action is in
+[configuration](docs/configuration.md), platform setup in [supported platforms](docs/platforms.md).
 
-Currently, this card contains translations for following languages:
-* `bg` - Bulgarian (Български)
-* `ca` - Catalan (Català)
-* `cs` - Czech (Čeština)
-* `da` - Danish (Dansk)
-* `de` - German (Deutsch)
-* `el` - Greek (Ελληνικά)
-* `en` - English
-* `es` - Spanish (Español)
-* `fi` - Finnish (Suomi)
-* `fr` - French (Français)
-* `he` - Hebrew (עברית)
-* `hu` - Hungarian (Magyar)
-* `is` - Icelandic (Íslenska)
-* `it` - Italian (Italiano)
-* `lv` - Latvian (Latviešu)
-* `nb-NO` - Norwegian Bokmål (Norsk bokmål)
-* `nl` - Dutch (Nederlands)
-* `pl` - Polish (Polski)
-* `pt` - Portuguese (Português)
-* `pt-BR` - Brazilian Portuguese (Português Brasileiro)
-* `ro` - Romanian (Română)
-* `ru` - Russian (Русский)
-* `sk` - Slovak (Slovenčina)
-* `sv` - Swedish (Svenska)
-* `tr` - Turkish (Türkçe)
-* `uk` - Ukrainian (Українська)
-* `zh` - Chinese (中文)
-* `zh-Hant` - Traditional Chinese (正體中文)
+## Supported platforms
 
-[Adding a new language](CONTRIBUTING.md#adding-new-translations)
+Xiaomi Miio, Roborock, Dreame, Valetudo, Viomi, Neato, Roomba, Wyze, Ecovacs, `send_command` and the
+community integrations listed in [supported platforms](docs/platforms.md), where each page links its
+templates, the entities the card discovers and the service calls it uses.
 
-## Special thanks
+[Adding a new platform](CONTRIBUTING.md#adding-new-platform); platform templates are shared with
+upstream, so those requests go to the
+[upstream tracker](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues/new?labels=new+platform&template=new_platform_request.yml).
 
-I'd like to give special thanks to people who helped me with card's design and development:
+## Maintenance model
 
-* [Bartosz Orczyk](www.bratver.com)
-* [Filip Schramm](https://github.com/fi-sch)
-* [Kamil Dryzek](https://github.com/dryzek)
-* [Marek Trochimiak](https://github.com/tromarek1)
+Every change goes through the same gates:
 
-<!-- piotrmachowski_support_links_start -->
+- `npm test` (Vitest + happy-dom), `npx tsc --noEmit`, `npm run lint`, `npm run build`,
+  `npm run check:map-scale` and `npm run check:docs` on every pull request; the documentation link
+  check runs offline, so a moved section cannot leave a dead link.
+- The Playwright visual suite runs in its own job for map-rendering pull requests and checks overlay
+  alignment at zoom and rotation, room hit-testing and the vertical/horizontal layout at three
+  widths ([visual suite](test/visual/README.md)).
+- A delivery review and a Claude Opus 5.5 council review must both approve before merge. The
+  council audits the diff against the issue and the tests, not just the style.
 
-## Support
+Report bugs and feature requests for this fork on the
+[fork tracker](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/issues). If the same
+configuration also fails with the upstream release, report it on the
+[upstream tracker](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues) as well;
+platform-template requests that apply to both builds belong upstream because those templates are
+shared.
 
-If you want to support my work with a donation you can use one of the following platforms:
+There is no robot and no Home Assistant instance in the build environment. Hardware and vendor
+behaviour is only claimed when a real fixture proves it; [DELIVERY.md](DELIVERY.md) lists the checks
+still owed and the open follow-ups, such as a tile label staying stale after a registry-only rename.
+Items that need that evidence are postponed rather than presented as done.
 
-<table>
-  <tr>
-    <th>Platform</th>
-    <th>Payment methods</th>
-    <th>Link</th>
-    <th>Comment</th>
-  </tr>
-  <tr>
-    <td>Ko-fi</td>
-    <td>
-      <li>PayPal</li>
-      <li>Credit card</li>
-    </td>
-    <td>
-      <a href='https://ko-fi.com/piotrmachowski' target='_blank'><img height='35px' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' />
-    </td>
-    <td>
-      <li>No fees</li>
-      <li>Single or monthly payment</li>
-    </td>
-  </tr>
-  <tr>
-    <td>buycoffee.to</td>
-    <td>
-      <li>BLIK</li>
-      <li>Bank transfer</li>
-    </td>
-    <td>
-      <a href="https://buycoffee.to/piotrmachowski" target="_blank"><img src="https://buycoffee.to/btn/buycoffeeto-btn-primary.svg" height="35px" alt="Postaw mi kawę na buycoffee.to"></a>
-    </td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>PayPal</td>
-    <td>
-      <li>PayPal</li>
-    </td>
-    <td>
-      <a href="https://paypal.me/PiMachowski" target="_blank"><img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" border="0" alt="PayPal Logo" height="35px" style="height: auto !important;width: auto !important;"></a>
-    </td>
-    <td>
-      <li>No fees</li>
-    </td>
-  </tr>
-  <tr>
-    <td>Revolut</td>
-    <td>
-      <li>Revolut</li>
-      <li>Credit Card</li>
-    </td>
-    <td>
-      <a href="https://revolut.me/314ma" target="_blank"><img src="https://assets.revolut.com/assets/favicons/favicon-32x32.png" height="32px" alt="Revolut"></a>
-    </td>
-    <td>
-      <li>No fees</li>
-    </td>
-  </tr>
-</table>
+## Attribution and license
 
-### Powered by
-[![PyCharm logo.](https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.svg)](https://jb.gg/OpenSourceSupport)
+This fork is based on
+[PiotrMachowski/lovelace-xiaomi-vacuum-map-card](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card),
+created by Piotr Machowski; the card, its platform templates and its translations are his work and
+the work of the upstream contributors. Special thanks to Bartosz Orczyk, Filip Schramm, Kamil
+Dryzek and Marek Trochimiak for the design and development.
 
-
-[ko_fi_shield]: https://img.shields.io/static/v1.svg?label=%20&message=Ko-Fi&color=F16061&logo=ko-fi&logoColor=white
-
-[ko_fi]: https://ko-fi.com/piotrmachowski
-
-[buycoffee_to_shield]: https://shields.io/badge/buycoffee.to-white?style=flat&labelColor=white&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABhmlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw1AUhU9TpaIVh1YQcchQnayIijhKFYtgobQVWnUweemP0KQhSXFxFFwLDv4sVh1cnHV1cBUEwR8QVxcnRRcp8b6k0CLGC4/3cd49h/fuA4R6malmxzigapaRisfEbG5FDLzChxB6MIZ+iZl6Ir2QgWd93VM31V2UZ3n3/Vm9St5kgE8knmW6YRGvE09vWjrnfeIwK0kK8TnxqEEXJH7kuuzyG+eiwwLPDBuZ1BxxmFgstrHcxqxkqMRTxBFF1ShfyLqscN7irJarrHlP/sJgXltOc53WEOJYRAJJiJBRxQbKsBClXSPFRIrOYx7+QcefJJdMrg0wcsyjAhWS4wf/g9+zNQuTE25SMAZ0vtj2xzAQ2AUaNdv+PrbtxgngfwautJa/UgdmPkmvtbTIEdC3DVxctzR5D7jcAQaedMmQHMlPSygUgPcz+qYcELoFulfduTXPcfoAZGhWSzfAwSEwUqTsNY93d7XP7d+e5vx+AIahcq//o+yoAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH5wETCy4vFNqLzwAAAVpJREFUOMvd0rFLVXEYxvHPOedKJnKJhrDLuUFREULE7YDCMYj+AydpsCWiaKu29hZxiP4Al4aWwC1EdFI4Q3hqEmkIBI8ZChWXKNLLvS0/Qcza84V3enm/7/s878t/HxGkeTaIGziP+EB918nawu7Dq1d0e1+2J2bepnk2jFEUVVF+qKV51o9neBCaugfge70keoxxUbSWjrQ+4SUyzKZ5NlnDZdzGG7w4DIh+dtZEFntDA98l8S0MYwctNGrYz9WqKJePFLq80g5Sr+EHlnATp+NA+4qLaZ7FfzMrzbMBjGEdq8GrJMZnvAvFC/8wfAwjWMQ8XmMzaW9sdevNRgd3MFhvNpbaG1u/Dk2/hOc4gadVUa7Um425qii/7Z+xH9O4jwW8Cqv24Tru4hyeVEU588cfBMgpPMI9nMFe0BkFzVOYrYqycyQgQJLwTC2cDZCPeF8V5Y7jGb8BUpRicy7OU5MAAAAASUVORK5CYII=
-
-[buycoffee_to]: https://buycoffee.to/piotrmachowski
-
-[buy_me_a_coffee_shield]: https://img.shields.io/static/v1.svg?label=%20&message=Buy%20me%20a%20coffee&color=6f4e37&logo=buy%20me%20a%20coffee&logoColor=white
-
-[buy_me_a_coffee]: https://www.buymeacoffee.com/PiotrMachowski
-
-[paypal_me_shield]: https://img.shields.io/static/v1.svg?label=%20&message=PayPal.Me&logo=paypal
-
-[paypal_me]: https://paypal.me/PiMachowski
-
-[revolut_me_shield]: https://img.shields.io/static/v1.svg?label=%20&message=Revolut&logo=revolut
-
-[revolut_me]: https://revolut.me/314ma
-<!-- piotrmachowski_support_links_end -->
+Released under the [MIT license](LICENSE). The fork's scope and every intentional divergence from
+upstream are recorded in [FORK.md](FORK.md); the plan and the postponed items are in
+[ROADMAP.md](ROADMAP.md).

@@ -1,14 +1,16 @@
-name: Request a feature in Xiaomi Vacuum Map card
-description: Request a feature in Xiaomi Vacuum Map card
+name: Request a feature in Better Xiaomi Vacuum Map Card
+description: Request a feature in Better Xiaomi Vacuum Map Card (this fork).
 labels: enhancement
-assignees: 'PiotrMachowski'
+assignees: 'Igloczek'
 body:
   - type: markdown
     attributes:
       value: |
         This issue form is for feature requests or enhancements only!
 
-        If you have a bug or a question, please use the dedicated form.
+        If you have a bug or a question, please use the dedicated form. The fork's scope and the
+        deliberately postponed items are in
+        [ROADMAP.md](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/blob/master/ROADMAP.md).
   - type: textarea
     validations:
       required: true

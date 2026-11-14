@@ -11,7 +11,7 @@ To add a new language follow these steps:
 1. Copy content of [`src/localize/languages/en.json`](/src/localize/languages/en.json) file to a newly created file
 1. Replace English texts with your translations (do not replace keys!)
 1. Import your file in [`src/localize/localize.ts`](/src/localize/localize.ts)
-1. Add a new entry in [translations list](/README.md#translations)
+1. Add a new entry in [translations list](/docs/configuration.md#translations)
 1. Create a pull request
 
 ## Adding new platform
@@ -23,7 +23,7 @@ To add a new platform follow these steps:
 1. Copy content of [`src/model/generators/platform_templates/new.json`](/src/model/generators/platform_templates/new.json) file to a newly created file
 1. Adjust configuration according to parameters of added platform
 1. Import your file in [`src/model/generators/platform-generator.ts`](/src/model/generators/platform-generator.ts)
-1. Add a new entry in [supported platforms list](/README.md#supported-vacuum-platforms)
+1. Add a new entry in [supported platforms list](/docs/platforms.md#supported-vacuum-platforms)
 1. Create a pull request
 
 ## Building with npm

@@ -1,14 +1,25 @@
-name: Report an issue with Xiaomi Vacuum Map card
-description: Report an issue with Xiaomi Vacuum Map card.
+name: Report an issue with Better Xiaomi Vacuum Map Card
+description: Report a bug in Better Xiaomi Vacuum Map Card (this fork).
 labels: bug
-assignees: 'PiotrMachowski'
+assignees: 'Igloczek'
 body:
   - type: markdown
     attributes:
       value: |
-        This issue form is for reporting bugs only!
+        This issue form is for bugs in **Better Xiaomi Vacuum Map Card**, the fork.
 
-        If you have a question, feature or enhancement request, please use the dedicated form.
+        This is the fork's tracker; file fork bugs and fork regressions here. If the same
+        configuration also fails with the upstream release, report it in the
+        [upstream tracker](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues)
+        too. The element is still `custom:xiaomi-vacuum-map-card` and the asset is still
+        `xiaomi-vacuum-map-card.js`, so include which build you run below.
+
+        Configuration options are in
+        [docs/configuration.md](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/blob/master/docs/configuration.md);
+        platform setup is in
+        [docs/platforms.md](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/blob/master/docs/platforms.md).
+
+        Questions and feature requests have their own form.
   - type: checkboxes
     id: checklist
     attributes:
@@ -18,7 +29,7 @@ body:
           required: true
         - label: I have cleared the cache of my browser
           required: true
-        - label: I have checked if the problem is already reported
+        - label: I have checked the documentation and the existing reports
           required: true
   - type: textarea
     validations:
@@ -31,13 +42,29 @@ body:
     attributes:
       value: |
         ## Environment
+  - type: dropdown
+    id: card-build
+    validations:
+      required: true
+    attributes:
+      label: Which card build do you run?
+      description: >-
+        Choose the fork for this repository's builds, or upstream if the bug also happens with the
+        upstream release. Reporting both makes the difference between a fork regression and an
+        upstream bug.
+      options:
+        - Better Xiaomi Vacuum Map Card (this fork)
+        - Upstream Xiaomi Vacuum Map Card
+        - Both
   - type: input
     id: card-version
     validations:
       required: true
     attributes:
-      label: What version of a card has described problem?
-      placeholder: vX.X.X
+      label: What version of the card has described problem?
+      placeholder: v2.5.0-igloczek.1
+      description: >-
+        The release tag from the resource URL or the latest release page.
   - type: input
     id: last-working-card-version
     validations:
@@ -60,7 +87,7 @@ body:
       required: true
     attributes:
       label: Which integration do you use to control your vacuum (link)?
-      description: Provide a link to (custom) integration that you use to control your vacuum. 
+      description: Provide a link to (custom) integration that you use to control your vacuum.
       placeholder: https://www.home-assistant.io/integrations/xiaomi_miio/
       value: https://www.home-assistant.io/integrations/xiaomi_miio/
   - type: input
@@ -105,7 +132,8 @@ body:
     attributes:
       label: Card's configuration
       description: |
-        Please provide card's YAML configuration to help with problem reproduction.
+        Please provide card's YAML configuration to help with problem reproduction. Remove
+        tokens, IP addresses and serial numbers before posting.
       render: yaml
   - type: textarea
     attributes:

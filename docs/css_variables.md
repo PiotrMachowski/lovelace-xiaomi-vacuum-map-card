@@ -1,3 +1,8 @@
+# CSS variables
+
+*Better Xiaomi Vacuum Map Card* keeps the upstream CSS variable names, so existing themes and
+`card_mod` snippets keep working. The variables below can be set on the card:
+
 ```css
 --map-card-primary-color
 --map-card-primary-text-color

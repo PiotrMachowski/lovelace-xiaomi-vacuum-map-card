@@ -1,14 +1,20 @@
 name: Request support for a new vacuum platform
-description: Request support for a new vacuum platform
+description: Request support for a new vacuum platform in Better Xiaomi Vacuum Map Card.
 labels:
   - new platform
   - enhancement
-assignees: 'PiotrMachowski'
+assignees: 'Igloczek'
 body:
   - type: markdown
     attributes:
       value: |
         Using this form you can create a request for a new supported platform.
+
+        Platform templates are shared with upstream, so a request that applies to the upstream card
+        as well belongs in the
+        [upstream tracker](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/issues).
+        The fork only adds a template when a state/registry dump from a real instance can back it;
+        see [Adding a new platform](https://github.com/Igloczek/lovelace-xiaomi-vacuum-map-card/blob/master/CONTRIBUTING.md#adding-new-platform).
   - type: input
     validations:
       required: true
@@ -34,7 +40,7 @@ body:
     attributes:
       label: Checklist
       options:
-        - label: I have sent info about entities to `piotr.machowski.dev [at] gmail.com` ([Retrieving entities info](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/discussions/594); please provide your GitHub username in the email)
+        - label: I can provide an anonymised state and entity-registry dump for this platform (no tokens, IPs or serial numbers)
           required: false
   - type: textarea
     validations:
@@ -43,6 +49,7 @@ body:
       label: Vacuum entity/entities
       description: |
         Please provide example state and attributes of vacuum entity/entities (from dev-tools).
+        Remove tokens, IP addresses and serial numbers.
       render: yaml
   - type: textarea
     validations:
