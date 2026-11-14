@@ -30,6 +30,14 @@ const STUB_ELEMENTS = [
     "hui-card-preview",
 ];
 
+/**
+ * Home Assistant's dropdown extends the stub element with the one method the card calls when a
+ * menu entry is chosen. Without it an entry click throws instead of changing the mode.
+ */
+class HaDropdownStub extends HTMLElement {
+    hideMenu() {}
+}
+
 const visual = {
     ready: false,
     card: undefined,
@@ -40,6 +48,7 @@ const visual = {
 };
 
 function defineStubElements() {
+    if (!customElements.get("ha-dropdown")) customElements.define("ha-dropdown", HaDropdownStub);
     for (const tag of STUB_ELEMENTS) {
         if (!customElements.get(tag)) customElements.define(tag, class extends HTMLElement {});
     }
