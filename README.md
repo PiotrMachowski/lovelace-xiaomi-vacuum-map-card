@@ -10,6 +10,8 @@ with the vacuum's status and controls around the map.
 
 It works with Xiaomi, Roborock, Dreame, Viomi, Valetudo, Neato, Roomba, Ecovacs, Wyze and more.
 
+[![Open your Home Assistant instance and open this repository in the Marketplace.](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=Igloczek&repository=lovelace-better-xiaomi-vacuum-map-card&category=dashboard)
+
 [![Better Xiaomi Vacuum Map Card: selecting rooms, zooming and rotating the map, drawing a zone, Pin & Go, a path and switching floors](docs/media/demo.webp)](docs/media/demo.mp4)
 
 ## Why it's better
