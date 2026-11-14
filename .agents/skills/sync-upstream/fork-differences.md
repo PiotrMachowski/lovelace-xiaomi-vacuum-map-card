@@ -30,6 +30,7 @@ that merges cleanly but breaks a row here is a failed sync.
 | [Project identity](../../../FORK.md#r1-project-identity) | `README.md`, `package.json`, `hacs.json`, `docs/`, issue forms | `npm run check:docs`; README install/identity review |
 | [Repository rename](../../../FORK.md#r2-repository-rename) | `package.json` repository/homepage/bugs, README links, issue forms, `origin` | `gh repo view`; `npm run check:docs` |
 | [Upstream sync skill](../../../FORK.md#upstream-sync-skill) | `.agents/skills/sync-upstream/` | This file and `SKILL.md` still present and referenced by `AGENTS.md` |
+| [Agent problem reports](../../../FORK.md#agent-reports) | `.agents/skills/report-problem/`, `scripts/agent-report/`, `.github/workflows/agent-report.yml`, `.github/ISSUE_TEMPLATE/agent_report.yml`, `docs/report-a-problem.md` | `test/agent-report.test.ts`; issue forms keep the agent-report entry |
 
 ## Rules for a clean merge
 
