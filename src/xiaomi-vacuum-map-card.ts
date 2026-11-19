@@ -150,6 +150,8 @@ export class XiaomiVacuumMapCard extends LitElement {
     private modes: MapMode[] = [];
     private shouldHandleMouseUp!: boolean;
     private lastHassUpdate!: Date;
+    private mapImageResizeObserver?: ResizeObserver;
+    private observedMapImage?: HTMLImageElement;
     public isInEditor = false;
 
     constructor() {
@@ -252,6 +254,8 @@ export class XiaomiVacuumMapCard extends LitElement {
         }
         document.removeEventListener(EVENT_LOVELACE_DOM, this._handleLovelaceDomEvent);
         this.connected = false;
+        this.mapImageResizeObserver?.disconnect();
+        this.observedMapImage = undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
@@ -426,6 +430,7 @@ export class XiaomiVacuumMapCard extends LitElement {
         const oldHass = changedProperties.get("_hass") as HomeAssistantFixed | undefined;
         const changed = oldHass && this.hass && checkIfEntitiesChanged(this.entitiesToManuallyUpdate, oldHass, this.hass);
         this._updateElements(changed);
+        this._observeMapImageSize();
     }
 
     public _getCurrentPreset(): CardPresetConfig {
@@ -1265,6 +1270,19 @@ export class XiaomiVacuumMapCard extends LitElement {
             allowChangeEvent: true,
         });
         delay(300).then(() => (zoomerContent.style.transitionDuration = "0s"));
+    }
+
+    private _observeMapImageSize(): void {
+        const image = this._getMapImage();
+        if (!this.isConnected || image === this.observedMapImage) {
+            return;
+        }
+        this.mapImageResizeObserver?.disconnect();
+        this.observedMapImage = image;
+        if (image) {
+            this.mapImageResizeObserver ??= new ResizeObserver(() => this._calculateBasicScale());
+            this.mapImageResizeObserver.observe(image);
+        }
     }
 
     private _calculateBasicScale(): void {
