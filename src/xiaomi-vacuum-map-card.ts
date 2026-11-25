@@ -22,6 +22,7 @@ import {
     CardPresetConfig,
     MapExtractorRoom,
     PredefinedZoneConfig,
+    SelectionState,
     TranslatableString,
     VariablesStorage,
 } from "./types/types";
@@ -150,6 +151,7 @@ export class XiaomiVacuumMapCard extends LitElement {
     private modes: MapMode[] = [];
     private shouldHandleMouseUp!: boolean;
     private lastHassUpdate!: Date;
+    private lastDynamicRooms?: string;
     public isInEditor = false;
 
     constructor() {
@@ -752,15 +754,24 @@ export class XiaomiVacuumMapCard extends LitElement {
                     .filter(s => s.state_entity)
                     .map(s => s.state_entity as string);
                 break;
-            case SelectionType.ROOM:
-                this.selectableRooms = newMode.predefinedSelections.map(
-                    ps => new Room(ps as RoomConfig, this._getContext()),
-                );
+            case SelectionType.ROOM: {
+                const isDynamic = newMode.predefinedSelections.length === 0;
+                const rooms = isDynamic
+                    ? this._getRoomsConfig()?.rooms ?? []
+                    : (newMode.predefinedSelections as RoomConfig[]);
+                this.selectableRooms = rooms.map(ps => new Room(ps, this._getContext()));
                 this.selectedRooms = this.selectableRooms.filter(s => s.selected);
                 this.entitiesToManuallyUpdate = newMode.predefinedSelections
                     .filter(s => s.state_entity)
                     .map(s => s.state_entity as string);
+                if (isDynamic && this.currentPreset.map_source?.camera) {
+                    this.entitiesToManuallyUpdate.push(this.currentPreset.map_source.camera);
+                    this.lastDynamicRooms = JSON.stringify(rooms);
+                } else {
+                    this.lastDynamicRooms = undefined;
+                }
                 break;
+            }
             case SelectionType.PREDEFINED_POINT:
                 const pointsFromEntities = PredefinedPoint.getFromEntities(newMode, this.hass, () =>
                     this._getContext(),
@@ -981,7 +992,7 @@ export class XiaomiVacuumMapCard extends LitElement {
 
     private _getRoomsConfig(): RoomConfigEventData | undefined {
         const config = this._getCurrentPreset();
-        const rooms = this.hass.states[config.map_source?.camera ?? ""]?.attributes["rooms"] as Record<
+        const rooms = this.hass?.states[config.map_source?.camera ?? ""]?.attributes["rooms"] as Record<
             string,
             MapExtractorRoom
         >;
@@ -1096,9 +1107,30 @@ export class XiaomiVacuumMapCard extends LitElement {
             case SelectionType.PREDEFINED_RECTANGLE:
                 this.selectablePredefinedRectangles.filter(p => p.isDynamic()).length > 0 && update();
                 break;
-            case SelectionType.ROOM:
-                this.selectedRooms.filter(p => p.isDynamic()).length > 0 && update();
+            case SelectionType.ROOM: {
+                const mode = this._getCurrentMode();
+                if (mode && mode.predefinedSelections.length === 0) {
+                    const rooms = this._getRoomsConfig()?.rooms ?? [];
+                    const next = JSON.stringify(rooms);
+                    if (next !== this.lastDynamicRooms) {
+                        const selected = new Set(this.selectedRooms.map(r => String(r.toVacuum())));
+                        this.lastDynamicRooms = next;
+                        this.selectableRooms = rooms.map(
+                            r =>
+                                new Room(
+                                    selected.has(String(r.id)) ? { ...r, default_state: SelectionState.SELECTED } : r,
+                                    this._getContext(),
+                                ),
+                        );
+                        this.selectedRooms = this.selectableRooms.filter(s => s.selected);
+                        this._selectionChanged();
+                        this.requestUpdate();
+                    }
+                } else {
+                    this.selectedRooms.filter(p => p.isDynamic()).length > 0 && update();
+                }
                 break;
+            }
             case SelectionType.PREDEFINED_POINT:
                 this.selectablePredefinedPoints.filter(p => p.isDynamic()).length > 0 && update();
                 break;
